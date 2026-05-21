@@ -351,7 +351,7 @@ function FactoryContent() {
                 <div className="flex gap-1">
                   {(["pdf", "sales", "seo", "publish"] as const).map((t) => (
                     <button key={t} style={S.tab(tab === t)} onClick={() => setTab(t)}>
-                      {t === "pdf" ? "📄 PDF Guide" : t === "sales" ? "💰 Sales Page" : t === "seo" ? "🔍 SEO Page" : "🚀 Publish & Sell"}
+                      {t === "pdf" ? "📄 Guide Content" : t === "sales" ? "💬 Buy Page Copy" : t === "seo" ? "📝 SEO Article" : "🚀 Launch"}
                     </button>
                   ))}
                 </div>
@@ -360,7 +360,7 @@ function FactoryContent() {
                     tab === "pdf" ? selected.pdfContent : tab === "sales" ? selected.salesPageCopy : selected.seoPageContent,
                     tab
                   )} className="text-xs px-3 py-1.5 rounded-lg mb-1" style={S.badge("#6366F1")}>
-                    {copied === tab ? "✓ Copied!" : "Copy"}
+                    {copied === tab ? "✓ Copied!" : tab === "sales" ? "Copy Raw JSON" : "Copy"}
                   </button>
                 )}
               </div>
@@ -462,50 +462,72 @@ function FactoryContent() {
 
                     {/* STEP 3 — Your two pages */}
                     <div className="p-4 rounded-lg" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
-                      <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: "var(--muted)" }}>
-                        Step 3 · 🌐 Your Two Live Pages
+                      <div className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "var(--muted)" }}>
+                        Step 3 · Your Two Pages
                       </div>
+                      <p className="text-xs mb-3" style={{ color: "var(--muted)" }}>
+                        Every PDF gets two pages automatically — one for buyers, one for Google.
+                      </p>
                       <div className="space-y-2">
-                        <div className="flex items-center justify-between gap-3 p-3 rounded-lg" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
-                          <div>
-                            <div className="text-xs font-bold mb-0.5" style={{ color: "var(--text)" }}>🔍 SEO Page — Google traffic</div>
-                            <div className="text-xs" style={{ color: "var(--muted)" }}>/guide/{selected.slug} · Ranks on Google · Free traffic forever</div>
-                          </div>
-                          <div className="flex gap-1.5 flex-shrink-0">
-                            <a href={`/guide/${selected.slug}`} target="_blank" rel="noopener noreferrer"
-                              className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
-                              style={{ background: "#6366F120", color: "#818CF8", border: "1px solid #6366F130" }}>
-                              View
-                            </a>
-                            <button onClick={() => copy(`${typeof window !== "undefined" ? window.location.origin : ""}/guide/${selected.slug}`, "seourl")}
-                              className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
-                              style={{ background: "var(--surface)", color: "var(--muted)", border: "1px solid var(--border)" }}>
-                              {copied === "seourl" ? "✓" : "Copy"}
-                            </button>
+
+                        {/* Buy Page — primary */}
+                        <div className="p-3 rounded-lg" style={{ background: "var(--bg)", border: "2px solid #6366F140" }}>
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <div className="text-xs font-bold mb-0.5" style={{ color: "#818CF8" }}>
+                                🛒 Buy Page — put this link in your TikTok / Instagram bio
+                              </div>
+                              <div className="text-xs font-mono mt-1 truncate max-w-xs" style={{ color: "var(--muted)" }}>
+                                /sell/{selected.slug}
+                              </div>
+                              <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>
+                                No distractions. One job: get the sale.
+                              </div>
+                            </div>
+                            <div className="flex gap-1.5 flex-shrink-0">
+                              <a href={`/sell/${selected.slug}`} target="_blank" rel="noopener noreferrer"
+                                className="text-xs px-2.5 py-1.5 rounded-lg font-bold"
+                                style={{ background: "#6366F1", color: "#fff" }}>
+                                View
+                              </a>
+                              <button onClick={() => copy(`${typeof window !== "undefined" ? window.location.origin : ""}/sell/${selected.slug}`, "sellurl")}
+                                className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
+                                style={{ background: copied === "sellurl" ? "#10B98120" : "var(--surface)", color: copied === "sellurl" ? "#10B981" : "var(--muted)", border: "1px solid var(--border)" }}>
+                                {copied === "sellurl" ? "✓ Copied!" : "Copy Link"}
+                              </button>
+                            </div>
                           </div>
                         </div>
-                        <div className="flex items-center justify-between gap-3 p-3 rounded-lg" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
-                          <div>
-                            <div className="text-xs font-bold mb-0.5" style={{ color: "var(--text)" }}>💰 Sell Page — Social traffic</div>
-                            <div className="text-xs" style={{ color: "var(--muted)" }}>/sell/{selected.slug} · TikTok bio link · Pure conversion, no distractions</div>
-                          </div>
-                          <div className="flex gap-1.5 flex-shrink-0">
-                            <a href={`/sell/${selected.slug}`} target="_blank" rel="noopener noreferrer"
-                              className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
-                              style={{ background: "#F59E0B20", color: "#F59E0B", border: "1px solid #F59E0B30" }}>
-                              View
-                            </a>
-                            <button onClick={() => copy(`${typeof window !== "undefined" ? window.location.origin : ""}/sell/${selected.slug}`, "sellurl")}
-                              className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
-                              style={{ background: "var(--surface)", color: "var(--muted)", border: "1px solid var(--border)" }}>
-                              {copied === "sellurl" ? "✓" : "Copy"}
-                            </button>
+
+                        {/* SEO Page — secondary */}
+                        <div className="p-3 rounded-lg" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+                          <div className="flex items-center justify-between gap-3">
+                            <div>
+                              <div className="text-xs font-bold mb-0.5" style={{ color: "var(--text)" }}>
+                                📖 Google Page — how people find you for free
+                              </div>
+                              <div className="text-xs" style={{ color: "var(--muted)" }}>
+                                /guide/{selected.slug} · Ranks on Google · sends people to the buy page
+                              </div>
+                            </div>
+                            <div className="flex gap-1.5 flex-shrink-0">
+                              <a href={`/guide/${selected.slug}`} target="_blank" rel="noopener noreferrer"
+                                className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
+                                style={{ background: "var(--surface)", color: "var(--muted)", border: "1px solid var(--border)" }}>
+                                View
+                              </a>
+                              <button onClick={() => copy(`${typeof window !== "undefined" ? window.location.origin : ""}/guide/${selected.slug}`, "seourl")}
+                                className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
+                                style={{ background: "var(--surface)", color: "var(--muted)", border: "1px solid var(--border)" }}>
+                                {copied === "seourl" ? "✓" : "Copy"}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <p className="text-xs mt-3" style={{ color: "var(--muted)" }}>
+                      <p className="text-xs mt-3 font-medium" style={{ color: selected.published ? "#10B981" : "#F59E0B" }}>
                         {selected.published
-                          ? "✅ Both pages are live. Use the Sell Page URL as your TikTok/Instagram bio link."
+                          ? "✅ Both pages are live."
                           : "⚠️ Click \"Publish Page\" above to make both pages live."}
                       </p>
                       <div className="mt-3 pt-3" style={{ borderTop: "1px solid var(--border)" }}>
