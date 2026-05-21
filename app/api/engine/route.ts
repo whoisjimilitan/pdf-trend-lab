@@ -628,12 +628,31 @@ function scoreCommercialPain(query: string): PainScore {
     score -= 8; flags.push("COMPARATIVE");
   }
 
-  // PDF SUITABILITY — can this become a structured downloadable guide?
-  // Good: processes, paperwork, systems, bureaucracy, checklists, applications, exam prep
-  // Bad: news, celebrity, entertainment, single-answer questions
-  const badForPDF = /news|celebrity|movie|song|game|funny|meme|quiz|twitter|instagram|reddit/.test(q);
-  const goodForPDF = /how to|register|apply|renew|process|guide|step|checklist|form|document|certificate|tax|visa|passport|business|start|earn|invest|farm|exam|pass/.test(q);
-  const isPDFSuitable = !badForPDF && (goodForPDF || score > 5);
+  // ── HARD REJECTION GATES ──────────────────────────────────────────────────
+  // These disqualify a query entirely regardless of other signals.
+
+  // Gate 1: Junk categories — will never become a sellable PDF
+  const isJunk = /news|celebrity|movie|song|music|sport|game|funny|meme|quiz|twitter|instagram|tiktok|reddit|facebook|youtube/.test(q);
+
+  // Gate 2: Pure information — answerable in 10 seconds on Google, no PDF needed
+  const isPureInfo = /^what is |^who is |^where is |^when did |^why is |^definition of |^meaning of |^history of /.test(q);
+
+  // Gate 3: Too vague or too broad — no specific problem being solved
+  const isTooVague = q.trim().split(/\s+/).length < 3; // fewer than 3 words
+
+  // Gate 4: Free answer exists — no one pays for this
+  const hasFreeAnswer = /wikipedia|dictionary|translate|convert|calculator|weather|time in |capital of |population of /.test(q);
+
+  // ── PDF SUITABILITY — positive confirmation ────────────────────────────────
+  // Must contain at least one signal that a structured guide is the right format
+  const hasPDFFormat = /how to|step by step|guide|process|register|apply|renew|obtain|recover|documents|checklist|requirements|procedure|certificate|application|from uk|from abroad|abroad|setup|start a|side hustle|exam|pass |avoid|without mistake|correctly/.test(q);
+
+  const isPDFSuitable =
+    !isJunk &&
+    !isPureInfo &&
+    !isTooVague &&
+    !hasFreeAnswer &&
+    hasPDFFormat;
 
   return { score, flags, isPDFSuitable };
 }
@@ -685,9 +704,17 @@ export async function POST(req: Request) {
   // ── LAYER 4: Commercial Pain Detection ────────────────────────────────────
   // Score and filter every query before anything else touches it.
   // This stops weak seeds at the door.
+  // PRIMARY CONVERSION FLAGS — at least one must be present to pass
+  const PRIMARY_FLAGS = new Set(["FEAR", "MONEY", "DIASPORA", "DEADLINE", "IMMIGRATION", "LEGAL", "PROCESS", "HEALTH"]);
+  const MIN_PAIN_SCORE = 12;
+
   const initialScored = rawSearches
     .map((q) => ({ query: q, ...scoreCommercialPain(q) }))
-    .filter((s) => s.isPDFSuitable)
+    .filter((s) =>
+      s.isPDFSuitable &&
+      s.score >= MIN_PAIN_SCORE &&
+      s.flags.some((f) => PRIMARY_FLAGS.has(f))
+    )
     .sort((a, b) => b.score - a.score);
 
   // Depth drill: autocomplete the top 8 highest-pain queries to surface
@@ -699,7 +726,12 @@ export async function POST(req: Request) {
   const initialSet   = new Set(initialScored.map((s) => s.query));
   const depthScored  = depthRaw
     .map((q) => ({ query: q, ...scoreCommercialPain(q) }))
-    .filter((s) => s.isPDFSuitable && !initialSet.has(s.query));
+    .filter((s) =>
+      s.isPDFSuitable &&
+      s.score >= MIN_PAIN_SCORE &&
+      s.flags.some((f) => PRIMARY_FLAGS.has(f)) &&
+      !initialSet.has(s.query)
+    );
 
   // Merge Level 1 + Level 2 signals, re-sort by pain score
   const allScored = [...initialScored, ...depthScored].sort((a, b) => b.score - a.score);
@@ -859,8 +891,12 @@ AXIS 4 — FIRST-MOVER WINDOW (15 pts max)
 SCORING:
 90–100: Plant immediately. Commercial pain + monopoly + real demand.
 80–89:  Strong seed. Build after the 90+ ones.
-70–79:  Worth planting if portfolio needs this niche.
-Below 70: Skip — weak pain signal or too much competition.
+75–79:  Acceptable if diaspora or monopoly opportunity.
+Below 75: Do not include. Return nothing rather than a weak seed.
+
+FINAL GATE — ask this before including any result:
+"Would someone who just discovered they have a problem RIGHT NOW pay ${pricing.symbol}${pricing.min} for a clear PDF answer to this?"
+If the honest answer is "maybe" or "probably not" — exclude it.
 
 PAIN POINT WRITING — this is your most important output:
 Format: "[Specific group of people] [what they're trying to do] [what keeps going wrong] [the real cost of not solving it]"
@@ -970,7 +1006,10 @@ Return ONLY valid JSON: { "results": [...] }`,
   });
 
   // Hard filter by real volume
-  opportunities = opportunities.filter((o) => Number(o.searchVolume) >= ABSOLUTE_MIN_VOLUME);
+  opportunities = opportunities.filter((o) =>
+    Number(o.searchVolume) >= ABSOLUTE_MIN_VOLUME &&
+    Number(o.opportunityScore) >= 75
+  );
 
   if (opportunities.length === 0) {
     return NextResponse.json({
