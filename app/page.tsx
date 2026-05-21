@@ -198,7 +198,7 @@ export default function HomePage() {
               </div>
             </a>
             <div className="lp-nav-right">
-              <a href="/dashboard" className="lp-nav-login">Sign in</a>
+              <a href="/dashboard" className="lp-nav-login">Go to App →</a>
               <a href="#start" className="lp-nav-cta">Start Planting →</a>
             </div>
           </div>
@@ -544,7 +544,7 @@ export default function HomePage() {
           <p>
             © {new Date().getFullYear()} PDF Seeds ·{" "}
             <a href="/store">Browse Guides</a> ·{" "}
-            <a href="/dashboard">Sign In</a>
+            <a href="/dashboard">Go to App</a>
           </p>
         </footer>
 
