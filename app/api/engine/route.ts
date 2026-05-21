@@ -726,6 +726,13 @@ function scoreCommercialPain(query: string): PainScore {
   return { score, flags, isPDFSuitable };
 }
 
+function computeVolumeTier(volume: number): string {
+  if (volume >= 50000) return "mass-market";
+  if (volume >= 20000) return "strong";
+  if (volume >= 5000)  return "niche";
+  return "micro-niche";
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // POST — Main engine handler
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1025,6 +1032,36 @@ ACTIONABILITY RATING:
   medium: process varies by situation, 2–3 possible paths, user needs to make some judgment calls
   hard: highly variable, depends heavily on individual circumstances, difficult to make universally useful
 
+VIDEO SCRIPT — write a complete 5-7 second faceless video script engineered for maximum watch completion.
+This IS the distribution machine. High completion rate → algorithm pushes it → strangers see the PDF link → 1–2% buy.
+Three lines. Each line spoken in ~2 seconds. No intro. No "hey guys". Start with the pain — immediately.
+
+Structure:
+  hook (0-2s): The scroll-stopper. Name the exact situation — not a category. PSA, fear trigger, or "did you know" format.
+    Someone who has this exact problem must STOP scrolling the moment they hear this.
+  tease (2-4s): The stakes or payoff. What they risk getting wrong. Or what they'll gain. One specific sentence.
+    Do NOT explain the guide here. Raise the stakes. Create the desire to know more.
+  cta (4-7s): Direct them to the bio. Short. "I put the complete step-by-step guide in my bio" is enough.
+    Do NOT sell the guide. Just point to it.
+
+✅ EXAMPLES:
+  TOPIC: ghana passport renewal from uk
+  hook: "PSA for Ghanaians in the UK — if you book the wrong embassy appointment you lose your slot AND your fee 🚨"
+  tease: "The process changed in 2024 and most guides online are outdated — here's what's actually required now"
+  cta: "Complete step-by-step guide in bio — I put every document and step in one PDF"
+
+  TOPIC: how to recover momo transaction ghana
+  hook: "If your MoMo transfer disappeared, do NOT call customer service first — do this instead:"
+  tease: "Customer service can't reverse most failed transfers — but this specific step can recover it within 24 hours"
+  cta: "Full recovery guide in bio — covers every type of failed MoMo transaction"
+
+  TOPIC: jamb registration 2026
+  hook: "This one mistake on your JAMB registration gets you disqualified — and most students don't even know it"
+  tease: "JAMB has changed the document requirements — using last year's list is why applications get rejected"
+  cta: "Download the updated checklist in bio — every requirement for 2026 in one place"
+
+Output as a JSON object with three string keys: hook, tease, cta.
+
 PAIN POINT WRITING — this is your most important output:
 Format: "[Specific group of people] [what they're trying to do] [what keeps going wrong] [the real cost of not solving it]"
 40–80 words. Raw, honest, first-person. This becomes the emotional hook — the intro of the PDF, the TikTok script, the buy page opener.
@@ -1084,7 +1121,12 @@ OUTPUT FORMAT
   "hookPotential": "high | medium | low",
   "hookAngle": "The exact opening line of a 5-second TikTok/Reels — one sentence, scroll-stopping",
   "pdfSuitability": "1–2 sentences: why this is better as a PDF than a blog post or video",
-  "actionabilityRating": "easy | medium | hard"
+  "actionabilityRating": "easy | medium | hard",
+  "videoScript": {
+    "hook": "The scroll-stopper — 0-2s. Exact situation named. Immediate pain or PSA. No intro.",
+    "tease": "Stakes or payoff — 2-4s. What they risk or gain. One specific sentence.",
+    "cta": "The CTA — 4-7s. Point to bio. Do not sell. Just direct."
+  }
 }
 
 PRICING: ${pricing.symbol}${pricing.min}–${pricing.symbol}${pricing.max} (${pricing.note})
@@ -1178,6 +1220,10 @@ Return ONLY valid JSON: { "results": [...] }`,
             hookAngle:           String(o.hookAngle || ""),
             pdfSuitability:      String(o.pdfSuitability || ""),
             actionabilityRating: String(o.actionabilityRating || "medium"),
+            videoScript:         typeof o.videoScript === "object" && o.videoScript !== null
+                                   ? JSON.stringify(o.videoScript)
+                                   : String(o.videoScript || "{}"),
+            volumeTier:          computeVolumeTier(Number(o.searchVolume) || 0),
             isQuickWin,
             isDiaspora: Boolean(diaspora),
           },

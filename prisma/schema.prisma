@@ -27,6 +27,8 @@ model Opportunity {
   hookAngle           String    @default("")
   pdfSuitability      String    @default("")
   actionabilityRating String    @default("medium")
+  videoScript         String    @default("")
+  volumeTier          String    @default("niche")
   saved               Boolean   @default(false)
   isQuickWin       Boolean   @default(false)
   isDiaspora       Boolean   @default(false)
