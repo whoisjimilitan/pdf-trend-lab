@@ -10,8 +10,8 @@ const STRIPE = "https://buy.stripe.com/00waEX65Nb838Ce1aP5ZC00";
 function CheckIcon() {
   return (
     <span className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-      style={{ background: "#10B98120", border: "1px solid #10B98140" }}>
-      <svg className="w-3 h-3" fill="#10B981" viewBox="0 0 20 20">
+      style={{ background: "#DCFCE7", border: "1px solid #BBF7D0" }}>
+      <svg className="w-3 h-3" fill="#16A34A" viewBox="0 0 20 20">
         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
       </svg>
     </span>
@@ -32,9 +32,9 @@ function Stars() {
 
 function FaqItem({ q, a }: { q: string; a: string }) {
   return (
-    <details className="group" style={{ borderBottom: "1px solid #1F2333" }}>
+    <details className="group" style={{ borderBottom: "1px solid #E2E8F0" }}>
       <summary className="flex items-start justify-between py-5 cursor-pointer list-none gap-6">
-        <span className="text-sm font-semibold leading-snug" style={{ color: "#E2E8F0" }}>{q}</span>
+        <span className="text-sm font-semibold leading-snug" style={{ color: "#1E293B" }}>{q}</span>
         <span className="text-xl flex-shrink-0 mt-0.5 transition-transform duration-200 group-open:rotate-45"
           style={{ color: "#6366F1" }}>+</span>
       </summary>
@@ -52,154 +52,153 @@ export default function HomePage() {
         body > main { overflow: visible !important; height: auto !important; }
 
         * { box-sizing: border-box; }
-        .lp { background: #08090D; color: #E2E8F0; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
+        .lp { background: #FFFFFF; color: #334155; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
 
         /* NAV */
-        .lp-nav { position: sticky; top: 0; z-index: 50; background: rgba(8,9,13,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid #1A1E2E; padding: 0 24px; }
+        .lp-nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid #E2E8F0; padding: 0 24px; }
         .lp-nav-inner { max-width: 1100px; margin: 0 auto; height: 64px; display: flex; align-items: center; justify-content: space-between; }
         .lp-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .lp-logo-mark { width: 34px; height: 34px; background: #6366F1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
-        .lp-logo-text { font-weight: 800; font-size: 1rem; color: #F1F5F9; }
-        .lp-logo-sub { font-size: 0.65rem; color: #3D4566; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+        .lp-logo-text { font-weight: 800; font-size: 1rem; color: #0F172A; }
+        .lp-logo-sub { font-size: 0.65rem; color: #94A3B8; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
         .lp-nav-right { display: flex; align-items: center; gap: 12px; }
-        .lp-nav-login { font-size: 0.85rem; color: #475569; text-decoration: none; }
-        .lp-nav-login:hover { color: #E2E8F0; }
+        .lp-nav-login { font-size: 0.85rem; color: #64748B; text-decoration: none; }
+        .lp-nav-login:hover { color: #0F172A; }
         .lp-nav-cta { background: #6366F1; color: #fff; font-weight: 700; font-size: 0.85rem; padding: 9px 22px; border-radius: 8px; text-decoration: none; }
         .lp-nav-cta:hover { background: #4F46E5; }
 
         /* HERO */
         .lp-hero { padding: 108px 24px 88px; text-align: center; position: relative; overflow: hidden; }
-        .lp-hero-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.09) 0%, transparent 60%); pointer-events: none; }
+        .lp-hero-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.06) 0%, transparent 60%); pointer-events: none; }
         .lp-hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
-        .lp-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: #6366F10D; border: 1px solid #6366F125; border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 700; color: #6366F1; margin-bottom: 28px; letter-spacing: 0.02em; }
-        .lp-hero h1 { font-size: clamp(2.2rem, 5.5vw, 3.6rem); font-weight: 900; line-height: 1.12; color: #F8FAFC; margin: 0 0 28px; letter-spacing: -0.025em; }
+        .lp-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 700; color: #4F46E5; margin-bottom: 28px; letter-spacing: 0.02em; }
+        .lp-hero h1 { font-size: clamp(2.2rem, 5.5vw, 3.6rem); font-weight: 900; line-height: 1.12; color: #0F172A; margin: 0 0 28px; letter-spacing: -0.025em; }
         .lp-hero h1 em { color: #6366F1; font-style: normal; }
         .lp-hero-sub { font-size: 1.05rem; color: #64748B; line-height: 1.75; max-width: 640px; margin: 0 auto 28px; }
-        .lp-offer-line { font-size: 0.9rem; font-weight: 600; color: #10B981; margin: 0 auto 36px; }
+        .lp-offer-line { font-size: 0.9rem; font-weight: 600; color: #16A34A; margin: 0 auto 36px; }
         .lp-hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 48px; }
         .lp-primary-btn { display: inline-block; background: #6366F1; color: #fff; font-weight: 800; font-size: 0.95rem; padding: 15px 38px; border-radius: 10px; text-decoration: none; letter-spacing: 0.01em; }
         .lp-primary-btn:hover { background: #4F46E5; }
-        .lp-secondary-btn { display: inline-block; background: transparent; color: #64748B; font-weight: 600; font-size: 0.95rem; padding: 15px 26px; border-radius: 10px; text-decoration: none; border: 1px solid #1A1E2E; }
-        .lp-secondary-btn:hover { border-color: #2A3050; color: #E2E8F0; }
+        .lp-secondary-btn { display: inline-block; background: transparent; color: #64748B; font-weight: 600; font-size: 0.95rem; padding: 15px 26px; border-radius: 10px; text-decoration: none; border: 1px solid #E2E8F0; }
+        .lp-secondary-btn:hover { border-color: #CBD5E1; color: #334155; }
         .lp-social-proof { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .lp-avatars { display: flex; }
-        .lp-avatar { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #08090D; background: #1A1E2E; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; margin-left: -7px; }
+        .lp-avatar { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #FFFFFF; background: #EEF2FF; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; margin-left: -7px; }
         .lp-avatar:first-child { margin-left: 0; }
-        .lp-proof-text { font-size: 0.8rem; color: #3D4566; }
+        .lp-proof-text { font-size: 0.8rem; color: #94A3B8; }
 
         /* TRUST BAR */
-        .lp-trust { background: #0A0B10; border-top: 1px solid #1A1E2E; border-bottom: 1px solid #1A1E2E; padding: 32px 24px; }
+        .lp-trust { background: #F8FAFC; border-top: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0; padding: 32px 24px; }
         .lp-trust-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
-        .lp-stat-num { font-size: 1.7rem; font-weight: 900; color: #F1F5F9; line-height: 1; margin-bottom: 5px; }
-        .lp-stat-label { font-size: 0.75rem; color: #3D4566; line-height: 1.4; }
+        .lp-stat-num { font-size: 1.7rem; font-weight: 900; color: #0F172A; line-height: 1; margin-bottom: 5px; }
+        .lp-stat-label { font-size: 0.75rem; color: #94A3B8; line-height: 1.4; }
 
         /* SECTIONS */
         .lp-section { padding: 88px 24px; }
-        .lp-section-alt { background: #0A0B10; }
+        .lp-section-alt { background: #F8FAFC; }
         .lp-section-inner { max-width: 920px; margin: 0 auto; }
-        .lp-section-inner-wide { max-width: 1100px; margin: 0 auto; }
-        .lp-section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #3D4566; margin-bottom: 14px; }
-        .lp-section-title { font-size: clamp(1.55rem, 3.8vw, 2.15rem); font-weight: 900; color: #F1F5F9; line-height: 1.22; margin-bottom: 18px; }
-        .lp-section-body { font-size: 0.97rem; color: #475569; line-height: 1.8; }
+        .lp-section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #94A3B8; margin-bottom: 14px; }
+        .lp-section-title { font-size: clamp(1.55rem, 3.8vw, 2.15rem); font-weight: 900; color: #0F172A; line-height: 1.22; margin-bottom: 18px; }
+        .lp-section-body { font-size: 0.97rem; color: #64748B; line-height: 1.8; }
 
         /* THE PROBLEM */
         .problem-pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
-        .problem-pill { background: #EF444410; border: 1px solid #EF444425; color: #EF4444; border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 600; }
+        .problem-pill { background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 600; }
 
         /* THE INSIGHT — signal cards */
         .signal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 36px; }
-        .signal-card { background: #0F1117; border: 1px solid #1A1E2E; border-radius: 12px; padding: 20px; }
-        .signal-query { font-size: 0.82rem; color: #94A3B8; font-style: italic; margin-bottom: 10px; }
+        .signal-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .signal-query { font-size: 0.82rem; color: #475569; font-style: italic; margin-bottom: 10px; }
         .signal-indicators { display: flex; gap: 8px; flex-wrap: wrap; }
         .signal-chip { font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
 
         /* HOW IT WORKS */
         .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .step-card { background: #0F1117; border: 1px solid #1A1E2E; border-radius: 16px; padding: 28px 22px; }
-        .step-num { font-size: 2.2rem; font-weight: 900; color: #6366F115; line-height: 1; margin-bottom: 16px; }
+        .step-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 28px 22px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        .step-num { font-size: 2.2rem; font-weight: 900; color: #EEF2FF; line-height: 1; margin-bottom: 16px; }
         .step-icon { font-size: 1.5rem; margin-bottom: 12px; }
-        .step-title { font-size: 0.95rem; font-weight: 800; color: #F1F5F9; margin-bottom: 8px; }
-        .step-body { font-size: 0.82rem; color: #475569; line-height: 1.7; }
+        .step-title { font-size: 0.95rem; font-weight: 800; color: #0F172A; margin-bottom: 8px; }
+        .step-body { font-size: 0.82rem; color: #64748B; line-height: 1.7; }
 
         /* REAL OPPORTUNITIES */
         .opp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 40px; }
-        .opp-card { background: #0F1117; border: 1px solid #1A1E2E; border-radius: 14px; padding: 24px; }
+        .opp-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
         .opp-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
         .opp-flag { font-size: 1.2rem; }
-        .opp-status { font-size: 0.7rem; font-weight: 700; color: #10B981; background: #10B98112; border: 1px solid #10B98125; padding: 3px 10px; border-radius: 20px; }
-        .opp-query { font-size: 0.88rem; font-weight: 700; color: #E2E8F0; margin-bottom: 14px; line-height: 1.4; }
+        .opp-status { font-size: 0.7rem; font-weight: 700; color: #16A34A; background: #DCFCE7; border: 1px solid #BBF7D0; padding: 3px 10px; border-radius: 20px; }
+        .opp-query { font-size: 0.88rem; font-weight: 700; color: #1E293B; margin-bottom: 14px; line-height: 1.4; }
         .opp-data { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-        .opp-data-item { background: #080A0F; border-radius: 8px; padding: 10px 12px; }
-        .opp-data-label { font-size: 0.68rem; color: #3D4566; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
-        .opp-data-value { font-size: 0.9rem; font-weight: 800; color: #F1F5F9; }
-        .opp-product { font-size: 0.8rem; color: #64748B; border-top: 1px solid #1A1E2E; padding-top: 12px; line-height: 1.5; }
+        .opp-data-item { background: #F8FAFC; border-radius: 8px; padding: 10px 12px; border: 1px solid #F1F5F9; }
+        .opp-data-label { font-size: 0.68rem; color: #94A3B8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+        .opp-data-value { font-size: 0.9rem; font-weight: 800; color: #0F172A; }
+        .opp-product { font-size: 0.8rem; color: #64748B; border-top: 1px solid #F1F5F9; padding-top: 12px; line-height: 1.5; }
         .opp-product strong { color: #6366F1; }
 
         /* TWO HARVESTS */
         .harvest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
-        .harvest-card { background: #0F1117; border: 1px solid #1A1E2E; border-radius: 16px; padding: 32px 28px; }
+        .harvest-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 32px 28px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
         .harvest-badge { display: inline-block; border-radius: 6px; padding: 4px 12px; font-size: 0.72rem; font-weight: 700; margin-bottom: 18px; }
-        .harvest-card h3 { font-size: 1.05rem; font-weight: 800; color: #F1F5F9; margin-bottom: 12px; }
-        .harvest-card p { font-size: 0.88rem; color: #475569; line-height: 1.75; margin-bottom: 14px; }
+        .harvest-card h3 { font-size: 1.05rem; font-weight: 800; color: #0F172A; margin-bottom: 12px; }
+        .harvest-card p { font-size: 0.88rem; color: #64748B; line-height: 1.75; margin-bottom: 14px; }
         .harvest-timeline { font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; display: inline-block; }
 
         /* FARM ECONOMICS */
         .farm-cards { display: flex; flex-direction: column; gap: 10px; }
-        .farm-card { background: #0F1117; border: 1px solid #1A1E2E; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .farm-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
         .farm-card-seeds { font-size: 0.88rem; font-weight: 700; color: #6366F1; }
-        .farm-card-income { font-size: 0.9rem; font-weight: 800; color: #E2E8F0; }
-        .farm-card-annual { font-size: 0.72rem; color: #3D4566; margin-top: 2px; text-align: right; }
+        .farm-card-income { font-size: 0.9rem; font-weight: 800; color: #0F172A; }
+        .farm-card-annual { font-size: 0.72rem; color: #94A3B8; margin-top: 2px; text-align: right; }
 
         /* WHO IT'S FOR */
         .who-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 36px; }
-        .who-card { background: #0F1117; border: 1px solid #1A1E2E; border-radius: 12px; padding: 22px; }
+        .who-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
         .who-card-icon { font-size: 1.4rem; margin-bottom: 10px; }
-        .who-card-title { font-size: 0.9rem; font-weight: 800; color: #E2E8F0; margin-bottom: 6px; }
-        .who-card-body { font-size: 0.82rem; color: #475569; line-height: 1.65; }
+        .who-card-title { font-size: 0.9rem; font-weight: 800; color: #0F172A; margin-bottom: 6px; }
+        .who-card-body { font-size: 0.82rem; color: #64748B; line-height: 1.65; }
 
         /* VIDEO */
-        .video-placeholder { background: #0F1117; border: 1px dashed #2A3050; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 56px 40px; text-align: center; }
+        .video-placeholder { background: #F8FAFC; border: 2px dashed #CBD5E1; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 56px 40px; text-align: center; }
         .video-play { width: 64px; height: 64px; background: #6366F1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
         .video-play svg { margin-left: 3px; }
-        .video-placeholder-title { font-size: 0.95rem; font-weight: 700; color: #E2E8F0; margin-bottom: 8px; }
-        .video-placeholder-sub { font-size: 0.82rem; color: #3D4566; max-width: 300px; line-height: 1.6; }
-        .video-placeholder-note { font-size: 0.72rem; color: #2A3050; margin-top: 14px; border: 1px solid #1A1E2E; border-radius: 8px; padding: 7px 12px; }
+        .video-placeholder-title { font-size: 0.95rem; font-weight: 700; color: #1E293B; margin-bottom: 8px; }
+        .video-placeholder-sub { font-size: 0.82rem; color: #94A3B8; max-width: 300px; line-height: 1.6; }
+        .video-placeholder-note { font-size: 0.72rem; color: #CBD5E1; margin-top: 14px; border: 1px solid #E2E8F0; border-radius: 8px; padding: 7px 12px; background: #FFFFFF; }
 
         /* TESTIMONIALS */
         .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-        .testimonial-placeholder { background: #0F1117; border: 1px dashed #1A1E2E; border-radius: 14px; padding: 28px 20px; text-align: center; }
-        .testimonial-avatar-ph { width: 52px; height: 52px; border-radius: 50%; background: #1A1E2E; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-        .testimonial-name-ph { font-size: 0.85rem; font-weight: 700; color: #3D4566; margin-bottom: 4px; }
-        .testimonial-role-ph { font-size: 0.72rem; color: #2A3050; margin-bottom: 12px; }
-        .testimonial-note { font-size: 0.7rem; color: #2A3050; font-style: italic; }
+        .testimonial-placeholder { background: #FFFFFF; border: 1px dashed #E2E8F0; border-radius: 14px; padding: 28px 20px; text-align: center; }
+        .testimonial-avatar-ph { width: 52px; height: 52px; border-radius: 50%; background: #EEF2FF; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .testimonial-name-ph { font-size: 0.85rem; font-weight: 700; color: #94A3B8; margin-bottom: 4px; }
+        .testimonial-role-ph { font-size: 0.72rem; color: #CBD5E1; margin-bottom: 12px; }
+        .testimonial-note { font-size: 0.7rem; color: #CBD5E1; font-style: italic; }
 
         /* FAQ */
         .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
 
         /* PRICING */
-        .pricing-box { max-width: 560px; margin: 0 auto; background: #0F1117; border: 1px solid #6366F125; border-radius: 20px; padding: 48px 40px; text-align: center; position: relative; overflow: hidden; }
-        .pricing-glow { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 280px; height: 1px; background: linear-gradient(to right, transparent, #6366F1, transparent); }
-        .pricing-badge { display: inline-block; background: #F59E0B15; color: #F59E0B; border: 1px solid #F59E0B25; border-radius: 20px; padding: 4px 14px; font-size: 0.72rem; font-weight: 700; margin-bottom: 20px; letter-spacing: 0.04em; }
-        .pricing-title { font-size: 1.15rem; font-weight: 800; color: #F1F5F9; margin-bottom: 6px; }
-        .pricing-sub { font-size: 0.85rem; color: #475569; margin-bottom: 28px; }
-        .pricing-amount { font-size: 4rem; font-weight: 900; color: #F1F5F9; line-height: 1; margin-bottom: 4px; }
-        .pricing-amount span { font-size: 1.4rem; color: #475569; vertical-align: top; margin-top: 12px; display: inline-block; }
-        .pricing-period { font-size: 0.82rem; color: #3D4566; margin-bottom: 32px; }
+        .pricing-box { max-width: 560px; margin: 0 auto; background: #FFFFFF; border: 2px solid #6366F130; border-radius: 20px; padding: 48px 40px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(99,102,241,0.08); }
+        .pricing-glow { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 280px; height: 2px; background: linear-gradient(to right, transparent, #6366F1, transparent); }
+        .pricing-badge { display: inline-block; background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; border-radius: 20px; padding: 4px 14px; font-size: 0.72rem; font-weight: 700; margin-bottom: 20px; letter-spacing: 0.04em; }
+        .pricing-title { font-size: 1.15rem; font-weight: 800; color: #0F172A; margin-bottom: 6px; }
+        .pricing-sub { font-size: 0.85rem; color: #64748B; margin-bottom: 28px; }
+        .pricing-amount { font-size: 4rem; font-weight: 900; color: #0F172A; line-height: 1; margin-bottom: 4px; }
+        .pricing-amount span { font-size: 1.4rem; color: #94A3B8; vertical-align: top; margin-top: 12px; display: inline-block; }
+        .pricing-period { font-size: 0.82rem; color: #94A3B8; margin-bottom: 32px; }
         .pricing-includes { text-align: left; margin-bottom: 32px; display: flex; flex-direction: column; gap: 10px; }
-        .pricing-includes li { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #64748B; list-style: none; }
+        .pricing-includes li { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #475569; list-style: none; }
         .pricing-cta { display: block; background: #6366F1; color: #fff; font-weight: 800; font-size: 1rem; padding: 17px 32px; border-radius: 12px; text-decoration: none; margin-bottom: 14px; }
         .pricing-cta:hover { background: #4F46E5; }
-        .pricing-offer { font-size: 0.8rem; color: #10B981; font-weight: 600; margin-bottom: 8px; }
-        .pricing-guarantee { font-size: 0.75rem; color: #3D4566; }
+        .pricing-offer { font-size: 0.8rem; color: #16A34A; font-weight: 600; margin-bottom: 8px; }
+        .pricing-guarantee { font-size: 0.75rem; color: #94A3B8; }
 
         /* MOBILE STICKY */
-        .mobile-sticky { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: #0A0B10; border-top: 1px solid #1A1E2E; padding: 12px 16px; }
+        .mobile-sticky { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: #FFFFFF; border-top: 1px solid #E2E8F0; padding: 12px 16px; box-shadow: 0 -4px 12px rgba(0,0,0,0.06); }
         .mobile-sticky a { display: block; background: #6366F1; color: #fff; font-weight: 800; font-size: 0.9rem; padding: 15px; border-radius: 10px; text-decoration: none; text-align: center; }
 
         /* FOOTER */
-        .lp-footer { padding: 32px 24px; border-top: 1px solid #1A1E2E; text-align: center; }
-        .lp-footer p { font-size: 0.78rem; color: #2A3050; }
-        .lp-footer a { color: #3D4566; text-decoration: none; }
+        .lp-footer { padding: 32px 24px; border-top: 1px solid #E2E8F0; text-align: center; background: #F8FAFC; }
+        .lp-footer p { font-size: 0.78rem; color: #CBD5E1; }
+        .lp-footer a { color: #94A3B8; text-decoration: none; }
         .lp-footer a:hover { color: #6366F1; }
 
         @media (max-width: 768px) {
@@ -308,29 +307,29 @@ export default function HomePage() {
                   Meanwhile, millions of people are typing urgent, specific, practical questions
                   into Google every single day — questions with no good PDF guide answer.
                 </p>
-                <p className="lp-section-body" style={{ color: "#CBD5E1", fontWeight: 600 }}>
+                <p className="lp-section-body" style={{ color: "#1E293B", fontWeight: 600 }}>
                   The opportunity is not inventing demand.
                   It is discovering demand that already exists — and being the first
                   to plant the right seed into it.
                 </p>
               </div>
               <div>
-                <div style={{ fontSize: "0.82rem", color: "#3D4566", fontWeight: 700, marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                  What people are building without validation:
+                <div style={{ fontSize: "0.82rem", color: "#94A3B8", fontWeight: 700, marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                  What people build without validating demand first:
                 </div>
                 <div className="problem-pills">
                   {["Generic ebooks", "Broad how-to guides", "Unresearched templates", "Courses nobody asked for", "PDFs with no audience", "Content with no search demand"].map((p) => (
                     <span key={p} className="problem-pill">{p}</span>
                   ))}
                 </div>
-                <div style={{ marginTop: 28, background: "#0F1117", border: "1px solid #10B98120", borderRadius: 12, padding: "20px 22px" }}>
-                  <div style={{ fontSize: "0.72rem", color: "#10B981", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
+                <div style={{ marginTop: 28, background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 12, padding: "20px 22px" }}>
+                  <div style={{ fontSize: "0.72rem", color: "#16A34A", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
                     The better approach
                   </div>
-                  <p style={{ fontSize: "0.88rem", color: "#64748B", lineHeight: 1.7, margin: 0 }}>
-                    Find what thousands of people are <strong style={{ color: "#CBD5E1" }}>already searching for</strong>.
+                  <p style={{ fontSize: "0.88rem", color: "#475569", lineHeight: 1.7, margin: 0 }}>
+                    Find what thousands of people are <strong style={{ color: "#1E293B" }}>already searching for</strong>.
                     Build the PDF guide that answers it. Plant it where they&apos;re looking.
-                    That seed harvests every time someone searches — <strong style={{ color: "#CBD5E1" }}>forever</strong>.
+                    That seed harvests every time someone searches — <strong style={{ color: "#1E293B" }}>forever</strong>.
                   </p>
                 </div>
               </div>
@@ -348,10 +347,10 @@ export default function HomePage() {
             <p className="lp-section-body" style={{ maxWidth: 600, marginBottom: 12 }}>
               When thousands of people repeatedly search for the same unresolved problem,
               they are revealing intent, urgency, pain, and willingness to pay —
-              all at once. They are not browsing. They are looking for a solution
+              all at once. They are not browsing. They are looking for a PDF guide
               they would buy if it existed.
             </p>
-            <p className="lp-section-body" style={{ maxWidth: 600, marginBottom: 0, color: "#CBD5E1", fontWeight: 600 }}>
+            <p className="lp-section-body" style={{ maxWidth: 600, marginBottom: 0, color: "#1E293B", fontWeight: 600 }}>
               PDF Seeds reads those signals across 5 African markets and tells you
               exactly which gaps have the most fertile soil — before anyone else plants them.
             </p>
@@ -360,33 +359,33 @@ export default function HomePage() {
                 {
                   query: "\"How do I transfer land to my children when I die in Ghana?\"",
                   chips: [
-                    { label: "4,200 searches / mo", color: "#6366F1", bg: "#6366F112" },
-                    { label: "Intent: high urgency", color: "#F59E0B", bg: "#F59E0B12" },
-                    { label: "PDFs available: 0", color: "#10B981", bg: "#10B98112" },
+                    { label: "4,200 searches / mo", color: "#4F46E5", bg: "#EEF2FF" },
+                    { label: "Intent: high urgency", color: "#B45309", bg: "#FEF3C7" },
+                    { label: "PDF guides: 0", color: "#16A34A", bg: "#DCFCE7" },
                   ],
                 },
                 {
                   query: "\"How to register a business name in Nigeria step by step\"",
                   chips: [
-                    { label: "6,800 searches / mo", color: "#6366F1", bg: "#6366F112" },
-                    { label: "Intent: commercial urgency", color: "#F59E0B", bg: "#F59E0B12" },
-                    { label: "Simple PDFs: none", color: "#10B981", bg: "#10B98112" },
+                    { label: "6,800 searches / mo", color: "#4F46E5", bg: "#EEF2FF" },
+                    { label: "Intent: commercial urgency", color: "#B45309", bg: "#FEF3C7" },
+                    { label: "Simple PDFs: none", color: "#16A34A", bg: "#DCFCE7" },
                   ],
                 },
                 {
-                  query: "\"How to renew Nigerian passport from UK\"",
+                  query: "\"How to renew Nigerian passport from the UK\"",
                   chips: [
-                    { label: "2,900 searches / mo", color: "#6366F1", bg: "#6366F112" },
-                    { label: "Diaspora premium", color: "#818CF8", bg: "#6366F112" },
-                    { label: "Competition: very low", color: "#10B981", bg: "#10B98112" },
+                    { label: "2,900 searches / mo", color: "#4F46E5", bg: "#EEF2FF" },
+                    { label: "Diaspora premium", color: "#7C3AED", bg: "#F5F3FF" },
+                    { label: "Competition: very low", color: "#16A34A", bg: "#DCFCE7" },
                   ],
                 },
                 {
                   query: "\"How to start small poultry farm in Kenya with little money\"",
                   chips: [
-                    { label: "3,600 searches / mo", color: "#6366F1", bg: "#6366F112" },
-                    { label: "Intent: economic urgency", color: "#F59E0B", bg: "#F59E0B12" },
-                    { label: "PDF guides: 0", color: "#10B981", bg: "#10B98112" },
+                    { label: "3,600 searches / mo", color: "#4F46E5", bg: "#EEF2FF" },
+                    { label: "Intent: economic urgency", color: "#B45309", bg: "#FEF3C7" },
+                    { label: "PDF guides: 0", color: "#16A34A", bg: "#DCFCE7" },
                   ],
                 },
               ].map((s, i) => (
@@ -412,7 +411,7 @@ export default function HomePage() {
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <div className="lp-section-label">The farming system</div>
               <div className="lp-section-title">Three tools. One pipeline. No team needed.</div>
-              <p style={{ fontSize: "0.92rem", color: "#475569", maxWidth: 560, margin: "0 auto" }}>
+              <p style={{ fontSize: "0.92rem", color: "#64748B", maxWidth: 560, margin: "0 auto" }}>
                 A real publishing operation needs a researcher, an SEO expert, a writer, a designer,
                 and a social media manager. PDF Seeds compresses every one of those roles into one pipeline.
                 One person. Farming like a media company.
@@ -426,11 +425,11 @@ export default function HomePage() {
                 },
                 {
                   num: "02", icon: "🌱", title: "Grow the seed",
-                  body: "Select an opportunity. Click grow. In under 3 minutes: a complete PDF guide, a sales page, an SEO article designed to rank on Google, and 10 social hooks for TikTok, Pinterest, and Instagram. Nothing for you to write. Nothing to design. The seed is ready to plant.",
+                  body: "Select an opportunity. Click grow. In under 3 minutes: a complete PDF guide, a sales page, an SEO article designed to rank on Google, and 10 social hooks for TikTok, Pinterest, and Instagram. Nothing for you to write. Nothing to design.",
                 },
                 {
                   num: "03", icon: "📅", title: "Plant on schedule",
-                  body: "Every day the system gives you one specific action. Monday: post this TikTok script. Tuesday: this Pinterest pin. Wednesday: this Instagram caption. Copy, paste, ten minutes. Consistent distribution without the thinking — because a productive farm runs on routine.",
+                  body: "Every day the system gives you one specific action. Monday: post this TikTok script. Tuesday: this Pinterest pin. Wednesday: this Instagram caption. Copy, paste, ten minutes. Consistent distribution without the thinking.",
                 },
               ].map((step, i) => (
                 <div key={i} className="step-card">
@@ -507,12 +506,12 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="opp-product">
-                    <strong>PDF opportunity:</strong> {opp.product}
+                    <strong>PDF opportunity: </strong>{opp.product}
                   </div>
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: "0.78rem", color: "#2A3050", marginTop: 18, textAlign: "center" }}>
+            <p style={{ fontSize: "0.78rem", color: "#CBD5E1", marginTop: 18, textAlign: "center" }}>
               PDF Seeds surfaces hundreds of gaps like these — scored, ranked, and ready to grow.
             </p>
           </div>
@@ -527,7 +526,7 @@ export default function HomePage() {
             </div>
             <div className="harvest-grid">
               <div className="harvest-card">
-                <div className="harvest-badge" style={{ background: "#10B98112", color: "#10B981", border: "1px solid #10B98125" }}>
+                <div className="harvest-badge" style={{ background: "#DCFCE7", color: "#16A34A", border: "1px solid #BBF7D0" }}>
                   🌿 Google — The evergreen harvest
                 </div>
                 <h3>Recurring income from search</h3>
@@ -540,25 +539,25 @@ export default function HomePage() {
                   Once ranked, a seed harvests indefinitely. The ground keeps producing
                   without replanting. That is what a permanent digital asset means.
                 </p>
-                <div className="harvest-timeline" style={{ background: "#10B98112", color: "#10B981" }}>
+                <div className="harvest-timeline" style={{ background: "#DCFCE7", color: "#16A34A", border: "1px solid #BBF7D0" }}>
                   ⏱ 4–12 weeks to rank · Harvests every month after
                 </div>
               </div>
               <div className="harvest-card">
-                <div className="harvest-badge" style={{ background: "#6366F112", color: "#818CF8", border: "1px solid #6366F125" }}>
+                <div className="harvest-badge" style={{ background: "#EEF2FF", color: "#4F46E5", border: "1px solid #C7D2FE" }}>
                   📱 Social — The fast harvest
                 </div>
                 <h3>Sales this week, not this year</h3>
                 <p>
                   TikTok, Pinterest, and Instagram drive buyers directly to your PDF sell page.
                   Every seed comes with 10 platform-specific hooks — scripts the system wrote
-                  for you. Post one. People who feel the pain click the link in your bio. They buy.
+                  for you. Post one. People who feel the pain click. They buy.
                 </p>
                 <p>
                   Social produces income within days of planting. It runs in parallel while
                   Google is still taking root. Fast harvest now. Evergreen harvest forever.
                 </p>
-                <div className="harvest-timeline" style={{ background: "#6366F112", color: "#818CF8" }}>
+                <div className="harvest-timeline" style={{ background: "#EEF2FF", color: "#4F46E5", border: "1px solid #C7D2FE" }}>
                   ⚡ First harvest possible within 48 hours of planting
                 </div>
               </div>
@@ -583,7 +582,7 @@ export default function HomePage() {
                   The diaspora market changes the economics entirely. A Ghanaian in London
                   resolving a land issue remotely will pay £20 for a PDF that saves them
                   confusion, lawyer fees, or a flight home. UK income. Home-country problems.
-                  Almost no competing seeds planted. That is the richest soil in the farm.
+                  Almost no competing seeds planted.
                 </p>
                 <a href={STRIPE} className="lp-primary-btn" style={{ display: "inline-block" }}>
                   Plant Your First Seed →
@@ -605,15 +604,15 @@ export default function HomePage() {
                     </div>
                   ))}
                 </div>
-                <p style={{ fontSize: "0.72rem", color: "#2A3050", marginTop: 12, textAlign: "center" }}>
+                <p style={{ fontSize: "0.72rem", color: "#CBD5E1", marginTop: 12, textAlign: "center" }}>
                   Based on £8/day per guide. Each seed is an independent, compounding asset.
                 </p>
-                <div style={{ marginTop: 18, background: "#0F1117", border: "1px solid #1A1E2E", borderRadius: 12, padding: "18px 20px" }}>
-                  <div style={{ fontSize: "0.68rem", color: "#3D4566", marginBottom: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                <div style={{ marginTop: 18, background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 12, padding: "18px 20px" }}>
+                  <div style={{ fontSize: "0.68rem", color: "#94A3B8", marginBottom: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em" }}>
                     Diaspora premium
                   </div>
                   <div style={{ fontSize: "0.85rem", color: "#64748B", lineHeight: 1.7 }}>
-                    Diaspora PDF guides sell for <strong style={{ color: "#F1F5F9" }}>£15–£20</strong> — three times local pricing.
+                    Diaspora PDF guides sell for <strong style={{ color: "#0F172A" }}>£15–£20</strong> — three times local pricing.
                     UK salaries. Home-country problems. Near-zero competition.
                     The strongest ground in the whole farm.
                   </div>
@@ -645,12 +644,12 @@ export default function HomePage() {
                 {
                   icon: "🌍",
                   title: "African market specialists",
-                  body: "You understand African markets. You know the problems people face. PDF Seeds helps you identify which of those problems have the most search demand — and the least competition.",
+                  body: "You understand African markets. You know the problems people face. PDF Seeds identifies which of those problems have the most search demand — and the least competition.",
                 },
                 {
                   icon: "✈️",
                   title: "Diaspora community builders",
-                  body: "You can bridge the gap between home-country knowledge and diaspora urgency. That combination commands premium pricing and faces near-zero PDF competition in most topics.",
+                  body: "You bridge the gap between home-country knowledge and diaspora urgency. That combination commands premium PDF pricing and faces near-zero competition on most topics.",
                 },
               ].map((w) => (
                 <div key={w.title} className="who-card">
@@ -677,8 +676,8 @@ export default function HomePage() {
                 </p>
                 <p className="lp-section-body" style={{ marginBottom: 20 }}>
                   The idea is simple: millions of people in African markets are searching for answers
-                  that don&apos;t exist in one place yet. We find those gaps, write the PDF guides,
-                  and plant them where the buyers already are.
+                  that don&apos;t exist as PDF guides yet. We find those gaps, write the guides, and plant them
+                  where the buyers already are.
                   Every guide is a seed. Every seed earns every month.
                 </p>
                 <p style={{ fontSize: "0.85rem", color: "#6366F1", fontWeight: 700 }}>
@@ -791,7 +790,7 @@ export default function HomePage() {
               <div className="pricing-glow" />
               <div className="pricing-badge">🌱 FOUNDING FARMER PRICING</div>
               <div className="pricing-title">PDF Seeds — Full Farm Access</div>
-              <div className="pricing-sub">Every tool you need to find the gaps, grow the guides, and harvest every month.</div>
+              <div className="pricing-sub">Every tool you need to find the gaps, grow the PDF guides, and harvest every month.</div>
               <div className="pricing-amount"><span>£</span>39</div>
               <div className="pricing-period">per month · cancel anytime</div>
               <ul className="pricing-includes">
