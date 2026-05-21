@@ -11,14 +11,8 @@ type Opportunity = {
   maxPrice: number;
   country: string;
   hookPotential: string;
-  hookAngle: string;
-  pdfSuitability: string;
-  actionabilityRating: string;
   volumeTier: string;
   videoScript: string;
-  painPoint: string;
-  emotionalIntent: string;
-  opportunityScore: number;
 };
 
 type Product = {
@@ -29,7 +23,6 @@ type Product = {
   pdfContent: string;
   salesPageCopy: string;
   seoPageContent: string;
-  status: string;
   published: boolean;
   salesCount: number;
   revenue: number;
@@ -50,34 +43,6 @@ function parseVideoScript(raw: string): { hook: string; tease: string; cta: stri
   } catch { return { hook: "", tease: "", cta: "" }; }
 }
 
-const VOLUME_BADGE: Record<string, { label: string; color: string; bg: string; border: string }> = {
-  "mass-market": { label: "🔥 50K+/mo",  color: "#16A34A", bg: "#DCFCE7", border: "#BBF7D0" },
-  "strong":      { label: "💪 20K+/mo",  color: "#2563EB", bg: "#DBEAFE", border: "#BFDBFE" },
-  "niche":       { label: "📍 5K+/mo",   color: "#7C3AED", bg: "#EDE9FE", border: "#DDD6FE" },
-  "micro-niche": { label: "🔬 Micro",    color: "#64748b", bg: "#F1F5F9", border: "#E2E8F0" },
-};
-
-const HOOK_BADGE: Record<string, { label: string; color: string; bg: string; border: string }> = {
-  "high":   { label: "🔥 High Hook", color: "#EA580C", bg: "#FFF7ED", border: "#FED7AA" },
-  "medium": { label: "📊 Mid Hook",  color: "#D97706", bg: "#FFFBEB", border: "#FDE68A" },
-  "low":    { label: "💬 Low Hook",  color: "#64748b", bg: "#F1F5F9", border: "#E2E8F0" },
-};
-
-const ACTION_BADGE: Record<string, { label: string; color: string; bg: string; border: string }> = {
-  "easy":   { label: "✅ Easy",    color: "#16A34A", bg: "#DCFCE7", border: "#BBF7D0" },
-  "medium": { label: "⚡ Medium",  color: "#D97706", bg: "#FFFBEB", border: "#FDE68A" },
-  "hard":   { label: "🔧 Complex", color: "#DC2626", bg: "#FEF2F2", border: "#FECACA" },
-};
-
-function Pill({ badge }: { badge?: { label: string; color: string; bg: string; border: string } }) {
-  if (!badge) return null;
-  return (
-    <span style={{ fontSize: "0.68rem", fontWeight: 700, color: badge.color, background: badge.bg, border: `1px solid ${badge.border}`, padding: "3px 9px", borderRadius: 20 }}>
-      {badge.label}
-    </span>
-  );
-}
-
 function GuidesContent() {
   const params = useSearchParams();
   const opportunityId = params.get("id");
@@ -89,6 +54,7 @@ function GuidesContent() {
   const [publishing, setPublishing] = useState(false);
   const [copied, setCopied]         = useState("");
   const [hooksOpen, setHooksOpen]   = useState(false);
+  const [scriptOpen, setScriptOpen] = useState(false);
   const [payUrl, setPayUrl]         = useState("");
   const [payUrlSaving, setPayUrlSaving] = useState(false);
   const [payUrlSaved, setPayUrlSaved]   = useState(false);
@@ -97,7 +63,7 @@ function GuidesContent() {
   const [customContent, setCustomContent] = useState("");
   const [contentSaving, setContentSaving] = useState(false);
   const [contentSaved, setContentSaved]   = useState(false);
-  const [articleOpen, setArticleOpen]   = useState(false);
+  const [articleOpen, setArticleOpen]     = useState(false);
   const [customArticle, setCustomArticle] = useState("");
   const [articleSaving, setArticleSaving] = useState(false);
   const [articleSaved, setArticleSaved]   = useState(false);
@@ -211,177 +177,167 @@ function GuidesContent() {
   const origin = typeof window !== "undefined" ? window.location.origin : "";
 
   const card: React.CSSProperties = {
-    background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, padding: "18px 20px",
+    background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, padding: "20px",
   };
 
   const btn = (variant: "primary" | "ghost"): React.CSSProperties => ({
-    display: "inline-block", padding: "8px 16px", borderRadius: 8, fontSize: "0.8rem", fontWeight: 700,
+    display: "inline-block", padding: "9px 18px", borderRadius: 9, fontSize: "0.82rem", fontWeight: 700,
     cursor: "pointer", textDecoration: "none",
     border: variant === "ghost" ? "1px solid var(--border)" : "none",
     background: variant === "primary" ? "var(--accent)" : "var(--surface2)",
     color: variant === "primary" ? "#fff" : "var(--muted)",
   });
 
-  const miniBtn: React.CSSProperties = {
-    fontSize: "0.7rem", fontWeight: 600, color: "var(--muted)",
-    background: "transparent", border: "none", cursor: "pointer", padding: "2px 4px",
-  };
-
   return (
     <div style={{ display: "flex", height: "100%", minHeight: 0 }}>
 
       {/* Sidebar */}
-      <div style={{ width: 252, flexShrink: 0, borderRight: "1px solid var(--border)", background: "var(--surface)", overflowY: "auto", display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: "18px 16px 12px", borderBottom: "1px solid var(--border)" }}>
+      <div style={{ width: 240, flexShrink: 0, borderRight: "1px solid var(--border)", background: "var(--surface)", overflowY: "auto", display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "20px 16px 12px", borderBottom: "1px solid var(--border)" }}>
           <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text)" }}>
             Guides {guides.length > 0 && <span style={{ color: "var(--muted)", fontWeight: 400 }}>({guides.length})</span>}
           </div>
         </div>
 
         {guides.length === 0 ? (
-          <div style={{ padding: "32px 16px", textAlign: "center" }}>
-            <div style={{ fontSize: "1.4rem", marginBottom: 10 }}>📄</div>
+          <div style={{ padding: "24px 16px", textAlign: "center" }}>
+            <div style={{ fontSize: "1.5rem", marginBottom: 10 }}>📄</div>
             <div style={{ fontSize: "0.8rem", color: "var(--muted)", lineHeight: 1.6 }}>
-              No guides yet. Find a seed and grow your first one.
+              No guides yet. Go to Seeds, pick an opportunity, and grow your first one.
             </div>
           </div>
         ) : guides.map((g) => (
           <div key={g.id}
-            onClick={() => { setSelected(g); setPayUrl(g.gumroadUrl ?? ""); setHooksOpen(false); setContentOpen(false); setCustomContent(""); setArticleOpen(false); setCustomArticle(""); setEditingHookId(null); }}
-            style={{ padding: "11px 14px", borderBottom: "1px solid var(--border)", cursor: "pointer", background: selected?.id === g.id ? "var(--surface2)" : "transparent" }}>
-            <div style={{ fontSize: "0.81rem", fontWeight: 500, color: "var(--text)", marginBottom: 5, lineHeight: 1.35 }}>
+            onClick={() => { setSelected(g); setPayUrl(g.gumroadUrl ?? ""); setHooksOpen(false); setScriptOpen(false); setContentOpen(false); setCustomContent(""); setArticleOpen(false); setCustomArticle(""); setEditingHookId(null); }}
+            style={{ padding: "12px 16px", borderBottom: "1px solid var(--border)", cursor: "pointer", background: selected?.id === g.id ? "var(--surface2)" : "transparent" }}>
+            <div style={{ fontSize: "0.82rem", fontWeight: 500, color: "var(--text)", marginBottom: 4, lineHeight: 1.4 }}>
               {g.title}
             </div>
-            <div style={{ display: "flex", gap: 4, flexWrap: "wrap", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               {g.published
-                ? <span style={{ fontSize: "0.6rem", fontWeight: 700, color: "#16A34A", background: "#DCFCE7", border: "1px solid #BBF7D0", padding: "1px 6px", borderRadius: 20 }}>Live</span>
-                : <span style={{ fontSize: "0.6rem", color: "var(--muted)", background: "var(--surface2)", padding: "1px 6px", borderRadius: 20, border: "1px solid var(--border)" }}>Draft</span>
+                ? <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "#16A34A", background: "#DCFCE7", border: "1px solid #BBF7D0", padding: "1px 7px", borderRadius: 20 }}>🟢 Live</span>
+                : <span style={{ fontSize: "0.65rem", color: "var(--muted)", background: "var(--surface2)", padding: "1px 7px", borderRadius: 20 }}>Draft</span>
               }
-              {g.opportunity?.volumeTier && VOLUME_BADGE[g.opportunity.volumeTier] && (
-                <span style={{ fontSize: "0.6rem", fontWeight: 700, color: VOLUME_BADGE[g.opportunity.volumeTier].color, background: VOLUME_BADGE[g.opportunity.volumeTier].bg, border: `1px solid ${VOLUME_BADGE[g.opportunity.volumeTier].border}`, padding: "1px 6px", borderRadius: 20 }}>
-                  {VOLUME_BADGE[g.opportunity.volumeTier].label}
-                </span>
-              )}
-              {g.opportunity?.hookPotential === "high" && (
-                <span style={{ fontSize: "0.6rem", fontWeight: 700, color: "#EA580C", background: "#FFF7ED", border: "1px solid #FED7AA", padding: "1px 6px", borderRadius: 20 }}>🔥 Hook</span>
-              )}
               {g.salesCount > 0 && (
-                <span style={{ fontSize: "0.6rem", color: "#D97706", fontWeight: 600 }}>£{g.revenue.toFixed(0)}</span>
+                <span style={{ fontSize: "0.65rem", color: "var(--amber)", fontWeight: 600 }}>£{g.revenue.toFixed(0)} earned</span>
               )}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Main panel */}
-      <div style={{ flex: 1, overflowY: "auto", padding: "32px 36px", background: "var(--bg)" }}>
+      {/* Detail */}
+      <div style={{ flex: 1, overflowY: "auto", padding: "32px", background: "var(--bg)" }}>
 
         {opportunityId && !selected && (
-          <div style={{ ...card, maxWidth: 520, textAlign: "center" }}>
-            <div style={{ fontSize: "1.4rem", marginBottom: 10 }}>🌱</div>
-            <div style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text)", marginBottom: 6 }}>Ready to grow.</div>
-            <p style={{ fontSize: "0.83rem", color: "var(--muted)", margin: "0 0 18px", lineHeight: 1.6 }}>
-              Generates PDF, buy page, Google article, and social posts in one go.
+          <div style={{ ...card, maxWidth: 560, marginBottom: 24, textAlign: "center" }}>
+            <div style={{ fontSize: "1.5rem", marginBottom: 12 }}>🌱</div>
+            <div style={{ fontSize: "0.97rem", fontWeight: 600, color: "var(--text)", marginBottom: 8 }}>Ready to grow this seed.</div>
+            <p style={{ fontSize: "0.85rem", color: "var(--muted)", margin: "0 0 20px", lineHeight: 1.7 }}>
+              One click generates your PDF guide, buy page, Google article, and social posts.
             </p>
             <button onClick={grow} disabled={growing} style={{ ...btn("primary"), opacity: growing ? 0.7 : 1, cursor: growing ? "not-allowed" : "pointer" }}>
-              {growing ? "Growing…" : "Grow This Seed →"}
+              {growing ? "Growing your guide…" : "Grow This Seed →"}
             </button>
           </div>
         )}
 
         {!selected && !opportunityId && (
-          <div style={{ maxWidth: 400, textAlign: "center", paddingTop: 80 }}>
-            <div style={{ fontSize: "1.8rem", marginBottom: 12 }}>📄</div>
-            <div style={{ fontSize: "0.9rem", color: "var(--muted)" }}>Select a guide from the left.</div>
+          <div style={{ maxWidth: 560, textAlign: "center", paddingTop: 80 }}>
+            <div style={{ fontSize: "2rem", marginBottom: 14 }}>📄</div>
+            <div style={{ fontSize: "0.97rem", fontWeight: 600, color: "var(--text)", marginBottom: 8 }}>Select a guide to see its details.</div>
+            <p style={{ fontSize: "0.85rem", color: "var(--muted)", lineHeight: 1.7 }}>Or go to Seeds to find a new opportunity.</p>
           </div>
         )}
 
         {selected && (() => {
-          const opp = selected.opportunity;
-          const vs  = parseVideoScript(opp?.videoScript ?? "");
+          const vs = parseVideoScript(selected.opportunity?.videoScript ?? "");
           const hasScript = vs.hook || vs.tease || vs.cta;
-          const fullScript = [vs.hook, vs.tease, vs.cta].filter(Boolean).join("\n\n");
+          const fullScript = [vs.hook && `Hook:\n${vs.hook}`, vs.tease && `Tease:\n${vs.tease}`, vs.cta && `CTA:\n${vs.cta}`].filter(Boolean).join("\n\n");
 
           return (
-            <div style={{ maxWidth: 620 }}>
+            <div style={{ maxWidth: 560 }}>
 
               {/* Header */}
-              <div style={{ marginBottom: 18 }}>
-                <h1 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text)", margin: "0 0 12px", lineHeight: 1.35 }}>
+              <div style={{ marginBottom: 24 }}>
+                <h1 style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--text)", margin: "0 0 12px", lineHeight: 1.35 }}>
                   {selected.title}
                 </h1>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                   <button onClick={() => toggleLive(selected)} disabled={publishing}
-                    style={{ padding: "7px 16px", borderRadius: 8, fontSize: "0.8rem", fontWeight: 700, cursor: publishing ? "not-allowed" : "pointer", border: "none", background: selected.published ? "#DCFCE7" : "var(--accent)", color: selected.published ? "#16A34A" : "#fff", opacity: publishing ? 0.7 : 1 }}>
+                    style={{ padding: "8px 18px", borderRadius: 9, fontSize: "0.82rem", fontWeight: 700, cursor: publishing ? "not-allowed" : "pointer", border: "none", background: selected.published ? "#DCFCE7" : "var(--accent)", color: selected.published ? "#16A34A" : "#fff", opacity: publishing ? 0.7 : 1 }}>
                     {publishing ? "…" : selected.published ? "🟢 Live" : "Go Live →"}
                   </button>
                   {selected.salesCount > 0 && (
-                    <span style={{ fontSize: "0.76rem", color: "var(--muted)" }}>
-                      {selected.salesCount} sale{selected.salesCount !== 1 ? "s" : ""} · £{selected.revenue.toFixed(0)}
+                    <span style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
+                      {selected.salesCount} sale{selected.salesCount !== 1 ? "s" : ""} · £{selected.revenue.toFixed(0)} earned
                     </span>
                   )}
                   <button onClick={() => deleteGuide(selected)} disabled={deleting}
-                    style={{ marginLeft: "auto", padding: "7px 13px", borderRadius: 8, fontSize: "0.76rem", fontWeight: 600, cursor: deleting ? "not-allowed" : "pointer", border: "1px solid #FECACA", background: "transparent", color: "#DC2626", opacity: deleting ? 0.5 : 1 }}>
+                    style={{ marginLeft: "auto", padding: "8px 14px", borderRadius: 9, fontSize: "0.78rem", fontWeight: 600, cursor: deleting ? "not-allowed" : "pointer", border: "1px solid #FECACA", background: "transparent", color: "#DC2626", opacity: deleting ? 0.5 : 1 }}>
                     {deleting ? "…" : "Delete"}
                   </button>
                 </div>
               </div>
 
-              {/* Signal badges */}
-              {(opp?.volumeTier || opp?.hookPotential || opp?.actionabilityRating) && (
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 18 }}>
-                  <Pill badge={VOLUME_BADGE[opp?.volumeTier]} />
-                  <Pill badge={HOOK_BADGE[opp?.hookPotential]} />
-                  <Pill badge={ACTION_BADGE[opp?.actionabilityRating]} />
-                </div>
-              )}
-
-              {/* Cards */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 
                 {/* Video Script */}
-                <div style={{ ...card, borderColor: hasScript ? "rgba(99,102,241,0.3)" : "var(--border)" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: hasScript ? 14 : 0 }}>
-                    <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text)" }}>🎬 Video Script</div>
-                    {hasScript && (
-                      <button onClick={() => copy(fullScript, "videoscript")} style={btn("ghost")}>
-                        {copied === "videoscript" ? "✓ Copied" : "Copy All"}
+                <div style={card}>
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: scriptOpen ? 16 : 0 }}>
+                    <div>
+                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text)", marginBottom: 3 }}>🎬 Video Script</div>
+                      <div style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
+                        5–7 second faceless video. Record and post to drive traffic.
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                      {hasScript && scriptOpen && (
+                        <button onClick={() => copy(fullScript, "script")} style={btn("ghost")}>
+                          {copied === "script" ? "✓ Copied" : "Copy All"}
+                        </button>
+                      )}
+                      <button onClick={() => setScriptOpen((o) => !o)} style={btn("ghost")}>
+                        {scriptOpen ? "Hide" : "Show Script"}
                       </button>
-                    )}
+                    </div>
                   </div>
 
-                  {hasScript ? (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                      {[
-                        { key: "hook",  label: "Hook · 0–2s",  color: "#6366F1", border: "rgba(99,102,241,0.18)", text: vs.hook  },
-                        { key: "tease", label: "Tease · 2–4s", color: "#D97706", border: "rgba(245,158,11,0.18)", text: vs.tease },
-                        { key: "cta",   label: "CTA · 4–7s",   color: "#059669", border: "rgba(16,185,129,0.18)", text: vs.cta   },
-                      ].filter(r => r.text).map((row) => (
-                        <div key={row.key} style={{ background: "var(--bg)", border: `1px solid ${row.border}`, borderRadius: 10, padding: "11px 13px" }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                            <span style={{ fontSize: "0.64rem", fontWeight: 800, color: row.color, letterSpacing: "0.07em", textTransform: "uppercase" }}>{row.label}</span>
-                            <button onClick={() => copy(row.text, row.key)} style={miniBtn}>
-                              {copied === row.key ? "✓" : "Copy"}
-                            </button>
+                  {scriptOpen && (
+                    <div style={{ borderTop: "1px solid var(--border)", paddingTop: 14, display: "flex", flexDirection: "column", gap: 10 }}>
+                      {hasScript ? (
+                        [
+                          { label: "1. Hook (say this first — 0–2s)", text: vs.hook, key: "hook" },
+                          { label: "2. Tease (raise the stakes — 2–4s)", text: vs.tease, key: "tease" },
+                          { label: "3. CTA (point to bio — 4–7s)", text: vs.cta, key: "cta" },
+                        ].filter(r => r.text).map((row) => (
+                          <div key={row.key}>
+                            <div style={{ fontSize: "0.71rem", fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>{row.label}</div>
+                            <div style={{ display: "flex", alignItems: "flex-start", gap: 10, background: "var(--surface2)", borderRadius: 9, padding: "10px 12px" }}>
+                              <p style={{ fontSize: "0.84rem", color: "var(--text)", lineHeight: 1.6, margin: 0, flex: 1 }}>{row.text}</p>
+                              <button onClick={() => copy(row.text, row.key)}
+                                style={{ fontSize: "0.72rem", fontWeight: 600, color: copied === row.key ? "var(--accent)" : "var(--muted)", background: "none", border: "none", cursor: "pointer", flexShrink: 0, paddingTop: 2 }}>
+                                {copied === row.key ? "✓" : "Copy"}
+                              </button>
+                            </div>
                           </div>
-                          <p style={{ fontSize: "0.86rem", color: "var(--text)", lineHeight: 1.55, margin: 0 }}>{row.text}</p>
+                        ))
+                      ) : (
+                        <div style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
+                          Available for opportunities scanned with the latest engine.
                         </div>
-                      ))}
+                      )}
                     </div>
-                  ) : (
-                    <p style={{ fontSize: "0.78rem", color: "var(--muted)", margin: 0 }}>
-                      Available on opportunities scanned with the latest engine.
-                    </p>
                   )}
                 </div>
 
                 {/* PDF Guide */}
                 <div style={card}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: contentOpen ? 14 : 0 }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: contentOpen ? 16 : 0 }}>
                     <div>
-                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text)" }}>📄 PDF Guide</div>
-                      <div style={{ fontSize: "0.76rem", color: "var(--muted)", marginTop: 2 }}>
-                        {contentSaved ? "✅ Saved." : "Download and sell."}
+                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text)", marginBottom: 3 }}>📄 PDF Guide</div>
+                      <div style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
+                        {contentSaved ? "✅ Content updated." : "Your complete guide, ready to download and sell."}
                       </div>
                     </div>
                     <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
@@ -394,15 +350,15 @@ function GuidesContent() {
                     </div>
                   </div>
                   {contentOpen && (
-                    <div style={{ borderTop: "1px solid var(--border)", paddingTop: 12 }}>
-                      <div style={{ fontSize: "0.71rem", color: "var(--muted)", marginBottom: 7 }}>
-                        # heading · ## subheading · - bullet
+                    <div style={{ borderTop: "1px solid var(--border)", paddingTop: 14 }}>
+                      <div style={{ fontSize: "0.72rem", color: "var(--muted)", marginBottom: 8 }}>
+                        Use # for headings, ## for subheadings, - for bullet points.
                       </div>
-                      <textarea value={customContent} onChange={(e) => setCustomContent(e.target.value)} rows={14}
+                      <textarea value={customContent} onChange={(e) => setCustomContent(e.target.value)} rows={16}
                         placeholder={"# Chapter 1\n\n## Section\n\n- Step one\n- Step two"}
-                        style={{ width: "100%", fontSize: "0.78rem", lineHeight: 1.6, padding: "10px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", outline: "none", resize: "vertical", fontFamily: "monospace", boxSizing: "border-box" }}
+                        style={{ width: "100%", fontSize: "0.78rem", lineHeight: 1.65, padding: "12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", outline: "none", resize: "vertical", fontFamily: "monospace", boxSizing: "border-box" }}
                       />
-                      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 8 }}>
+                      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
                         <button onClick={() => saveContent(selected)} disabled={contentSaving || !customContent.trim()}
                           style={{ ...btn("primary"), opacity: !customContent.trim() ? 0.5 : 1 }}>
                           {contentSaving ? "Saving…" : "Save & Replace"}
@@ -414,10 +370,10 @@ function GuidesContent() {
 
                 {/* Buy Page */}
                 <div style={card}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: selected.slug ? 12 : 0 }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: selected.slug ? 14 : 0 }}>
                     <div>
-                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text)" }}>🛒 Buy Page</div>
-                      <div style={{ fontSize: "0.76rem", color: "var(--muted)", marginTop: 2 }}>Your sales link — put it in bio.</div>
+                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text)", marginBottom: 3 }}>🛒 Buy Page</div>
+                      <div style={{ fontSize: "0.78rem", color: "var(--muted)" }}>Share this link. Put it in your bio. This is where people buy.</div>
                     </div>
                     {selected.slug && (
                       <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
@@ -429,18 +385,18 @@ function GuidesContent() {
                     )}
                   </div>
                   {selected.slug && (
-                    <div style={{ borderTop: "1px solid var(--border)", paddingTop: 10 }}>
-                      <div style={{ fontSize: "0.71rem", color: "var(--muted)", marginBottom: 7 }}>
-                        {selected.gumroadUrl ? "✅ Payment link connected" : "Add your Gumroad / Payhip / Selar link"}
+                    <div style={{ paddingTop: 12, borderTop: "1px solid var(--border)" }}>
+                      <div style={{ fontSize: "0.72rem", color: "var(--muted)", marginBottom: 8 }}>
+                        {selected.gumroadUrl ? "✅ Payment link connected" : "Add a payment link so buyers can check out"}
                       </div>
-                      <div style={{ display: "flex", gap: 7 }}>
+                      <div style={{ display: "flex", gap: 8 }}>
                         <input type="url" value={payUrl} onChange={(e) => setPayUrl(e.target.value)}
-                          placeholder={selected.gumroadUrl || "Paste payment link"}
-                          style={{ flex: 1, fontSize: "0.78rem", padding: "7px 11px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", outline: "none" }}
+                          placeholder={selected.gumroadUrl || "Paste your Gumroad / Payhip / Selar link"}
+                          style={{ flex: 1, fontSize: "0.78rem", padding: "8px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", outline: "none" }}
                         />
                         <button onClick={() => savePayUrl(selected)} disabled={payUrlSaving || !payUrl.trim()}
                           style={{ ...btn(payUrlSaved ? "ghost" : "primary"), opacity: !payUrl.trim() ? 0.5 : 1 }}>
-                          {payUrlSaved ? "✓" : payUrlSaving ? "…" : "Save"}
+                          {payUrlSaved ? "✓ Saved" : payUrlSaving ? "…" : "Save"}
                         </button>
                       </div>
                     </div>
@@ -449,11 +405,11 @@ function GuidesContent() {
 
                 {/* Google Article */}
                 <div style={card}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: articleOpen ? 14 : 0 }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: articleOpen ? 16 : 0 }}>
                     <div>
-                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text)" }}>📖 Google Article</div>
-                      <div style={{ fontSize: "0.76rem", color: "var(--muted)", marginTop: 2 }}>
-                        {articleSaved ? "✅ Saved." : "Ranks on Google → sends readers to buy page."}
+                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text)", marginBottom: 3 }}>📖 Google Article</div>
+                      <div style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
+                        {articleSaved ? "✅ Article updated." : "People find this on Google. It sends them to your buy page."}
                       </div>
                     </div>
                     <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
@@ -466,15 +422,15 @@ function GuidesContent() {
                     </div>
                   </div>
                   {articleOpen && (
-                    <div style={{ borderTop: "1px solid var(--border)", paddingTop: 12 }}>
-                      <div style={{ fontSize: "0.71rem", color: "var(--muted)", marginBottom: 7 }}>
-                        # heading · ## subheading · - bullet
+                    <div style={{ borderTop: "1px solid var(--border)", paddingTop: 14 }}>
+                      <div style={{ fontSize: "0.72rem", color: "var(--muted)", marginBottom: 8 }}>
+                        Use # for headings, ## for subheadings, - for bullets.
                       </div>
-                      <textarea value={customArticle} onChange={(e) => setCustomArticle(e.target.value)} rows={14}
+                      <textarea value={customArticle} onChange={(e) => setCustomArticle(e.target.value)} rows={16}
                         placeholder="# Article Title&#10;&#10;## Section&#10;&#10;- Bullet"
-                        style={{ width: "100%", fontSize: "0.78rem", lineHeight: 1.6, padding: "10px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", outline: "none", resize: "vertical", fontFamily: "monospace", boxSizing: "border-box" }}
+                        style={{ width: "100%", fontSize: "0.78rem", lineHeight: 1.65, padding: "12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", outline: "none", resize: "vertical", fontFamily: "monospace", boxSizing: "border-box" }}
                       />
-                      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 8 }}>
+                      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
                         <button onClick={() => saveArticle(selected)} disabled={articleSaving || !customArticle.trim()}
                           style={{ ...btn("primary"), opacity: !customArticle.trim() ? 0.5 : 1 }}>
                           {articleSaving ? "Saving…" : "Save & Replace"}
@@ -486,16 +442,16 @@ function GuidesContent() {
 
                 {/* Social Posts */}
                 <div style={card}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: hooksOpen && guideHooks.length > 0 ? 14 : 0 }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: hooksOpen && guideHooks.length > 0 ? 16 : 0 }}>
                     <div>
-                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text)" }}>📱 Social Posts</div>
-                      <div style={{ fontSize: "0.76rem", color: "var(--muted)", marginTop: 2 }}>
-                        {guideHooks.length > 0 ? `${guideHooks.length} posts — TikTok, Instagram, Pinterest, more.` : "Available after growing."}
+                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text)", marginBottom: 3 }}>📱 Social Posts</div>
+                      <div style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
+                        {guideHooks.length > 0 ? `${guideHooks.length} posts ready — TikTok, Instagram, Pinterest, and more.` : "Social posts will be available after growing."}
                       </div>
                     </div>
                     {guideHooks.length > 0 && (
                       <button onClick={() => setHooksOpen((o) => !o)} style={btn("ghost")}>
-                        {hooksOpen ? "Hide" : "Show"}
+                        {hooksOpen ? "Hide" : "Show Posts"}
                       </button>
                     )}
                   </div>
@@ -503,34 +459,36 @@ function GuidesContent() {
                   {hooksOpen && guideHooks.length > 0 && (
                     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                       {guideHooks.map((h) => (
-                        <div key={h.id} style={{ background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 10, padding: "11px 13px" }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 7 }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                              <span>{PLATFORM_ICON[h.platform] ?? "📣"}</span>
-                              <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--muted)", textTransform: "capitalize" }}>{h.platform}</span>
+                        <div key={h.id} style={{ background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 10, padding: "12px 14px" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                              <span style={{ fontSize: "0.9rem" }}>{PLATFORM_ICON[h.platform] ?? "📣"}</span>
+                              <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--muted)", textTransform: "capitalize", letterSpacing: "0.04em" }}>{h.platform}</span>
                             </div>
                             <div style={{ display: "flex", gap: 8 }}>
-                              <button onClick={() => { setEditingHookId(h.id); setHookDraft(h.text); }} style={miniBtn}>Edit</button>
-                              <button onClick={() => copy(h.text, h.id)} style={{ ...miniBtn, color: copied === h.id ? "var(--accent)" : "var(--muted)" }}>
-                                {copied === h.id ? "✓" : "Copy"}
+                              <button onClick={() => { setEditingHookId(h.id); setHookDraft(h.text); }}
+                                style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--muted)", background: "transparent", border: "none", cursor: "pointer" }}>Edit</button>
+                              <button onClick={() => copy(h.text, h.id)}
+                                style={{ fontSize: "0.72rem", fontWeight: 600, color: copied === h.id ? "var(--accent)" : "var(--muted)", background: "transparent", border: "none", cursor: "pointer" }}>
+                                {copied === h.id ? "✓ Copied" : "Copy"}
                               </button>
                             </div>
                           </div>
                           {editingHookId === h.id ? (
                             <div>
                               <textarea value={hookDraft} onChange={(e) => setHookDraft(e.target.value)} rows={5}
-                                style={{ width: "100%", fontSize: "0.78rem", lineHeight: 1.6, padding: "9px 11px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box" }}
+                                style={{ width: "100%", fontSize: "0.78rem", lineHeight: 1.65, padding: "10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box" }}
                               />
-                              <div style={{ display: "flex", justifyContent: "flex-end", gap: 7, marginTop: 7 }}>
-                                <button onClick={() => setEditingHookId(null)} style={{ ...btn("ghost"), fontSize: "0.75rem", padding: "6px 13px" }}>Cancel</button>
+                              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 8 }}>
+                                <button onClick={() => setEditingHookId(null)} style={{ ...btn("ghost"), fontSize: "0.75rem", padding: "7px 14px" }}>Cancel</button>
                                 <button onClick={() => saveHook(h.id, hookDraft)} disabled={hookSaving || !hookDraft.trim()}
-                                  style={{ ...btn("primary"), fontSize: "0.75rem", padding: "6px 13px", opacity: !hookDraft.trim() ? 0.5 : 1 }}>
-                                  {hookSaving ? "…" : "Save"}
+                                  style={{ ...btn("primary"), fontSize: "0.75rem", padding: "7px 14px", opacity: !hookDraft.trim() ? 0.5 : 1 }}>
+                                  {hookSaving ? "Saving…" : "Save"}
                                 </button>
                               </div>
                             </div>
                           ) : (
-                            <p style={{ fontSize: "0.8rem", color: "var(--text)", lineHeight: 1.6, margin: 0, whiteSpace: "pre-line" }}>{h.text}</p>
+                            <p style={{ fontSize: "0.8rem", color: "var(--text)", lineHeight: 1.65, margin: 0, whiteSpace: "pre-line" }}>{h.text}</p>
                           )}
                         </div>
                       ))}
