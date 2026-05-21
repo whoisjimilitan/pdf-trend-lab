@@ -17,6 +17,40 @@ async function fetchAutocompleteSuggestions(query: string): Promise<string[]> {
   }
 }
 
+// YouTube search suggestions — different algorithm to Google, surfaces video-demand queries.
+// People searching YouTube for "how to" topics = very high intent, very PDF-compatible.
+async function fetchYouTubeSuggestions(query: string): Promise<string[]> {
+  try {
+    const url = `https://suggestqueries-clients6.youtube.com/complete/search?client=firefox&ds=yt&q=${encodeURIComponent(query)}&hl=en`;
+    const res = await fetch(url, {
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0" },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data[1]) ? (data[1] as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+// Bing suggestions — independent algorithm, different ranking signals.
+// A query appearing in both Google + Bing = confirmed real demand (not autocomplete noise).
+async function fetchBingSuggestions(query: string): Promise<string[]> {
+  try {
+    const url = `https://api.bing.com/osjson.aspx?query=${encodeURIComponent(query)}&mkt=en-GB`;
+    const res = await fetch(url, {
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0" },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data[1]) ? (data[1] as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
 // Country names used as search anchors
 const COUNTRY_LABEL: Record<string, string> = {
   GH: "ghana", NG: "nigeria", KE: "kenya", ZA: "south africa",
@@ -611,6 +645,41 @@ function scoreCommercialPain(query: string): PainScore {
     score += 6; flags.push("CAREER");
   }
 
+  // CONSEQUENCE SCORING — what happens if they get this wrong?
+  // Higher consequence = higher willingness to pay immediately.
+  if (/visa.*(reject|denied|refused|fail)|rejected.*visa|denied.*visa/.test(q)) {
+    score += 20; flags.push("CONSEQUENCE-VISA");
+  }
+  if (/deportat|removal order|illegal stay|overstay/.test(q)) {
+    score += 20; flags.push("CONSEQUENCE-DEPORTATION");
+  }
+  if (/inheritance|probate|land.*death|property.*death|after.*death/.test(q)) {
+    score += 18; flags.push("CONSEQUENCE-INHERITANCE");
+  }
+  if (/land.*dispute|property.*dispute|ownership.*dispute|title.*fraud/.test(q)) {
+    score += 18; flags.push("CONSEQUENCE-DISPUTE");
+  }
+  if (/pension|retirement.*claim|claim.*pension/.test(q)) {
+    score += 15; flags.push("CONSEQUENCE-PENSION");
+  }
+  if (/tax.*penalty|tax.*fine|tax.*mistake|tax.*error|wrong.*tax/.test(q)) {
+    score += 15; flags.push("CONSEQUENCE-TAX");
+  }
+  if (/exam.*fail|fail.*exam|repeat.*exam|resit/.test(q)) {
+    score += 12; flags.push("CONSEQUENCE-EXAM");
+  }
+  if (/account.*frozen|account.*blocked|bank.*block|momo.*block|momo.*fail|recover.*momo|recover.*transfer/.test(q)) {
+    score += 18; flags.push("CONSEQUENCE-FROZEN");
+  }
+
+  // PAIN DENSITY BONUS — queries with 3+ primary flags simultaneously
+  // are where real PDF sales happen. Multi-pain = multi-motivated buyer.
+  const primaryFlagCount = flags.filter((f) =>
+    ["FEAR","MONEY","DIASPORA","DEADLINE","IMMIGRATION","LEGAL","PROCESS","HEALTH"].includes(f)
+  ).length;
+  if (primaryFlagCount >= 3) { score += 20; flags.push("HIGH-DENSITY"); }
+  else if (primaryFlagCount >= 2) { score += 10; flags.push("MULTI-PAIN"); }
+
   // ANTI-PATTERNS — subtract for signals that don't convert to PDF sales
   if (/^what is |^who is |^where is |^when did |^why is |history of |definition |meaning of /.test(q)) {
     score -= 20; flags.push("INFORMATIONAL");
@@ -676,16 +745,32 @@ export async function POST(req: Request) {
 
   const queries = buildDiscoveryQueries(country, keyword || "", niche || "", diaspora);
 
-  // Phase 1 — Discovery: autocomplete + Reddit in parallel (unchanged)
-  const [suggestionArrays, redditSignals] = await Promise.all([
+  // Phase 1 — Discovery: Google + YouTube + Bing autocomplete + Reddit in parallel.
+  // Three independent algorithms — if all three surface the same query, it's confirmed
+  // real demand (not autocomplete noise). Each has different ranking signals:
+  // Google = web intent, YouTube = how-to/tutorial intent, Bing = independent validation.
+  const [googleArrays, youtubeArrays, bingArrays, redditSignals] = await Promise.all([
     Promise.all(queries.map(fetchAutocompleteSuggestions)),
+    Promise.all(queries.map(fetchYouTubeSuggestions)),
+    Promise.all(queries.map(fetchBingSuggestions)),
     Promise.race<string[]>([
       fetchRedditSignals(country, keyword || "", niche || "", diaspora).catch(() => []),
       new Promise<string[]>((resolve) => setTimeout(() => resolve([]), 3000)),
     ]),
   ]);
 
-  const rawSearches = [...new Set(suggestionArrays.flat())].filter((s) => s.length > 8);
+  // Cross-source demand validation: count distinct sources (max 3) per query.
+  // Dedup within each source first — then count source appearances.
+  const googleSet  = new Set(googleArrays.flat().filter((q) => q.length > 8));
+  const youtubeSet = new Set(youtubeArrays.flat().filter((q) => q.length > 8));
+  const bingSet    = new Set(bingArrays.flat().filter((q) => q.length > 8));
+
+  const sourceFrequency = new Map<string, number>();
+  for (const q of [...googleSet, ...youtubeSet, ...bingSet]) {
+    sourceFrequency.set(q, (sourceFrequency.get(q) ?? 0) + 1);
+  }
+
+  const rawSearches = [...sourceFrequency.keys()];
 
   const pricing = diaspora
     ? (DIASPORA_PRICING[country] ?? PRICING.GB)
@@ -736,7 +821,9 @@ export async function POST(req: Request) {
   // Merge Level 1 + Level 2 signals, re-sort by pain score
   const allScored = [...initialScored, ...depthScored].sort((a, b) => b.score - a.score);
 
-  console.log(`[engine] ${country}${diaspora ? " DIASPORA" : ""} (${market.tier}): ${rawSearches.length} raw → ${allScored.length} pain-scored (depth added ${depthScored.length}). Top score: ${allScored[0]?.score ?? 0} [${allScored[0]?.flags.join("+")}]`);
+  const confirmedCount  = [...sourceFrequency.values()].filter((n) => n >= 3).length;
+  const validatedCount  = [...sourceFrequency.values()].filter((n) => n === 2).length;
+  console.log(`[engine] ${country}${diaspora ? " DIASPORA" : ""} (${market.tier}): ${rawSearches.length} raw (${confirmedCount} 3-source confirmed, ${validatedCount} 2-source validated) → ${allScored.length} pain-scored (depth added ${depthScored.length}). Top score: ${allScored[0]?.score ?? 0} [${allScored[0]?.flags.join("+")}]`);
 
   // Phase 2 — Real volumes via DataForSEO on pain-scored queries
   const topForVolume = allScored.slice(0, 80).map((s) => s.query);
@@ -783,9 +870,15 @@ export async function POST(req: Request) {
          compData.monopolyScore >= 65 ? `low competition` :
          compData.monopolyScore >= 40 ? `medium competition` : `saturated`)
       : "";
+    // Cross-source demand confidence — how many independent search engines returned this query
+    const sourcesCount    = sourceFrequency.get(e.keyword) ?? 0;
+    const demandSignal    =
+      sourcesCount >= 3 ? "CONFIRMED [Google+YouTube+Bing]" :
+      sourcesCount >= 2 ? "validated [2 sources]" : "";
     const parts = [`${i + 1}. "${e.keyword}" | pain:${e.painScore} ${painAnnotation}`];
     if (volAnnotation)  parts.push(volAnnotation);
     if (compAnnotation) parts.push(compAnnotation);
+    if (demandSignal)   parts.push(demandSignal);
     parts.push(priority);
     return parts.join(" | ").replace(/\s\|\s$/, "");
   }).join("\n");
@@ -865,6 +958,9 @@ DATA PROVIDED (use it, do not override it):
 — "← HIGH PRIORITY" = pre-scored as high commercial intensity. These are your best seeds.
 — Volume marked "✓" = real Google monthly data. Use it exactly.
 — "MONOPOLY" = live Google search found zero competing PDFs on Gumroad/Payhip right now.
+— "CONFIRMED [Google+YouTube+Bing]" = this query was independently surfaced by all three search engines. This is the strongest demand signal possible — three separate algorithms agree real people are searching for this. Treat like a volume-confirmed keyword.
+— "validated [2 sources]" = confirmed by two independent engines. Strong signal, not noise.
+— No source annotation = single-source, treat with slightly more caution on volume estimates.
 
 SCORING AXES:
 AXIS 1 — PDF MONOPOLY (35 pts max)
