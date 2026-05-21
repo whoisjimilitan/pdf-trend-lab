@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Opportunity {
+  id               String    @id @default(cuid())
+  keyword          String
+  pdfTitle         String    @default("")
+  niche            String
+  country          String    @default("US")
+  searchVolume     Int
+  opportunityScore Int
+  competition      String
+  trend            String
+  easeToSell       String
+  minPrice         Float
+  maxPrice         Float
+  emotionalIntent  String
+  exactQuestions   String
+  painPoint        String    @default("")
+  saved            Boolean   @default(false)
+  isQuickWin       Boolean   @default(false)
+  isDiaspora       Boolean   @default(false)
+  clusterId        String?
+  cluster          Cluster?  @relation(fields: [clusterId], references: [id])
+  products         Product[]
+  hooks            Hook[]
+  createdAt        DateTime  @default(now())
+}
+
+model Product {
+  id             String      @id @default(cuid())
+  opportunityId  String
+  opportunity    Opportunity @relation(fields: [opportunityId], references: [id])
+  title          String
+  slug           String      @default("")
+  pdfContent     String
+  salesPageCopy  String
+  seoPageContent String
+  status         String      @default("draft")
+  published      Boolean     @default(false)
+  salesCount     Int         @default(0)
+  revenue        Float       @default(0)
+  shopifyId      String?
+  gumroadUrl     String      @default("")
+  createdAt      DateTime    @default(now())
+}
+
+model Hook {
+  id            String       @id @default(cuid())
+  opportunityId String?
+  opportunity   Opportunity? @relation(fields: [opportunityId], references: [id])
+  text          String
+  platform      String
+  emotionType   String
+  niche         String
+  usageCount    Int          @default(0)
+  createdAt     DateTime     @default(now())
+}
+
+model Cluster {
+  id            String        @id @default(cuid())
+  name          String
+  theme         String
+  emotionalCore String
+  opportunities Opportunity[]
+  createdAt     DateTime      @default(now())
+}
+
+model EmailSubscriber {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  productSlug String?
+  country     String?
+  source      String?
+  createdAt   DateTime @default(now())
+}
+
+model PlantingLog {
+  id        String   @id @default(cuid())
+  productId String
+  platform  String
+  hookId    String?
+  postedAt  DateTime @default(now())
+  notes     String?
+}
+
+model DailyLoop {
+  id        String   @id @default(cuid())
+  date      String
+  status    String   @default("pending")
+  niche     String
+  keyword   String
+  pdfDone   Boolean  @default(false)
+  hooksDone Boolean  @default(false)
+  published Boolean  @default(false)
+  notes     String?
+  createdAt DateTime @default(now())
+}
