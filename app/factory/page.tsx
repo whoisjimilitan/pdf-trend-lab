@@ -98,6 +98,8 @@ function FactoryContent() {
   const [gumroadInput, setGumroadInput] = useState("");
   const [gumroadSaving, setGumroadSaving] = useState(false);
   const [gumroadSaved, setGumroadSaved] = useState(false);
+  const [refreshingSellPage, setRefreshingSellPage] = useState(false);
+  const [sellPageRefreshed, setSellPageRefreshed] = useState(false);
 
   const load = useCallback(async () => {
     const [pRes, hRes] = await Promise.all([fetch("/api/factory"), fetch("/api/hooks")]);
@@ -157,6 +159,20 @@ function FactoryContent() {
     const updated = await res.json();
     setProducts((prev) => prev.map((x) => x.id === p.id ? { ...x, ...updated } : x));
     setSelected((prev) => prev?.id === p.id ? { ...prev, ...updated } : prev);
+  }
+
+  async function refreshSellPage(p: Product) {
+    setRefreshingSellPage(true);
+    try {
+      const res = await fetch(`/api/products/${p.id}/sell-page`, { method: "POST" });
+      const updated = await res.json();
+      setProducts((prev) => prev.map((x) => x.id === p.id ? { ...x, ...updated } : x));
+      setSelected((prev) => prev?.id === p.id ? { ...prev, ...updated } : prev);
+      setSellPageRefreshed(true);
+      setTimeout(() => setSellPageRefreshed(false), 3000);
+    } finally {
+      setRefreshingSellPage(false);
+    }
   }
 
   async function saveGumroadUrl(p: Product) {
@@ -492,6 +508,26 @@ function FactoryContent() {
                           ? "✅ Both pages are live. Use the Sell Page URL as your TikTok/Instagram bio link."
                           : "⚠️ Click \"Publish Page\" above to make both pages live."}
                       </p>
+                      <div className="mt-3 pt-3" style={{ borderTop: "1px solid var(--border)" }}>
+                        <div className="flex items-center justify-between">
+                          <div className="text-xs" style={{ color: "var(--muted)" }}>
+                            Want tighter, more targeted sell page copy?
+                          </div>
+                          <button
+                            onClick={() => refreshSellPage(selected)}
+                            disabled={refreshingSellPage}
+                            className="text-xs px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5"
+                            style={{
+                              background: sellPageRefreshed ? "#10B98120" : "#6366F120",
+                              color: sellPageRefreshed ? "#10B981" : "#818CF8",
+                              border: `1px solid ${sellPageRefreshed ? "#10B98140" : "#6366F140"}`,
+                              opacity: refreshingSellPage ? 0.6 : 1,
+                              cursor: refreshingSellPage ? "not-allowed" : "pointer",
+                            }}>
+                            {refreshingSellPage ? "⚙️ Generating…" : sellPageRefreshed ? "✓ Updated!" : "🎯 Regenerate Sell Page"}
+                          </button>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Sales tracker */}
