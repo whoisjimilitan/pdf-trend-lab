@@ -7,12 +7,34 @@ export const metadata: Metadata = {
 
 const STRIPE = "https://buy.stripe.com/00waEX65Nb838Ce1aP5ZC00";
 
+function CheckIcon() {
+  return (
+    <span className="lp-check-icon">
+      <svg className="lp-check-svg" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+      </svg>
+    </span>
+  );
+}
+
+function Stars() {
+  return (
+    <div style={{ display: "flex", gap: 2 }}>
+      {[...Array(5)].map((_, i) => (
+        <svg key={i} style={{ width: 14, height: 14, color: "#F59E0B", fill: "currentColor" }} viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
 function FaqItem({ q, a }: { q: string; a: string }) {
   return (
     <details className="faq-item group">
       <summary className="faq-summary">
         <span className="faq-q">{q}</span>
-        <span className="faq-icon">+</span>
+        <span className="faq-plus">+</span>
       </summary>
       <p className="faq-a">{a}</p>
     </details>
@@ -28,115 +50,133 @@ export default function HomePage() {
         body > main { overflow: visible !important; height: auto !important; }
         * { box-sizing: border-box; }
 
-        .lp { background: #F7F4EF; color: #1A1A18; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
-        .lp h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.8rem, 6vw, 4.4rem); font-weight: 400; line-height: 1.08; color: #1A1A18; margin: 0 0 24px; }
-        .lp h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 400; color: #1A1A18; line-height: 1.2; margin: 0 0 14px; }
-        .lp p { font-size: 1rem; color: #6B6558; line-height: 1.8; margin: 0 0 16px; }
+        .lp { background: #FFFFFF; color: #334155; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
 
         /* NAV */
-        .lp-nav { position: sticky; top: 0; z-index: 50; background: rgba(247,244,239,0.96); backdrop-filter: blur(10px); border-bottom: 1px solid #E4DDD5; padding: 0 24px; }
-        .lp-nav-inner { max-width: 1040px; margin: 0 auto; height: 62px; display: flex; align-items: center; justify-content: space-between; }
-        .lp-logo { text-decoration: none; display: flex; align-items: center; gap: 8px; }
-        .lp-logo-text { font-family: Georgia, serif; font-size: 1rem; color: #1A1A18; }
-        .lp-nav-right { display: flex; align-items: center; gap: 14px; }
-        .lp-nav-login { font-size: 0.85rem; color: #6B6558; text-decoration: none; }
-        .lp-nav-login:hover { color: #1A1A18; }
-        .lp-btn-primary { display: inline-block; background: #4A6741; color: #fff; font-weight: 700; font-size: 0.95rem; padding: 12px 26px; border-radius: 9px; text-decoration: none; }
-        .lp-btn-primary:hover { background: #3D5635; }
+        .lp-nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid #E2E8F0; padding: 0 24px; }
+        .lp-nav-inner { max-width: 1100px; margin: 0 auto; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+        .lp-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .lp-logo-mark { width: 34px; height: 34px; background: #6366F1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+        .lp-logo-name { font-weight: 800; font-size: 1rem; color: #0F172A; line-height: 1.1; }
+        .lp-logo-sub { font-size: 0.6rem; color: #94A3B8; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+        .lp-nav-right { display: flex; align-items: center; gap: 12px; }
+        .lp-nav-login { font-size: 0.85rem; color: #64748B; text-decoration: none; }
+        .lp-nav-login:hover { color: #0F172A; }
+        .lp-nav-cta { background: #6366F1; color: #fff; font-weight: 700; font-size: 0.85rem; padding: 9px 20px; border-radius: 8px; text-decoration: none; }
+        .lp-nav-cta:hover { background: #4F46E5; }
 
         /* HERO */
-        .lp-hero { padding: 104px 24px 84px; text-align: center; background: #F7F4EF; }
-        .lp-hero-inner { max-width: 580px; margin: 0 auto; }
-        .lp-hero p { font-size: 1.05rem; color: #6B6558; line-height: 1.8; max-width: 500px; margin: 0 auto 32px; }
-        .lp-hero-cta { display: inline-block; background: #4A6741; color: #fff; font-weight: 700; font-size: 1.05rem; padding: 17px 44px; border-radius: 10px; text-decoration: none; }
-        .lp-hero-cta:hover { background: #3D5635; }
-        .lp-trust-line { font-size: 0.78rem; color: #B5834A; margin-top: 18px; display: block; }
+        .lp-hero { padding: 108px 24px 88px; text-align: center; position: relative; overflow: hidden; background: #FFFFFF; }
+        .lp-hero-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.06) 0%, transparent 60%); pointer-events: none; }
+        .lp-hero-inner { max-width: 820px; margin: 0 auto; position: relative; z-index: 1; }
+        .lp-eyebrow { display: inline-flex; align-items: center; gap: 6px; background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 700; color: #4F46E5; margin-bottom: 28px; }
+        .lp h1 { font-size: clamp(3rem, 7vw, 5rem); font-weight: 900; line-height: 1.05; color: #0F172A; margin: 0 0 24px; letter-spacing: -0.03em; }
+        .lp h1 em { color: #6366F1; font-style: normal; }
+        .lp-hero-sub { font-size: 1.05rem; color: #64748B; line-height: 1.75; max-width: 580px; margin: 0 auto 28px; }
+        .lp-hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 28px; }
+        .lp-btn-primary { display: inline-block; background: #6366F1; color: #fff; font-weight: 800; font-size: 0.95rem; padding: 15px 36px; border-radius: 10px; text-decoration: none; letter-spacing: 0.01em; }
+        .lp-btn-primary:hover { background: #4F46E5; }
+        .lp-btn-ghost { display: inline-block; background: transparent; color: #64748B; font-weight: 600; font-size: 0.95rem; padding: 15px 26px; border-radius: 10px; text-decoration: none; border: 1px solid #E2E8F0; }
+        .lp-btn-ghost:hover { border-color: #CBD5E1; color: #334155; }
+        .lp-social-proof { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .lp-avatars { display: flex; }
+        .lp-avatar { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #FFFFFF; background: #EEF2FF; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; margin-left: -6px; }
+        .lp-avatar:first-child { margin-left: 0; }
+        .lp-proof-text { font-size: 0.8rem; color: #94A3B8; }
 
         /* SECTIONS */
-        .lp-section { padding: 88px 24px; background: #F7F4EF; }
-        .lp-section-white { background: #FFFFFF; }
-        .lp-inner { max-width: 960px; margin: 0 auto; }
-        .lp-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #B5834A; margin-bottom: 12px; }
+        .lp-section { padding: 88px 24px; background: #FFFFFF; }
+        .lp-section-alt { background: #F8FAFC; }
+        .lp-inner { max-width: 1000px; margin: 0 auto; }
+        .lp-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #94A3B8; margin-bottom: 12px; }
+        .lp h2 { font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 900; color: #0F172A; line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.02em; }
+        .lp-body { font-size: 0.97rem; color: #64748B; line-height: 1.8; }
 
         /* WHAT IS A SEED */
         .seed-split { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: start; }
         .flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 28px; }
         .flow-step { display: flex; gap: 14px; align-items: flex-start; padding-bottom: 28px; position: relative; }
-        .flow-step:not(:last-child)::before { content: ""; position: absolute; left: 15px; top: 33px; bottom: 0; width: 1px; background: #E4DDD5; }
-        .flow-dot { width: 32px; height: 32px; border-radius: 50%; background: #EFF5ED; border: 1.5px solid #C5D9C0; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; }
-        .flow-label { font-size: 0.88rem; font-weight: 600; color: #1A1A18; margin-bottom: 3px; line-height: 1.3; }
-        .flow-sub { font-size: 0.82rem; color: #6B6558; line-height: 1.55; }
-        .seed-card { background: #FFFFFF; border: 1.5px solid #E4DDD5; border-radius: 14px; padding: 26px; }
-        .seed-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: #FEF9EE; border: 1px solid #E4DDD5; color: #B5834A; }
-        .seed-query { font-family: Georgia, serif; font-style: italic; font-size: 0.95rem; color: #1A1A18; line-height: 1.55; margin: 14px 0 20px; }
-        .seed-stat-label { font-size: 0.65rem; color: #6B6558; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
-        .seed-stat-value { font-size: 0.92rem; font-weight: 700; color: #1A1A18; }
+        .flow-step:not(:last-child)::before { content: ""; position: absolute; left: 15px; top: 33px; bottom: 0; width: 1px; background: #E2E8F0; }
+        .flow-dot { width: 32px; height: 32px; border-radius: 50%; background: #DCFCE7; border: 1.5px solid #BBF7D0; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+        .flow-label { font-size: 0.88rem; font-weight: 700; color: #0F172A; margin-bottom: 3px; }
+        .flow-sub { font-size: 0.82rem; color: #64748B; line-height: 1.55; }
+        .seed-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+        .seed-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: #FEF3C7; border: 1px solid #FDE68A; color: #B45309; }
+        .seed-query { font-size: 0.95rem; color: #1E293B; line-height: 1.55; margin: 14px 0 20px; font-style: italic; font-weight: 500; }
+        .seed-stat-label { font-size: 0.65rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+        .seed-stat-value { font-size: 0.92rem; font-weight: 800; color: #0F172A; }
 
-        /* OPPORTUNITY CARDS */
+        /* OPP CARDS */
         .opp-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
-        .opp-simple { background: #FFFFFF; border: 1px solid #E4DDD5; border-radius: 14px; padding: 24px 20px; }
-        .opp-simple-query { font-family: Georgia, serif; font-style: italic; font-size: 0.9rem; color: #1A1A18; line-height: 1.55; margin: 10px 0 14px; }
-        .opp-demand { font-size: 0.78rem; color: #6B6558; }
-        .opp-badge { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; background: #FEF9EE; border: 1px solid #E4DDD5; color: #B5834A; margin-top: 14px; }
+        .opp-simple { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 24px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        .opp-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .opp-badge-live { font-size: 0.7rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; background: #FEF3C7; border: 1px solid #FDE68A; color: #B45309; }
+        .opp-query { font-size: 0.9rem; color: #1E293B; line-height: 1.55; margin: 0 0 14px; font-style: italic; font-weight: 500; }
+        .opp-demand { font-size: 0.78rem; color: #64748B; }
 
         /* FOUNDER */
-        .founder-section { text-align: center; padding: 96px 24px; background: #FFFFFF; }
-        .founder-quote { font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 400; font-style: italic; color: #1A1A18; line-height: 1.35; max-width: 680px; margin: 0 auto 24px; }
-        .founder-body { font-size: 0.95rem; color: #6B6558; line-height: 1.8; max-width: 500px; margin: 0 auto 16px; }
-        .founder-cite { font-size: 0.85rem; color: #B5834A; }
+        .founder-inner { max-width: 780px; margin: 0 auto; text-align: center; }
+        .founder-quote { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 900; color: #0F172A; line-height: 1.15; letter-spacing: -0.025em; margin: 0 0 28px; }
+        .founder-body { font-size: 0.97rem; color: #64748B; line-height: 1.8; max-width: 520px; margin: 0 auto 18px; }
+        .founder-cite { font-size: 0.88rem; color: #6366F1; font-weight: 700; }
 
         /* HOW IT WORKS */
         .steps-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 44px; }
-        .step-simple { background: #FFFFFF; border: 1px solid #E4DDD5; border-radius: 14px; padding: 32px 24px; }
-        .step-num-big { font-family: Georgia, serif; font-size: 3rem; font-weight: 400; color: #E4DDD5; line-height: 1; margin-bottom: 18px; }
-        .step-icon-lg { font-size: 1.4rem; margin-bottom: 12px; }
-        .step-title { font-size: 1rem; font-weight: 700; color: #1A1A18; margin-bottom: 8px; }
-        .step-body { font-size: 0.88rem; color: #6B6558; line-height: 1.75; }
+        .step-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 32px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        .step-num { font-size: 2.5rem; font-weight: 900; color: #EEF2FF; line-height: 1; margin-bottom: 16px; letter-spacing: -0.02em; }
+        .step-icon { font-size: 1.5rem; margin-bottom: 12px; }
+        .step-title { font-size: 1rem; font-weight: 800; color: #0F172A; margin-bottom: 8px; }
+        .step-body { font-size: 0.85rem; color: #64748B; line-height: 1.75; }
 
         /* PRICING */
-        .pricing-wrap { max-width: 500px; margin: 0 auto; }
-        .pricing-box { background: #FFFFFF; border: 1.5px solid #C5D9C0; border-radius: 18px; padding: 48px 40px; text-align: center; }
-        .pricing-badge { font-size: 0.72rem; font-weight: 700; color: #B5834A; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; display: block; }
-        .pricing-amount { font-family: Georgia, serif; font-size: 5rem; font-weight: 400; color: #1A1A18; line-height: 1; }
-        .pricing-per { font-size: 0.9rem; color: #6B6558; margin: 8px 0 28px; }
-        .pricing-list { text-align: left; list-style: none; padding: 0; margin: 0 0 28px; display: flex; flex-direction: column; gap: 10px; }
-        .pricing-list li { font-size: 0.88rem; color: #6B6558; display: flex; gap: 10px; align-items: flex-start; }
-        .pricing-check { color: #4A6741; flex-shrink: 0; margin-top: 1px; }
-        .pricing-cta { display: block; background: #4A6741; color: #fff; font-weight: 700; font-size: 1rem; padding: 17px; border-radius: 10px; text-decoration: none; margin-bottom: 14px; }
-        .pricing-cta:hover { background: #3D5635; }
-        .pricing-offer { font-size: 0.82rem; color: #4A6741; font-weight: 600; margin-bottom: 8px; }
-        .pricing-guarantee { font-size: 0.75rem; color: #B5834A; }
+        .pricing-box { max-width: 540px; margin: 0 auto; background: #FFFFFF; border: 2px solid rgba(99,102,241,0.2); border-radius: 20px; padding: 48px 40px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(99,102,241,0.08); }
+        .pricing-glow { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 280px; height: 2px; background: linear-gradient(to right, transparent, #6366F1, transparent); }
+        .pricing-badge { display: inline-block; background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; border-radius: 20px; padding: 4px 14px; font-size: 0.72rem; font-weight: 700; margin-bottom: 20px; letter-spacing: 0.04em; text-transform: uppercase; }
+        .pricing-title { font-size: 1.1rem; font-weight: 800; color: #0F172A; margin-bottom: 4px; }
+        .pricing-sub { font-size: 0.85rem; color: #64748B; margin-bottom: 28px; }
+        .pricing-amount { font-size: 4.5rem; font-weight: 900; color: #0F172A; line-height: 1; margin-bottom: 4px; letter-spacing: -0.03em; }
+        .pricing-amount sup { font-size: 1.6rem; vertical-align: super; font-weight: 700; color: #94A3B8; }
+        .pricing-period { font-size: 0.85rem; color: #94A3B8; margin-bottom: 32px; }
+        .pricing-list { text-align: left; list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-direction: column; gap: 10px; }
+        .pricing-list li { font-size: 0.88rem; color: #475569; display: flex; gap: 10px; align-items: flex-start; }
+        .lp-check-icon { width: 18px; height: 18px; border-radius: 50%; background: #DCFCE7; border: 1px solid #BBF7D0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+        .lp-check-svg { width: 10px; height: 10px; color: #16A34A; }
+        .pricing-cta { display: block; background: #6366F1; color: #fff; font-weight: 800; font-size: 1rem; padding: 17px; border-radius: 12px; text-decoration: none; margin-bottom: 14px; }
+        .pricing-cta:hover { background: #4F46E5; }
+        .pricing-offer { font-size: 0.82rem; color: #16A34A; font-weight: 600; margin-bottom: 8px; }
+        .pricing-guarantee { font-size: 0.75rem; color: #94A3B8; }
 
         /* FAQ */
-        .faq-max { max-width: 680px; margin: 0 auto; }
-        .faq-item { border-bottom: 1px solid #E4DDD5; }
+        .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 56px; }
+        .faq-item { border-bottom: 1px solid #E2E8F0; }
         .faq-item:last-child { border-bottom: none; }
         .faq-summary { display: flex; align-items: flex-start; justify-content: space-between; padding: 20px 0; cursor: pointer; list-style: none; gap: 16px; }
-        .faq-q { font-size: 0.92rem; font-weight: 600; color: #1A1A18; line-height: 1.4; }
-        .faq-icon { color: #4A6741; font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; transition: transform 0.2s; }
-        details[open] .faq-icon { transform: rotate(45deg); }
-        .faq-a { font-size: 0.88rem; color: #6B6558; line-height: 1.75; padding-bottom: 20px; margin: 0; }
+        .faq-q { font-size: 0.9rem; font-weight: 600; color: #1E293B; line-height: 1.4; }
+        .faq-plus { color: #6366F1; font-size: 1.3rem; flex-shrink: 0; margin-top: 0px; transition: transform 0.2s; line-height: 1; }
+        details[open] .faq-plus { transform: rotate(45deg); }
+        .faq-a { font-size: 0.88rem; color: #64748B; line-height: 1.75; padding-bottom: 20px; margin: 0; }
 
         /* FOOTER */
-        .lp-footer { padding: 28px 24px; border-top: 1px solid #E4DDD5; text-align: center; background: #F7F4EF; }
-        .lp-footer p { font-size: 0.78rem; color: #6B6558; margin: 0; }
-        .lp-footer a { color: #6B6558; text-decoration: none; }
-        .lp-footer a:hover { color: #1A1A18; }
+        .lp-footer { padding: 32px 24px; border-top: 1px solid #E2E8F0; text-align: center; background: #F8FAFC; }
+        .lp-footer p { font-size: 0.78rem; color: #CBD5E1; margin: 0; }
+        .lp-footer a { color: #94A3B8; text-decoration: none; }
+        .lp-footer a:hover { color: #6366F1; }
 
         /* MOBILE STICKY */
-        .mobile-sticky { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: #F7F4EF; border-top: 1px solid #E4DDD5; padding: 12px 16px; }
-        .mobile-sticky a { display: block; background: #4A6741; color: #fff; font-weight: 700; font-size: 0.9rem; padding: 15px; border-radius: 10px; text-decoration: none; text-align: center; }
+        .mobile-sticky { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: #FFFFFF; border-top: 1px solid #E2E8F0; padding: 12px 16px; box-shadow: 0 -4px 12px rgba(0,0,0,0.06); }
+        .mobile-sticky a { display: block; background: #6366F1; color: #fff; font-weight: 800; font-size: 0.9rem; padding: 15px; border-radius: 10px; text-decoration: none; text-align: center; }
 
         @media (max-width: 768px) {
-          .lp h1 { font-size: 2.4rem; }
-          .lp h2 { font-size: 1.5rem; }
+          .lp h1 { font-size: 2.8rem; letter-spacing: -0.02em; }
+          .lp h2 { font-size: 1.7rem; }
           .lp-section { padding: 56px 20px; }
-          .lp-hero { padding: 72px 20px 56px; }
+          .lp-hero { padding: 80px 20px 64px; }
           .seed-split { grid-template-columns: 1fr; gap: 32px; }
           .opp-grid-3 { grid-template-columns: 1fr; }
           .steps-3 { grid-template-columns: 1fr; }
-          .pricing-box { padding: 36px 22px; }
-          .pricing-amount { font-size: 4rem; }
+          .faq-grid { grid-template-columns: 1fr; }
+          .pricing-box { padding: 36px 24px; }
+          .pricing-amount { font-size: 3.5rem; }
           .mobile-sticky { display: block; }
           body { padding-bottom: 80px; }
         }
@@ -148,37 +188,56 @@ export default function HomePage() {
         <nav className="lp-nav">
           <div className="lp-nav-inner">
             <a href="/" className="lp-logo">
-              <span style={{ fontSize: "1.1rem" }}>🌱</span>
-              <span className="lp-logo-text">PDF Seeds</span>
+              <div className="lp-logo-mark">🌱</div>
+              <div>
+                <div className="lp-logo-name">PDF Seeds</div>
+                <div className="lp-logo-sub">Plant. Grow. Harvest.</div>
+              </div>
             </a>
             <div className="lp-nav-right">
               <a href="/dashboard" className="lp-nav-login">My Farm</a>
-              <a href={STRIPE} className="lp-btn-primary">Plant Your First Seed →</a>
+              <a href={STRIPE} className="lp-nav-cta">Plant Your First Seed →</a>
             </div>
           </div>
         </nav>
 
         {/* ── HERO ── */}
         <section className="lp-hero">
+          <div className="lp-hero-glow" />
           <div className="lp-hero-inner">
-            <h1>Plant once.<br />Earn for years.</h1>
-            <p>
+            <div className="lp-eyebrow">🌱 The farming system for African digital markets</div>
+            <h1>
+              Plant once.<br />
+              <em>Earn for years.</em>
+            </h1>
+            <p className="lp-hero-sub">
               PDF Seeds finds questions people are already searching for across African markets —
-              then helps you turn them into simple digital products that can keep selling over time.
+              then helps you turn them into simple digital products that keep selling over time.
             </p>
-            <a href={STRIPE} className="lp-hero-cta">Plant Your First Seed →</a>
-            <span className="lp-trust-line">5 African markets scanned daily · Diaspora opportunities included</span>
+            <div className="lp-hero-ctas">
+              <a href={STRIPE} className="lp-btn-primary">Plant Your First Seed →</a>
+              <a href="#how-it-works" className="lp-btn-ghost">See how it works ↓</a>
+            </div>
+            <div className="lp-social-proof">
+              <div className="lp-avatars">
+                {["🇬🇭", "🇳🇬", "🇰🇪", "🇿🇦", "🇬🇧"].map((f, i) => (
+                  <div key={i} className="lp-avatar">{f}</div>
+                ))}
+              </div>
+              <Stars />
+              <p className="lp-proof-text">Early planters across 5 markets</p>
+            </div>
           </div>
         </section>
 
         {/* ── WHAT IS A SEED? ── */}
-        <section className="lp-section lp-section-white">
+        <section className="lp-section lp-section-alt">
           <div className="lp-inner">
             <div className="lp-label">What is a seed?</div>
             <div className="seed-split">
               <div>
-                <h2>A question with no answer.<br />Yet.</h2>
-                <p>
+                <h2>A question with no answer. Yet.</h2>
+                <p className="lp-body">
                   A seed is a real question that thousands of people search for every month —
                   and nobody has written the PDF guide to answer it.
                   When you plant that seed, you own that ground.
@@ -201,7 +260,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: "0.78rem", color: "#6B6558", marginBottom: 12, fontWeight: 600 }}>
+                <div style={{ fontSize: "0.72rem", color: "#94A3B8", marginBottom: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
                   A real seed — right now, unplanted
                 </div>
                 <div className="seed-card">
@@ -209,7 +268,7 @@ export default function HomePage() {
                     <span style={{ fontSize: "1.4rem" }}>🇬🇭</span>
                     <span className="seed-badge">🟡 Unplanted</span>
                   </div>
-                  <div style={{ fontSize: "0.72rem", color: "#6B6558", marginTop: 8 }}>Ghana · Inheritance & Land</div>
+                  <div style={{ fontSize: "0.72rem", color: "#94A3B8", marginTop: 8 }}>Ghana · Inheritance & Land</div>
                   <div className="seed-query">&ldquo;How to transfer land ownership in Ghana after death&rdquo;</div>
                   <div style={{ display: "flex", gap: 20, marginBottom: 20 }}>
                     <div>
@@ -218,7 +277,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <div className="seed-stat-label">Competition</div>
-                      <div className="seed-stat-value" style={{ color: "#4A6741" }}>Very Low</div>
+                      <div className="seed-stat-value" style={{ color: "#16A34A" }}>Very Low</div>
                     </div>
                     <div>
                       <div className="seed-stat-label">PDF guides</div>
@@ -239,86 +298,64 @@ export default function HomePage() {
           <div className="lp-inner">
             <div className="lp-label">Unplanted opportunities</div>
             <h2>Three seeds waiting to be planted.</h2>
-            <p style={{ maxWidth: 540 }}>
+            <p className="lp-body" style={{ maxWidth: 540 }}>
               Real searches. Real demand. No PDF guide has answered any of them yet.
             </p>
             <div className="opp-grid-3">
               {[
-                {
-                  flag: "🇳🇬",
-                  country: "Nigeria",
-                  query: "How to register a business in Nigeria step by step",
-                  demand: "6,800 searches / month",
-                },
-                {
-                  flag: "🇰🇪",
-                  country: "Kenya",
-                  query: "How to start a small poultry farm in Kenya with little money",
-                  demand: "3,600 searches / month",
-                },
-                {
-                  flag: "🇬🇧",
-                  country: "UK Diaspora",
-                  query: "How to renew a Nigerian passport from the UK",
-                  demand: "2,900 searches / month",
-                },
+                { flag: "🇳🇬", country: "Nigeria", query: "How to register a business in Nigeria step by step", demand: "6,800 searches / month" },
+                { flag: "🇰🇪", country: "Kenya",   query: "How to start a small poultry farm in Kenya with little money", demand: "3,600 searches / month" },
+                { flag: "🇬🇧", country: "UK Diaspora", query: "How to renew a Nigerian passport from the UK", demand: "2,900 searches / month" },
               ].map((opp, i) => (
                 <div key={i} className="opp-simple">
-                  <span style={{ fontSize: "1.4rem" }}>{opp.flag}</span>
-                  <div style={{ fontSize: "0.72rem", color: "#6B6558", fontWeight: 600, margin: "6px 0 0" }}>{opp.country}</div>
-                  <div className="opp-simple-query">&ldquo;{opp.query}&rdquo;</div>
+                  <div className="opp-header">
+                    <span style={{ fontSize: "1.3rem" }}>{opp.flag}</span>
+                    <span className="opp-badge-live">🟡 Unplanted</span>
+                  </div>
+                  <div style={{ fontSize: "0.72rem", color: "#94A3B8", fontWeight: 600, marginBottom: 8 }}>{opp.country}</div>
+                  <div className="opp-query">&ldquo;{opp.query}&rdquo;</div>
                   <div className="opp-demand">{opp.demand}</div>
-                  <div className="opp-badge">🟡 Still Unplanted</div>
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: "0.78rem", color: "#B5834A", marginTop: 20, textAlign: "center" }}>
+            <p style={{ fontSize: "0.78rem", color: "#CBD5E1", marginTop: 18, textAlign: "center" }}>
               PDF Seeds surfaces hundreds of gaps like these — scored, ranked, and ready to grow.
             </p>
           </div>
         </section>
 
         {/* ── FOUNDER ── */}
-        <section className="founder-section">
-          <div className="lp-label" style={{ marginBottom: 28 }}>From the founder</div>
-          <p className="founder-quote">&ldquo;I wanted a farm. Not another job.&rdquo;</p>
-          <p className="founder-body">
-            I built PDF Seeds because I kept seeing the same gap: millions of urgent searches
-            in African markets, and almost no simple PDF guides answering them.
-            The opportunity was obvious. The system to act on it wasn&apos;t. So I built it.
-          </p>
-          <span className="founder-cite">— Jimi, Founder of PDF Seeds</span>
+        <section className="lp-section lp-section-alt">
+          <div className="lp-inner">
+            <div className="founder-inner">
+              <div className="lp-label" style={{ marginBottom: 24 }}>From the founder</div>
+              <p className="founder-quote">&ldquo;I wanted a farm. Not another job.&rdquo;</p>
+              <p className="founder-body">
+                I built PDF Seeds because I kept seeing the same gap: millions of urgent searches
+                in African markets, and almost no simple PDF guides answering them.
+                The opportunity was obvious. The system to act on it wasn&apos;t. So I built it.
+              </p>
+              <span className="founder-cite">— Jimi, Founder of PDF Seeds</span>
+            </div>
+          </div>
         </section>
 
         {/* ── HOW IT WORKS ── */}
         <section className="lp-section" id="how-it-works">
           <div className="lp-inner">
-            <div className="lp-label">How it works</div>
-            <h2>Three steps. One afternoon to start.</h2>
+            <div style={{ textAlign: "center", marginBottom: 8 }}>
+              <div className="lp-label">How it works</div>
+              <h2>Three steps. One afternoon to start.</h2>
+            </div>
             <div className="steps-3">
               {[
-                {
-                  num: "01",
-                  icon: "🔍",
-                  title: "Find the gap",
-                  body: "We scan real search data across 5 African markets and surface questions with high demand and no PDF guide. You pick the one you want to plant.",
-                },
-                {
-                  num: "02",
-                  icon: "🌱",
-                  title: "Grow the guide",
-                  body: "One click generates your complete PDF guide, a buy page, an SEO article, and 10 social hooks. Nothing to write. Ready in 3 minutes.",
-                },
-                {
-                  num: "03",
-                  icon: "🌾",
-                  title: "Earn while it grows",
-                  body: "Share the buy link. Post the social hooks. Over time, Google sends buyers automatically. The guide keeps selling. You keep earning.",
-                },
+                { num: "01", icon: "🔍", title: "Find the gap", body: "We scan real search data across 5 African markets and surface questions with high demand and no PDF guide. You pick the one you want to plant." },
+                { num: "02", icon: "🌱", title: "Grow the guide", body: "One click generates your complete PDF guide, a buy page, an SEO article, and 10 social hooks. Nothing to write. Ready in 3 minutes." },
+                { num: "03", icon: "🌾", title: "Earn while it grows", body: "Share the buy link. Post the social hooks. Over time, Google sends buyers automatically. The guide keeps selling. You keep earning." },
               ].map((s, i) => (
-                <div key={i} className="step-simple">
-                  <div className="step-num-big">{s.num}</div>
-                  <div className="step-icon-lg">{s.icon}</div>
+                <div key={i} className="step-card">
+                  <div className="step-num">{s.num}</div>
+                  <div className="step-icon">{s.icon}</div>
                   <div className="step-title">{s.title}</div>
                   <div className="step-body">{s.body}</div>
                 </div>
@@ -328,70 +365,54 @@ export default function HomePage() {
         </section>
 
         {/* ── PRICING ── */}
-        <section className="lp-section lp-section-white" id="start">
-          <div className="lp-inner" style={{ textAlign: "center", marginBottom: 36 }}>
+        <section className="lp-section lp-section-alt" id="start">
+          <div className="lp-inner" style={{ textAlign: "center", marginBottom: 44 }}>
             <div className="lp-label">Start your farm</div>
             <h2>One subscription. Your whole farm.</h2>
           </div>
-          <div className="pricing-wrap">
-            <div className="pricing-box">
-              <span className="pricing-badge">🌱 Founding Farmer Price</span>
-              <div className="pricing-amount">£39</div>
-              <div className="pricing-per">per month · cancel anytime</div>
-              <ul className="pricing-list">
-                {[
-                  "Gap finder — 5 African markets scanned for unplanted demand",
-                  "PDF guide generation — unlimited seeds, one click each",
-                  "Buy page + SEO article grown automatically with every guide",
-                  "10 social hooks per guide — TikTok, Pinterest, Instagram",
-                  "Daily planting schedule — one action per day",
-                  "Farm dashboard — every seed tracked in one place",
-                ].map((item, i) => (
-                  <li key={i}>
-                    <span className="pricing-check">✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <a href={STRIPE} className="pricing-cta">Plant My First Seed →</a>
-              <div className="pricing-offer">✅ First harvest within 7 days — or your first month is free.</div>
-              <div className="pricing-guarantee">30-day money-back guarantee · No questions asked · Cancel anytime</div>
-            </div>
+          <div className="pricing-box">
+            <div className="pricing-glow" />
+            <div className="pricing-badge">🌱 Founding Farmer Pricing</div>
+            <div className="pricing-title">PDF Seeds — Full Farm Access</div>
+            <div className="pricing-sub">Everything you need to find the gaps, grow the guides, and harvest every month.</div>
+            <div className="pricing-amount"><sup>£</sup>39</div>
+            <div className="pricing-period">per month · cancel anytime</div>
+            <ul className="pricing-list">
+              {[
+                "Gap finder — 5 African markets scanned for unplanted demand",
+                "PDF guide generation — unlimited seeds, one click each",
+                "Buy page + SEO article grown automatically with every guide",
+                "10 social hooks per guide — TikTok, Pinterest, Instagram",
+                "Daily planting schedule — one specific action per day",
+                "Farm dashboard — every seed tracked in one place",
+              ].map((item, i) => (
+                <li key={i}><CheckIcon />{item}</li>
+              ))}
+            </ul>
+            <a href={STRIPE} className="pricing-cta">Plant My First Seed →</a>
+            <div className="pricing-offer">✅ First harvest within 7 days — or your first month is free.</div>
+            <div className="pricing-guarantee">30-day money-back guarantee · No questions asked · Cancel anytime</div>
           </div>
         </section>
 
         {/* ── FAQ ── */}
         <section className="lp-section" id="faq">
           <div className="lp-inner">
-            <div style={{ textAlign: "center", marginBottom: 44 }}>
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
               <div className="lp-label">Before you plant</div>
               <h2>Every question, answered honestly.</h2>
             </div>
-            <div className="faq-max">
-              <FaqItem
-                q="Do I need to write the PDF guides myself?"
-                a="Nothing to write. You pick the gap, click grow, and the system produces the full PDF guide, sales page, SEO article, and social hooks automatically. Your job is to share the buy link."
-              />
-              <FaqItem
-                q="Do I need technical or marketing skills?"
-                a="None. No coding, no design experience, no SEO knowledge required. If you can click a button and copy-paste text, you have everything you need."
-              />
-              <FaqItem
-                q="How long before my first harvest?"
-                a="Most planters have their first seed in the ground within an hour. Social can drive sales within 48 hours. We guarantee income from your first seed within 7 days — or your first month is fully refunded."
-              />
-              <FaqItem
-                q="Is the African market already saturated?"
-                a="The opposite. Most practical, high-intent topics in Ghana, Nigeria, Kenya, and South Africa have zero PDF guides published. The window is open — but it won't stay that way indefinitely."
-              />
-              <FaqItem
-                q="Is £39 a month worth it?"
-                a="One seed earning £8 a day returns £240 a month — six times your subscription cost from a single guide. The farm pays for itself in the first week. After that, every harvest is profit."
-              />
-              <FaqItem
-                q="What if my seeds don't produce?"
-                a="We refund your first month — no forms, no chasing. Plant your first seed within 7 days. If it doesn't earn, email us. Refund sent the same day."
-              />
+            <div className="faq-grid">
+              <div>
+                <FaqItem q="Do I need to write the PDF guides myself?" a="Nothing to write. You pick the gap, click grow, and the system produces the full PDF guide, sales page, SEO article, and social hooks automatically. Your job is to share the buy link." />
+                <FaqItem q="Do I need technical or marketing skills?" a="None. No coding, no design experience, no SEO knowledge required. If you can click a button and copy-paste text, you have everything you need." />
+                <FaqItem q="How long before my first harvest?" a="Most planters have their first seed in the ground within an hour. Social can drive sales within 48 hours. We guarantee income from your first seed within 7 days — or your first month is fully refunded." />
+              </div>
+              <div>
+                <FaqItem q="Is the African market already saturated?" a="The opposite. Most practical, high-intent topics in Ghana, Nigeria, Kenya, and South Africa have zero PDF guides published. The window is open — but it won't stay that way indefinitely." />
+                <FaqItem q="Is £39 a month worth it?" a="One seed earning £8 a day returns £240 a month — six times your subscription cost from a single guide. The farm pays for itself in the first week. After that, every harvest is profit." />
+                <FaqItem q="What if my seeds don't produce?" a="We refund your first month — no forms, no chasing. Plant your first seed within 7 days. If it doesn't earn, email us. Refund sent the same day." />
+              </div>
             </div>
           </div>
         </section>
