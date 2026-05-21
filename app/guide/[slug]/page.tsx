@@ -9,20 +9,42 @@ async function getProduct(slug: string) {
   return prisma.product.findFirst({
     where: { slug },
     include: { opportunity: true },
+    // createdAt included by default in Prisma select *
   });
 }
+
+const BASE = "https://pdfseeds.com";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProduct(slug);
   if (!product) return { title: "Guide Not Found" };
+
+  const keyword    = product.opportunity?.keyword ?? product.title;
+  const painPoint  = product.opportunity?.painPoint ?? "";
+  const year       = new Date().getFullYear();
+  const title      = `${product.title} — Complete Step-by-Step Guide ${year}`;
+  const description = painPoint
+    ? `${painPoint.slice(0, 140).trim()}. Download the complete PDF guide — instant access.`
+    : `Complete guide to ${keyword}. Everything you need, step by step — download the PDF instantly.`;
+  const canonical  = `${BASE}/guide/${slug}`;
+
   return {
-    title: product.title,
-    description: `Free guide: ${product.title}. Download the complete step-by-step PDF guide.`,
+    title,
+    description,
+    keywords: `${keyword}, ${keyword} guide, how to ${keyword}, ${keyword} PDF, ${keyword} step by step`,
+    alternates: { canonical },
     openGraph: {
-      title: product.title,
-      description: `Free guide: ${product.title}. Download the complete step-by-step PDF guide.`,
+      title,
+      description,
       type: "article",
+      url: canonical,
+      siteName: "PDF Seeds",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }
@@ -60,8 +82,6 @@ export default async function GuidePage({ params }: Props) {
     : "$";
 
   const price = opportunity ? `${opportunity.minPrice.toFixed(2)}` : "9.99";
-  const painPoint = opportunity?.painPoint ?? "";
-
   // Related guides — same niche or same country, different product
   const related = await prisma.product.findMany({
     where: {
@@ -79,10 +99,50 @@ export default async function GuidePage({ params }: Props) {
     orderBy: { createdAt: "desc" },
   });
 
-  const seoHtml = renderMarkdown(product.seoPageContent);
+  const seoHtml    = renderMarkdown(product.seoPageContent);
+  const keyword    = opportunity?.keyword ?? product.title;
+  const painPoint  = opportunity?.painPoint ?? "";
+  const year       = new Date().getFullYear();
+  const canonical  = `${BASE}/guide/${slug}`;
+  const title      = `${product.title} — Complete Step-by-Step Guide ${year}`;
+  const description = painPoint
+    ? `${painPoint.slice(0, 140).trim()}. Download the complete PDF guide — instant access.`
+    : `Complete guide to ${keyword}. Everything you need, step by step.`;
+
+  const questions: string[] = (() => {
+    try { return JSON.parse(opportunity?.exactQuestions ?? "[]"); } catch { return []; }
+  })();
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": title,
+    "description": description,
+    "url": canonical,
+    "datePublished": product.createdAt,
+    "dateModified": product.createdAt,
+    "author": { "@type": "Organization", "name": "PDF Seeds", "url": BASE },
+    "publisher": { "@type": "Organization", "name": "PDF Seeds", "url": BASE },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+  };
+
+  const faqSchema = questions.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": questions.map((q) => ({
+      "@type": "Question",
+      "name": q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": `This is covered in full in our guide: ${product.title}. Download the complete PDF for the step-by-step answer.`,
+      },
+    })),
+  } : null;
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
       <style>{`
         body { margin: 0; font-family: system-ui, sans-serif; background: #0f0f11; color: #e2e8f0; }
         .guide-wrap { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }

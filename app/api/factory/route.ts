@@ -138,16 +138,45 @@ Rules — non-negotiable:
         model: "gemini-2.5-flash",
         messages: [{
           role: "user",
-          content: `Write an SEO-optimised landing page for this topic: "${opportunity.keyword}"
-This page ranks on Google and sends free buyers to a PDF guide.
-${painPoint ? `\nCore pain this page addresses: "${painPoint}"\n` : ""}
-Rules:
-- Page title = exact keyword phrase
-- First paragraph: answer the exact question directly, then name the pain in one sentence
-- Use the exact search phrases: ${questions.slice(0, 3).join(", ")}
-- 300–500 words
-- End with a natural CTA to download the guide
-- Simple, clear language
+          content: `Write a long-form SEO article that will rank on Google for the keyword: "${opportunity.keyword}"
+
+This article gets free organic traffic from Google and converts readers into PDF buyers. It must follow Google's quality guidelines — comprehensive, specific, genuinely helpful.
+${painPoint ? `\nCORE PAIN THIS ARTICLE ADDRESSES: "${painPoint}"\nUse this exact language in the opening — make the reader feel immediately understood.\n` : ""}
+────────────────────────────────────────
+MANDATORY STRUCTURE (in this exact order):
+────────────────────────────────────────
+
+1. H1 — exact keyword: "${opportunity.keyword}" (add ${new Date().getFullYear()} if it's a process, registration, or exam topic)
+
+2. OPENING PARAGRAPH (80–120 words):
+   - First sentence: answer the query directly using the exact keyword
+   - Second sentence: name the specific pain — what goes wrong for most people
+   - Third sentence: what this article gives them, right now
+   - Google rewards direct answers in the first paragraph — do not delay
+
+3. ONE H2 SECTION PER QUESTION (use these exact questions as H2 headings — they are long-tail keywords themselves):
+${questions.map((q, i) => `   ${i + 1}. ## ${q}`).join("\n")}
+   Each section: 120–200 words. Lead with the most important information. Steps as numbered lists. Specific details — costs, timelines, office names where relevant. No filler.
+
+4. ## Common Mistakes to Avoid
+   3–5 specific mistakes people actually make with this topic. Concrete, not generic.
+
+5. ## Frequently Asked Questions
+   3 Q&A pairs using real search variations of "${opportunity.keyword}". Short direct answers — 2–3 sentences each.
+
+6. CLOSING PARAGRAPH (40–60 words):
+   Natural bridge to downloading the full PDF guide. Do not be salesy — frame it as "if you want the complete step-by-step checklist in one place…"
+
+────────────────────────────────────────
+SEO RULES (non-negotiable):
+────────────────────────────────────────
+- Use the exact keyword "${opportunity.keyword}" in: the H1, the opening paragraph, at least 2 H2 sections, and the closing paragraph
+- Use natural keyword variations throughout — never stuff the same phrase repeatedly
+- Every H2 = a real question people type into Google (use the list above exactly)
+- 900–1,400 words total — Google rewards comprehensive content for how-to and guide queries
+- No padding. Every sentence earns its place by giving usable information.
+- Plain language. Short paragraphs. Bullet points and numbered lists for steps.
+- Specific where possible: real fees, real timelines, real office names, real document names
 
 Write in markdown.`
         }],
