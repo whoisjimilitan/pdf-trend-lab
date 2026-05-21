@@ -159,7 +159,7 @@ export default async function DashboardPage() {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: "0.85rem", fontWeight: 500, color: "var(--text)", marginBottom: 2 }}>{g.title}</div>
                 <div style={{ fontSize: "0.72rem", color: "var(--muted)" }}>
-                  {g.published ? "🟢 Live" : "○ Draft"}
+                  {g.published ? "🟢 Live" : "◦ Draft"}
                   {g.salesCount > 0 && ` · ${g.salesCount} sold · £${g.revenue.toFixed(0)}`}
                 </div>
               </div>

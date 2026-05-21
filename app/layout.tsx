@@ -42,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <nav className="flex-1 px-3 py-4 space-y-0.5">
             {nav.map(({ href, label, icon, sub }) => (
               <Link key={href} href={href}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-[#EFEDE7] hover:text-[#5E7153]"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-[#EEF2FF] hover:text-[#4F46E5]"
                 style={{ textDecoration: "none", color: "var(--muted)" }}>
                 <span style={{ fontSize: "1rem" }}>{icon}</span>
                 <div>
@@ -55,8 +55,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
           {/* Footer */}
           <div className="px-5 py-4" style={{ borderTop: "1px solid var(--border)" }}>
-            <div style={{ fontSize: "0.72rem", color: "var(--muted)" }}>
-              One seed at a time.
+            <div style={{ fontSize: "0.72rem", color: "var(--muted)", fontWeight: 600, letterSpacing: "0.02em" }}>
+              Plant. Grow. Harvest.
             </div>
           </div>
         </aside>

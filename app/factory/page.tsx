@@ -174,7 +174,7 @@ function GuidesContent() {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               {g.published ? (
-                <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "#5E7153", background: "#E8EFDF", border: "1px solid #C8D9B8", padding: "1px 7px", borderRadius: 20 }}>
+                <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "#16A34A", background: "#DCFCE7", border: "1px solid #BBF7D0", padding: "1px 7px", borderRadius: 20 }}>
                   🟢 Live
                 </span>
               ) : (
@@ -236,8 +236,8 @@ function GuidesContent() {
                 <button onClick={() => toggleLive(selected)} disabled={publishing}
                   style={{
                     padding: "8px 18px", borderRadius: 9, fontSize: "0.82rem", fontWeight: 700, cursor: publishing ? "not-allowed" : "pointer", border: "none",
-                    background: selected.published ? "#E8EFDF" : "var(--accent)",
-                    color: selected.published ? "#5E7153" : "#fff",
+                    background: selected.published ? "#DCFCE7" : "var(--accent)",
+                    color: selected.published ? "#16A34A" : "#fff",
                     opacity: publishing ? 0.7 : 1,
                   }}>
                   {publishing ? "…" : selected.published ? "🟢 Live" : "Go Live →"}
