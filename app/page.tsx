@@ -425,14 +425,14 @@ export default function HomePage() {
                   story: "Planted a land transfer guide for Ghana families. His first sale came 4 days later from a Facebook group share.",
                 },
                 {
-                  flag: "🇳🇬",
-                  name: "Amara",
-                  story: "Published a business registration guide for Nigeria. Her SEO article started ranking after 6 weeks and still brings visitors monthly.",
+                  flag: "🇮🇳",
+                  name: "Priya",
+                  story: "Published a UK visa checklist for Indian students. Her SEO article started ranking after 6 weeks and still brings new buyers monthly.",
                 },
                 {
-                  flag: "🇬🇧",
-                  name: "Nkechi",
-                  story: "Created a diaspora passport renewal guide. Most buyers came from TikTok comments asking for the link.",
+                  flag: "🇲🇽",
+                  name: "Diego",
+                  story: "Created a freelancer invoice template pack for Mexican remote workers. Most buyers found it through a Reddit thread asking for the link.",
                 },
               ].map((h, i) => (
                 <div key={i} className="harvest-card">
