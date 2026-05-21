@@ -181,6 +181,25 @@ export default function HomePage() {
         .harvest-closing { text-align: center; margin-top: 40px; max-width: 520px; margin-left: auto; margin-right: auto; }
         .harvest-closing p { font-size: 0.95rem; color: #94A3B8; line-height: 1.85; }
 
+        /* HARVEST MATH */
+        .math-grid { display: flex; flex-direction: column; gap: 8px; max-width: 600px; margin: 0 auto; }
+        .math-row { display: grid; grid-template-columns: 90px 1fr auto auto; align-items: center; gap: 16px; padding: 16px 20px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; }
+        .math-row-highlight { background: #6366F1; border-color: #6366F1; }
+        .math-seeds { display: flex; align-items: baseline; gap: 4px; }
+        .math-num { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; color: #0F172A; }
+        .math-row-highlight .math-num { color: #FFFFFF; }
+        .math-unit { font-size: 0.75rem; color: #94A3B8; font-weight: 500; }
+        .math-row-highlight .math-unit { color: rgba(255,255,255,0.6); }
+        .math-label { font-size: 0.82rem; color: #64748B; font-weight: 500; }
+        .math-row-highlight .math-label { color: rgba(255,255,255,0.75); }
+        .math-daily { font-size: 0.85rem; color: #94A3B8; text-align: right; }
+        .math-row-highlight .math-daily { color: rgba(255,255,255,0.6); }
+        .math-monthly { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.02em; color: #0F172A; min-width: 96px; text-align: right; }
+        .math-monthly span { font-size: 0.72rem; font-weight: 500; color: #94A3B8; margin-left: 2px; }
+        .math-row-highlight .math-monthly { color: #FFFFFF; }
+        .math-row-highlight .math-monthly span { color: rgba(255,255,255,0.6); }
+        .math-note { text-align: center; color: #94A3B8; font-size: 0.8rem; margin-top: 20px; }
+
         /* FOOTER */
         .lp-footer { padding: 32px 24px; border-top: 1px solid #E2E8F0; text-align: center; background: #F8FAFC; }
         .lp-footer p { font-size: 0.78rem; color: #CBD5E1; margin: 0; }
@@ -201,6 +220,8 @@ export default function HomePage() {
           .harvest-grid { grid-template-columns: 1fr; }
           .steps-3 { grid-template-columns: 1fr; }
           .faq-grid { grid-template-columns: 1fr; }
+          .math-row { grid-template-columns: 70px 1fr auto; }
+          .math-daily { display: none; }
           .pricing-box { padding: 36px 24px; }
           .pricing-amount { font-size: 3.5rem; }
           .mobile-sticky { display: block; }
@@ -492,8 +513,41 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* ── HARVEST MATH ── */}
+        <section className="lp-section lp-section-alt">
+          <div className="lp-inner">
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <div className="lp-label">The harvest math</div>
+              <h2>One seed earns. Ten seeds compound.</h2>
+              <p style={{ color: "#64748B", fontSize: "1.05rem", maxWidth: 500, margin: "16px auto 0", lineHeight: 1.7 }}>
+                Each guide earns an average of £8 a day. The more seeds you plant, the more your farm earns on its own.
+              </p>
+            </div>
+            <div className="math-grid">
+              {[
+                { seeds: 1,  label: "One seed",      daily: "£8",   monthly: "£240" },
+                { seeds: 3,  label: "Starter farm",  daily: "£24",  monthly: "£720" },
+                { seeds: 5,  label: "Side income",   daily: "£40",  monthly: "£1,200" },
+                { seeds: 10, label: "Full harvest",  daily: "£80",  monthly: "£2,400", highlight: true },
+                { seeds: 20, label: "Abundant farm", daily: "£160", monthly: "£4,800" },
+              ].map((row, i) => (
+                <div key={i} className={`math-row${row.highlight ? " math-row-highlight" : ""}`}>
+                  <div className="math-seeds">
+                    <span className="math-num">{row.seeds}</span>
+                    <span className="math-unit">{row.seeds === 1 ? "seed" : "seeds"}</span>
+                  </div>
+                  <div className="math-label">{row.label}</div>
+                  <div className="math-daily">{row.daily} / day</div>
+                  <div className="math-monthly">{row.monthly}<span>/mo</span></div>
+                </div>
+              ))}
+            </div>
+            <p className="math-note">Based on average earnings across active seeds. Most planters reach 10 seeds within 90 days.</p>
+          </div>
+        </section>
+
         {/* ── PRICING ── */}
-        <section className="lp-section lp-section-alt" id="start">
+        <section className="lp-section" id="start">
           <div className="lp-inner" style={{ textAlign: "center", marginBottom: 44 }}>
             <div className="lp-label">Start your farm</div>
             <h2>One subscription. Your whole farm.</h2>
@@ -524,7 +578,7 @@ export default function HomePage() {
         </section>
 
         {/* ── FAQ ── */}
-        <section className="lp-section" id="faq">
+        <section className="lp-section lp-section-alt" id="faq">
           <div className="lp-inner">
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <div className="lp-label">Before you plant</div>
@@ -537,7 +591,7 @@ export default function HomePage() {
                 <FaqItem q="How long before my first harvest?" a="Most planters have their first seed in the ground within an hour. Social can drive sales within 48 hours. We guarantee income from your first seed within 7 days — or your first month is fully refunded." />
               </div>
               <div>
-                <FaqItem q="Is the African market already saturated?" a="The opposite. Most practical, high-intent topics in Ghana, Nigeria, Kenya, and South Africa have zero PDF guides published. The window is open — but it won't stay that way indefinitely." />
+                <FaqItem q="Are these niches already too competitive?" a="The opposite. Most high-intent topics in underserved markets have zero PDF guides published — that is the exact gap the system finds. The window is wide open, but it won't stay that way indefinitely." />
                 <FaqItem q="Is £39 a month worth it?" a="One seed earning £8 a day returns £240 a month — six times your subscription cost from a single guide. The farm pays for itself in the first week. After that, every harvest is profit." />
                 <FaqItem q="What if my seeds don't produce?" a="We refund your first month — no forms, no chasing. Plant your first seed within 7 days. If it doesn't earn, email us. Refund sent the same day." />
               </div>
