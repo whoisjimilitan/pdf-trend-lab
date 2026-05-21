@@ -11,11 +11,10 @@ export const metadata: Metadata = {
 };
 
 const nav = [
-  { href: "/dashboard", label: "My Farm",       icon: "🌱" },
-  { href: "/engine",    label: "Find Gaps",      icon: "🔍" },
-  { href: "/factory",   label: "Grow Guides",    icon: "📄" },
-  { href: "/schedule",  label: "Daily Schedule", icon: "📅" },
-  { href: "/store",     label: "Store",          icon: "🛍️" },
+  { href: "/dashboard", label: "My Farm",  icon: "🌱" },
+  { href: "/factory",   label: "My Seeds", icon: "📄" },
+  { href: "/schedule",  label: "Schedule", icon: "📅" },
+  { href: "/store",     label: "Store",    icon: "🛍️" },
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -37,13 +36,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/engine"
               className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-sm font-bold text-white"
               style={{ background: "var(--accent)" }}>
-              🔍 Find New Gaps →
+              🌱 Plant New Seed
             </Link>
           </div>
           <nav className="flex-1 px-3 py-2 space-y-1">
             {nav.map(({ href, label, icon }) => (
               <Link key={href} href={href}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors hover:bg-indigo-50 hover:text-indigo-700"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors hover:bg-[#EFF5ED] hover:text-[#4A6741]"
                 style={{ color: "var(--muted)" }}>
                 <span className="text-base">{icon}</span>
                 {label}
