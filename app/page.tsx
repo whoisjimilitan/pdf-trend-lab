@@ -216,8 +216,8 @@ export default function HomePage() {
               Earn <em>every month.</em>
             </h1>
             <p className="lp-hero-sub">
-              Every day, millions of people in Ghana, Nigeria, Kenya, South Africa, and the UK diaspora
-              type questions into Google that nobody has answered in a PDF yet.
+              Millions of people across Ghana, Nigeria, Kenya, South Africa, and the UK diaspora
+              are Googling questions with no PDF answer yet.
               PDF Seeds finds those gaps, writes the guide, and puts it in front of buyers — automatically.
             </p>
             <p className="lp-offer-line">
@@ -264,12 +264,12 @@ export default function HomePage() {
                 <div className="lp-section-label">From the founder</div>
                 <div className="lp-section-title">This system works while you sleep.</div>
                 <p className="lp-section-body" style={{ marginBottom: 20 }}>
-                  I built PDF Seeds because I was tired of side hustles that demanded more of my time the more I put in.
+                  I built PDF Seeds because I was tired of side hustles that demanded more time the more I put in.
                   I wanted something that kept growing after I stopped. This is that thing.
                 </p>
                 <p className="lp-section-body" style={{ marginBottom: 20 }}>
-                  The idea is simple: millions of people in African markets are searching for answers that don&apos;t exist
-                  in one place yet. We find those gaps, write the guides, and plant them where the buyers already are.
+                  Millions of people across African markets are searching for answers that don&apos;t exist in one place.
+                  We find those gaps, write the guides, plant them where buyers already are.
                   Every guide is a seed. Every seed earns every month.
                 </p>
                 <p style={{ fontSize: "0.85rem", color: "#6366F1", fontWeight: 700 }}>
@@ -305,19 +305,19 @@ export default function HomePage() {
               {[
                 {
                   num: "01", icon: "🔍", title: "Find your seed",
-                  body: "Tell us your market. In 60 seconds you get 10–15 real questions people are searching — with no PDF answer yet.",
+                  body: "Tell us your market. 60 seconds later: 10–15 real questions people are searching with no PDF answer.",
                 },
                 {
                   num: "02", icon: "📄", title: "Grow your guide",
-                  body: "Pick a topic. Click generate. In 3 minutes: a complete PDF, a sell page, an SEO article, and 10 marketing hooks. Nothing for you to write.",
+                  body: "Pick a topic. Click generate. 3 minutes: PDF, sell page, SEO article, 10 hooks. Nothing to write.",
                 },
                 {
                   num: "03", icon: "🌍", title: "Plant it",
-                  body: "Post one thing a day. The schedule tells you exactly where — TikTok Monday, Pinterest Tuesday. Ten minutes. Your guide starts appearing in Google and social feeds.",
+                  body: "Post one thing a day. The schedule says where — TikTok Monday, Pinterest Tuesday. Ten minutes. Google and social feeds start finding you.",
                 },
                 {
                   num: "04", icon: "💰", title: "Harvest",
-                  body: "£8/day per guide = £240/month. Ten guides = £2,400. Every month you plant more, the library grows. The income compounds.",
+                  body: "£8/day per guide = £240/month. Ten guides = £2,400. Plant more each month. The income compounds.",
                 },
               ].map((step, i) => (
                 <div key={i} className="step-card">
@@ -340,8 +340,8 @@ export default function HomePage() {
                 <div className="lp-section-label">What you get</div>
                 <div className="lp-section-title">Stop guessing. Start planting.</div>
                 <p className="lp-section-body" style={{ marginBottom: 32 }}>
-                  Every tool inside PDF Seeds exists for one reason: to remove every obstacle between you and a
-                  guide that earns money. Not to impress you with technology. To get you paid.
+                  Every tool inside PDF Seeds exists for one reason: remove every obstacle between you and a
+                  guide that earns. Not to impress you. To get you paid.
                 </p>
                 <a href="#start" className="lp-primary-btn" style={{ display: "inline-block" }}>
                   Start Planting Today →
@@ -352,12 +352,12 @@ export default function HomePage() {
                   {
                     icon: "🎯",
                     title: "Never guess what to make",
-                    desc: "Know exactly what people are already searching for. Every topic is a proven demand, not a hope.",
+                    desc: "Know exactly what people are searching for. Every topic is proven demand, not a hope.",
                   },
                   {
                     icon: "📝",
                     title: "Your guide is ready before your coffee goes cold",
-                    desc: "PDF, sales page, SEO article — generated and ready to publish in one click.",
+                    desc: "PDF, sell page, SEO article — generated and ready to sell in one click.",
                   },
                   {
                     icon: "📱",
@@ -372,7 +372,7 @@ export default function HomePage() {
                   {
                     icon: "✈️",
                     title: "Serve the UK diaspora at premium prices",
-                    desc: "Ghanaians, Nigerians and Kenyans in the UK pay in pounds for guides that solve home-country problems. Near-zero competition.",
+                    desc: "Ghanaians, Nigerians, Kenyans in the UK pay in pounds for guides that solve home-country problems. Near-zero competition.",
                   },
                   {
                     icon: "🗓️",
