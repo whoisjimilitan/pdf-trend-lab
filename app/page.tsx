@@ -105,6 +105,22 @@ export default function HomePage() {
         .problem-pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
         .problem-pill { background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 600; }
 
+        /* INTELLIGENCE LAYER */
+        .intel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 40px; }
+        .intel-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 22px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .intel-card-num { font-size: 1.6rem; font-weight: 900; color: #EEF2FF; line-height: 1; margin-bottom: 10px; }
+        .intel-card-title { font-size: 0.82rem; font-weight: 800; color: #0F172A; margin-bottom: 6px; }
+        .intel-card-body { font-size: 0.78rem; color: #64748B; line-height: 1.6; }
+        .intel-card-threshold { font-size: 0.72rem; font-weight: 700; color: #4F46E5; background: #EEF2FF; border-radius: 4px; padding: 3px 8px; display: inline-block; margin-top: 10px; }
+
+        /* WHAT ONE SEED PRODUCES */
+        .output-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 40px; }
+        .output-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 22px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .output-icon { font-size: 1.6rem; margin-bottom: 12px; }
+        .output-title { font-size: 0.88rem; font-weight: 800; color: #0F172A; margin-bottom: 6px; }
+        .output-body { font-size: 0.78rem; color: #64748B; line-height: 1.65; margin-bottom: 12px; }
+        .output-tag { font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 4px; display: inline-block; }
+
         /* THE INSIGHT — signal cards */
         .signal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 36px; }
         .signal-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
@@ -204,6 +220,8 @@ export default function HomePage() {
         @media (max-width: 768px) {
           .lp-trust-inner { grid-template-columns: repeat(2, 1fr); }
           .signal-grid { grid-template-columns: 1fr; }
+          .intel-grid { grid-template-columns: repeat(2, 1fr); }
+          .output-grid { grid-template-columns: repeat(2, 1fr); }
           .steps-grid { grid-template-columns: 1fr; }
           .opp-grid { grid-template-columns: 1fr; }
           .harvest-grid { grid-template-columns: 1fr; }
@@ -244,18 +262,18 @@ export default function HomePage() {
               🌱 Search-demand intelligence for African markets
             </div>
             <h1>
-              Millions of searches.<br />
-              No PDF answer.<br />
-              <em>That gap is your farm.</em>
+              People are searching.<br />
+              No PDF exists yet.<br />
+              <em>That gap is profitable.</em>
             </h1>
             <p className="lp-hero-sub">
-              Every day, people in Ghana, Nigeria, Kenya, South Africa, and the UK diaspora type
-              urgent questions into Google that nobody has answered in a PDF guide yet.
-              PDF Seeds finds those gaps automatically — then grows the guide, the sales page,
-              the SEO article, and your social content. Plant once. Harvest every month.
+              Across African markets, millions of urgent, specific questions are typed into Google
+              every day — questions no PDF guide has ever answered. PDF Seeds identifies those gaps,
+              scores the demand, validates the opportunity, and builds the guide, the sales page,
+              and the SEO article automatically. One platform. Systematic publishing. Permanent digital assets.
             </p>
             <p className="lp-offer-line">
-              ✅ Plant your first seed and harvest income within 7 days — or your first month is free.
+              ✅ Identify your first opportunity and publish your first guide within 7 days — or your first month is free.
             </p>
             <div className="lp-hero-ctas">
               <a href={STRIPE} className="lp-primary-btn">Start Finding Opportunities →</a>
@@ -405,6 +423,124 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* ── THE INTELLIGENCE LAYER ── */}
+        <section className="lp-section">
+          <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
+            <div style={{ textAlign: "center", marginBottom: 8 }}>
+              <div className="lp-section-label">How the intelligence works</div>
+              <div className="lp-section-title">The opportunity engine reads the soil before you plant.</div>
+              <p style={{ fontSize: "0.92rem", color: "#64748B", maxWidth: 540, margin: "0 auto" }}>
+                Every opportunity is scored against four signals. You only see gaps worth planting into.
+                The rest are filtered out automatically.
+              </p>
+            </div>
+            <div className="intel-grid">
+              {[
+                {
+                  num: "01",
+                  title: "Search Volume",
+                  body: "How many people search this question every month. Low volume means a small audience. High volume with no PDF answer means a large, untapped market.",
+                  threshold: "Threshold: 1,000+ searches / month",
+                },
+                {
+                  num: "02",
+                  title: "Competition Mapping",
+                  body: "How many quality PDF guides already exist for this exact search. In most African market queries, the answer is zero. That is the gap.",
+                  threshold: "Target: 0–2 competing guides",
+                },
+                {
+                  num: "03",
+                  title: "Intent Scoring",
+                  body: "How urgent and transactional the search is. Pain questions outperform curiosity questions. The more urgent the problem, the higher the conversion.",
+                  threshold: "Priority: high-urgency intent",
+                },
+                {
+                  num: "04",
+                  title: "Opportunity Score",
+                  body: "A combined rank that surfaces the highest-value gaps first. Demand × low competition × high intent = the seeds worth planting now.",
+                  threshold: "You see the best first",
+                },
+              ].map((card) => (
+                <div key={card.num} className="intel-card">
+                  <div className="intel-card-num">{card.num}</div>
+                  <div className="intel-card-title">{card.title}</div>
+                  <div className="intel-card-body">{card.body}</div>
+                  <div className="intel-card-threshold">{card.threshold}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── WHAT ONE SEED PRODUCES ── */}
+        <section className="lp-section lp-section-alt">
+          <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
+            <div style={{ textAlign: "center", marginBottom: 8 }}>
+              <div className="lp-section-label">What one seed produces</div>
+              <div className="lp-section-title">Click grow. In 3 minutes, this is ready.</div>
+              <p style={{ fontSize: "0.92rem", color: "#64748B", maxWidth: 540, margin: "0 auto" }}>
+                Every validated opportunity generates a complete publishing kit automatically.
+                Nothing left for you to write, design, or figure out.
+              </p>
+            </div>
+            <div className="output-grid">
+              {[
+                {
+                  icon: "📄",
+                  title: "The PDF Guide",
+                  body: "20–40 pages. Structured, formatted, and written to directly answer the search question. Ready to sell on day one.",
+                  tag: "The product",
+                  tagColor: "#4F46E5",
+                  tagBg: "#EEF2FF",
+                },
+                {
+                  icon: "🛒",
+                  title: "The Sell Page",
+                  body: "Your shareable buy link — put it in your TikTok bio, Instagram bio, or send it directly. Every sale flows through here.",
+                  tag: "Your storefront",
+                  tagColor: "#16A34A",
+                  tagBg: "#DCFCE7",
+                },
+                {
+                  icon: "🔍",
+                  title: "The SEO Article",
+                  body: "An article built to rank for the exact search phrase the guide targets. Once ranked, Google sends buyers indefinitely.",
+                  tag: "Evergreen traffic",
+                  tagColor: "#16A34A",
+                  tagBg: "#DCFCE7",
+                },
+                {
+                  icon: "📱",
+                  title: "10 Social Hooks",
+                  body: "Scripts for TikTok, Pinterest, and Instagram — written for the specific pain the guide solves. Copy, paste, post.",
+                  tag: "Fast traffic",
+                  tagColor: "#7C3AED",
+                  tagBg: "#F5F3FF",
+                },
+              ].map((o) => (
+                <div key={o.title} className="output-card">
+                  <div className="output-icon">{o.icon}</div>
+                  <div className="output-title">{o.title}</div>
+                  <div className="output-body">{o.body}</div>
+                  <div className="output-tag" style={{ color: o.tagColor, background: o.tagBg }}>{o.tag}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 32, background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 12, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+              <div style={{ fontSize: "1.5rem" }}>📸</div>
+              <div>
+                <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1E293B", marginBottom: 4 }}>
+                  Real output screenshots coming soon
+                </div>
+                <div style={{ fontSize: "0.78rem", color: "#94A3B8" }}>
+                  We&apos;re capturing actual tool outputs — generated PDFs, live sell pages, ranked SEO articles — to show here.
+                  If you&apos;ve already used PDF Seeds, <a href="mailto:hello@pdfseeds.com" style={{ color: "#6366F1", textDecoration: "none" }}>send us your results</a>.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── THE FARMING SYSTEM ── */}
         <section className="lp-section" id="how-it-works">
           <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
@@ -521,44 +657,45 @@ export default function HomePage() {
         <section className="lp-section">
           <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
             <div style={{ textAlign: "center" }}>
-              <div className="lp-section-label">Two harvests</div>
-              <div className="lp-section-title">Every seed earns from two directions at once.</div>
+              <div className="lp-section-label">Two traffic streams</div>
+              <div className="lp-section-title">Every published guide captures traffic from two directions.</div>
             </div>
             <div className="harvest-grid">
               <div className="harvest-card">
                 <div className="harvest-badge" style={{ background: "#DCFCE7", color: "#16A34A", border: "1px solid #BBF7D0" }}>
-                  🌿 Google — The evergreen harvest
+                  🌿 Google — Evergreen search traffic
                 </div>
-                <h3>Recurring income from search</h3>
+                <h3>Search rankings that compound over time</h3>
                 <p>
-                  Every seed comes with an SEO article built to rank for the exact search it targets.
-                  When someone searches the question, your article surfaces. They read it,
-                  they want the full PDF guide, they buy. You did nothing that day.
+                  Every guide comes with an SEO article written to rank for the exact search it targets.
+                  Once it ranks, it captures that search permanently. Each visitor who finds it and buys
+                  is a conversion from existing demand — no ad spend, no ongoing effort required.
                 </p>
                 <p>
-                  Once ranked, a seed harvests indefinitely. The ground keeps producing
-                  without replanting. That is what a permanent digital asset means.
+                  This is the compounding layer. Each ranking guide adds to a library of
+                  permanent search assets. The more guides published, the more ground covered.
                 </p>
                 <div className="harvest-timeline" style={{ background: "#DCFCE7", color: "#16A34A", border: "1px solid #BBF7D0" }}>
-                  ⏱ 4–12 weeks to rank · Harvests every month after
+                  ⏱ 4–12 weeks to rank · Converts indefinitely after
                 </div>
               </div>
               <div className="harvest-card">
                 <div className="harvest-badge" style={{ background: "#EEF2FF", color: "#4F46E5", border: "1px solid #C7D2FE" }}>
-                  📱 Social — The fast harvest
+                  📱 Social — Immediate distribution
                 </div>
-                <h3>Sales this week, not this year</h3>
+                <h3>Validated demand, activated immediately</h3>
                 <p>
-                  TikTok, Pinterest, and Instagram drive buyers directly to your PDF sell page.
-                  Every seed comes with 10 platform-specific hooks — scripts the system wrote
-                  for you. Post one. People who feel the pain click. They buy.
+                  TikTok, Pinterest, and Instagram send buyers directly to the sell page.
+                  Every guide comes with 10 platform-specific scripts written for the exact
+                  pain the PDF solves. Post one. High-intent viewers click through and buy.
                 </p>
                 <p>
-                  Social produces income within days of planting. It runs in parallel while
-                  Google is still taking root. Fast harvest now. Evergreen harvest forever.
+                  Social distribution begins generating sales within days of publishing —
+                  while Google rankings are still building. Both channels run in parallel,
+                  serving different parts of the same validated demand.
                 </p>
                 <div className="harvest-timeline" style={{ background: "#EEF2FF", color: "#4F46E5", border: "1px solid #C7D2FE" }}>
-                  ⚡ First harvest possible within 48 hours of planting
+                  ⚡ Sales possible within 48 hours of publishing
                 </div>
               </div>
             </div>
@@ -570,19 +707,19 @@ export default function HomePage() {
           <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 52, alignItems: "start" }}>
               <div>
-                <div className="lp-section-label">As the farm grows</div>
-                <div className="lp-section-title">More seeds. More ground. More harvest.</div>
+                <div className="lp-section-label">The compounding model</div>
+                <div className="lp-section-title">Each guide published adds a permanent asset to the library.</div>
                 <p className="lp-section-body" style={{ marginBottom: 20 }}>
-                  A PDF guide costs almost nothing to reproduce. Once planted, the only thing
-                  that changes month to month is how many more buyers find it. No restocking.
-                  No shipping. No ongoing work. Every new seed is another permanent plot
-                  earning in the background.
+                  A PDF guide costs almost nothing to reproduce. Once published and ranked,
+                  its revenue compounds with audience growth — not with your time.
+                  Every additional guide adds another search position, another social funnel,
+                  another permanent entry point into the same validated demand.
                 </p>
                 <p className="lp-section-body" style={{ marginBottom: 24 }}>
-                  The diaspora market changes the economics entirely. A Ghanaian in London
-                  resolving a land issue remotely will pay £20 for a PDF that saves them
-                  confusion, lawyer fees, or a flight home. UK income. Home-country problems.
-                  Almost no competing seeds planted.
+                  The diaspora market changes the unit economics entirely. A Ghanaian in London
+                  resolving a land issue remotely will pay £20 for a guide that saves them
+                  confusion, lawyer fees, or a flight home. Higher prices, near-zero PDF competition,
+                  and a highly motivated buyer. The strongest segment in the model.
                 </p>
                 <a href={STRIPE} className="lp-primary-btn" style={{ display: "inline-block" }}>
                   Plant Your First Seed →
@@ -668,17 +805,18 @@ export default function HomePage() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
               <div>
                 <div className="lp-section-label">From the founder</div>
-                <div className="lp-section-title">I wanted a farm. Not another job.</div>
+                <div className="lp-section-title">I wanted a publishing system. Not another hustle.</div>
                 <p className="lp-section-body" style={{ marginBottom: 20 }}>
-                  I built PDF Seeds because I was tired of side hustles that demanded more of my
-                  time the more I put in. I wanted something that kept growing after I stopped.
-                  A farm, not a treadmill.
+                  I built PDF Seeds because I kept seeing the same problem: massive, untapped search demand
+                  in African markets, and almost no digital products built to capture it.
+                  The information gap was obvious. The business model was sound.
+                  What was missing was a system to execute it efficiently.
                 </p>
                 <p className="lp-section-body" style={{ marginBottom: 20 }}>
-                  The idea is simple: millions of people in African markets are searching for answers
-                  that don&apos;t exist as PDF guides yet. We find those gaps, write the guides, and plant them
-                  where the buyers already are.
-                  Every guide is a seed. Every seed earns every month.
+                  PDF Seeds is that system. It identifies real search demand, validates the opportunity,
+                  and builds every component of the publishing pipeline — the PDF guide, the sales page,
+                  the SEO article, the social content — in one step. Each guide published becomes a
+                  permanent search asset. The library compounds over time.
                 </p>
                 <p style={{ fontSize: "0.85rem", color: "#6366F1", fontWeight: 700 }}>
                   — Jimi, Founder of PDF Seeds
