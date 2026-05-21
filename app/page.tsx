@@ -156,6 +156,22 @@ export default function HomePage() {
         details[open] .faq-plus { transform: rotate(45deg); }
         .faq-a { font-size: 0.88rem; color: #64748B; line-height: 1.75; padding-bottom: 20px; margin: 0; }
 
+        /* WHY PEOPLE START PLANTING */
+        .why-inner { max-width: 680px; }
+        .why-body { font-size: 1rem; color: #64748B; line-height: 1.85; margin: 0 0 20px; }
+        .why-body strong { color: #0F172A; font-weight: 700; }
+        .why-somethings { margin: 0 0 28px; padding: 18px 22px; background: #F8FAFC; border-left: 3px solid #C7D2FE; border-radius: 0 8px 8px 0; display: flex; flex-direction: column; gap: 8px; }
+        .why-somethings p { font-size: 0.97rem; color: #64748B; font-style: italic; margin: 0; line-height: 1.65; }
+        .why-highlight { font-size: 1.05rem; font-weight: 700; color: #0F172A; margin: 0 0 14px; }
+        .why-not-block { margin: 0 0 20px; }
+        .why-not-block p { font-size: 0.9rem; color: #94A3B8; margin: 0 0 3px; font-style: italic; }
+        .why-outcomes { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 22px 24px; margin: 28px 0; }
+        .why-outcomes-title { font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 14px; }
+        .why-outcome-row { display: flex; gap: 10px; font-size: 0.9rem; color: #64748B; padding: 7px 0; border-bottom: 1px solid #F1F5F9; line-height: 1.5; }
+        .why-outcome-row:last-child { border-bottom: none; }
+        .why-arrow { color: #6366F1; font-weight: 700; flex-shrink: 0; }
+        .why-closing { font-size: 1.05rem; font-weight: 800; color: #0F172A; line-height: 1.45; margin: 0; letter-spacing: -0.01em; border-top: 1px solid #E2E8F0; padding-top: 24px; }
+
         /* FOOTER */
         .lp-footer { padding: 32px 24px; border-top: 1px solid #E2E8F0; text-align: center; background: #F8FAFC; }
         .lp-footer p { font-size: 0.78rem; color: #CBD5E1; margin: 0; }
@@ -293,8 +309,71 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── THREE SEEDS WAITING ── */}
+        {/* ── WHY PEOPLE START PLANTING ── */}
         <section className="lp-section">
+          <div className="lp-inner">
+            <div className="why-inner">
+              <div className="lp-label">Why people start planting</div>
+              <h2 style={{ marginBottom: 24 }}>They needed something<br />that finally made sense.</h2>
+
+              <p className="why-body">
+                Most people don&apos;t need another business idea.<br />
+                They need <strong>something that finally makes sense.</strong>
+              </p>
+
+              <div className="why-somethings">
+                <p>Something they can build quietly after work.</p>
+                <p>Something that doesn&apos;t require inventory.</p>
+                <p>Something that doesn&apos;t depend on going viral every day.</p>
+                <p>Something that keeps earning after the work is done.</p>
+              </div>
+
+              <p className="why-body">That is why people start planting.</p>
+
+              <p className="why-body">
+                Some are trying to cover rent.<br />
+                Some want extra income without taking a second job.<br />
+                Some are tired of starting over every month.<br />
+                Some simply want one digital asset that keeps growing quietly in the background.
+              </p>
+
+              <p className="why-highlight">PDF Seeds was built for that person.</p>
+
+              <div className="why-not-block">
+                <p>Not influencers.</p>
+                <p>Not marketing experts.</p>
+                <p>Not people with huge audiences.</p>
+              </div>
+
+              <p className="why-body">
+                Just ordinary people willing to plant one useful guide into demand that already exists.
+              </p>
+
+              <div className="why-outcomes">
+                <div className="why-outcomes-title">🌱 One seed can become:</div>
+                {[
+                  "your first online sale",
+                  "your first consistent side income",
+                  "your first digital asset",
+                  "your first proof that the internet still has open ground",
+                ].map((item, i) => (
+                  <div key={i} className="why-outcome-row">
+                    <span className="why-arrow">→</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="why-closing">
+                You do not need hundreds of ideas.<br />
+                You need one unplanted question.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── THREE SEEDS WAITING ── */}
+        <section className="lp-section lp-section-alt">
           <div className="lp-inner">
             <div className="lp-label">Unplanted opportunities</div>
             <h2>Three seeds waiting to be planted.</h2>
@@ -379,12 +458,12 @@ export default function HomePage() {
             <div className="pricing-period">per month · cancel anytime</div>
             <ul className="pricing-list">
               {[
-                "Gap finder — 5 African markets scanned for unplanted demand",
-                "PDF guide generation — unlimited seeds, one click each",
-                "Buy page + SEO article grown automatically with every guide",
-                "10 social hooks per guide — TikTok, Pinterest, Instagram",
-                "Daily planting schedule — one specific action per day",
-                "Farm dashboard — every seed tracked in one place",
+                "Find questions people already want answered — before anyone else plants them",
+                "Generate a complete guide ready to sell in minutes, not months",
+                "Get found on Google and social media without being an expert",
+                "Build a library of digital assets that compound over time",
+                "Know exactly what to post each day — no content strategy needed",
+                "Watch every seed grow from one simple dashboard",
               ].map((item, i) => (
                 <li key={i}><CheckIcon />{item}</li>
               ))}
