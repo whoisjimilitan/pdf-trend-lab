@@ -540,6 +540,105 @@ async function checkPDFCompetition(keywords: string[]): Promise<Map<string, Comp
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// LAYER 4 — Commercial Pain Detector
+// Scores every query for urgency, confusion, and willingness-to-pay BEFORE
+// sending anything to Gemini. A 2k/mo search with panic + money beats a
+// 50k/mo "what is…" query every time. This is the engine's moat.
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface PainScore {
+  score: number;
+  flags: string[];
+  isPDFSuitable: boolean;
+}
+
+function scoreCommercialPain(query: string): PainScore {
+  const q = query.toLowerCase();
+  const flags: string[] = [];
+  let score = 0;
+
+  // FEAR & MONEY — highest conversion signals. Panic + cash = instant buyer.
+  if (/recover|lost|stolen|blocked|failed|rejected|denied|wrong|mistake|fix|scam|fraud|cheat/.test(q)) {
+    score += 15; flags.push("FEAR");
+  }
+  if (/money|payment|transfer|fund|fee|cost|salary|income|debt|loan|refund|withdraw|charge/.test(q)) {
+    score += 15; flags.push("MONEY");
+  }
+
+  // DEADLINE URGENCY — people pay to avoid consequences
+  if (/urgent|emergency|deadline|expire|expired|late|overdue|asap|last chance/.test(q)) {
+    score += 12; flags.push("DEADLINE");
+  }
+
+  // DIASPORA — highest willingness to pay. Western salary, African problem, zero local help.
+  if (/from uk|from abroad|from usa|from canada|from australia|overseas|international|diaspora/.test(q)) {
+    score += 15; flags.push("DIASPORA");
+  }
+  if (/embassy|high commission|visa|passport|immigration|citizenship|dual nationality/.test(q)) {
+    score += 12; flags.push("IMMIGRATION");
+  }
+
+  // PROCESS COMPLEXITY — people pay for someone to untangle bureaucracy
+  if (/register|registration|apply|application|renew|renewal|submit|obtain|procedure|process/.test(q)) {
+    score += 10; flags.push("PROCESS");
+  }
+  if (/document|certificate|form|checklist|requirement|proof/.test(q)) {
+    score += 8; flags.push("PAPERWORK");
+  }
+
+  // LEGAL / OFFICIAL — high stakes, low tolerance for mistakes
+  if (/tax|legal|law|court|fine|penalty|compliance|licence|license|regulation/.test(q)) {
+    score += 10; flags.push("LEGAL");
+  }
+
+  // CONFUSION — buyer is lost and willing to pay for clarity
+  if (/confused|don.t know|not sure|understand|explain|what happens|what do i|help me/.test(q)) {
+    score += 8; flags.push("CONFUSION");
+  }
+
+  // STEP-BY-STEP INTENT — explicitly wants a guide
+  if (/how to|step by step|complete guide|beginners|without mistake|correctly/.test(q)) {
+    score += 8; flags.push("GUIDE-INTENT");
+  }
+
+  // HEALTH ANXIETY — always high-intent
+  if (/symptom|sick|disease|hospital|medical|health|pain|treatment|cure/.test(q)) {
+    score += 8; flags.push("HEALTH");
+  }
+
+  // CAREER / FINANCIAL STRESS
+  if (/job|career|fired|unemployed|promotion|interview|salary|business|start a business/.test(q)) {
+    score += 6; flags.push("CAREER");
+  }
+
+  // ANTI-PATTERNS — subtract for signals that don't convert to PDF sales
+  if (/^what is |^who is |^where is |^when did |^why is |history of |definition |meaning of /.test(q)) {
+    score -= 20; flags.push("INFORMATIONAL");
+  }
+  if (/news|latest|today|celebrity|movie|song|music|sport|game|entertainment|gossip/.test(q)) {
+    score -= 25; flags.push("ENTERTAINMENT");
+  }
+  if (/reddit|twitter|instagram|tiktok|youtube|facebook|social media/.test(q)) {
+    score -= 15; flags.push("SOCIAL-META");
+  }
+  if (/funny|joke|meme|quiz/.test(q)) {
+    score -= 30; flags.push("JUNK");
+  }
+  if (/^review |best .* for |vs |compared to |difference between /.test(q)) {
+    score -= 8; flags.push("COMPARATIVE");
+  }
+
+  // PDF SUITABILITY — can this become a structured downloadable guide?
+  // Good: processes, paperwork, systems, bureaucracy, checklists, applications, exam prep
+  // Bad: news, celebrity, entertainment, single-answer questions
+  const badForPDF = /news|celebrity|movie|song|game|funny|meme|quiz|twitter|instagram|reddit/.test(q);
+  const goodForPDF = /how to|register|apply|renew|process|guide|step|checklist|form|document|certificate|tax|visa|passport|business|start|earn|invest|farm|exam|pass/.test(q);
+  const isPDFSuitable = !badForPDF && (goodForPDF || score > 5);
+
+  return { score, flags, isPDFSuitable };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // POST — Main engine handler
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -567,13 +666,7 @@ export async function POST(req: Request) {
     ]),
   ]);
 
-  const rawSearches = [...new Set(suggestionArrays.flat())]
-    .filter((s) => s.length > 8)
-    .sort((a, b) => {
-      const aScore = /^(how|why|what|when|guide|step|complete|can i|avoid|stop|fix|start|make|get|pass|register|apply|manage)/i.test(a) ? 0 : 1;
-      const bScore = /^(how|why|what|when|guide|step|complete|can i|avoid|stop|fix|start|make|get|pass|register|apply|manage)/i.test(b) ? 0 : 1;
-      return aScore - bScore;
-    });
+  const rawSearches = [...new Set(suggestionArrays.flat())].filter((s) => s.length > 8);
 
   const pricing = diaspora
     ? (DIASPORA_PRICING[country] ?? PRICING.GB)
@@ -589,58 +682,80 @@ export async function POST(req: Request) {
     }, { status: 503 });
   }
 
-  console.log(`[engine] ${country}${diaspora ? " DIASPORA" : ""} (${market.tier}): ${queries.length} queries → ${rawSearches.length} searches, ${redditSignals.length} Reddit signals`);
+  // ── LAYER 4: Commercial Pain Detection ────────────────────────────────────
+  // Score and filter every query before anything else touches it.
+  // This stops weak seeds at the door.
+  const initialScored = rawSearches
+    .map((q) => ({ query: q, ...scoreCommercialPain(q) }))
+    .filter((s) => s.isPDFSuitable)
+    .sort((a, b) => b.score - a.score);
 
-  // Phase 2 — Real volumes via DataForSEO (graceful fallback if not configured)
-  const top80 = rawSearches.slice(0, 80);
-  const volumeMap = await fetchRealVolumes(top80, country);
+  // Depth drill: autocomplete the top 8 highest-pain queries to surface
+  // MORE SPECIFIC, MORE URGENT variations (e.g. "ghana passport renewal uk"
+  // → "ghana passport renewal uk documents needed", "how long does it take", etc.)
+  const top8forDepth = initialScored.slice(0, 8).map((s) => s.query);
+  const depthArrays  = await Promise.all(top8forDepth.map(fetchAutocompleteSuggestions));
+  const depthRaw     = [...new Set(depthArrays.flat())].filter((s) => s.length > 8);
+  const initialSet   = new Set(initialScored.map((s) => s.query));
+  const depthScored  = depthRaw
+    .map((q) => ({ query: q, ...scoreCommercialPain(q) }))
+    .filter((s) => s.isPDFSuitable && !initialSet.has(s.query));
+
+  // Merge Level 1 + Level 2 signals, re-sort by pain score
+  const allScored = [...initialScored, ...depthScored].sort((a, b) => b.score - a.score);
+
+  console.log(`[engine] ${country}${diaspora ? " DIASPORA" : ""} (${market.tier}): ${rawSearches.length} raw → ${allScored.length} pain-scored (depth added ${depthScored.length}). Top score: ${allScored[0]?.score ?? 0} [${allScored[0]?.flags.join("+")}]`);
+
+  // Phase 2 — Real volumes via DataForSEO on pain-scored queries
+  const topForVolume = allScored.slice(0, 80).map((s) => s.query);
+  const volumeMap    = await fetchRealVolumes(topForVolume, country);
   const hasRealVolumes = volumeMap.size > 0;
 
-  // Phase 3 — Filter by real volume (only when DataForSEO is live)
-  let enrichedKeywords: Array<{ keyword: string; volume?: number; inDataForSEO: boolean }>;
+  // Phase 3 — Volume filter: cut confirmed low-volume queries, keep unknowns
+  let enrichedKeywords: Array<{ keyword: string; painScore: number; flags: string[]; volume?: number; inDataForSEO: boolean }>;
   if (hasRealVolumes) {
-    enrichedKeywords = top80
-      .map((kw) => {
-        const data = volumeMap.get(kw.toLowerCase());
-        return { keyword: kw, volume: data?.searchVolume, inDataForSEO: !!data };
+    enrichedKeywords = allScored
+      .map((s) => {
+        const data = volumeMap.get(s.query.toLowerCase());
+        return { keyword: s.query, painScore: s.score, flags: s.flags, volume: data?.searchVolume, inDataForSEO: !!data };
       })
-      // Hard filter: if DataForSEO has data and it's below the floor, cut it
       .filter(({ volume, inDataForSEO }) => !inDataForSEO || (volume ?? 0) >= ABSOLUTE_MIN_VOLUME)
-      .sort((a, b) => (b.volume ?? 0) - (a.volume ?? 0));
+      // Re-sort: pain score + volume together (pain is primary signal)
+      .sort((a, b) => (b.painScore * 1000 + (b.volume ?? 0)) - (a.painScore * 1000 + (a.volume ?? 0)));
 
-    console.log(`[engine] After volume filter: ${enrichedKeywords.length}/${top80.length} keywords survive ≥${ABSOLUTE_MIN_VOLUME.toLocaleString()}/mo`);
+    console.log(`[engine] After volume filter: ${enrichedKeywords.length}/${topForVolume.length} keywords survive`);
   } else {
-    // DataForSEO not configured — pass all to Gemini for estimation
-    enrichedKeywords = top80.map((kw) => ({ keyword: kw, inDataForSEO: false }));
+    enrichedKeywords = allScored.map((s) => ({ keyword: s.query, painScore: s.score, flags: s.flags, inDataForSEO: false }));
   }
 
   if (enrichedKeywords.length < minResultsGate) {
     return NextResponse.json({
-      error: `Real volume data shows fewer than ${minResultsGate} searches above ${ABSOLUTE_MIN_VOLUME.toLocaleString()}/mo for this market. Try a broader keyword or different country.`,
+      error: `No strong pain signals found above volume floor for this market. Try a more specific keyword or switch to Diaspora mode.`,
     }, { status: 422 });
   }
 
-  // Phase 4 — Live competition check for top 20 (preserves 100 free/day quota)
+  // Phase 4 — Competition check for top pain-scored keywords
   const top20 = enrichedKeywords.slice(0, 20).map((e) => e.keyword);
-  const competitionMap = await checkPDFCompetition(top20);
+  const competitionMap   = await checkPDFCompetition(top20);
   const hasRealCompetition = competitionMap.size > 0;
 
-  // Phase 5 — Build enriched prompt list for Gemini
-  // Gemini's only job now: pain point writing, title crafting, exact questions, urgency/ease scoring.
-  // It must NOT estimate volumes or competition — real data is provided where available.
+  // Phase 5 — Build fully annotated prompt list for Gemini
+  // Every query arrives with: pain score + emotional flags + real volume + competition reality
   const enrichedList = enrichedKeywords.slice(0, 60).map((e, i) => {
-    const volAnnotation  = e.volume != null ? `${e.volume.toLocaleString()}/mo ✓ REAL` : (hasRealVolumes ? "volume unknown" : "");
+    const painAnnotation = e.flags.length > 0 ? `[${e.flags.join("+")}]` : "";
+    const priority       = e.painScore >= 35 ? " ← HIGH PRIORITY" : e.painScore >= 20 ? " ← WORTH CHECKING" : "";
+    const volAnnotation  = e.volume != null ? `${e.volume.toLocaleString()}/mo ✓` : "";
     const compData       = competitionMap.get(e.keyword.toLowerCase());
     const compAnnotation = compData
-      ? (compData.monopolyScore >= 85 ? `PDF supply: ${compData.pdfCount} ← MONOPOLY OPPORTUNITY` :
-         compData.monopolyScore >= 65 ? `PDF supply: ${compData.pdfCount} (low)` :
-         compData.monopolyScore >= 40 ? `PDF supply: ${compData.pdfCount} (medium)` :
-                                        `PDF supply: ${compData.pdfCount} (saturated)`)
+      ? (compData.monopolyScore >= 85 ? `MONOPOLY (${compData.pdfCount} PDFs exist)` :
+         compData.monopolyScore >= 65 ? `low competition` :
+         compData.monopolyScore >= 40 ? `medium competition` : `saturated`)
       : "";
-    const parts = [`${i + 1}. "${e.keyword}"`];
-    if (volAnnotation)  parts.push(`| ${volAnnotation}`);
-    if (compAnnotation) parts.push(`| ${compAnnotation}`);
-    return parts.join(" ");
+    const parts = [`${i + 1}. "${e.keyword}" | pain:${e.painScore} ${painAnnotation}`];
+    if (volAnnotation)  parts.push(volAnnotation);
+    if (compAnnotation) parts.push(compAnnotation);
+    parts.push(priority);
+    return parts.join(" | ").replace(/\s\|\s$/, "");
   }).join("\n");
 
   const redditSection = redditSignals.length > 0
@@ -671,108 +786,131 @@ For competition: "MONOPOLY OPPORTUNITY" = "low". High PDF supply count = "high".
       messages: [
         {
           role: "system",
-          content: `You are a digital product strategist who builds a PDF guide business on one principle: solve a specific, painful, widespread problem that tens of thousands of people are actively searching for — and package the solution as the definitive, easy-to-buy guide.
+          content: `You are a commercial pain detection engine. Your only job is to identify searches where someone is confused, stressed, or afraid — and where a clean, downloadable PDF guide is the obvious solution.
 
-YOUR INTELLIGENCE SYSTEM:
+THE CORE PRINCIPLE:
+You are NOT building an SEO keyword tool.
+You are detecting profitable uncertainty.
 
-LAYER 1 — SEARCH SIGNAL (Google Autocomplete):
-What people TYPE when they need answers. This is your SEO backbone.
-The exact search phrase → embedded in the PDF title → page ranks on Google → free organic traffic forever.
+The buyer pays because they are unsure, overwhelmed, confused, or afraid of making a mistake.
+That changes everything about how you evaluate a search.
 
-LAYER 2 — VOLUME SIGNAL (DataForSEO / real Google data):
-Actual monthly search volumes where available. Marked "✓ REAL". Use them exactly — do not adjust.
+SEARCH VOLUME IS NOT THE PRIMARY SIGNAL.
+A 2,000/month search with FEAR + MONEY + PROCESS beats a 50,000/month "what is cryptocurrency" every time.
+Why? Because the first person is in pain and needs a solution today. The second is browsing.
 
-LAYER 3 — COMPETITION SIGNAL (Live Google Custom Search):
-Live count of existing PDF guides on Gumroad, Payhip, Selar. "← MONOPOLY OPPORTUNITY" means zero competing guides exist right now.
+THE COMMERCIAL PAIN HIERARCHY (in order of conversion power):
+1. FEAR — "how to recover lost momo transaction" → they're panicking. Instant buyer.
+2. MONEY — anything involving payments, fees, transfers, income → financial stakes = willingness to pay
+3. DIASPORA — someone in the UK trying to solve a Ghana/Nigeria/Kenya problem → Western salary, African bureaucracy, zero local help → premium pricing, instant sale
+4. DEADLINE — something expires, a form is overdue, a certificate needs renewal → urgency = conversion
+5. PROCESS COMPLEXITY — government forms, registrations, applications → people pay to untangle bureaucracy
+6. LEGAL / COMPLIANCE — tax, licenses, court, certificates → high stakes, low tolerance for mistakes
+7. CONFUSION — they don't know where to start → they'll pay for a clear first step
 
-LAYER 4 — PAIN SIGNAL (Reddit / social language):
-What people SAY when they describe their suffering. Use this for the painPoint and PDF title framing.
+WHAT MAKES A GOOD PDF TOPIC:
+✅ Processes, paperwork, applications, registrations, renewals
+✅ Bureaucracy simplification (government, legal, financial)
+✅ Exam prep (WAEC, JAMB, KCSE — students pay for pattern clarity)
+✅ Diaspora logistics (passport renewal abroad, dual citizenship, sending money home)
+✅ Step-by-step systems (farming, business setup, side hustles)
+✅ "From abroad" problems (certificate verification, property from UK, embassy processes)
 
-HOW THESE LAYERS COMBINE IN ONE TITLE:
-The keyword phrase gets the page found (SEO layer).
-The pain framing makes the reader buy (conversion layer).
+❌ Reject these — they will NOT sell as PDFs:
+❌ "What is…" / "Who is…" / "History of…" — pure information, no pain
+❌ Entertainment, news, celebrity, sports, music
+❌ Broad motivation / general inspiration
+❌ Anything with a free, complete, obvious Google answer in 10 seconds
 
-✅ SEARCH: "how to register a business in ghana"
-   PAIN: "I've been going in circles for months — forms, wrong offices, missing documents"
-   TITLE: "Complete Step-by-Step Guide to Registering a Business in Ghana 2026"
-   PAIN POINT: "Thousands of Ghanaian entrepreneurs are losing months to confusing paperwork and wrong advice just to register a business that should take two weeks."
+THE PACKAGING GAP (your hidden edge):
+There may be 200 blog posts, confusing government websites, and YouTube videos.
+But if there's NO clean, downloadable, step-by-step PDF guide — that IS a gap.
+You're selling convenience and certainty, not information.
 
-✅ SEARCH: "waec past questions"
-   PAIN: "I studied hard but I don't know what the exam actually focuses on"
-   TITLE: "WAEC / WASSCE Success Guide: How to Pass All Subjects Easily"
+DATA PROVIDED (use it, do not override it):
+— "pain:" score = pre-calculated commercial pain score. Higher = more urgent, more likely to convert.
+— Flags = emotional signals detected: FEAR, MONEY, DIASPORA, DEADLINE, PROCESS, LEGAL, CONFUSION
+— "← HIGH PRIORITY" = pre-scored as high commercial intensity. These are your best seeds.
+— Volume marked "✓" = real Google monthly data. Use it exactly.
+— "MONOPOLY" = live Google search found zero competing PDFs on Gumroad/Payhip right now.
 
-THE PAIN POINT — what it is and how to write it:
-A single sentence (40–80 words) describing the specific suffering that creates demand for this PDF.
-NOT "many people struggle with this topic." Too vague.
-YES: Name the specific group, the specific frustration, the specific consequence.
-Format: "[Group of people] [what they're trying to do] [what keeps going wrong] [the real cost of not solving it]"
+SCORING AXES:
+AXIS 1 — PDF MONOPOLY (35 pts max)
+  MONOPOLY label: +35 pts
+  Low competition: +20 pts
+  Some PDFs exist but yours can be clearly better: +8 pts
+  Saturated: +0 pts
 
-TITLE RULES:
-— Keyword phrase must appear naturally in the title (SEO signal preserved)
-— Add year (2026) for registration, legal, exam, visa, government topics
-— Use full dual acronyms: "WAEC / WASSCE", "JAMB / UTME", "KCSE / KNEC"
-— Subtitle must state a PROMISE or OUTCOME (not just "A Complete Guide")
+AXIS 2 — COMMERCIAL PAIN INTENSITY (30 pts max)
+  pain: score ≥ 35 (FEAR/MONEY/DIASPORA combination): +30 pts
+  pain: score 20–34: +20 pts
+  pain: score 10–19: +10 pts
+  pain: score < 10: +0 pts (probably skip)
 
-EXACT QUESTIONS — 4 SHORT HUMAN FRAGMENTS:
-Real search fragments people type alongside the main query. These become chapter headings.
-✅ "How much?", "Documents needed", "How long it takes", "Tax registration"
-❌ "How do I find out what documents are required for this process?"
-
-THE OPPORTUNITY DENSITY MODEL:
-  Opportunity Density = Search Demand ÷ Supply of Existing Solutions
-
-A topic with 9,000 monthly searches and ZERO competing PDF guides has infinite opportunity density.
-A topic with 60,000 monthly searches and 400 competing PDF guides has low opportunity density.
-
-FOUR SCORING AXES:
-AXIS 1 — PDF MONOPOLY (weight: 35 pts max)
-  Marked "← MONOPOLY OPPORTUNITY": +35 pts
-  Low supply (1–3 PDFs): +20 pts
-  Medium supply (several quality PDFs): +5 pts
-
-AXIS 2 — DEMAND (weight: 30 pts max)
-  Market: ${country} (${market.tier}). Minimum: ${ABSOLUTE_MIN_VOLUME.toLocaleString()}/month.
+AXIS 3 — DEMAND REALITY (20 pts max)
+  Market: ${country} (${market.tier}). Floor: ${ABSOLUTE_MIN_VOLUME.toLocaleString()}/month.
+  ${market.strongVolume.toLocaleString()}+/month → +20 pts
   ${ABSOLUTE_MIN_VOLUME.toLocaleString()}–${(market.strongVolume - 1).toLocaleString()}/month → +10 pts
-  ${market.strongVolume.toLocaleString()}–${(market.massiveVolume - 1).toLocaleString()}/month → +20 pts
-  ${market.massiveVolume.toLocaleString()}+/month → +30 pts
 
-AXIS 3 — PROBLEM URGENCY (weight: 20 pts max)
-  Urgent + consequential: +20 pts
-  General improvement: +10 pts
-
-AXIS 4 — FIRST-MOVER WINDOW (weight: 15 pts max)
-  No quality guide exists: +15 pts
-  Some competition but yours can be clearly better: +5 pts
+AXIS 4 — FIRST-MOVER WINDOW (15 pts max)
+  No quality guide exists yet: +15 pts
+  Thin or poor-quality guides only: +8 pts
 
 SCORING:
-90–100: Plant immediately.
-80–89:  Strong seed.
+90–100: Plant immediately. Commercial pain + monopoly + real demand.
+80–89:  Strong seed. Build after the 90+ ones.
 70–79:  Worth planting if portfolio needs this niche.
-Below 70: Skip.
+Below 70: Skip — weak pain signal or too much competition.
 
-REVENUE REALITY CHECK:
-Monthly Revenue = Search Volume × (Top-3 CTR ≈ 30%) × Conversion Rate × Price
-Example: 9,000/mo × 30% × 4% × ${pricing.symbol}${pricing.min} = ${pricing.symbol}${Math.round(9000 * 0.30 * 0.04 * pricing.min)}/month from ONE PDF.`,
+PAIN POINT WRITING — this is your most important output:
+Format: "[Specific group of people] [what they're trying to do] [what keeps going wrong] [the real cost of not solving it]"
+40–80 words. Raw, honest, first-person. This becomes the emotional hook — the intro of the PDF, the TikTok script, the buy page opener.
+
+✅ EXAMPLE:
+SEARCH: "how to recover deleted momo transaction ghana" | pain:52 [FEAR+MONEY+PROCESS] ← HIGH PRIORITY
+PAIN POINT: "Ghanaians who've lost money through a failed or deleted MoMo transaction are going in circles — calling customer service, visiting branches, getting different answers every time, while their money sits frozen or missing and nobody gives them a clear recovery path."
+TITLE: "MoMo Transaction Recovery Guide: How to Get Your Money Back in Ghana (Step-by-Step)"
+
+✅ EXAMPLE:
+SEARCH: "ghana passport renewal uk" | pain:47 [DIASPORA+IMMIGRATION+PROCESS] ← HIGH PRIORITY
+PAIN POINT: "Ghanaians living in the UK who need to renew their passport are navigating a confusing process with no clear guide — wrong appointment slots, missing documents, embassy delays, and no one to call who actually knows the correct current procedure."
+TITLE: "Ghana Passport Renewal from the UK: Complete Step-by-Step Guide 2026"
+
+TITLE RULES:
+— Keyword phrase must appear naturally in the title
+— Add year (2026) for registration, legal, exam, visa, government topics
+— Use dual acronyms: "WAEC / WASSCE", "JAMB / UTME", "KCSE / KNEC"
+— Subtitle states a PROMISE or OUTCOME
+
+EXACT QUESTIONS — 4 short human search fragments (these become chapter headings):
+✅ "Documents needed", "How long it takes", "How much it costs", "Common mistakes"
+❌ "How do I find out what documents are required for this process?"`,
         },
         {
           role: "user",
-          content: `Find the ${count} most plantable PDF opportunities for ${diaspora ? `${COUNTRY_LABEL[country] ?? country} diaspora` : country}.
+          content: `Detect the ${count} most commercially painful PDF opportunities from this pre-scored search data.
 ${diasporaContext}${realDataNote}
 
-LIVE SEARCH DATA — what people are actively searching right now:
+PAIN-SCORED SEARCH DATA — sorted by commercial intensity (highest pain first):
 ${enrichedList}${redditSection}
 
+INSTRUCTIONS:
+— Prioritise "← HIGH PRIORITY" queries. These have the strongest emotional-commercial signals.
+— Queries with FEAR+MONEY, DIASPORA+PROCESS, or DEADLINE flags convert best to PDF sales.
+— Reject any query that wouldn't make a clean, structured, downloadable guide.
+— For each opportunity, write a pain point that makes a reader say: "that's exactly my situation."
+
 ─────────────────────────────────────────
-OUTPUT FORMAT (one object per opportunity)
+OUTPUT FORMAT
 ─────────────────────────────────────────
 
 {
-  "painPoint": "40–80 words. Name who is suffering, what they are trying to do, what keeps going wrong, and what it costs them.",
-  "keyword": "exact verbatim phrase from the search data above — copy precisely, no edits",
-  "pdfTitle": "The keyword embedded naturally + reads like a real product someone would buy",
+  "painPoint": "40–80 words. Specific group + what they're trying to do + what keeps going wrong + the real cost. Raw and honest.",
+  "keyword": "exact verbatim phrase from the data above — copy precisely",
+  "pdfTitle": "Keyword embedded naturally. Reads like a real product. Subtitle states a promise.",
   "niche": "health | finance | education | business | farming | technology | relationships | home | career | mindset | other",
-  "searchVolume": <integer — use the ✓ REAL figure if provided, otherwise estimate conservatively. Minimum ${ABSOLUTE_MIN_VOLUME}>,
-  "opportunityScore": <integer 70–100, derived from the four-axis scoring above>,
+  "searchVolume": <integer — use ✓ figure if provided, otherwise estimate conservatively. Minimum ${ABSOLUTE_MIN_VOLUME}>,
+  "opportunityScore": <integer 70–100 from the four-axis scoring>,
   "competition": "low | medium | high",
   "trend": "rising | stable | declining",
   "easeToSell": "easy | medium | hard",
