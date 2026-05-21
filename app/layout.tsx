@@ -17,7 +17,7 @@ const nav = [
   { href: "/store",    label: "Store",             icon: "🛍️" },
   { href: "/hooks",    label: "Hook Library",      icon: "🎣" },
   { href: "/clusters", label: "Cluster Map",       icon: "🗺️" },
-  { href: "/",         label: "Dashboard",         icon: "📊" },
+  { href: "/dashboard", label: "Dashboard",         icon: "📊" },
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
