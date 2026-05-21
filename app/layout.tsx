@@ -45,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <nav className="flex-1 px-3 py-2 space-y-1">
             {nav.map(({ href, label, icon }) => (
               <Link key={href} href={href}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors hover:text-white"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors hover:bg-indigo-50 hover:text-indigo-700"
                 style={{ color: "var(--muted)" }}>
                 <span className="text-base">{icon}</span>
                 {label}

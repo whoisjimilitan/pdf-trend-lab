@@ -105,6 +105,34 @@ export default function HomePage() {
         .problem-pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
         .problem-pill { background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 600; }
 
+        /* LIVE FEED */
+        .live-feed { display: flex; flex-direction: column; gap: 8px; margin-top: 36px; }
+        .live-feed-row { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .live-feed-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+        .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #EF4444; flex-shrink: 0; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .live-query { font-size: 0.84rem; font-weight: 600; color: #1E293B; }
+        .live-feed-right { display: flex; gap: 8px; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
+        .live-chip { font-size: 0.7rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+        .live-score { font-size: 0.78rem; font-weight: 900; color: #4F46E5; background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 20px; padding: 3px 10px; white-space: nowrap; }
+
+        /* FROM GAP TO FIRST SALE */
+        .timeline-steps { display: flex; align-items: flex-start; gap: 0; margin-top: 48px; position: relative; }
+        .timeline-steps::before { content: ""; position: absolute; top: 20px; left: 20px; right: 20px; height: 2px; background: linear-gradient(to right, #6366F1, #10B981); z-index: 0; }
+        .timeline-step { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 1; }
+        .timeline-dot { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; margin-bottom: 14px; flex-shrink: 0; border: 3px solid #FFFFFF; box-shadow: 0 0 0 2px #E2E8F0; }
+        .timeline-time { font-size: 0.68rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+        .timeline-label { font-size: 0.8rem; font-weight: 700; color: #0F172A; margin-bottom: 4px; line-height: 1.3; }
+        .timeline-sub { font-size: 0.72rem; color: #94A3B8; line-height: 1.4; max-width: 100px; }
+
+        /* WEEK IN THE FIELD */
+        .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 36px; }
+        .week-day { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px 10px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .week-day-name { font-size: 0.65rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+        .week-day-platform { font-size: 1.1rem; margin-bottom: 6px; }
+        .week-day-action { font-size: 0.7rem; font-weight: 700; color: #0F172A; margin-bottom: 4px; line-height: 1.3; }
+        .week-day-time { font-size: 0.65rem; color: #94A3B8; }
+
         /* INTELLIGENCE LAYER */
         .intel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 40px; }
         .intel-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 22px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
@@ -232,6 +260,10 @@ export default function HomePage() {
           .mobile-sticky { display: block; }
           .lp-hero { padding: 80px 20px 64px; }
           body { padding-bottom: 80px; }
+          .week-grid { grid-template-columns: repeat(4, 1fr); }
+          .timeline-steps { flex-wrap: wrap; gap: 16px; }
+          .timeline-steps::before { display: none; }
+          .timeline-step { flex: 0 0 calc(33% - 8px); }
         }
       `}</style>
 
@@ -541,8 +573,40 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* ── FROM GAP TO FIRST SALE ── */}
+        <section className="lp-section">
+          <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
+            <div style={{ textAlign: "center" }}>
+              <div className="lp-section-label">From gap to first sale</div>
+              <div className="lp-section-title">The fastest publishing pipeline you&apos;ve ever seen.</div>
+              <p style={{ fontSize: "0.92rem", color: "#64748B", maxWidth: 520, margin: "0 auto" }}>
+                From identifying an unplanted gap to your first sale — this is the journey, timed.
+              </p>
+            </div>
+            <div className="timeline-steps">
+              {[
+                { time: "T + 0 min", emoji: "🔍", label: "Gap Identified", sub: "High demand, no PDF planted", bg: "#6366F1" },
+                { time: "T + 1 min", emoji: "✅", label: "Validated", sub: "Score threshold passed", bg: "#7C3AED" },
+                { time: "T + 3 min", emoji: "📄", label: "Kit Generated", sub: "PDF, sell page, SEO article", bg: "#16A34A" },
+                { time: "T + 5 min", emoji: "🛒", label: "Live to Sell", sub: "Buy link active & shareable", bg: "#D97706" },
+                { time: "T + 48 hrs", emoji: "📱", label: "Social Posted", sub: "First traffic from TikTok", bg: "#EF4444" },
+                { time: "T + 4–12 wks", emoji: "🌿", label: "Ranking", sub: "Google sends buyers forever", bg: "#10B981" },
+              ].map((step, i) => (
+                <div key={i} className="timeline-step">
+                  <div className="timeline-dot" style={{ background: step.bg }}>
+                    <span style={{ fontSize: "0.9rem" }}>{step.emoji}</span>
+                  </div>
+                  <div className="timeline-time">{step.time}</div>
+                  <div className="timeline-label">{step.label}</div>
+                  <div className="timeline-sub">{step.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── THE FARMING SYSTEM ── */}
-        <section className="lp-section" id="how-it-works">
+        <section className="lp-section lp-section-alt" id="how-it-works">
           <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <div className="lp-section-label">The farming system</div>
@@ -576,6 +640,42 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ── YOUR WEEK IN THE FIELD ── */}
+        <section className="lp-section">
+          <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
+            <div style={{ textAlign: "center" }}>
+              <div className="lp-section-label">Your week in the field</div>
+              <div className="lp-section-title">One action. Every day. Ten minutes each.</div>
+              <p style={{ fontSize: "0.92rem", color: "#64748B", maxWidth: 520, margin: "0 auto" }}>
+                The daily planting schedule tells you exactly what to post, where, and when.
+                No content planning. No strategy sessions. Just consistent daily distribution.
+              </p>
+            </div>
+            <div className="week-grid">
+              {[
+                { day: "Mon", emoji: "🎵", platform: "TikTok", action: "Post pain hook video", time: "8 am" },
+                { day: "Tue", emoji: "📌", platform: "Pinterest", action: "Pin SEO guide image", time: "9 am" },
+                { day: "Wed", emoji: "📸", platform: "Instagram", action: "Story CTA with buy link", time: "7 am" },
+                { day: "Thu", emoji: "🎵", platform: "TikTok", action: "Post solution reveal", time: "8 am" },
+                { day: "Fri", emoji: "📌", platform: "Pinterest", action: "Pin story board", time: "9 am" },
+                { day: "Sat", emoji: "📊", platform: "Dashboard", action: "Review harvest data", time: "10 am" },
+                { day: "Sun", emoji: "🌱", platform: "Seeds", action: "Plant next opportunity", time: "Anytime" },
+              ].map((d, i) => (
+                <div key={i} className="week-day">
+                  <div className="week-day-name">{d.day}</div>
+                  <div className="week-day-platform">{d.emoji}</div>
+                  <div className="week-day-action">{d.platform}</div>
+                  <div style={{ fontSize: "0.7rem", color: "#475569", marginBottom: 4, lineHeight: 1.3 }}>{d.action}</div>
+                  <div className="week-day-time">{d.time}</div>
+                </div>
+              ))}
+            </div>
+            <p style={{ fontSize: "0.78rem", color: "#94A3B8", marginTop: 14, textAlign: "center" }}>
+              The system generates the content. You post it. Never more than 10 minutes a day.
+            </p>
           </div>
         </section>
 
@@ -649,6 +749,46 @@ export default function HomePage() {
             </div>
             <p style={{ fontSize: "0.78rem", color: "#CBD5E1", marginTop: 18, textAlign: "center" }}>
               PDF Seeds surfaces hundreds of gaps like these — scored, ranked, and ready to grow.
+            </p>
+          </div>
+        </section>
+
+        {/* ── LIVE SOIL — OPPORTUNITY FEED ── */}
+        <section className="lp-section">
+          <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
+            <div className="lp-section-label">Live soil</div>
+            <div className="lp-section-title">The opportunity terminal — gaps detected in real time.</div>
+            <p className="lp-section-body" style={{ maxWidth: 600, marginBottom: 0 }}>
+              PDF Seeds continuously monitors search demand across all 5 markets. When a gap score
+              crosses the threshold — high volume, low competition, no PDF planted — it surfaces here.
+              These are live unplanted seeds, scored and ready.
+            </p>
+            <div className="live-feed">
+              {[
+                { query: "How to apply for Ghana NHIS card in 2024", market: "🇬🇭 Ghana", searches: "3,100/mo", competition: "Very Low", score: "94" },
+                { query: "How to get birth certificate in Nigeria from abroad", market: "🇳🇬 Nigeria", searches: "5,200/mo", competition: "Low", score: "91" },
+                { query: "How to claim Nigerian pension from the UK", market: "🇬🇧 Diaspora", searches: "1,800/mo", competition: "Very Low", score: "92" },
+                { query: "How to send money to Kenya without charges", market: "🇰🇪 Kenya", searches: "2,700/mo", competition: "Very Low", score: "88" },
+                { query: "How to apply for South Africa SASSA grant online", market: "🇿🇦 South Africa", searches: "4,400/mo", competition: "Low", score: "86" },
+              ].map((row, i) => (
+                <div key={i} className="live-feed-row">
+                  <div className="live-feed-left">
+                    <div className="live-dot" />
+                    <div>
+                      <div className="live-query">&ldquo;{row.query}&rdquo;</div>
+                      <div style={{ fontSize: "0.72rem", color: "#94A3B8", marginTop: 3 }}>{row.market}</div>
+                    </div>
+                  </div>
+                  <div className="live-feed-right">
+                    <span className="live-chip" style={{ color: "#4F46E5", background: "#EEF2FF", border: "1px solid #C7D2FE" }}>{row.searches}</span>
+                    <span className="live-chip" style={{ color: "#16A34A", background: "#DCFCE7", border: "1px solid #BBF7D0" }}>Competition: {row.competition}</span>
+                    <span className="live-score">Score {row.score}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p style={{ fontSize: "0.75rem", color: "#CBD5E1", marginTop: 14, textAlign: "center" }}>
+              Gaps close when a guide is published. First planter wins the ground.
             </p>
           </div>
         </section>
