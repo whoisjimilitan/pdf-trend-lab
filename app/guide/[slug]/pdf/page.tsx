@@ -112,12 +112,12 @@ export default async function PdfPage({ params }: Props) {
       <div className="pdf-wrap">
         {/* Cover */}
         <div className="cover">
-          <div className="logo">PDF Trend Lab — Digital Guide</div>
+          <div className="logo">PDF Seeds — Digital Guide</div>
           <h1>{product.title}</h1>
           <div className="subtitle">Your Complete Step-by-Step Guide</div>
           <div className="price-badge">{currency}{price} — Instant Download</div>
           <div className="footer-note">
-            © {year} PDF Trend Lab &nbsp;|&nbsp; Instant Download &nbsp;|&nbsp; 30-Day Money-Back Guarantee
+            © {year} PDF Seeds &nbsp;|&nbsp; Instant Download &nbsp;|&nbsp; 30-Day Money-Back Guarantee
           </div>
         </div>
 

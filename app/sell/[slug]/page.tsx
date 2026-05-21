@@ -148,7 +148,7 @@ export default async function SellPage({ params }: Props) {
       <div className="sell-page">
         {/* Nav */}
         <nav className="sell-nav">
-          <span className="sell-nav-brand">📚 PDF Trend Lab</span>
+          <span className="sell-nav-brand">🌱 PDF Seeds</span>
           <a href="#buy" className="sell-nav-cta">Get Instant Access →</a>
         </nav>
 
@@ -257,7 +257,7 @@ export default async function SellPage({ params }: Props) {
 
         {/* Footer */}
         <footer className="sell-footer">
-          <p>PDF Trend Lab · <a href="/store">Browse all guides</a> · <a href={`/guide/${slug}`}>Free preview</a></p>
+          <p>PDF Seeds · <a href="/store">Browse all guides</a> · <a href={`/guide/${slug}`}>Free preview</a></p>
         </footer>
       </div>
     </>

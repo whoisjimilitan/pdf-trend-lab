@@ -6,8 +6,8 @@ import "./globals.css";
 const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "PDF Trend Lab",
-  description: "Demand intelligence → digital product engine",
+  title: "PDF Seeds",
+  description: "Plant PDF guides. Grow passive income. Harvest every month.",
 };
 
 const nav = [
@@ -29,10 +29,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           className="w-56 flex-shrink-0 flex flex-col">
           <div className="px-5 py-6 border-b" style={{ borderColor: "var(--border)" }}>
             <div className="text-xs font-semibold tracking-widest uppercase mb-0.5" style={{ color: "var(--muted)" }}>
-              PDF Trend Lab
+              PDF Seeds
             </div>
             <div className="text-sm font-medium" style={{ color: "var(--text)" }}>
-              PDF Farming Suite
+              Plant. Grow. Harvest.
             </div>
           </div>
           <div className="px-3 pt-4 pb-2">
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </nav>
           <div className="px-5 py-4 border-t" style={{ borderColor: "var(--border)" }}>
             <div className="text-xs" style={{ color: "var(--muted)" }}>
-              Real problems. Real solutions.
+              Plant seeds. Harvest income.
             </div>
           </div>
         </aside>

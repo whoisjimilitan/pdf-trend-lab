@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "PDF Guide Store — Instant Downloads",
+  title: "PDF Seeds — Guide Store",
   description: "Find the guide that answers your exact problem. Instant download, read on any device.",
 };
 
@@ -142,7 +142,7 @@ export default async function StorePage() {
         )}
 
         <div className="store-footer">
-          <p>All guides are instant downloads · 30-day money-back guarantee · <a href="/">PDF Trend Lab</a></p>
+          <p>All guides are instant downloads · 30-day money-back guarantee · <a href="/">PDF Seeds</a></p>
         </div>
       </div>
     </>
