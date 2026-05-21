@@ -98,13 +98,15 @@ export default async function PdfPage({ params }: Props) {
       <script dangerouslySetInnerHTML={{ __html: `
         window.addEventListener('load', function() {
           setTimeout(function() { window.print(); }, 800);
+          var btn = document.getElementById('pdf-print-btn');
+          if (btn) btn.addEventListener('click', function() { window.print(); });
         });
       ` }} />
 
       {/* Print/back bar */}
       <div className="print-bar no-print">
         <a href={`/guide/${slug}`} className="back-btn">← Back to Guide</a>
-        <button className="print-btn" onClick={() => typeof window !== 'undefined' && window.print()}>
+        <button id="pdf-print-btn" className="print-btn">
           🖨️ Save as PDF
         </button>
       </div>

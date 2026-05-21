@@ -43,9 +43,6 @@ const DIASPORA_SUBREDDITS: Record<string, string[]> = {
   ZA: ["southafrica", "unitedkingdom"],
 };
 
-// Diaspora search anchors — exactly how diaspora members phrase their searches.
-// These people have Western purchasing power and face knowledge gaps their local
-// contacts can't help with. Competition for these guides is near zero.
 const DIASPORA_ANCHORS: Record<string, string[]> = {
   GH: [
     "ghana passport renewal uk",
@@ -132,11 +129,6 @@ const DIASPORA_ANCHORS: Record<string, string[]> = {
   ],
 };
 
-/**
- * Fetch Reddit posts to harvest real emotional pain language.
- * People describe their problems on Reddit in raw, unfiltered terms —
- * different from how they phrase a Google search.
- */
 async function fetchRedditSignals(country: string, keyword: string, niche: string, diaspora = false): Promise<string[]> {
   const subreddits = diaspora
     ? (DIASPORA_SUBREDDITS[country] ?? COUNTRY_SUBREDDITS[country] ?? ["AskReddit"])
@@ -178,11 +170,6 @@ async function fetchRedditSignals(country: string, keyword: string, niche: strin
   return [...new Set(signals)].slice(0, 25);
 }
 
-/**
- * Two-layer query strategy:
- * Layer 1 — Universal starters (always return results)
- * Layer 2 — Country-specific anchors (real local search phrases)
- */
 const UNIVERSAL_STARTERS = [
   "how to",
   "how do i",
@@ -322,7 +309,6 @@ const COUNTRY_ANCHORS: Record<string, string[]> = {
 function buildDiscoveryQueries(country: string, keyword: string, niche: string, diaspora = false): string[] {
   const label = COUNTRY_LABEL[country] ?? "";
 
-  // DIASPORA MODE — queries specifically for diaspora members searching from abroad
   if (diaspora) {
     const anchors = DIASPORA_ANCHORS[country] ?? [];
     if (keyword) {
@@ -338,7 +324,6 @@ function buildDiscoveryQueries(country: string, keyword: string, niche: string, 
     return anchors;
   }
 
-  // KEYWORD MODE — explore a specific topic from all angles
   if (keyword) {
     const base = [
       `how to ${keyword}`,
@@ -365,7 +350,6 @@ function buildDiscoveryQueries(country: string, keyword: string, niche: string, 
     return base;
   }
 
-  // NICHE MODE — focus discovery on a specific domain
   if (niche) {
     const nicheQueries = [
       `how to ${niche}`,
@@ -389,7 +373,6 @@ function buildDiscoveryQueries(country: string, keyword: string, niche: string, 
     return [...nicheQueries, ...(COUNTRY_ANCHORS[country] ?? [])];
   }
 
-  // AUTO DISCOVERY MODE — universal starters + country anchors
   return [...UNIVERSAL_STARTERS, ...(COUNTRY_ANCHORS[country] ?? [])];
 }
 
@@ -405,8 +388,6 @@ export const PRICING: Record<string, { symbol: string; min: number; max: number;
 };
 
 // Diaspora buyers have Western purchasing power — price in GBP accordingly.
-// A Ghanaian in the UK pays £14.99 without thinking twice for a guide
-// that solves a problem their UK contacts cannot help with.
 export const DIASPORA_PRICING: Record<string, { symbol: string; min: number; max: number; note: string }> = {
   GH: { symbol: "£", min: 9.99,  max: 19.99, note: "British Pounds — Ghanaian diaspora" },
   NG: { symbol: "£", min: 9.99,  max: 19.99, note: "British Pounds — Nigerian diaspora" },
@@ -414,11 +395,8 @@ export const DIASPORA_PRICING: Record<string, { symbol: string; min: number; max
   ZA: { symbol: "£", min: 9.99,  max: 14.99, note: "British Pounds — South African diaspora" },
 };
 
-// Absolute floor — below this, even a monopoly doesn't generate meaningful income.
-// Everything above 5k is evaluated by Opportunity Density, not raw volume alone.
 const ABSOLUTE_MIN_VOLUME = 5000;
 
-// Market size context — used to calibrate what "strong demand" means per country.
 const MARKET_CONTEXT: Record<string, { tier: string; strongVolume: number; massiveVolume: number }> = {
   GH: { tier: "emerging",  strongVolume: 15000,  massiveVolume: 40000  },
   NG: { tier: "emerging",  strongVolume: 20000,  massiveVolume: 60000  },
@@ -430,14 +408,140 @@ const MARKET_CONTEXT: Record<string, { tier: string; strongVolume: number; massi
   AU: { tier: "saturated", strongVolume: 18000,  massiveVolume: 55000  },
 };
 
-// Diaspora markets are niche but high-intent. Lower absolute volumes are expected
-// because the audience is a subset of the origin country's diaspora population.
 const DIASPORA_MARKET_CONTEXT: Record<string, { tier: string; strongVolume: number; massiveVolume: number }> = {
   GH: { tier: "diaspora-niche", strongVolume: 3000, massiveVolume: 10000 },
   NG: { tier: "diaspora-niche", strongVolume: 5000, massiveVolume: 15000 },
   KE: { tier: "diaspora-niche", strongVolume: 2000, massiveVolume: 8000  },
   ZA: { tier: "diaspora-niche", strongVolume: 2000, massiveVolume: 8000  },
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYER 2 — Real search volume via DataForSEO (~$0.0003/keyword)
+// Replaces AI-hallucinated volumes with Google's actual monthly search data.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const DATAFORSEO_LOCATION: Record<string, number> = {
+  GH: 2288, NG: 2566, KE: 2404, ZA: 2710,
+  GB: 2826, US: 2840, CA: 2124, AU: 2036,
+};
+
+interface VolumeData {
+  searchVolume: number;
+  cpc: number;
+  competition: number;
+}
+
+async function fetchRealVolumes(keywords: string[], country: string): Promise<Map<string, VolumeData>> {
+  const email = process.env.DATAFORSEO_EMAIL;
+  const key   = process.env.DATAFORSEO_KEY;
+  if (!email || !key) return new Map();
+
+  const locationCode = DATAFORSEO_LOCATION[country] ?? 2840;
+  const result = new Map<string, VolumeData>();
+
+  // Batch in chunks of 50 (API allows 1000 but keep costs predictable)
+  for (let i = 0; i < keywords.length; i += 50) {
+    const chunk = keywords.slice(i, i + 50);
+    try {
+      const res = await fetch("https://api.dataforseo.com/v3/keywords_data/google/search_volume/live", {
+        method: "POST",
+        headers: {
+          "Authorization": `Basic ${Buffer.from(`${email}:${key}`).toString("base64")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([{ keywords: chunk, location_code: locationCode, language_code: "en" }]),
+        signal: AbortSignal.timeout(15000),
+      });
+
+      if (!res.ok) {
+        console.warn(`[engine] DataForSEO ${res.status} — continuing without real volumes`);
+        break;
+      }
+
+      const data = await res.json();
+      for (const task of (data?.tasks ?? [])) {
+        for (const item of (task?.result ?? [])) {
+          if (item?.keyword) {
+            result.set(item.keyword.toLowerCase(), {
+              searchVolume: item.search_volume ?? 0,
+              cpc: item.cpc ?? 0,
+              competition: item.competition ?? 0,
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("[engine] DataForSEO fetch failed:", e);
+      break;
+    }
+  }
+
+  console.log(`[engine] DataForSEO: got real volumes for ${result.size}/${keywords.length} keywords`);
+  return result;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYER 3 — Live PDF competition via Google Custom Search (100 free/day)
+// Checks site:gumroad.com + site:payhip.com for each keyword in real-time.
+// Only run on top 20 keywords to preserve the daily quota.
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface CompetitionData {
+  pdfCount: number;
+  monopolyScore: number; // 0–100, higher = less competition = better opportunity
+}
+
+async function checkPDFCompetition(keywords: string[]): Promise<Map<string, CompetitionData>> {
+  const apiKey = process.env.GOOGLE_CUSTOM_SEARCH_KEY;
+  const cx     = process.env.GOOGLE_CUSTOM_SEARCH_CX;
+  if (!apiKey || !cx) return new Map();
+
+  const result = new Map<string, CompetitionData>();
+  const limit  = Math.min(keywords.length, 20);
+
+  for (let i = 0; i < limit; i++) {
+    const kw = keywords[i];
+    try {
+      const query = `site:gumroad.com OR site:payhip.com OR site:selar.co OR filetype:pdf "${kw}"`;
+      const url   = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cx}&q=${encodeURIComponent(query)}&num=10`;
+      const res   = await fetch(url, { signal: AbortSignal.timeout(6000) });
+
+      if (!res.ok) {
+        console.warn(`[engine] Custom Search ${res.status} for "${kw}"`);
+        continue;
+      }
+
+      const data         = await res.json();
+      const totalResults = parseInt(data?.searchInformation?.totalResults ?? "0", 10);
+      const items        = (data?.items ?? []) as Array<{ link?: string }>;
+      const pdfCount     = items.filter((item) =>
+        item?.link?.includes("gumroad.com") ||
+        item?.link?.includes("payhip.com") ||
+        item?.link?.endsWith(".pdf")
+      ).length;
+
+      const monopolyScore =
+        totalResults === 0  ? 100 :
+        totalResults < 3    ? 85  :
+        totalResults < 10   ? 65  :
+        totalResults < 50   ? 40  : 15;
+
+      result.set(kw.toLowerCase(), { pdfCount, monopolyScore });
+    } catch (e) {
+      console.warn(`[engine] Competition check failed for "${kw}":`, e);
+    }
+
+    // Small delay to respect rate limits
+    if (i < limit - 1) await new Promise((r) => setTimeout(r, 120));
+  }
+
+  console.log(`[engine] Competition checked ${result.size} keywords — ${[...result.values()].filter(v => v.monopolyScore >= 85).length} monopoly opportunities`);
+  return result;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// POST — Main engine handler
+// ─────────────────────────────────────────────────────────────────────────────
 
 export async function POST(req: Request) {
   try {
@@ -454,11 +558,13 @@ export async function POST(req: Request) {
 
   const queries = buildDiscoveryQueries(country, keyword || "", niche || "", diaspora);
 
-  const suggestionArrays = await Promise.all(queries.map(fetchAutocompleteSuggestions));
-
-  const redditSignals = await Promise.race<string[]>([
-    fetchRedditSignals(country, keyword || "", niche || "", diaspora).catch(() => []),
-    new Promise<string[]>((resolve) => setTimeout(() => resolve([]), 3000)),
+  // Phase 1 — Discovery: autocomplete + Reddit in parallel (unchanged)
+  const [suggestionArrays, redditSignals] = await Promise.all([
+    Promise.all(queries.map(fetchAutocompleteSuggestions)),
+    Promise.race<string[]>([
+      fetchRedditSignals(country, keyword || "", niche || "", diaspora).catch(() => []),
+      new Promise<string[]>((resolve) => setTimeout(() => resolve([]), 3000)),
+    ]),
   ]);
 
   const rawSearches = [...new Set(suggestionArrays.flat())]
@@ -476,20 +582,71 @@ export async function POST(req: Request) {
     ? (DIASPORA_MARKET_CONTEXT[country] ?? MARKET_CONTEXT.GB)
     : (MARKET_CONTEXT[country] ?? MARKET_CONTEXT.US);
 
-  console.log(`[engine] ${country}${diaspora ? " DIASPORA" : ""} (${market.tier}): ${queries.length} queries → ${rawSearches.length} searches, ${redditSignals.length} Reddit signals`);
-
-  // For diaspora, even 5 good results is fine — anchors are very specific
   const minResultsGate = diaspora ? 3 : 10;
-
   if (rawSearches.length < minResultsGate) {
     return NextResponse.json({
       error: `Could not fetch enough live search data (got ${rawSearches.length} results). Check your internet connection and try again.`,
     }, { status: 503 });
   }
-  const realSearchList = rawSearches.slice(0, 80).map((s, i) => `${i + 1}. ${s}`).join("\n");
+
+  console.log(`[engine] ${country}${diaspora ? " DIASPORA" : ""} (${market.tier}): ${queries.length} queries → ${rawSearches.length} searches, ${redditSignals.length} Reddit signals`);
+
+  // Phase 2 — Real volumes via DataForSEO (graceful fallback if not configured)
+  const top80 = rawSearches.slice(0, 80);
+  const volumeMap = await fetchRealVolumes(top80, country);
+  const hasRealVolumes = volumeMap.size > 0;
+
+  // Phase 3 — Filter by real volume (only when DataForSEO is live)
+  let enrichedKeywords: Array<{ keyword: string; volume?: number; inDataForSEO: boolean }>;
+  if (hasRealVolumes) {
+    enrichedKeywords = top80
+      .map((kw) => {
+        const data = volumeMap.get(kw.toLowerCase());
+        return { keyword: kw, volume: data?.searchVolume, inDataForSEO: !!data };
+      })
+      // Hard filter: if DataForSEO has data and it's below the floor, cut it
+      .filter(({ volume, inDataForSEO }) => !inDataForSEO || (volume ?? 0) >= ABSOLUTE_MIN_VOLUME)
+      .sort((a, b) => (b.volume ?? 0) - (a.volume ?? 0));
+
+    console.log(`[engine] After volume filter: ${enrichedKeywords.length}/${top80.length} keywords survive ≥${ABSOLUTE_MIN_VOLUME.toLocaleString()}/mo`);
+  } else {
+    // DataForSEO not configured — pass all to Gemini for estimation
+    enrichedKeywords = top80.map((kw) => ({ keyword: kw, inDataForSEO: false }));
+  }
+
+  if (enrichedKeywords.length < minResultsGate) {
+    return NextResponse.json({
+      error: `Real volume data shows fewer than ${minResultsGate} searches above ${ABSOLUTE_MIN_VOLUME.toLocaleString()}/mo for this market. Try a broader keyword or different country.`,
+    }, { status: 422 });
+  }
+
+  // Phase 4 — Live competition check for top 20 (preserves 100 free/day quota)
+  const top20 = enrichedKeywords.slice(0, 20).map((e) => e.keyword);
+  const competitionMap = await checkPDFCompetition(top20);
+  const hasRealCompetition = competitionMap.size > 0;
+
+  // Phase 5 — Build enriched prompt list for Gemini
+  // Gemini's only job now: pain point writing, title crafting, exact questions, urgency/ease scoring.
+  // It must NOT estimate volumes or competition — real data is provided where available.
+  const enrichedList = enrichedKeywords.slice(0, 60).map((e, i) => {
+    const volAnnotation  = e.volume != null ? `${e.volume.toLocaleString()}/mo ✓ REAL` : (hasRealVolumes ? "volume unknown" : "");
+    const compData       = competitionMap.get(e.keyword.toLowerCase());
+    const compAnnotation = compData
+      ? (compData.monopolyScore >= 85 ? `PDF supply: ${compData.pdfCount} ← MONOPOLY OPPORTUNITY` :
+         compData.monopolyScore >= 65 ? `PDF supply: ${compData.pdfCount} (low)` :
+         compData.monopolyScore >= 40 ? `PDF supply: ${compData.pdfCount} (medium)` :
+                                        `PDF supply: ${compData.pdfCount} (saturated)`)
+      : "";
+    const parts = [`${i + 1}. "${e.keyword}"`];
+    if (volAnnotation)  parts.push(`| ${volAnnotation}`);
+    if (compAnnotation) parts.push(`| ${compAnnotation}`);
+    return parts.join(" ");
+  }).join("\n");
+
   const redditSection = redditSignals.length > 0
-    ? `\n\nPAIN SIGNALS FROM REDDIT (how diaspora members actually describe these problems):\n${redditSignals.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`
+    ? `\n\nPAIN SIGNALS FROM REDDIT (how people actually describe these problems):\n${redditSignals.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`
     : "";
+
   const diasporaContext = diaspora ? `
 THIS IS DIASPORA MODE — ${country} diaspora living in the UK (and US, Canada, Australia).
 These buyers have Western purchasing power (paying in £ or $) but need ${COUNTRY_LABEL[country] ?? country}-specific solutions.
@@ -497,6 +654,15 @@ Their knowledge gap is 10x worse than locals — they have no local contacts to 
 They pay premium prices for clarity and certainty.
 Buyer profile: educated, employed, earning Western salaries, extremely frustrated that nobody has built a clear guide for their situation.
 Price in GBP (${pricing.symbol}${pricing.min}–${pricing.symbol}${pricing.max}).` : "";
+
+  const realDataNote = hasRealVolumes
+    ? `\n\nIMPORTANT — REAL DATA PROVIDED:
+Columns marked "✓ REAL" are actual Google monthly search volumes from DataForSEO — not estimates.
+Columns marked "← MONOPOLY OPPORTUNITY" mean live Google search found zero competing PDF guides on Gumroad, Payhip, or Selar.
+DO NOT override, re-estimate, or second-guess these numbers.
+For the searchVolume field: use the exact "✓ REAL" figure. If not marked, make a conservative estimate.
+For competition: "MONOPOLY OPPORTUNITY" = "low". High PDF supply count = "high".`
+    : "";
 
   let completion;
   try {
@@ -507,19 +673,20 @@ Price in GBP (${pricing.symbol}${pricing.min}–${pricing.symbol}${pricing.max})
           role: "system",
           content: `You are a digital product strategist who builds a PDF guide business on one principle: solve a specific, painful, widespread problem that tens of thousands of people are actively searching for — and package the solution as the definitive, easy-to-buy guide.
 
-YOUR TWO-LAYER INTELLIGENCE SYSTEM:
+YOUR INTELLIGENCE SYSTEM:
 
 LAYER 1 — SEARCH SIGNAL (Google Autocomplete):
 What people TYPE when they need answers. This is your SEO backbone.
 The exact search phrase → embedded in the PDF title → page ranks on Google → free organic traffic forever.
-The keyword IS the title IS the SEO anchor. Never lose this connection.
 
-LAYER 2 — PAIN SIGNAL (Reddit / social language):
-What people SAY when they describe their suffering. This is your conversion engine.
-Reddit threads, Quora posts, forum complaints use raw, emotional, first-person language:
-"I've been trying for 3 months and I still can't register my business"
-"Every time I try to withdraw my mobile money it fails and nobody can tell me why"
-This language tells you WHAT the PDF must fix and HOW to frame it so buyers feel seen.
+LAYER 2 — VOLUME SIGNAL (DataForSEO / real Google data):
+Actual monthly search volumes where available. Marked "✓ REAL". Use them exactly — do not adjust.
+
+LAYER 3 — COMPETITION SIGNAL (Live Google Custom Search):
+Live count of existing PDF guides on Gumroad, Payhip, Selar. "← MONOPOLY OPPORTUNITY" means zero competing guides exist right now.
+
+LAYER 4 — PAIN SIGNAL (Reddit / social language):
+What people SAY when they describe their suffering. Use this for the painPoint and PDF title framing.
 
 HOW THESE LAYERS COMBINE IN ONE TITLE:
 The keyword phrase gets the page found (SEO layer).
@@ -533,124 +700,78 @@ The pain framing makes the reader buy (conversion layer).
 ✅ SEARCH: "waec past questions"
    PAIN: "I studied hard but I don't know what the exam actually focuses on"
    TITLE: "WAEC / WASSCE Success Guide: How to Pass All Subjects Easily"
-   PAIN POINT: "Students across West Africa prepare for months only to fail WAEC because nobody teaches them the exam's actual patterns and question types."
-
-✅ SEARCH: "mobile money scams ghana"
-   PAIN: "I lost money to a scam last year and still don't know how it happened"
-   TITLE: "Mobile Money Safety Guide: Avoid Scams, Fraud & Loss in Ghana"
-   PAIN POINT: "Every week in Ghana, people lose their savings to mobile money fraud — not because they're careless, but because nobody has ever explained the exact tactics scammers use."
 
 THE PAIN POINT — what it is and how to write it:
 A single sentence (40–80 words) describing the specific suffering that creates demand for this PDF.
 NOT "many people struggle with this topic." Too vague.
 YES: Name the specific group, the specific frustration, the specific consequence.
 Format: "[Group of people] [what they're trying to do] [what keeps going wrong] [the real cost of not solving it]"
-The pain point becomes the emotional hook — the intro of the PDF, the opening of the sales page, the TikTok script.
 
 TITLE RULES:
 — Keyword phrase must appear naturally in the title (SEO signal preserved)
 — Add year (2026) for registration, legal, exam, visa, government topics
 — Use full dual acronyms: "WAEC / WASSCE", "JAMB / UTME", "KCSE / KNEC"
 — Subtitle must state a PROMISE or OUTCOME (not just "A Complete Guide")
-— Title reads like a real product, not a keyword list
 
 EXACT QUESTIONS — 4 SHORT HUMAN FRAGMENTS:
 Real search fragments people type alongside the main query. These become chapter headings.
 ✅ "How much?", "Documents needed", "How long it takes", "Tax registration"
 ❌ "How do I find out what documents are required for this process?"
 
-THE OPPORTUNITY DENSITY MODEL — HOW TO ACTUALLY REASON ABOUT WHAT'S WORTH MAKING:
-
-Raw search volume is NOT the primary signal. Opportunity Density is:
-
+THE OPPORTUNITY DENSITY MODEL:
   Opportunity Density = Search Demand ÷ Supply of Existing Solutions
 
 A topic with 9,000 monthly searches and ZERO competing PDF guides has infinite opportunity density.
 A topic with 60,000 monthly searches and 400 competing PDF guides has low opportunity density.
-The first is a better business than the second, every time.
 
-This means you must evaluate each topic on four axes — not volume alone:
+FOUR SCORING AXES:
+AXIS 1 — PDF MONOPOLY (weight: 35 pts max)
+  Marked "← MONOPOLY OPPORTUNITY": +35 pts
+  Low supply (1–3 PDFs): +20 pts
+  Medium supply (several quality PDFs): +5 pts
 
-AXIS 1 — PDF MONOPOLY POTENTIAL (most important signal):
-Does a comprehensive, easy-to-buy PDF guide already exist for this exact market + topic?
-For location-specific topics in emerging markets (national exams, business registration, mobile payments, local farming, government processes, scholarships, local health systems) — the answer is almost always NO.
-  → No competing PDF exists: this is a monopoly opportunity. Build it and own the topic.
-  → 1–3 basic PDFs exist: still a strong gap if yours is clearly better.
-  → 10+ quality PDFs: oversupplied, move on.
+AXIS 2 — DEMAND (weight: 30 pts max)
+  Market: ${country} (${market.tier}). Minimum: ${ABSOLUTE_MIN_VOLUME.toLocaleString()}/month.
+  ${ABSOLUTE_MIN_VOLUME.toLocaleString()}–${(market.strongVolume - 1).toLocaleString()}/month → +10 pts
+  ${market.strongVolume.toLocaleString()}–${(market.massiveVolume - 1).toLocaleString()}/month → +20 pts
+  ${market.massiveVolume.toLocaleString()}+/month → +30 pts
 
-AXIS 2 — DEMAND REALISM (volume calibrated to this market, not US standards):
-${country} is a ${market.tier} market. Strong demand here means ${market.strongVolume.toLocaleString()}+/month. Massive demand means ${market.massiveVolume.toLocaleString()}+/month.
-The absolute minimum is ${ABSOLUTE_MIN_VOLUME.toLocaleString()}/month — below this, even owning the topic won't generate meaningful income.
+AXIS 3 — PROBLEM URGENCY (weight: 20 pts max)
+  Urgent + consequential: +20 pts
+  General improvement: +10 pts
 
-AXIS 3 — PROBLEM URGENCY (will people pay immediately?):
-Urgent, consequential problems (failing an exam, being blocked from starting a business, losing money to fraud, needing a government document) convert at 3–5%.
-General improvement topics (getting fitter, learning a skill) convert at 0.5–1%.
-Higher urgency = smaller volume can still generate strong revenue.
+AXIS 4 — FIRST-MOVER WINDOW (weight: 15 pts max)
+  No quality guide exists: +15 pts
+  Some competition but yours can be clearly better: +5 pts
 
-AXIS 4 — FIRST-MOVER WINDOW:
-In ${market.tier} digital markets, being the FIRST quality PDF on a topic means you rank, you own the search result, and you keep the traffic for years. This is the farming strategy — plant it once, harvest forever.
+SCORING:
+90–100: Plant immediately.
+80–89:  Strong seed.
+70–79:  Worth planting if portfolio needs this niche.
+Below 70: Skip.
 
-REVENUE REALITY CHECK (use this to validate each opportunity):
-Monthly Revenue = Search Volume × (Top-3 Ranking Click Rate ≈ 30%) × Conversion Rate × Price
-Example: 9,000/mo × 30% CTR × 4% conversion × ${pricing.symbol}${pricing.min} = ${pricing.symbol}${Math.round(9000 * 0.30 * 0.04 * pricing.min)}/month from ONE PDF.
-That is a plantable, passive income seed.`,
+REVENUE REALITY CHECK:
+Monthly Revenue = Search Volume × (Top-3 CTR ≈ 30%) × Conversion Rate × Price
+Example: 9,000/mo × 30% × 4% × ${pricing.symbol}${pricing.min} = ${pricing.symbol}${Math.round(9000 * 0.30 * 0.04 * pricing.min)}/month from ONE PDF.`,
         },
         {
           role: "user",
-          content: `You have two live data sources for ${diaspora ? `${COUNTRY_LABEL[country] ?? country} diaspora (primarily UK-based)` : country}. Your job is to find the ${count} most plantable PDF opportunities — products that can be built once and generate passive income for years.
-${diasporaContext}
-LIVE SEARCHES — what ${diaspora ? `${COUNTRY_LABEL[country] ?? country} diaspora members` : `people in ${country}`} are actively searching right now:
-${realSearchList}${redditSection}
+          content: `Find the ${count} most plantable PDF opportunities for ${diaspora ? `${COUNTRY_LABEL[country] ?? country} diaspora` : country}.
+${diasporaContext}${realDataNote}
 
-─────────────────────────────────────────
-HOW TO EVALUATE EACH OPPORTUNITY
-─────────────────────────────────────────
-
-For each search phrase, reason through all four axes before scoring:
-
-AXIS 1 — PDF MONOPOLY (weight: 35 pts max)
-Ask: "If I search Google right now for this exact topic + ${country}, does a well-made, easy-to-buy PDF guide come up?"
-For most local topics in ${country} — government processes, national exams, local financial tools, farming, scholarships — the answer is NO. That is the entire business case.
-  No competing PDF exists                    → +35 pts (own this topic entirely)
-  1–3 thin or low-quality PDFs exist         → +20 pts (yours will dominate)
-  Several quality PDFs already compete       → +5 pts
-
-AXIS 2 — DEMAND (weight: 30 pts max)
-Minimum to include: ${ABSOLUTE_MIN_VOLUME.toLocaleString()}/month. Below this, even a monopoly won't pay.
-  ${ABSOLUTE_MIN_VOLUME.toLocaleString()}–${(market.strongVolume - 1).toLocaleString()}/month  → +10 pts
-  ${market.strongVolume.toLocaleString()}–${(market.massiveVolume - 1).toLocaleString()}/month  → +20 pts
-  ${market.massiveVolume.toLocaleString()}+/month            → +30 pts
-
-AXIS 3 — PROBLEM URGENCY (weight: 20 pts max)
-High urgency = there are real consequences for not solving this (failing an exam, being blocked from registering a business, losing money to fraud, missing a visa deadline).
-  Urgent, consequential problem              → +20 pts
-  General improvement / lifestyle topic     → +10 pts
-
-AXIS 4 — FIRST-MOVER WINDOW (weight: 15 pts max)
-In ${country}'s digital market, being first with a quality PDF means owning that search result for years.
-  Clear first-mover — no quality guide exists yet  → +15 pts
-  Some competition but yours can be clearly better → +5 pts
-
-SCORING LOGIC:
-90–100: Plant immediately. Monopoly + real demand + urgent problem. This is a passive income machine.
-80–89:  Strong seed. Build after the 90+ ones.
-70–79:  Worth planting if the portfolio needs volume in this niche.
-Below 70: Skip.
-
-IMPORTANT — RETURN ${count} RESULTS:
-Be thorough. Scan every phrase. If the data supports ${count} viable opportunities, return all ${count}.
-Do not self-limit. A 6,000/month search with zero competing PDFs and a real knowledge gap belongs in the results.
+LIVE SEARCH DATA — what people are actively searching right now:
+${enrichedList}${redditSection}
 
 ─────────────────────────────────────────
 OUTPUT FORMAT (one object per opportunity)
 ─────────────────────────────────────────
 
 {
-  "painPoint": "40–80 words. Name who is suffering, what they are trying to do, what keeps going wrong, and what it costs them. Write in raw, honest language — as if the person is describing it themselves.",
+  "painPoint": "40–80 words. Name who is suffering, what they are trying to do, what keeps going wrong, and what it costs them.",
   "keyword": "exact verbatim phrase from the search data above — copy precisely, no edits",
   "pdfTitle": "The keyword embedded naturally + reads like a real product someone would buy",
   "niche": "health | finance | education | business | farming | technology | relationships | home | career | mindset | other",
-  "searchVolume": <integer — be conservative, do not inflate. Minimum ${ABSOLUTE_MIN_VOLUME}>,
+  "searchVolume": <integer — use the ✓ REAL figure if provided, otherwise estimate conservatively. Minimum ${ABSOLUTE_MIN_VOLUME}>,
   "opportunityScore": <integer 70–100, derived from the four-axis scoring above>,
   "competition": "low | medium | high",
   "trend": "rising | stable | declining",
@@ -688,6 +809,29 @@ Return ONLY valid JSON: { "results": [...] }`,
     return NextResponse.json({ error: "Failed to parse AI response" }, { status: 500 });
   }
 
+  // Phase 6 — Override AI estimates with real data before saving
+  opportunities = opportunities.map((o) => {
+    const kw = String(o.keyword ?? "").toLowerCase();
+
+    // Override volume with DataForSEO real data
+    const realVolume = volumeMap.get(kw)?.searchVolume;
+    if (realVolume != null) {
+      o = { ...o, searchVolume: realVolume };
+    }
+
+    // Override competition with Google Custom Search data
+    const compData = competitionMap.get(kw);
+    if (compData) {
+      const competition =
+        compData.monopolyScore >= 85 ? "low" :
+        compData.monopolyScore >= 50 ? "medium" : "high";
+      o = { ...o, competition };
+    }
+
+    return o;
+  });
+
+  // Hard filter by real volume
   opportunities = opportunities.filter((o) => Number(o.searchVolume) >= ABSOLUTE_MIN_VOLUME);
 
   if (opportunities.length === 0) {
