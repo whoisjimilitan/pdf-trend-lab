@@ -46,6 +46,7 @@ function GuidesContent() {
   const [payUrl, setPayUrl]         = useState("");
   const [payUrlSaving, setPayUrlSaving] = useState(false);
   const [payUrlSaved, setPayUrlSaved]   = useState(false);
+  const [deleting, setDeleting]         = useState(false);
 
   const load = useCallback(async () => {
     const [gRes, hRes] = await Promise.all([fetch("/api/factory"), fetch("/api/hooks")]);
@@ -87,6 +88,16 @@ function GuidesContent() {
       setGuides((prev) => prev.map((x) => x.id === g.id ? { ...x, ...updated } : x));
       setSelected((prev) => prev?.id === g.id ? { ...prev, ...updated } : prev);
     } finally { setPublishing(false); }
+  }
+
+  async function deleteGuide(g: Product) {
+    if (!window.confirm(`Delete "${g.title}"? This cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      await fetch(`/api/products/${g.id}`, { method: "DELETE" });
+      setSelected(null);
+      await load();
+    } finally { setDeleting(false); }
   }
 
   async function savePayUrl(g: Product) {
@@ -247,6 +258,10 @@ function GuidesContent() {
                     {selected.salesCount} sale{selected.salesCount !== 1 ? "s" : ""} · £{selected.revenue.toFixed(0)} earned
                   </span>
                 )}
+                <button onClick={() => deleteGuide(selected)} disabled={deleting}
+                  style={{ marginLeft: "auto", padding: "8px 14px", borderRadius: 9, fontSize: "0.78rem", fontWeight: 600, cursor: deleting ? "not-allowed" : "pointer", border: "1px solid #FECACA", background: "transparent", color: "#DC2626", opacity: deleting ? 0.5 : 1 }}>
+                  {deleting ? "…" : "Delete"}
+                </button>
               </div>
             </div>
 
