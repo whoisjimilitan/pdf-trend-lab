@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import WaitlistForm from "@/app/components/WaitlistForm";
 
 export const metadata: Metadata = {
   title: "PDF Seeds — Plant Once. Earn Every Month.",
-  description: "We'll get you earning from your first PDF seed within 7 days — or your first month is free. The passive income system built for African markets and the diaspora.",
+  description: "The passive income system for African markets. Find unanswered questions, grow the guide, earn every month. Automatically.",
 };
+
+const STRIPE = "https://buy.stripe.com/00waEX65Nb838Ce1aP5ZC00";
 
 function CheckIcon() {
   return (
@@ -46,7 +47,6 @@ export default function HomePage() {
   return (
     <>
       <style>{`
-        /* Hide sidebar — this is the standalone marketing homepage */
         body > aside { display: none !important; }
         body { display: block !important; overflow-y: auto !important; height: auto !important; }
         body > main { overflow: visible !important; height: auto !important; }
@@ -72,10 +72,11 @@ export default function HomePage() {
         .lp-hero-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.12) 0%, transparent 65%); pointer-events: none; }
         .lp-hero-inner { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
         .lp-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: #6366F110; border: 1px solid #6366F130; border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 700; color: #818CF8; margin-bottom: 28px; }
-        .lp-hero h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 900; line-height: 1.1; color: #F8FAFC; margin: 0 0 24px; letter-spacing: -0.02em; }
+        .lp-hero h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 900; line-height: 1.1; color: #F8FAFC; margin: 0 0 24px; letter-spacing: -0.02em; }
         .lp-hero h1 em { color: #6366F1; font-style: normal; }
-        .lp-hero-sub { font-size: 1.1rem; color: #94A3B8; line-height: 1.7; max-width: 600px; margin: 0 auto 12px; }
-        .lp-offer-line { font-size: 1rem; font-weight: 700; color: #10B981; margin: 0 auto 36px; }
+        .lp-hero-pain { font-size: 1.05rem; color: #94A3B8; line-height: 1.7; max-width: 540px; margin: 0 auto 20px; }
+        .lp-hero-mechanism { font-size: 1.05rem; color: #CBD5E1; line-height: 1.7; max-width: 640px; margin: 0 auto 14px; }
+        .lp-offer-line { font-size: 0.95rem; font-weight: 700; color: #10B981; margin: 0 auto 36px; }
         .lp-hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 48px; }
         .lp-primary-btn { display: inline-block; background: #6366F1; color: #fff; font-weight: 800; font-size: 1rem; padding: 16px 40px; border-radius: 10px; text-decoration: none; }
         .lp-primary-btn:hover { background: #4F46E5; }
@@ -97,12 +98,42 @@ export default function HomePage() {
         .lp-section { padding: 80px 24px; }
         .lp-section-dark { background: #0D0E17; }
         .lp-section-inner { max-width: 900px; margin: 0 auto; }
-        .lp-section-inner-wide { max-width: 1100px; margin: 0 auto; }
         .lp-section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #475569; margin-bottom: 12px; }
         .lp-section-title { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 900; color: #F1F5F9; line-height: 1.2; margin-bottom: 16px; }
-        .lp-section-body { font-size: 1rem; color: #64748B; line-height: 1.75; max-width: 600px; }
+        .lp-section-body { font-size: 1rem; color: #64748B; line-height: 1.75; }
 
-        /* FOUNDER VIDEO */
+        /* SEED EXAMPLE */
+        .seed-example { background: #0F1117; border: 1px solid #2A3050; border-radius: 16px; padding: 32px; margin-top: 40px; }
+        .seed-example-search { display: inline-flex; align-items: center; gap: 10px; background: #1F2333; border-radius: 10px; padding: 12px 18px; font-size: 0.9rem; color: #94A3B8; margin-bottom: 16px; }
+        .seed-stats { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
+        .seed-stat { background: #1F2333; border-radius: 8px; padding: 12px 16px; flex: 1; min-width: 100px; }
+        .seed-stat-num { font-size: 1.2rem; font-weight: 900; color: #F1F5F9; }
+        .seed-stat-label { font-size: 0.72rem; color: #475569; margin-top: 3px; }
+
+        /* HOW IT WORKS */
+        .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .step-card { background: #0F1117; border: 1px solid #1F2333; border-radius: 16px; padding: 28px 22px; }
+        .step-num { font-size: 2.5rem; font-weight: 900; color: #6366F120; line-height: 1; margin-bottom: 14px; }
+        .step-icon { font-size: 1.6rem; margin-bottom: 12px; }
+        .step-title { font-size: 0.95rem; font-weight: 800; color: #F1F5F9; margin-bottom: 8px; }
+        .step-body { font-size: 0.82rem; color: #64748B; line-height: 1.65; }
+
+        /* TWO HARVESTS */
+        .harvest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+        .harvest-card { background: #0F1117; border: 1px solid #1F2333; border-radius: 16px; padding: 32px 28px; }
+        .harvest-badge { display: inline-block; border-radius: 6px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; margin-bottom: 18px; }
+        .harvest-card h3 { font-size: 1.05rem; font-weight: 800; color: #F1F5F9; margin-bottom: 12px; }
+        .harvest-card p { font-size: 0.88rem; color: #64748B; line-height: 1.7; margin-bottom: 14px; }
+        .harvest-timeline { font-size: 0.78rem; font-weight: 700; padding: 6px 12px; border-radius: 20px; display: inline-block; }
+
+        /* FARM ECONOMICS */
+        .farm-cards { display: flex; flex-direction: column; gap: 12px; }
+        .farm-card { background: #0F1117; border: 1px solid #1F2333; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .farm-card-seeds { font-size: 0.88rem; font-weight: 700; color: #6366F1; }
+        .farm-card-income { font-size: 0.88rem; color: #94A3B8; }
+        .farm-card-annual { font-size: 0.78rem; color: #475569; margin-top: 2px; text-align: right; }
+
+        /* VIDEO */
         .video-placeholder { background: #0F1117; border: 2px dashed #2A3050; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px; text-align: center; }
         .video-play { width: 72px; height: 72px; background: #6366F1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
         .video-play svg { margin-left: 4px; }
@@ -110,37 +141,13 @@ export default function HomePage() {
         .video-placeholder-sub { font-size: 0.85rem; color: #475569; max-width: 320px; line-height: 1.6; }
         .video-placeholder-note { font-size: 0.75rem; color: #334155; margin-top: 16px; border: 1px solid #1F2333; border-radius: 8px; padding: 8px 14px; }
 
-        /* HOW IT WORKS */
-        .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-        .step-card { background: #0F1117; border: 1px solid #1F2333; border-radius: 16px; padding: 28px 22px; position: relative; }
-        .step-num { font-size: 2.5rem; font-weight: 900; color: #6366F120; line-height: 1; margin-bottom: 14px; }
-        .step-icon { font-size: 1.6rem; margin-bottom: 12px; }
-        .step-title { font-size: 0.95rem; font-weight: 800; color: #F1F5F9; margin-bottom: 8px; }
-        .step-body { font-size: 0.82rem; color: #64748B; line-height: 1.65; }
-        .step-connector { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); color: #2A3050; font-size: 1.2rem; z-index: 1; }
-
-        /* BENEFITS */
-        .benefits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .benefit-item { display: flex; align-items: flex-start; gap: 14px; background: #0F1117; border: 1px solid #1F2333; border-radius: 12px; padding: 18px 20px; }
-        .benefit-body .title { font-size: 0.9rem; font-weight: 700; color: #E2E8F0; margin-bottom: 4px; }
-        .benefit-body .desc { font-size: 0.82rem; color: #64748B; line-height: 1.6; }
-
-        /* VIDEO TESTIMONIALS */
+        /* TESTIMONIALS */
         .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
         .testimonial-placeholder { background: #0F1117; border: 1px dashed #2A3050; border-radius: 14px; padding: 28px 20px; text-align: center; }
         .testimonial-avatar-ph { width: 56px; height: 56px; border-radius: 50%; background: #1F2333; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
         .testimonial-name-ph { font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 4px; }
         .testimonial-role-ph { font-size: 0.75rem; color: #334155; margin-bottom: 12px; }
         .testimonial-note { font-size: 0.72rem; color: #334155; font-style: italic; }
-
-        /* WRITTEN TESTIMONIALS */
-        .written-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 28px; }
-        .written-card { background: #0F1117; border: 1px solid #1F2333; border-radius: 12px; padding: 20px; }
-        .written-text { font-size: 0.88rem; color: #94A3B8; line-height: 1.65; margin-bottom: 14px; font-style: italic; }
-        .written-author { display: flex; align-items: center; gap: 10px; }
-        .written-avatar { width: 36px; height: 36px; border-radius: 50%; background: #1F2333; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
-        .written-name { font-size: 0.8rem; font-weight: 700; color: #E2E8F0; }
-        .written-detail { font-size: 0.72rem; color: #475569; }
 
         /* FAQ */
         .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
@@ -174,15 +181,15 @@ export default function HomePage() {
         @media (max-width: 768px) {
           .lp-trust-inner { grid-template-columns: repeat(2, 1fr); }
           .steps-grid { grid-template-columns: 1fr; }
-          .step-connector { display: none; }
-          .benefits-grid { grid-template-columns: 1fr; }
+          .harvest-grid { grid-template-columns: 1fr; }
           .testimonials-grid { grid-template-columns: 1fr; }
-          .written-grid { grid-template-columns: 1fr; }
           .faq-grid { grid-template-columns: 1fr; }
           .pricing-box { padding: 36px 24px; }
           .mobile-sticky { display: block; }
           .lp-hero { padding: 80px 20px 60px; }
           body { padding-bottom: 80px; }
+          .seed-stats { gap: 10px; }
+          .seed-stat { min-width: calc(50% - 5px); }
         }
       `}</style>
 
@@ -200,7 +207,7 @@ export default function HomePage() {
             </a>
             <div className="lp-nav-right">
               <a href="/dashboard" className="lp-nav-login">Sign in</a>
-              <a href="#start" className="lp-nav-cta">Start Planting →</a>
+              <a href={STRIPE} className="lp-nav-cta">Start Planting →</a>
             </div>
           </div>
         </nav>
@@ -216,16 +223,20 @@ export default function HomePage() {
               Plant once.<br />
               Earn <em>every month.</em>
             </h1>
-            <p className="lp-hero-sub">
+            <p className="lp-hero-pain">
+              You want income that keeps growing after you stop — not another side hustle
+              that demands more time the more you put in.
+            </p>
+            <p className="lp-hero-mechanism">
               Every day, millions of people in Ghana, Nigeria, Kenya, South Africa, and the UK diaspora
-              type questions into Google that nobody has answered in a PDF yet.
-              PDF Seeds finds those gaps, writes the guide, and puts it in front of buyers — automatically.
+              type urgent questions into Google that nobody has answered in a PDF yet.
+              PDF Seeds finds those gaps, grows the guide, and plants it where buyers are already looking — automatically.
             </p>
             <p className="lp-offer-line">
-              ✅ We&apos;ll get you earning from your first PDF seed within 7 days — or your first month is free.
+              ✅ Earn from your first seed within 7 days — or your first month is free.
             </p>
             <div className="lp-hero-ctas">
-              <a href="#start" className="lp-primary-btn">Start Planting Today →</a>
+              <a href={STRIPE} className="lp-primary-btn">Start Planting Today →</a>
               <a href="#how-it-works" className="lp-secondary-btn">See how it works ↓</a>
             </div>
             <div className="lp-social-proof">
@@ -235,7 +246,7 @@ export default function HomePage() {
                 ))}
               </div>
               <Stars />
-              <p className="lp-proof-text">Early planters across 5 African markets — growing daily</p>
+              <p className="lp-proof-text">Early planters across 5 markets — growing daily</p>
             </div>
           </div>
         </section>
@@ -245,9 +256,9 @@ export default function HomePage() {
           <div className="lp-trust-inner">
             {[
               { num: "5", label: "African markets covered" },
-              { num: "10 min", label: "To your first guide, ready to sell" },
+              { num: "3 min", label: "From topic to guide, sell page & social hooks" },
               { num: "7 days", label: "To your first earning — guaranteed" },
-              { num: "3×", label: "Income streams from one platform" },
+              { num: "£0", label: "Competition on most diaspora topics" },
             ].map((s) => (
               <div key={s.label}>
                 <div className="lp-stat-num">{s.num}</div>
@@ -257,16 +268,209 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ── FOUNDER VIDEO ── */}
+        {/* ── THE SOIL — why this works ── */}
+        <section className="lp-section lp-section-dark">
+          <div className="lp-section-inner">
+            <div className="lp-section-label">Why this works</div>
+            <div className="lp-section-title" style={{ maxWidth: 600 }}>
+              African information markets are sitting wide open.
+            </div>
+            <p className="lp-section-body" style={{ marginBottom: 20 }}>
+              Millions of people across Ghana, Nigeria, Kenya, and South Africa have smartphones,
+              access to Google, real problems, and money to spend. They are searching for clear,
+              practical answers every single day.
+            </p>
+            <p className="lp-section-body" style={{ marginBottom: 20 }}>
+              But official information is confusing, legalistic, scattered across Facebook groups
+              and WhatsApp chats, or buried behind expensive consultations. The answers exist.
+              They just haven&apos;t been packaged yet.
+            </p>
+            <p className="lp-section-body" style={{ color: "#CBD5E1", fontWeight: 600, marginBottom: 0 }}>
+              That gap is the fertile soil. Every unanswered question is a seed waiting to be planted.
+              The person who plants it first owns that search — and that income — permanently.
+            </p>
+
+            {/* Real seed example */}
+            <div className="seed-example">
+              <div className="lp-section-label" style={{ marginBottom: 14 }}>A real seed — unplanted right now</div>
+              <div className="seed-example-search">
+                🔍 &ldquo;How do I transfer land to my children when I die in Ghana?&rdquo;
+              </div>
+              <p style={{ fontSize: "0.9rem", color: "#64748B", lineHeight: 1.7, marginBottom: 0 }}>
+                Thousands of people search this every month. There is no simple, affordable PDF answering it
+                in plain language. So someone plants one — a 20-page guide, priced at £9.
+                Every time someone searches, they find it. They buy. The seed earns, forever.
+              </p>
+              <div className="seed-stats">
+                {[
+                  { num: "£8 / day", label: "One seed earning" },
+                  { num: "£240 / mo", label: "From that one guide" },
+                  { num: "Forever", label: "No re-writing needed" },
+                  { num: "0", label: "Competing PDFs on this topic" },
+                ].map((s) => (
+                  <div key={s.label} className="seed-stat">
+                    <div className="seed-stat-num">{s.num}</div>
+                    <div className="seed-stat-label">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── HOW IT WORKS — the three jobs ── */}
+        <section className="lp-section" id="how-it-works">
+          <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <div className="lp-section-label">The system</div>
+              <div className="lp-section-title">Three jobs. One pipeline. No team needed.</div>
+              <p style={{ fontSize: "0.95rem", color: "#64748B", maxWidth: 580, margin: "0 auto" }}>
+                Normally you&apos;d need a researcher, content strategist, SEO expert, copywriter, and
+                social media manager. PDF Seeds compresses all of that into one pipeline.
+                One person, operating like a small media company.
+              </p>
+            </div>
+            <div className="steps-grid">
+              {[
+                {
+                  num: "01", icon: "🔍", title: "Find the fertile ground",
+                  body: "The opportunity engine scans real search data across 5 African markets to find questions that thousands of people are asking, nobody has written a PDF for, and people are desperate enough to pay to resolve. It scores every gap and tells you exactly what to plant next.",
+                },
+                {
+                  num: "02", icon: "🌱", title: "Grow your guide",
+                  body: "Pick a topic. Click generate. In under 3 minutes: a complete PDF, a sales page, an SEO article designed to rank on Google, and 10 social hooks for TikTok, Pinterest, and Instagram. Nothing for you to write. Nothing to design.",
+                },
+                {
+                  num: "03", icon: "📅", title: "The planting schedule",
+                  body: "Every day the system gives you one simple action. Monday: post this TikTok script. Tuesday: this Pinterest caption. Wednesday: this Instagram hook. Copy, paste, done in 10 minutes. Consistent distribution without the thinking.",
+                },
+              ].map((step, i) => (
+                <div key={i} className="step-card">
+                  <div className="step-num">{step.num}</div>
+                  <div className="step-icon">{step.icon}</div>
+                  <div className="step-title">{step.title}</div>
+                  <div className="step-body">{step.body}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── TWO HARVESTS ── */}
+        <section className="lp-section lp-section-dark">
+          <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
+            <div style={{ textAlign: "center" }}>
+              <div className="lp-section-label">How income arrives</div>
+              <div className="lp-section-title">Your seeds earn from two directions at once.</div>
+            </div>
+            <div className="harvest-grid">
+              <div className="harvest-card">
+                <div className="harvest-badge" style={{ background: "#10B98115", color: "#10B981", border: "1px solid #10B98130" }}>
+                  🌿 Google — The long game
+                </div>
+                <h3>Evergreen income while you sleep</h3>
+                <p>
+                  The SEO article the system writes for each guide is designed to rank on Google.
+                  When someone searches your topic, your article appears. They read it, they want
+                  the full guide, they buy. You did nothing that day.
+                </p>
+                <p>
+                  Once a guide ranks, it earns indefinitely. You planted it once.
+                  Google does the rest. That is what evergreen means.
+                </p>
+                <div className="harvest-timeline" style={{ background: "#10B98115", color: "#10B981" }}>
+                  ⏱ 4–12 weeks to rank · Earns indefinitely after
+                </div>
+              </div>
+              <div className="harvest-card">
+                <div className="harvest-badge" style={{ background: "#6366F115", color: "#818CF8", border: "1px solid #6366F130" }}>
+                  📱 Social — The fast harvest
+                </div>
+                <h3>Sales this week, not this year</h3>
+                <p>
+                  TikTok, Pinterest, and Instagram send buyers directly to your sell page —
+                  the link you put in your bio. Post a 7-second video using the hook the system
+                  wrote. People who feel the pain click. They buy.
+                </p>
+                <p>
+                  Social works within days. It&apos;s how you earn while Google is still building.
+                  The two streams run together — one fast, one forever.
+                </p>
+                <div className="harvest-timeline" style={{ background: "#6366F115", color: "#818CF8" }}>
+                  ⚡ Can earn within 48 hours of planting
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── THE FARM — compound economics ── */}
         <section className="lp-section">
+          <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }}>
+              <div>
+                <div className="lp-section-label">The compound effect</div>
+                <div className="lp-section-title">The more you plant, the more the farm earns.</div>
+                <p className="lp-section-body" style={{ marginBottom: 20 }}>
+                  A PDF costs almost nothing to reproduce. Once planted, the only thing that changes
+                  month to month is the number of buyers who find it. No restocking. No shipping.
+                  No customer support. Just income, compounding.
+                </p>
+                <p className="lp-section-body" style={{ marginBottom: 20 }}>
+                  The diaspora market changes the economics entirely. A Ghanaian in London trying to
+                  resolve a land issue remotely will pay £20 for clarity that saves them confusion,
+                  lawyer fees, or a flight home. Near-zero competition. Premium pricing.
+                  An extremely strong position.
+                </p>
+                <a href={STRIPE} className="lp-primary-btn" style={{ display: "inline-block" }}>
+                  Start Planting Today →
+                </a>
+              </div>
+              <div>
+                <div className="farm-cards">
+                  {[
+                    { seeds: "1 seed planted", month: "£240 / month", year: "£2,880 / year" },
+                    { seeds: "5 seeds planted", month: "£1,200 / month", year: "£14,400 / year" },
+                    { seeds: "10 seeds planted", month: "£2,400 / month", year: "£28,800 / year" },
+                  ].map((f) => (
+                    <div key={f.seeds} className="farm-card">
+                      <div className="farm-card-seeds">{f.seeds}</div>
+                      <div style={{ textAlign: "right" }}>
+                        <div className="farm-card-income">{f.month}</div>
+                        <div className="farm-card-annual">{f.year}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p style={{ fontSize: "0.75rem", color: "#334155", marginTop: 12, textAlign: "center" }}>
+                  Based on £8/day per guide. Each seed is an independent, permanent income stream.
+                </p>
+                <div style={{ marginTop: 20, background: "#0F1117", border: "1px solid #1F2333", borderRadius: 12, padding: "20px" }}>
+                  <div style={{ fontSize: "0.72rem", color: "#475569", marginBottom: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    The diaspora premium
+                  </div>
+                  <div style={{ fontSize: "0.88rem", color: "#94A3B8", lineHeight: 1.65 }}>
+                    UK diaspora guides sell for <strong style={{ color: "#F1F5F9" }}>£15–£20</strong> — three times local pricing.
+                    UK salaries. Home-country problems. Almost no competition.
+                    That is a very strong position to plant into.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── FOUNDER VIDEO ── */}
+        <section className="lp-section lp-section-dark">
           <div className="lp-section-inner">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
               <div>
                 <div className="lp-section-label">From the founder</div>
                 <div className="lp-section-title">This system works while you sleep.</div>
                 <p className="lp-section-body" style={{ marginBottom: 20 }}>
-                  I built PDF Seeds because I was tired of side hustles that demanded more of my time the more I put in.
-                  I wanted something that kept growing after I stopped. This is that thing.
+                  I built PDF Seeds because I was tired of side hustles that demanded more of my
+                  time the more I put in. I wanted something that kept growing after I stopped.
+                  This is that thing.
                 </p>
                 <p className="lp-section-body" style={{ marginBottom: 20 }}>
                   The idea is simple: millions of people in African markets are searching for answers
@@ -295,107 +499,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── HOW IT WORKS ── */}
-        <section className="lp-section lp-section-dark" id="how-it-works">
-          <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
-            <div style={{ textAlign: "center", marginBottom: 48 }}>
-              <div className="lp-section-label">The system</div>
-              <div className="lp-section-title">Four steps. Then it runs itself.</div>
-            </div>
-            <div className="steps-grid">
-              {[
-                {
-                  num: "01", icon: "🔍", title: "Find your seed",
-                  body: "Tell us your market. In 60 seconds: 10–15 real questions people are searching with no PDF answer yet.",
-                },
-                {
-                  num: "02", icon: "📄", title: "Grow your guide",
-                  body: "Pick a topic. Click generate. In 3 minutes: a PDF, a sell page, an SEO article, and 10 hooks. Nothing for you to write.",
-                },
-                {
-                  num: "03", icon: "🌍", title: "Plant it",
-                  body: "Post one thing a day. The schedule tells you where — TikTok Monday, Pinterest Tuesday. Ten minutes. Your guide starts showing up on Google and social.",
-                },
-                {
-                  num: "04", icon: "💰", title: "Harvest",
-                  body: "£8/day per guide = £240/month. Ten guides = £2,400. Every month you plant more, the library grows. The income compounds.",
-                },
-              ].map((step, i) => (
-                <div key={i} className="step-card">
-                  <div className="step-num">{step.num}</div>
-                  <div className="step-icon">{step.icon}</div>
-                  <div className="step-title">{step.title}</div>
-                  <div className="step-body">{step.body}</div>
-                  {i < 3 && <div className="step-connector">→</div>}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── WHAT YOU GET (benefits, not features) ── */}
-        <section className="lp-section">
-          <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }}>
-              <div>
-                <div className="lp-section-label">What you get</div>
-                <div className="lp-section-title">Stop guessing. Start planting.</div>
-                <p className="lp-section-body" style={{ marginBottom: 32 }}>
-                  Every tool inside PDF Seeds has one job — remove every obstacle between you and a guide
-                  that earns money. Not to impress you. To get you paid.
-                </p>
-                <a href="#start" className="lp-primary-btn" style={{ display: "inline-block" }}>
-                  Start Planting Today →
-                </a>
-              </div>
-              <div className="benefits-grid">
-                {[
-                  {
-                    icon: "🎯",
-                    title: "Never guess what to make",
-                    desc: "Know exactly what people are searching for. Every topic is proven demand, not a guess.",
-                  },
-                  {
-                    icon: "📝",
-                    title: "Your guide is ready before your coffee goes cold",
-                    desc: "PDF, sell page, SEO article — ready to publish in one click.",
-                  },
-                  {
-                    icon: "📱",
-                    title: "TikTok, Pinterest, Instagram — all written for you",
-                    desc: "Ten hooks per guide. Copy, paste, post. Ten minutes.",
-                  },
-                  {
-                    icon: "📈",
-                    title: "Google sends you free buyers every day",
-                    desc: "Your page ranks for the exact phrase people search. Free traffic, forever.",
-                  },
-                  {
-                    icon: "✈️",
-                    title: "Serve the UK diaspora at premium prices",
-                    desc: "UK-based Ghanaians, Nigerians and Kenyans pay in pounds for guides about home-country problems. Near-zero competition.",
-                  },
-                  {
-                    icon: "🗓️",
-                    title: "One action per day. That is all.",
-                    desc: "The planting schedule tells you what to post and where. Consistency without the thinking.",
-                  },
-                ].map((b, i) => (
-                  <div key={i} className="benefit-item">
-                    <div style={{ fontSize: "1.4rem", flex: "0 0 auto" }}>{b.icon}</div>
-                    <div className="benefit-body">
-                      <div className="title">{b.title}</div>
-                      <div className="desc">{b.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* ── VIDEO TESTIMONIALS ── */}
-        <section className="lp-section lp-section-dark">
+        <section className="lp-section">
           <div className="lp-section-inner" style={{ maxWidth: 1000 }}>
             <div style={{ textAlign: "center", marginBottom: 40 }}>
               <div className="lp-section-label">Early planters</div>
@@ -420,12 +525,11 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-
           </div>
         </section>
 
         {/* ── FAQ ── */}
-        <section className="lp-section">
+        <section className="lp-section lp-section-dark">
           <div className="lp-section-inner" style={{ maxWidth: 900 }}>
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <div className="lp-section-label">Questions</div>
@@ -435,37 +539,37 @@ export default function HomePage() {
               <div>
                 <FaqItem
                   q="Do I need to write anything?"
-                  a="Nothing. You pick a topic, click generate, and the platform writes the PDF, the sales page, the SEO article, and all your social media hooks. Your job is to post once a day and watch what grows."
+                  a="Nothing. You pick a topic, click generate, and the system writes the PDF, the sales page, the SEO article, and all your social media hooks. Your job is to post once a day and watch what grows."
                 />
                 <FaqItem
-                  q="Do I need any technical skills?"
-                  a="None. No coding, no design, no marketing degree. If you can click a button and copy and paste, you have all the skills this requires."
+                  q="Do I need technical skills?"
+                  a="None. No coding, no design, no marketing degree. If you can click a button and copy-paste, you have everything this requires."
                 />
                 <FaqItem
                   q="How long before I earn my first money?"
-                  a="Most people plant their first seed in under an hour. After that, it depends on your market and how consistently you post. We guarantee earnings within 7 days — or your first month is free."
+                  a="Most people plant their first seed in under an hour. Social traffic can drive sales within 48 hours. We guarantee earnings within 7 days — or your first month is free."
                 />
                 <FaqItem
                   q="Is the African market saturated?"
-                  a="The opposite. Most topics in Ghana, Nigeria, Kenya and South Africa have zero PDF competition. That gap is exactly what this platform was built to exploit — before everyone else finds it."
+                  a="The opposite. Most topics in Ghana, Nigeria, Kenya, and South Africa have zero PDF competition. That gap is exactly what this system was built to exploit — before everyone else finds it."
                 />
               </div>
               <div>
                 <FaqItem
                   q="Is £39 a month worth it?"
-                  a="One guide earning £8 a day is £240 a month — that's 6x your subscription back from a single seed. Ten guides running at that rate is £2,400 a month. The subscription pays for itself the first week."
+                  a="One guide earning £8 a day is £240 a month — that's 6x your subscription cost from a single seed. Ten guides running is £2,400 a month. The subscription pays for itself the first week."
                 />
                 <FaqItem
                   q="What if I don't see results?"
-                  a="We'll give you your first month back, no questions asked. No forms, no chasing. If you plant your first seed within 7 days and it doesn't earn — email us and we refund you immediately."
+                  a="We'll give you your first month back, no questions asked. If you plant your first seed within 7 days and it doesn't earn — email us and we refund you immediately."
                 />
                 <FaqItem
                   q="Which countries does this work for?"
-                  a="Currently Ghana, Nigeria, Kenya, South Africa, and UK diaspora communities. Each market has its own pricing, search patterns, and opportunity database — all handled automatically when you select your country."
+                  a="Currently Ghana, Nigeria, Kenya, South Africa, and UK diaspora communities. Each market has its own search data, pricing, and opportunity database — all handled automatically."
                 />
                 <FaqItem
-                  q="Can I sell guides from multiple countries at once?"
-                  a="Yes. Many subscribers run guides across two or three markets simultaneously. The platform handles all of them from one dashboard — different currencies, different audiences, one planting schedule."
+                  q="Can I run guides across multiple countries?"
+                  a="Yes. Many planters run guides across two or three markets simultaneously. One dashboard, different currencies, different audiences, one planting schedule."
                 />
               </div>
             </div>
@@ -473,7 +577,7 @@ export default function HomePage() {
         </section>
 
         {/* ── PRICING + CTA ── */}
-        <section className="lp-section lp-section-dark" id="start">
+        <section className="lp-section" id="start">
           <div className="lp-section-inner">
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <div className="lp-section-label">Get started</div>
@@ -500,9 +604,9 @@ export default function HomePage() {
                   <li key={i}><CheckIcon />{item}</li>
                 ))}
               </ul>
-              <WaitlistForm />
+              <a href={STRIPE} className="pricing-cta">Start Planting Today →</a>
               <div className="pricing-offer">
-                ✅ We&apos;ll get you earning within 7 days — or your first month is free.
+                ✅ Earn from your first seed within 7 days — or your first month is free.
               </div>
               <div className="pricing-guarantee">
                 30-day money-back guarantee · No questions asked · Cancel in one click
@@ -522,7 +626,7 @@ export default function HomePage() {
 
         {/* ── MOBILE STICKY CTA ── */}
         <div className="mobile-sticky">
-          <a href="#start">Start Planting — £39/month →</a>
+          <a href={STRIPE}>Start Planting — £39/month →</a>
         </div>
 
       </div>
