@@ -234,7 +234,7 @@ export default function HomePage() {
             <div className="lp-eyebrow">🌱 The farming system for African digital markets</div>
             <h1>
               Plant once.<br />
-              <em>Let it keep growing.</em>
+              <em>Earn for years.</em>
             </h1>
             <p className="lp-hero-sub">
               PDF Seeds finds questions people are already searching for across African markets —
