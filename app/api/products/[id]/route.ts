@@ -20,6 +20,7 @@ export async function PATCH(req: Request, { params }: RouteContext) {
   const data: Record<string, unknown> = {};
 
   if (typeof body.published === "boolean") data.published = body.published;
+  if (typeof body.gumroadUrl === "string") data.gumroadUrl = body.gumroadUrl;
   if (body.recordSale) {
     const current = await prisma.product.findUnique({ where: { id } });
     if (!current) return NextResponse.json({ error: "Not found" }, { status: 404 });

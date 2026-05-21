@@ -45,6 +45,10 @@ export default async function PdfPage({ params }: Props) {
   return (
     <>
       <style>{`
+        body > aside { display: none !important; }
+        body { display: block !important; overflow-y: auto !important; height: auto !important; }
+        body > main { overflow: visible !important; height: auto !important; }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: Georgia, 'Times New Roman', serif; background: #fff; color: #1a1a2e; }
 

@@ -15,6 +15,7 @@ type Product = {
   published: boolean;
   salesCount: number;
   revenue: number;
+  gumroadUrl: string;
   opportunity: {
     keyword: string;
     pdfTitle: string;
@@ -94,6 +95,9 @@ function FactoryContent() {
   const [tab, setTab] = useState<"pdf" | "sales" | "seo" | "publish">("pdf");
   const [copied, setCopied] = useState("");
   const [publishLoading, setPublishLoading] = useState(false);
+  const [gumroadInput, setGumroadInput] = useState("");
+  const [gumroadSaving, setGumroadSaving] = useState(false);
+  const [gumroadSaved, setGumroadSaved] = useState(false);
 
   const load = useCallback(async () => {
     const [pRes, hRes] = await Promise.all([fetch("/api/factory"), fetch("/api/hooks")]);
@@ -153,6 +157,25 @@ function FactoryContent() {
     const updated = await res.json();
     setProducts((prev) => prev.map((x) => x.id === p.id ? { ...x, ...updated } : x));
     setSelected((prev) => prev?.id === p.id ? { ...prev, ...updated } : prev);
+  }
+
+  async function saveGumroadUrl(p: Product) {
+    if (!gumroadInput.trim()) return;
+    setGumroadSaving(true);
+    try {
+      const res = await fetch(`/api/products/${p.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gumroadUrl: gumroadInput.trim() }),
+      });
+      const updated = await res.json();
+      setProducts((prev) => prev.map((x) => x.id === p.id ? { ...x, ...updated } : x));
+      setSelected((prev) => prev?.id === p.id ? { ...prev, ...updated } : prev);
+      setGumroadSaved(true);
+      setTimeout(() => setGumroadSaved(false), 3000);
+    } finally {
+      setGumroadSaving(false);
+    }
   }
 
   function copy(text: string, key: string) {
@@ -225,7 +248,7 @@ function FactoryContent() {
             ) : products.map((p) => {
               const sym = CURRENCY[p.opportunity?.country ?? "US"] ?? "$";
               return (
-                <div key={p.id} onClick={() => { setSelected(p); setTab("pdf"); }}
+                <div key={p.id} onClick={() => { setSelected(p); setTab("pdf"); setGumroadInput(p.gumroadUrl ?? ""); }}
                   className="px-4 py-3 cursor-pointer"
                   style={{ background: selected?.id === p.id ? "var(--surface2)" : "transparent" }}>
                   <div className="text-xs font-medium mb-1 leading-snug" style={{ color: "var(--text)" }}>
@@ -350,56 +373,125 @@ function FactoryContent() {
                 </div>
               ) : (
                 <div className="p-6 overflow-y-auto" style={{ maxHeight: 440 }}>
-                  {/* Publish & Sell tab */}
                   <div className="space-y-4">
-                    {/* Live URL */}
+
+                    {/* STEP 1 — Download PDF */}
                     <div className="p-4 rounded-lg" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
                       <div className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "var(--muted)" }}>
-                        📡 Your Free SEO Traffic Page
+                        Step 1 · 📥 Download Your PDF
                       </div>
-                      <div className="text-sm font-medium mb-1" style={{ color: "var(--text)" }}>
-                        {typeof window !== "undefined" ? window.location.origin : ""}/guide/{selected.slug}
-                      </div>
-                      <p className="text-xs" style={{ color: "var(--muted)" }}>
-                        {selected.published
-                          ? "✅ This page is live. Google will find and rank it for exact searches."
-                          : "⚠️ Click \"Publish Page\" above to make this page live and crawlable by Google."}
+                      <p className="text-xs mb-3" style={{ color: "var(--muted)" }}>
+                        Opens a print-ready page. Use <strong style={{ color: "var(--text)" }}>Ctrl+P → Save as PDF</strong> (or Cmd+P on Mac). That file is what you upload to Gumroad.
                       </p>
-                      <div className="flex gap-2 mt-3">
-                        <a href={`/guide/${selected.slug}`} target="_blank" rel="noopener noreferrer"
-                          className="text-xs px-3 py-1.5 rounded-lg font-semibold"
-                          style={{ background: "#6366F120", color: "#818CF8", border: "1px solid #6366F130" }}>
-                          Preview →
-                        </a>
+                      <div className="flex gap-2">
                         <a href={`/guide/${selected.slug}/pdf`} target="_blank" rel="noopener noreferrer"
-                          className="text-xs px-3 py-1.5 rounded-lg font-semibold"
-                          style={{ background: "#10B98120", color: "#10B981", border: "1px solid #10B98130" }}>
-                          Preview PDF →
+                          className="text-xs px-4 py-2 rounded-lg font-bold text-white"
+                          style={{ background: "var(--accent)" }}>
+                          📥 Open PDF Viewer →
                         </a>
-                        <button onClick={() => copy(`${typeof window !== "undefined" ? window.location.origin : ""}/guide/${selected.slug}`, "url")}
+                      </div>
+                    </div>
+
+                    {/* STEP 2 — Connect payment */}
+                    <div className="p-4 rounded-lg" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--muted)" }}>
+                          Step 2 · 🛒 Connect Your Payment Link
+                        </div>
+                        {selected.gumroadUrl && (
+                          <span style={{ background: "#10B98120", color: "#10B981", border: "1px solid #10B98140", borderRadius: 20, padding: "1px 8px", fontSize: 10, fontWeight: 700 }}>
+                            ✅ Payment Connected
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs mb-3" style={{ color: "var(--muted)" }}>
+                        Upload your PDF to <strong style={{ color: "var(--text)" }}>Gumroad</strong>, <strong style={{ color: "var(--text)" }}>Payhip</strong>, or <strong style={{ color: "var(--text)" }}>Selar</strong>. Paste the product URL below. The sell page buy button will use it instantly.
+                      </p>
+                      {selected.gumroadUrl && (
+                        <div className="text-xs mb-2 px-3 py-2 rounded-lg truncate"
+                          style={{ background: "#10B98108", border: "1px solid #10B98130", color: "#10B981" }}>
+                          {selected.gumroadUrl}
+                        </div>
+                      )}
+                      <div className="flex gap-2">
+                        <input
+                          type="url"
+                          value={gumroadInput}
+                          onChange={(e) => setGumroadInput(e.target.value)}
+                          placeholder={selected.gumroadUrl || "https://yourname.gumroad.com/l/product-name"}
+                          className="flex-1 text-xs px-3 py-2 rounded-lg"
+                          style={{ background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)", outline: "none" }}
+                        />
+                        <button
+                          onClick={() => saveGumroadUrl(selected)}
+                          disabled={gumroadSaving || !gumroadInput.trim()}
+                          className="text-xs px-4 py-2 rounded-lg font-bold"
+                          style={{
+                            background: gumroadSaved ? "#10B98120" : "#6366F1",
+                            color: gumroadSaved ? "#10B981" : "#fff",
+                            border: gumroadSaved ? "1px solid #10B98140" : "none",
+                            opacity: !gumroadInput.trim() ? 0.5 : 1,
+                          }}>
+                          {gumroadSaved ? "✓ Saved!" : gumroadSaving ? "Saving…" : "Save URL"}
+                        </button>
+                      </div>
+                      <div className="flex gap-2 mt-3">
+                        <button onClick={() => copy(buildGumroadListing(selected), "gumroad")}
                           className="text-xs px-3 py-1.5 rounded-lg font-semibold"
-                          style={{ background: "var(--surface)", color: "var(--muted)", border: "1px solid var(--border)" }}>
-                          {copied === "url" ? "✓ Copied!" : "Copy URL"}
+                          style={S.badge("#6366F1")}>
+                          {copied === "gumroad" ? "✓ Copied!" : "Copy Ready-Made Listing Text"}
                         </button>
                       </div>
                     </div>
 
-                    {/* Gumroad/Payhip listing */}
+                    {/* STEP 3 — Your two pages */}
                     <div className="p-4 rounded-lg" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--muted)" }}>
-                          🛒 Ready-to-Post Listing (Gumroad / Payhip / Selar)
-                        </div>
-                        <button onClick={() => copy(buildGumroadListing(selected), "gumroad")}
-                          className="text-xs px-3 py-1 rounded-lg font-semibold"
-                          style={S.badge("#6366F1")}>
-                          {copied === "gumroad" ? "✓ Copied!" : "Copy Listing"}
-                        </button>
+                      <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: "var(--muted)" }}>
+                        Step 3 · 🌐 Your Two Live Pages
                       </div>
-                      <pre className="text-xs whitespace-pre-wrap leading-relaxed overflow-auto"
-                        style={{ color: "var(--text)", fontFamily: "var(--font-geist-mono)", maxHeight: 220 }}>
-                        {buildGumroadListing(selected)}
-                      </pre>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between gap-3 p-3 rounded-lg" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+                          <div>
+                            <div className="text-xs font-bold mb-0.5" style={{ color: "var(--text)" }}>🔍 SEO Page — Google traffic</div>
+                            <div className="text-xs" style={{ color: "var(--muted)" }}>/guide/{selected.slug} · Ranks on Google · Free traffic forever</div>
+                          </div>
+                          <div className="flex gap-1.5 flex-shrink-0">
+                            <a href={`/guide/${selected.slug}`} target="_blank" rel="noopener noreferrer"
+                              className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
+                              style={{ background: "#6366F120", color: "#818CF8", border: "1px solid #6366F130" }}>
+                              View
+                            </a>
+                            <button onClick={() => copy(`${typeof window !== "undefined" ? window.location.origin : ""}/guide/${selected.slug}`, "seourl")}
+                              className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
+                              style={{ background: "var(--surface)", color: "var(--muted)", border: "1px solid var(--border)" }}>
+                              {copied === "seourl" ? "✓" : "Copy"}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between gap-3 p-3 rounded-lg" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+                          <div>
+                            <div className="text-xs font-bold mb-0.5" style={{ color: "var(--text)" }}>💰 Sell Page — Social traffic</div>
+                            <div className="text-xs" style={{ color: "var(--muted)" }}>/sell/{selected.slug} · TikTok bio link · Pure conversion, no distractions</div>
+                          </div>
+                          <div className="flex gap-1.5 flex-shrink-0">
+                            <a href={`/sell/${selected.slug}`} target="_blank" rel="noopener noreferrer"
+                              className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
+                              style={{ background: "#F59E0B20", color: "#F59E0B", border: "1px solid #F59E0B30" }}>
+                              View
+                            </a>
+                            <button onClick={() => copy(`${typeof window !== "undefined" ? window.location.origin : ""}/sell/${selected.slug}`, "sellurl")}
+                              className="text-xs px-2.5 py-1.5 rounded-lg font-semibold"
+                              style={{ background: "var(--surface)", color: "var(--muted)", border: "1px solid var(--border)" }}>
+                              {copied === "sellurl" ? "✓" : "Copy"}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-xs mt-3" style={{ color: "var(--muted)" }}>
+                        {selected.published
+                          ? "✅ Both pages are live. Use the Sell Page URL as your TikTok/Instagram bio link."
+                          : "⚠️ Click \"Publish Page\" above to make both pages live."}
+                      </p>
                     </div>
 
                     {/* Sales tracker */}
@@ -425,6 +517,7 @@ function FactoryContent() {
                         + Record a Sale
                       </button>
                     </div>
+
                   </div>
                 </div>
               )}
