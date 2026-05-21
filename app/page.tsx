@@ -217,7 +217,7 @@ export default function HomePage() {
             </h1>
             <p className="lp-hero-sub">
               Every day, millions of people in Ghana, Nigeria, Kenya, South Africa, and the UK diaspora
-              search Google for answers that nobody has put into a PDF yet.
+              type questions into Google that nobody has answered in a PDF yet.
               PDF Seeds finds those gaps, writes the guide, and puts it in front of buyers — automatically.
             </p>
             <p className="lp-offer-line">
@@ -305,15 +305,15 @@ export default function HomePage() {
               {[
                 {
                   num: "01", icon: "🔍", title: "Find your seed",
-                  body: "Tell us your market. In 60 seconds you get 10–15 real questions people are already searching — with no PDF answer yet.",
+                  body: "Tell us your market. In 60 seconds: 10–15 real questions people are searching with no PDF answer yet.",
                 },
                 {
                   num: "02", icon: "📄", title: "Grow your guide",
-                  body: "Pick a topic. Click generate. In 3 minutes: a complete PDF, a sell page, an SEO article, and 10 marketing hooks. Nothing for you to write.",
+                  body: "Pick a topic. Click generate. In 3 minutes: a PDF, a sell page, an SEO article, and 10 hooks. Nothing for you to write.",
                 },
                 {
                   num: "03", icon: "🌍", title: "Plant it",
-                  body: "Post one thing a day. The schedule tells you exactly where — TikTok Monday, Pinterest Tuesday. Ten minutes. Your guide starts appearing in Google and social feeds.",
+                  body: "Post one thing a day. The schedule tells you where — TikTok Monday, Pinterest Tuesday. Ten minutes. Your guide starts showing up on Google and social.",
                 },
                 {
                   num: "04", icon: "💰", title: "Harvest",
@@ -340,8 +340,8 @@ export default function HomePage() {
                 <div className="lp-section-label">What you get</div>
                 <div className="lp-section-title">Stop guessing. Start planting.</div>
                 <p className="lp-section-body" style={{ marginBottom: 32 }}>
-                  Every tool inside PDF Seeds exists for one reason: to remove every obstacle between you and a
-                  guide that earns money. Not to impress you with technology. To get you paid.
+                  Every tool inside PDF Seeds has one job — remove every obstacle between you and a guide
+                  that earns money. Not to impress you. To get you paid.
                 </p>
                 <a href="#start" className="lp-primary-btn" style={{ display: "inline-block" }}>
                   Start Planting Today →
@@ -352,32 +352,32 @@ export default function HomePage() {
                   {
                     icon: "🎯",
                     title: "Never guess what to make",
-                    desc: "Know exactly what people are already searching for. Every topic is a proven demand, not a hope.",
+                    desc: "Know exactly what people are searching for. Every topic is proven demand, not a guess.",
                   },
                   {
                     icon: "📝",
                     title: "Your guide is ready before your coffee goes cold",
-                    desc: "PDF, sell page, SEO article — generated and ready to publish in one click.",
+                    desc: "PDF, sell page, SEO article — ready to publish in one click.",
                   },
                   {
                     icon: "📱",
                     title: "TikTok, Pinterest, Instagram — all written for you",
-                    desc: "Ten platform-native hooks per guide. Copy, paste, post. Ten minutes.",
+                    desc: "Ten hooks per guide. Copy, paste, post. Ten minutes.",
                   },
                   {
                     icon: "📈",
                     title: "Google sends you free buyers every day",
-                    desc: "Your SEO page ranks for the exact phrase people are searching. Free traffic, forever.",
+                    desc: "Your page ranks for the exact phrase people search. Free traffic, forever.",
                   },
                   {
                     icon: "✈️",
                     title: "Serve the UK diaspora at premium prices",
-                    desc: "Ghanaians, Nigerians and Kenyans in the UK pay in pounds for guides that solve home-country problems. Near-zero competition.",
+                    desc: "UK-based Ghanaians, Nigerians and Kenyans pay in pounds for guides about home-country problems. Near-zero competition.",
                   },
                   {
                     icon: "🗓️",
                     title: "One action per day. That is all.",
-                    desc: "The planting schedule tells you exactly what to post and where. Consistency without the thinking.",
+                    desc: "The planting schedule tells you what to post and where. Consistency without the thinking.",
                   },
                 ].map((b, i) => (
                   <div key={i} className="benefit-item">
