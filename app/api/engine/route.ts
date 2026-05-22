@@ -1479,45 +1479,55 @@ Format: "[Specific group of people] [what they're trying to do] [what keeps goin
 ✅ EXAMPLE:
 SEARCH: "how to recover deleted momo transaction ghana" | pain:52 [FEAR+MONEY+PROCESS] ← HIGH PRIORITY
 PAIN POINT: "Ghanaians who've lost money through a failed or deleted MoMo transaction are going in circles — calling customer service, visiting branches, getting different answers every time, while their money sits frozen or missing and nobody gives them a clear recovery path."
-TITLE: "MoMo Transaction Recovery Guide: How to Get Your Money Back in Ghana (Step-by-Step)"
+TITLE (Formula 2 — FEAR+MONEY): "Stop Losing Money on Failed MoMo Transfers — How to Recover Every Transaction in Ghana Fast"
 
 ✅ EXAMPLE:
 SEARCH: "ghana passport renewal uk" | pain:47 [DIASPORA+IMMIGRATION+PROCESS] ← HIGH PRIORITY
 PAIN POINT: "Ghanaians living in the UK who need to renew their passport are navigating a confusing process with no clear guide — wrong appointment slots, missing documents, embassy delays, and no one to call who actually knows the correct current procedure."
-TITLE: "Ghana Passport Renewal from the UK: Complete Step-by-Step Guide 2026"
+TITLE (Formula 1 — DIASPORA+PROCESS): "How to Renew Your Ghana Passport from the UK — Every Document, Every Step, Done Right 2026"
+
+❌ TITLE STYLE TO NEVER USE — old format, wrong psychology:
+"Ghana Passport Renewal from the UK: Complete Step-by-Step Guide 2026" — WRONG (colon-subtitle format, passive, no action word at front)
+"MoMo Transaction Recovery Guide: How to Get Your Money Back" — WRONG (topic first, not action first)
+"Ghana Dual Citizenship Requirements: The Complete Checklist 2026" — WRONG (describes content, not solution)
 
 TITLE FORMULA SYSTEM — use exactly one of the four patterns below. No exceptions.
-The title is 80% of the sale. It must match what they typed AND feel like the perfect solution.
+The title IS the sale. It must hit the exact emotional nerve that made them search. No restraint — let it breathe, let it sell. Think: "if I read this title at 2am desperate for a solution, would I click immediately?"
 
-FORMULA 1 — Most used. How-to, process, registration, step-by-step topics.
-[Action Word] + [Exact Problem/Need] + [Location/Context] + [Power Word]
-✅ "Step-by-Step Guide: How to Register Your Business in Ghana — Fast & Without Mistakes"
-✅ "Complete Guide: How to Renew Your Ghana Passport from the UK — Every Document, Every Step"
-✅ "How to Fix a Failed MoMo Transfer in Ghana — Get Your Money Back Fast"
+FORMULA 1 — How-to, process, registration, step-by-step topics.
+[Action verb first] + [Exact Problem/Need] + [Who it's for / Location] + [Result or relief they get]
+✅ "How to Register Your Business in Ghana Without Hiring a Lawyer — Every Form, Every Step, Done Right"
+✅ "How to Renew Your Ghana Passport from the UK — Every Document, Every Appointment, Every Step in 2026"
+✅ "How to Fix a Failed MoMo Transfer in Ghana and Get Every Penny Back — Without Spending Days on Hold"
 
 FORMULA 2 — Fear-driven, pain-heavy topics. FEAR + MONEY + DEADLINE flags.
-[Stop/No More + Pain they hate] + [Exact way to fix it] + [Result they get]
-✅ "Stop Losing Money on Failed MoMo Transfers — How to Recover Every Transaction in Ghana"
-✅ "No More Confusion: How to File Your SARS Tax Return in South Africa — Keep More, Pay Less"
+[Stop / No More / Never Again + Pain they hate] + [Exact fix] + [Result they desperately want]
+✅ "Stop Losing Money on Failed MoMo Transfers — Here Is the Exact Recovery Process Nobody Told You About"
+✅ "No More SARS Tax Confusion — How South Africans Keep More Money and File Without Mistakes in 2026"
+✅ "Stop Guessing on Your Ghana Land Purchase — The Exact Documents That Protect You From Fraud and Loss"
 
 FORMULA 3 — Numbered, structured topics. Business, money, career, steps.
-[Number] + [Steps/Ways/Secrets] + [Exact Goal] + [Who it's for / Context]
-✅ "7 Steps to Start Your Online Business in Ghana — Even With No Experience or Capital"
-✅ "10 Ways to Make Money From Home in Nigeria — Proven, Legitimate, Low Starting Cost"
+[Number] + [Steps/Ways/Proven Methods] + [Exact Goal] + [Context that makes it credible]
+✅ "7 Steps to Start Your Online Business in Ghana — Even With No Experience, No Capital, and No Connections"
+✅ "10 Ways Nigerians Are Making Real Money From Home in 2026 — Proven, Legitimate, No Upfront Investment"
+✅ "5 Things Every Kenyan Must Do Before Buying Land — The Checklist That Prevents Losing Everything"
 
 FORMULA 4 — Definitive resource. Comprehensive, everything-in-one guides.
-[The Ultimate/Complete/Definitive] + Guide to + [Full Topic] + [Everything included signal]
-✅ "The Ultimate Guide to Buying Land in Ghana — All Documents, Fees & Legal Steps Included"
-✅ "Complete WAEC / WASSCE Preparation Guide — Everything You Need to Pass in 2026"
+[The Ultimate / The Complete / The Only] + [Topic] + [Everything signal — what's inside, who benefits]
+✅ "The Complete Ghana Land Buying Guide — Every Document, Every Fee, Every Legal Step So You Never Get Cheated"
+✅ "The Only WAEC / WASSCE Study Guide You Need — Every Subject, Every Past Pattern, Every Mark-Scoring Strategy"
+✅ "The Ultimate Guide to Dealing With Grief and Loss — Real Steps, Real Healing, Real Life on the Other Side"
 
 TITLE RULES (apply to ALL formulas):
-— 6–14 words only
-— Must include the EXACT keyword people search
-— Must name WHO it's for or WHERE (Ghana, from the UK, for beginners, for students)
-— Must end with a result, speed, or completeness signal
-— No jargon — sound like a helpful friend, not a textbook
+— NO word limit. If the title needs 20 words to land the punch, use them. Restraint kills sales.
+— Must start with an action word or strong emotion trigger — never with a noun or topic name
+— Must include the EXACT keyword or concept people searched
+— Must name WHO it's for or WHERE (Ghana, from the UK, for beginners, for Nigerians)
+— Must end with a result, a relief, a speed signal, or a completeness promise
+— Must feel like a trusted friend solved your exact problem, not a textbook chapter
+— ZERO colons. Never "Topic: The Rest of the Title" — that is passive, academic, unsellable
 — Add year (2026) for registration, legal, exam, visa, government topics
-— Use dual acronyms: "WAEC / WASSCE", "JAMB / UTME", "KCSE / KNEC"
+— Use dual acronyms where known: "WAEC / WASSCE", "JAMB / UTME", "KCSE / KNEC"
 
 PDF OUTLINE — 6–8 chapters. This IS the table of contents. Guides the reader from confusion → clarity → action.
 Structure every outline using this arc:
@@ -1565,7 +1575,7 @@ OUTPUT FORMAT
 {
   "painPoint": "40–80 words. Specific group + what they're trying to do + what keeps going wrong + the real cost. Raw and honest.",
   "keyword": "exact verbatim phrase from the data above — copy precisely",
-  "pdfTitle": "Use one of the 4 title formulas. Action word + exact keyword + who/where + result promise. 6–14 words.",
+  "pdfTitle": "MANDATORY: pick ONE formula based on flags. FEAR+MONEY → Formula 2: start with 'Stop' or 'No More', end with the result they crave. PROCESS+DIASPORA → Formula 1: start with 'How to', name who it's for, end with relief/result. Numbered topic → Formula 3: lead with a number. Comprehensive → Formula 4: 'The Complete/Ultimate/Only'. ACTION WORD FIRST — always. NO colons ever — 'Topic: Subtitle' is banned. NO word limit — write until the psychological punch lands. Must feel like the answer to a 2am desperate search.",
   "niche": "health | finance | education | business | farming | technology | relationships | home | career | mindset | other",
   "searchVolume": <integer — use ✓REAL figure if provided; use est[Nsrc] figure if provided; only estimate freely if neither is marked. Minimum 2000>,
   "opportunityScore": <integer 70–100 from the four-axis scoring>,
