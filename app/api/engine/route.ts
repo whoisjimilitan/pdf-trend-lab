@@ -1534,15 +1534,21 @@ Return ONLY valid JSON: { "results": [...] }`,
   );
 
   if (opportunities.length === 0) {
-    // Helpful error: tell the user what almost made it, so they know what to dig into
     const topMissed = allAiResults
       .sort((a, b) => Number(b.opportunityScore ?? 0) - Number(a.opportunityScore ?? 0))
-      .slice(0, 3)
-      .map((o) => `"${String(o.keyword)}"`)
-      .join(", ");
-    const suggestion = topMissed
-      ? ` Closest signals found: ${topMissed} — try one of these as a keyword to get a deeper, focused scan.`
+      .slice(0, 3);
+    const topMissedStr = topMissed.map((o) => `"${String(o.keyword)}"`).join(", ");
+
+    // Detect if missed signals are diaspora-type — if so, give a specific actionable suggestion
+    const diasporaPattern = /from uk|from abroad|from usa|from canada|from australia|overseas|abroad/i;
+    const hasDiasporaSignals = !diaspora && topMissed.some((o) => diasporaPattern.test(String(o.keyword)));
+
+    const suggestion = hasDiasporaSignals
+      ? ` Closest signals: ${topMissedStr}. These are diaspora queries — they scored in the wrong market context. Enable the Diaspora toggle and rescan: these will return as 80–90+ opportunities.`
+      : topMissedStr
+      ? ` Closest signals found: ${topMissedStr} — try one of these as a keyword to get a deeper, focused scan.`
       : ` Try a specific keyword like "passport renewal", "business registration", or "mobile money" to anchor the search.`;
+
     return NextResponse.json({
       error: `Scan complete — strong pain signals found but none hit the commercial threshold for this market.${suggestion}`,
     }, { status: 422 });
