@@ -204,6 +204,134 @@ async function fetchRedditSignals(country: string, keyword: string, niche: strin
   return [...new Set(signals)].slice(0, 25);
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYER 5 — Question Variants (People Also Ask equivalent — zero scraping)
+// Appends question words to proven pain queries to surface hyper-specific variants.
+// The same autocomplete API, different angle — reveals what confused people ask next.
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function fetchQuestionVariants(query: string): Promise<string[]> {
+  const prefixes = ["how", "what", "when", "why", "which", "can i", "do i need"];
+  try {
+    const results = await Promise.allSettled(
+      prefixes.map((p) => fetchAutocompleteSuggestions(`${query} ${p}`))
+    );
+    const all: string[] = [];
+    for (const r of results) if (r.status === "fulfilled") all.push(...r.value);
+    return [...new Set(all)].filter((q) => q.length > 12 && q !== query).slice(0, 20);
+  } catch {
+    return [];
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYER 6 — DuckDuckGo Related Topics (free, no auth)
+// Independent algorithm surfaces adjacent pain clusters Google and Bing miss.
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function fetchDuckDuckGoTopics(query: string): Promise<string[]> {
+  try {
+    const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`;
+    const res = await fetch(url, {
+      headers: { "User-Agent": "PDFTrendLab/1.0 (research)" },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const topics: string[] = [];
+    for (const item of (data?.RelatedTopics ?? [])) {
+      if (item?.Text && item.Text.length > 10) topics.push(item.Text.split(" - ")[0].trim());
+      if (Array.isArray(item?.Topics)) {
+        for (const sub of item.Topics) {
+          if (sub?.Text && sub.Text.length > 10) topics.push(sub.Text.split(" - ")[0].trim());
+        }
+      }
+    }
+    return [...new Set(topics)].slice(0, 15);
+  } catch {
+    return [];
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYER 7 — Community Pain Signals (Quora + Reddit via Custom Search)
+// Real questions from forums = verified pain in exact human language, highest intent.
+// Uses 1 Custom Search query — preserves quota for competition check and gap scoring.
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function fetchCommunitySignals(query: string, country: string): Promise<string[]> {
+  const apiKey = process.env.GOOGLE_CUSTOM_SEARCH_KEY;
+  const cx     = process.env.GOOGLE_CUSTOM_SEARCH_CX;
+  if (!apiKey || !cx) return [];
+  const label = COUNTRY_LABEL[country] ?? "";
+  const searchQuery = `(site:quora.com OR site:reddit.com) "${query}"${label ? " " + label : ""}`;
+  try {
+    const url = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cx}&q=${encodeURIComponent(searchQuery)}&num=10`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const items = (data?.items ?? []) as Array<{ title?: string; link?: string }>;
+    const signals: string[] = [];
+    for (const item of items) {
+      const title = item?.title?.replace(/ - Quora$| - Reddit$/i, "").trim();
+      if (title && title.length > 10 && title.length < 150) signals.push(title);
+    }
+    return [...new Set(signals)].slice(0, 12);
+  } catch {
+    return [];
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYER 8 — Answer Gap Scoring
+// Measures HOW POORLY the internet currently answers a question.
+// High gap = gov sites, Wikipedia, outdated content, or video-only results dominate.
+// An empty shelf = easier first-mover sale, lower ad costs, less review resistance.
+// Runs on top 15 keywords only — costs Custom Search quota, worth every query.
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function scoreAnswerGaps(keywords: string[]): Promise<Map<string, number>> {
+  const apiKey = process.env.GOOGLE_CUSTOM_SEARCH_KEY;
+  const cx     = process.env.GOOGLE_CUSTOM_SEARCH_CX;
+  if (!apiKey || !cx) return new Map();
+  const result = new Map<string, number>();
+  const limit  = Math.min(keywords.length, 15);
+
+  for (let i = 0; i < limit; i++) {
+    const kw = keywords[i];
+    try {
+      const url  = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cx}&q=${encodeURIComponent(kw)}&num=10`;
+      const res  = await fetch(url, { signal: AbortSignal.timeout(6000) });
+      if (!res.ok) continue;
+      const data  = await res.json();
+      const items = (data?.items ?? []) as Array<{ link?: string; snippet?: string }>;
+      const total = parseInt(data?.searchInformation?.totalResults ?? "0", 10);
+      let score = 0;
+
+      // Government domain = authoritative but impenetrable for regular people → gap for plain-language guide
+      if (items.some((item) => /\.gov\.|\.gov$|\.go\.|government\./i.test(item?.link ?? ""))) score += 35;
+      // Wikipedia = generic overview, no steps → gap for actionable guide
+      if (items.some((item) => item?.link?.includes("wikipedia.org"))) score += 20;
+      // Old content (2018–2022) = outdated → gap for 2025/2026 updated guide
+      if (items.some((item) => /201[89]|2020|2021|2022/.test(item?.snippet ?? ""))) score += 25;
+      // No step-by-step structure in snippets → gap for structured guide
+      const hasSteps = items.some((item) => /step [0-9]|1\.\s|2\.\s|first.*then/i.test(item?.snippet ?? ""));
+      if (!hasSteps && items.length > 0) score += 15;
+      // Video-only first result → gap for readable/downloadable guide
+      if (items[0]?.link?.includes("youtube.com") || items[0]?.link?.includes("youtu.be")) score += 20;
+      // Very thin coverage → almost certain gap
+      if (total < 1000) score += 20;
+      else if (total < 10000) score += 10;
+
+      result.set(kw.toLowerCase(), Math.min(score, 100));
+    } catch { /* ignore individual failures */ }
+    if (i < limit - 1) await new Promise((r) => setTimeout(r, 120));
+  }
+
+  console.log(`[engine] Gap scored ${result.size} keywords — ${[...result.values()].filter(v => v >= 50).length} high-gap opportunities`);
+  return result;
+}
+
 const UNIVERSAL_STARTERS = [
   "how to",
   "how do i",
@@ -820,11 +948,16 @@ export async function POST(req: Request) {
   // deeper, more specific variations of what's already proven to be commercially painful.
   const queries = [...new Set([...baseQueries, ...progressiveSeeds])];
 
-  // Phase 1 — Discovery: Google + YouTube + Bing autocomplete + Reddit in parallel.
-  // Three independent algorithms — if all three surface the same query, it's confirmed
-  // real demand (not autocomplete noise). Each has different ranking signals:
-  // Google = web intent, YouTube = how-to/tutorial intent, Bing = independent validation.
-  const [googleArrays, youtubeArrays, bingArrays, redditSignals] = await Promise.all([
+  // Phase 1 — 7-source parallel discovery.
+  // Google/YouTube/Bing = cross-algorithm autocomplete validation.
+  // Question variants = PAA-equivalent (appends question words to surface what confused people ask next).
+  // DuckDuckGo = adjacent topic clusters Google/Bing miss.
+  // Community signals = Quora/Reddit forum questions (verified pain in exact human language).
+  // Reddit = community posts for real problem phrasing.
+  const top3Queries = baseQueries.slice(0, 3);
+  const mainQuery   = keyword || niche || COUNTRY_LABEL[country] || "";
+
+  const [googleArrays, youtubeArrays, bingArrays, redditSignals, questionVariants, ddgResults, communitySignals] = await Promise.all([
     Promise.all(queries.map(fetchAutocompleteSuggestions)),
     Promise.all(queries.map(fetchYouTubeSuggestions)),
     Promise.all(queries.map(fetchBingSuggestions)),
@@ -832,9 +965,14 @@ export async function POST(req: Request) {
       fetchRedditSignals(country, keyword || "", niche || "", diaspora).catch(() => []),
       new Promise<string[]>((resolve) => setTimeout(() => resolve([]), 3000)),
     ]),
+    Promise.allSettled(top3Queries.map(fetchQuestionVariants)).then((rs) =>
+      rs.flatMap((r) => r.status === "fulfilled" ? r.value : [])
+    ),
+    fetchDuckDuckGoTopics(mainQuery).catch(() => [] as string[]),
+    fetchCommunitySignals(mainQuery, country).catch(() => [] as string[]),
   ]);
 
-  // Cross-source demand validation: count distinct sources (max 3) per query.
+  // Cross-source demand validation: count distinct sources per query.
   // Dedup within each source first — then count source appearances.
   const googleSet  = new Set(googleArrays.flat().filter((q) => q.length > 8));
   const youtubeSet = new Set(youtubeArrays.flat().filter((q) => q.length > 8));
@@ -844,6 +982,21 @@ export async function POST(req: Request) {
   for (const q of [...googleSet, ...youtubeSet, ...bingSet]) {
     sourceFrequency.set(q, (sourceFrequency.get(q) ?? 0) + 1);
   }
+
+  // Merge new signal sources — each adds +1 to frequency (community signals +2: forum = strong confirmation)
+  const questionVariantSet = new Set(questionVariants.filter((q) => q.length > 8));
+  const ddgSet             = new Set(ddgResults.filter((q) => q.length > 8));
+  const communitySet       = new Set(communitySignals.filter((q) => q.length > 8));
+
+  for (const q of questionVariantSet) sourceFrequency.set(q, (sourceFrequency.get(q) ?? 0) + 1);
+  for (const q of ddgSet) sourceFrequency.set(q, (sourceFrequency.get(q) ?? 0) + 1);
+  for (const q of communitySet) sourceFrequency.set(q, (sourceFrequency.get(q) ?? 0) + 2);
+
+  // Track platform origin per signal — used to set platformOfOrigin field
+  const signalOrigins = new Map<string, string>();
+  for (const q of questionVariantSet) signalOrigins.set(q.toLowerCase(), "paa");
+  for (const q of ddgSet) if (!signalOrigins.has(q.toLowerCase())) signalOrigins.set(q.toLowerCase(), "duckduckgo");
+  for (const q of communitySet) signalOrigins.set(q.toLowerCase(), "community"); // override — highest signal quality
 
   const rawSearches = [...sourceFrequency.keys()];
 
@@ -911,7 +1064,7 @@ export async function POST(req: Request) {
 
   const confirmedCount  = [...sourceFrequency.values()].filter((n) => n >= 3).length;
   const validatedCount  = [...sourceFrequency.values()].filter((n) => n === 2).length;
-  console.log(`[engine] ${country}${diaspora ? " DIASPORA" : ""} (${market.tier}): ${rawSearches.length} raw (${confirmedCount} 3-source, ${validatedCount} 2-source) → ${allScored.length} pain-scored → ${clusterDeduped.length} distinct clusters. Top score: ${clusterDeduped[0]?.score ?? 0} [${clusterDeduped[0]?.flags.join("+")}]`);
+  console.log(`[engine] ${country}${diaspora ? " DIASPORA" : ""} (${market.tier}): ${rawSearches.length} raw (${confirmedCount} 3-src, ${validatedCount} 2-src, ${communitySet.size} community, ${questionVariantSet.size} paa-variant) → ${allScored.length} pain-scored → ${clusterDeduped.length} clusters. Top: ${clusterDeduped[0]?.score ?? 0} [${clusterDeduped[0]?.flags.join("+")}]`);
 
   // Phase 2 — Real volumes via DataForSEO on clustered queries
   const topForVolume = clusterDeduped.slice(0, 80).map((s) => s.query);
@@ -942,8 +1095,13 @@ export async function POST(req: Request) {
 
   // Phase 4 — Competition check for top pain-scored keywords
   const top20 = enrichedKeywords.slice(0, 20).map((e) => e.keyword);
-  const competitionMap   = await checkPDFCompetition(top20);
+  const competitionMap     = await checkPDFCompetition(top20);
   const hasRealCompetition = competitionMap.size > 0;
+
+  // Phase 4b — Answer Gap Scoring: how poorly does the internet currently answer these?
+  // High gap = empty shelf = easier first-mover win. Runs only when Custom Search is configured.
+  const top15ForGap = enrichedKeywords.slice(0, 15).map((e) => e.keyword);
+  const gapScoreMap = await scoreAnswerGaps(top15ForGap);
 
   // Phase 5 — Build fully annotated prompt list for Gemini
   // Every query arrives pre-computed: pain score + flags + deterministic trend + proxy volume + competition
@@ -975,17 +1133,27 @@ export async function POST(req: Request) {
     const demandSignal     =
       sourcesCount >= 3 ? "CONFIRMED [Google+YouTube+Bing]" :
       sourcesCount >= 2 ? "validated [2 sources]" : "";
+    const gapScore       = gapScoreMap.get(e.keyword.toLowerCase());
+    const gapAnnotation  = gapScore != null ? `gap:${gapScore}` : "";
+    const origin         = signalOrigins.get(e.keyword.toLowerCase()) ?? "autocomplete";
+    const originTag      = origin !== "autocomplete" ? `origin:${origin}` : "";
+
     const parts = [`${i + 1}. "${e.keyword}" | pain:${e.painScore} ${painAnnotation}`];
     parts.push(volAnnotation);
     if (compAnnotation) parts.push(compAnnotation);
     if (demandSignal)   parts.push(demandSignal);
     parts.push(`trend:${precomputedTrend}`);
+    if (gapAnnotation)  parts.push(gapAnnotation);
+    if (originTag)      parts.push(originTag);
     parts.push(priority);
     return parts.join(" | ").replace(/\s\|\s$/, "");
   }).join("\n");
 
-  const redditSection = redditSignals.length > 0
-    ? `\n\nPAIN SIGNALS FROM REDDIT (how people actually describe these problems):\n${redditSignals.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`
+  const communityParts: string[] = [];
+  if (redditSignals.length > 0) communityParts.push(`REDDIT:\n${redditSignals.slice(0, 15).map((s, i) => `${i + 1}. "${s}"`).join("\n")}`);
+  if (communitySignals.length > 0) communityParts.push(`QUORA/COMMUNITY:\n${communitySignals.slice(0, 10).map((s, i) => `${i + 1}. "${s}"`).join("\n")}`);
+  const redditSection = communityParts.length > 0
+    ? `\n\nPAIN SIGNALS FROM COMMUNITY FORUMS (real problems in exact language people use):\n${communityParts.join("\n\n")}`
     : "";
 
   const diasporaContext = diaspora ? `
@@ -1018,7 +1186,13 @@ Minimum estimate for any included result: 2,500/month.`;
       messages: [
         {
           role: "system",
-          content: `You are a commercial pain detection engine. Your only job is to identify searches where someone is confused, stressed, or afraid — and where a clean, downloadable PDF guide is the obvious solution.
+          content: `You are an opportunity compression engine. You compress raw search demand into three decisions per opportunity: Problem → Product → Placement.
+
+PROBLEM: Identify who is confused, afraid, or stuck — and what exactly they need to do.
+PRODUCT: Specify the PDF format that solves it (checklist, step-by-step guide, template, reference sheet).
+PLACEMENT: Identify where the buyer ALREADY IS when they have this pain (TikTok, Pinterest, Facebook groups, Quora, Instagram Reels, WhatsApp communities).
+
+This compression model is why a "ghana passport renewal from uk" PDF sells — the diaspora person has a specific bureaucratic problem (PROBLEM), the step-by-step checklist with embassy dates and document list is the product (PRODUCT), and Ghanaians in UK Facebook groups is exactly where they're asking about it (PLACEMENT).
 
 THE CORE PRINCIPLE:
 You are NOT building an SEO keyword tool.
@@ -1069,6 +1243,8 @@ DATA PROVIDED (use it, do not override it):
 — "MONOPOLY" = live Google search found zero competing PDFs on Gumroad/Payhip right now.
 — "CONFIRMED [Google+YouTube+Bing]" = independently surfaced by all three search engines. Strongest possible demand signal — treat as volume-confirmed.
 — "validated [2 sources]" = confirmed by two independent engines. Strong signal, not noise.
+— "gap:" score (0-100) = how poorly the internet currently answers this question. 80+ = only gov sites, Wikipedia, or outdated 2020 content exists → empty shelf → easiest first-mover win. Use this to inform gapScore output.
+— "origin:" tag = where the signal was first detected (paa = People Also Ask equivalent, duckduckgo = adjacent topic cluster, community = Quora/Reddit forum question, autocomplete = standard search suggestion). Community and paa signals = highest intent — someone already committed to the topic. Use this for platformOfOrigin output.
 
 SCORING AXES:
 AXIS 1 — PDF MONOPOLY (35 pts max)
@@ -1127,6 +1303,21 @@ This is the scroll-stopper. One sentence. Direct PSA, fear trigger, surprising f
 
 PDF SUITABILITY EXPLANATION — in 1–2 sentences, explain specifically WHY this topic is better as a downloadable PDF than a blog post or YouTube video.
 Focus on: portability, offline access, the user keeps it and refers back, checklists they tick off, step clarity that video can't replicate.
+
+DISTRIBUTION STRATEGY — the PLACEMENT in Problem → Product → Placement.
+Specify EXACTLY where to put the content to reach the buyer when they have this problem.
+Platform must match where this type of person actually spends time AND discusses this topic.
+Format: 2-3 sentences. Primary platform + content format. Secondary channel.
+
+Platform matching rules:
+• DIASPORA topics → Facebook groups first (Ghanaians in UK, Nigerians in London). Then Instagram Reels, TikTok PSA.
+• EXAM topics (WAEC, JAMB, KCSE) → TikTok/WhatsApp status (students scroll here). Pinterest study boards.
+• GOVERNMENT/PROCESS topics → Pinterest (how-to guides index well). Quora answers (seed with partial answer + link).
+• MONEY/BUSINESS → TikTok Reels (fear hook format). Facebook Groups (entrepreneur communities).
+• HEALTH/URGENCY → TikTok PSA format (high completion rate). Instagram Reels.
+• IMMIGRATION → Facebook groups, Quora, YouTube Shorts.
+
+Always include: primary platform + content format + specific community type (e.g. "Ghanaians in UK Facebook groups", "WAEC students WhatsApp", not just "Facebook" or "social media").
 
 ACTIONABILITY RATING:
   easy: clear steps, limited variables, one correct path (e.g., passport renewal checklist — same for everyone)
@@ -1223,6 +1414,9 @@ OUTPUT FORMAT
   "hookAngle": "The exact opening line of a 5-second TikTok/Reels — one sentence, scroll-stopping",
   "pdfSuitability": "1–2 sentences: why this is better as a PDF than a blog post or video",
   "actionabilityRating": "easy | medium | hard",
+  "gapScore": <integer 0-100 — copy from gap: annotation if provided; otherwise: 0 if strong guides exist, 50 if gov/Wikipedia only, 80 if outdated or video-only coverage>,
+  "platformOfOrigin": "autocomplete | paa | duckduckgo | community — copy from origin: annotation if provided, otherwise autocomplete",
+  "distributionStrategy": "Primary: [platform + content format + specific community]. Secondary: [backup channel]. 2-3 sentences max.",
   "videoScript": {
     "hook": "The scroll-stopper — 0-2s. Exact situation named. Immediate pain or PSA. No intro.",
     "tease": "Stakes or payoff — 2-4s. What they risk or gain. One specific sentence.",
@@ -1286,6 +1480,14 @@ Return ONLY valid JSON: { "results": [...] }`,
     // Override trend with pre-computed deterministic value — AI must not fabricate this
     const precomputedTrend = precomputedTrendMap.get(kw);
     if (precomputedTrend) o = { ...o, trend: precomputedTrend };
+
+    // Override gap score with computed value (Custom Search analysis > AI estimate)
+    const computedGap = gapScoreMap.get(kw);
+    if (computedGap != null) o = { ...o, gapScore: computedGap };
+
+    // Override platform origin with tracked value (signal tracing > AI guess)
+    const trackedOrigin = signalOrigins.get(kw);
+    if (trackedOrigin) o = { ...o, platformOfOrigin: trackedOrigin };
 
     return o;
   });
@@ -1353,6 +1555,9 @@ Return ONLY valid JSON: { "results": [...] }`,
                                  ? JSON.stringify(o.videoScript)
                                  : String(o.videoScript || "{}"),
           volumeTier:          computeVolumeTier(Number(o.searchVolume) || 0),
+          gapScore:            Math.min(100, Math.max(0, Number(o.gapScore) || 0)),
+          platformOfOrigin:    String(o.platformOfOrigin || "autocomplete"),
+          distributionStrategy: String(o.distributionStrategy || ""),
           isQuickWin,
           isDiaspora: Boolean(diaspora),
         },

@@ -19,6 +19,12 @@ type Opportunity = {
   maxPrice: number;
   emotionalIntent: string;
   exactQuestions: string;
+  hookAngle: string;
+  pdfSuitability: string;
+  actionabilityRating: string;
+  gapScore: number;
+  platformOfOrigin: string;
+  distributionStrategy: string;
   saved: boolean;
   isQuickWin: boolean;
   isDiaspora: boolean;
@@ -50,6 +56,18 @@ const INTENT_COLORS: Record<string, string> = { fear: "#EF4444", urgency: "#F59E
 function chip(label: string, color: string): React.CSSProperties {
   return { background: color + "20", color, borderRadius: 5, padding: "2px 8px", fontSize: 11, fontWeight: 600, display: "inline-block", whiteSpace: "nowrap" as const };
 }
+
+function gapLabel(score: number): { label: string; color: string } {
+  if (score >= 60) return { label: `🏆 Empty shelf (${score})`, color: "#10B981" };
+  if (score >= 35) return { label: `📭 Some gap (${score})`,    color: "#F59E0B" };
+  return               { label: `📚 Well covered (${score})`,   color: "#6B7280" };
+}
+
+const ORIGIN_LABEL: Record<string, string> = {
+  paa:        "💡 PAA",
+  duckduckgo: "🦆 DDG",
+  community:  "💬 Forum",
+};
 
 function volumeDisplay(vol: number): { label: string; color: string; bg: string; tier: string } {
   if (vol >= 100000) return { label: fmt(vol) + "/mo", color: "#10B981", bg: "#10B98122", tier: "🔥 Massive Demand" };
@@ -198,6 +216,11 @@ export default function EnginePage() {
                   ✈️ DIASPORA · £
                 </span>
               )}
+              {o.platformOfOrigin && o.platformOfOrigin !== "autocomplete" && (
+                <span style={{ background: "#10B98115", color: "#10B981", borderRadius: 4, padding: "1px 6px", fontSize: 10, fontWeight: 600, border: "1px solid #10B98130" }}>
+                  {ORIGIN_LABEL[o.platformOfOrigin] ?? o.platformOfOrigin}
+                </span>
+              )}
               <span style={{ background: "var(--surface)", color: "var(--muted)", borderRadius: 4, padding: "1px 6px", fontSize: 10, border: "1px solid var(--border)" }}>
                 {o.niche}
               </span>
@@ -237,6 +260,15 @@ export default function EnginePage() {
           <span className="text-xs ml-auto" style={{ color: "var(--muted)" }}>monthly searches</span>
         </div>
 
+        {/* Gap score — how empty is the shelf? */}
+        {o.gapScore > 0 && (() => { const g = gapLabel(o.gapScore); return (
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg mb-3"
+            style={{ background: g.color + "12", border: `1px solid ${g.color}30` }}>
+            <span className="text-xs font-bold" style={{ color: g.color }}>{g.label}</span>
+            <span className="text-xs ml-2" style={{ color: "var(--muted)" }}>— existing answers are {o.gapScore >= 60 ? "gov sites / Wikipedia / outdated" : "partial"}</span>
+          </div>
+        ); })()}
+
         {/* Real problems searched — short fragments */}
         {questions.length > 0 && (
           <div className="mb-3">
@@ -247,10 +279,32 @@ export default function EnginePage() {
               {questions.slice(0, 4).map((q, i) => (
                 <span key={i} className="text-xs px-2.5 py-1 rounded-full"
                   style={{ background: "var(--surface)", border: "1px solid var(--border)", color: "var(--text)" }}>
-                  "{q}"
+                  &ldquo;{q}&rdquo;
                 </span>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Hook angle — the scroll-stopper */}
+        {o.hookAngle && (
+          <div className="px-3 py-2 rounded-lg mb-3"
+            style={{ background: "#6366F108", border: "1px solid #6366F120" }}>
+            <div className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "#818CF8" }}>
+              Hook angle
+            </div>
+            <div className="text-xs italic" style={{ color: "var(--text)" }}>&ldquo;{o.hookAngle}&rdquo;</div>
+          </div>
+        )}
+
+        {/* Distribution strategy — where to plant this */}
+        {o.distributionStrategy && (
+          <div className="px-3 py-2.5 rounded-lg mb-3"
+            style={{ background: "#F59E0B08", border: "1px solid #F59E0B25" }}>
+            <div className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "#D97706" }}>
+              🎯 Where to plant this
+            </div>
+            <div className="text-xs leading-relaxed" style={{ color: "var(--text)" }}>{o.distributionStrategy}</div>
           </div>
         )}
 
@@ -408,7 +462,7 @@ export default function EnginePage() {
               </div>
               <div className="text-xs mt-0.5 flex items-center gap-3 flex-wrap" style={{ color: "var(--muted)" }}>
                 <span>Generated: {scanInfo.timestamp}</span>
-                <span style={{ color: "#10B981" }}>✓ Score ≥ 70 · Opportunity Density model · Google + Reddit signals</span>
+                <span style={{ color: "#10B981" }}>✓ Score ≥ 70 · Problem → Product → Placement · 7-source signal model</span>
                 {(scanInfo.keyword || scanInfo.niche) && (
                   <span style={{ color: "var(--accent)" }}>
                     {scanInfo.keyword ? `Keyword: "${scanInfo.keyword}"` : `Niche: "${scanInfo.niche}"`}
@@ -452,7 +506,7 @@ export default function EnginePage() {
             Scanning {countryMeta.label} — all categories…
           </p>
           <p className="text-xs" style={{ color: "var(--muted)" }}>
-            Google Autocomplete · Reddit pain signals · Knowledge gap filter · 15k+/month gate
+            Google · YouTube · Bing · PAA variants · DuckDuckGo · Community signals · Answer gap scoring
           </p>
         </div>
       )}
