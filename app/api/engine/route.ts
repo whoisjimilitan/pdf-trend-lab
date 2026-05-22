@@ -53,7 +53,7 @@ async function fetchBingSuggestions(query: string): Promise<string[]> {
 
 const COUNTRY_LABEL: Record<string, string> = {
   GH: "ghana", NG: "nigeria", KE: "kenya", ZA: "south africa",
-  GB: "uk", CA: "canada", AU: "australia", US: "",
+  GB: "uk", CA: "canada", AU: "australia", US: "", GLOBAL: "",
 };
 
 // Reddit communities with strong signal for each market
@@ -66,6 +66,7 @@ const COUNTRY_SUBREDDITS: Record<string, string[]> = {
   GB: ["unitedkingdom", "UKPersonalFinance", "AskUK"],
   CA: ["PersonalFinanceCanada", "canada"],
   AU: ["AusFinance", "australia"],
+  GLOBAL: ["personalfinance", "selfimprovement", "Anxiety", "relationship_advice", "careerguidance", "mentalhealth", "Parenting"],
 };
 
 // Diaspora subreddits — communities where diaspora members discuss homeland topics
@@ -362,8 +363,52 @@ const PAIN_PATTERNS = [
   "how much does it cost to",
 ];
 
+// Universal human pain domains — no country, no niche assumption.
+// Used in Global mode as autocomplete seeds. Covers mental health, physical health,
+// financial hardship, relationships, career, and universal bureaucracy.
+const GLOBAL_PAIN_SEEDS = [
+  // Mental & emotional
+  "anxiety", "depression", "grief", "trauma", "burnout", "loneliness", "panic attack", "anger",
+  // Physical health
+  "chronic pain", "insomnia", "weight loss", "diabetes", "hair loss", "infertility",
+  // Relationships & family
+  "divorce", "toxic relationship", "narcissist", "co-parenting", "bereavement",
+  // Financial hardship
+  "debt", "credit score", "bankruptcy", "side hustle", "investing for beginners",
+  // Career & work
+  "job loss", "career change", "freelancing", "job interview",
+  // Universal admin
+  "visa application", "tax return", "driving test", "employment contract",
+  // Personal struggles
+  "procrastination", "social anxiety", "low self-esteem", "productivity",
+];
+
 function buildDiscoveryQueries(country: string, keyword: string, niche: string, diaspora = false): string[] {
   const label = COUNTRY_LABEL[country] ?? "";
+
+  if (country === "GLOBAL") {
+    if (keyword) {
+      return [
+        `how to ${keyword}`, `how do i ${keyword}`, `${keyword} guide`, `${keyword} for beginners`,
+        `${keyword} step by step`, `how to fix ${keyword}`, `${keyword} tips`, `${keyword} problems`,
+        `${keyword} help`, `how to deal with ${keyword}`, `how to recover from ${keyword}`,
+      ];
+    }
+    if (niche) {
+      return [
+        `how to ${niche}`, `${niche} guide`, `${niche} problems`, `${niche} help`,
+        `${niche} tips`, `${niche} for beginners`, `${niche} mistakes`,
+        `how to deal with ${niche}`, `how to recover from ${niche}`, `${niche} step by step`,
+      ];
+    }
+    // Broad global scan: seeds + behavioral pattern combinations surface any niche from autocomplete
+    return [
+      ...GLOBAL_PAIN_SEEDS,
+      ...GLOBAL_PAIN_SEEDS.slice(0, 18).map((s) => `how to deal with ${s}`),
+      ...GLOBAL_PAIN_SEEDS.slice(0, 14).map((s) => `how to recover from ${s}`),
+      ...GLOBAL_PAIN_SEEDS.slice(14).map((s) => `${s} help`),
+    ].slice(0, 65);
+  }
 
   if (diaspora) {
     const anchors = DIASPORA_ANCHORS[country] ?? [];
@@ -443,6 +488,7 @@ export const PRICING: Record<string, { symbol: string; min: number; max: number;
   CA: { symbol: "CA$", min: 14.99, max: 27.99, note: "Canadian Dollars" },
   AU: { symbol: "A$",  min: 14.99, max: 29.99, note: "Australian Dollars" },
   US: { symbol: "$",   min: 12.99, max: 24.99, note: "US Dollars" },
+  GLOBAL: { symbol: "$", min: 12.99, max: 24.99, note: "USD — borderless digital product" },
 };
 
 // Diaspora buyers have Western purchasing power — price in GBP accordingly.
@@ -464,6 +510,7 @@ const MARKET_CONTEXT: Record<string, { tier: string; strongVolume: number; massi
   GB: { tier: "saturated", strongVolume: 25000,  massiveVolume: 70000  },
   CA: { tier: "saturated", strongVolume: 20000,  massiveVolume: 60000  },
   AU: { tier: "saturated", strongVolume: 18000,  massiveVolume: 55000  },
+  GLOBAL: { tier: "global", strongVolume: 40000, massiveVolume: 100000 },
 };
 
 const DIASPORA_MARKET_CONTEXT: Record<string, { tier: string; strongVolume: number; massiveVolume: number }> = {
@@ -534,6 +581,7 @@ function estimateVolumeFromSources(query: string, sourceCount: number, painScore
 const DATAFORSEO_LOCATION: Record<string, number> = {
   GH: 2288, NG: 2566, KE: 2404, ZA: 2710,
   GB: 2826, US: 2840, CA: 2124, AU: 2036,
+  GLOBAL: 2840, // US as proxy — largest English market, broadest autocomplete coverage
 };
 
 interface VolumeData {
@@ -1109,6 +1157,22 @@ export async function POST(req: Request) {
     ? `\n\nPAIN SIGNALS FROM COMMUNITY FORUMS (real problems in exact language people use):\n${communityParts.join("\n\n")}`
     : "";
 
+  const isGlobal = country === "GLOBAL";
+
+  const globalContext = isGlobal ? `
+THIS IS GLOBAL MODE — universal human pain topics with no country anchor.
+These PDFs sell in any English-speaking market because the pain is not tied to any geography.
+The buyer is anyone, anywhere, who has this specific problem right now.
+
+GLOBAL MODE RULES:
+— Do NOT include country-specific bureaucracy or local regulations (no "ghana passport", no "universal credit UK")
+— Focus exclusively on universal human challenges: mental health, relationships, financial hardship, career, health, personal struggles
+— For each opportunity, include in distributionStrategy: "Top markets: US · UK · AU · CA" (adjust based on topic)
+— Use Pinterest, TikTok, YouTube Shorts, and Quora as primary platforms — they index globally, not just nationally
+— The PDF you're evaluating is a borderless product. Someone buys it at 2am in Lagos, London, or Los Angeles.
+Price in USD ($12.99–$24.99) — the universal digital product standard.
+` : "";
+
   const diasporaContext = diaspora ? `
 THIS IS DIASPORA MODE — ${country} diaspora living in the UK (and US, Canada, Australia).
 These buyers have Western purchasing power (paying in £ or $) but need ${COUNTRY_LABEL[country] ?? country}-specific solutions.
@@ -1334,7 +1398,7 @@ EXACT QUESTIONS — 4 short human search fragments (these become chapter heading
         {
           role: "user",
           content: `Detect the ${count} most commercially painful PDF opportunities from this pre-scored search data.
-${diasporaContext}${realDataNote}
+${globalContext}${diasporaContext}${realDataNote}
 
 PAIN-SCORED SEARCH DATA — sorted by commercial intensity (highest pain first):
 ${enrichedList}${redditSection}
@@ -1453,7 +1517,7 @@ Return ONLY valid JSON: { "results": [...] }`,
     if (hasRealVolumes) return ABSOLUTE_MIN_VOLUME; // trust real DataForSEO data
     if (diaspora) return 800;                        // diaspora = niche but premium
     const tier = MARKET_CONTEXT[country]?.tier;
-    if (tier === "saturated") return 3000;           // US/GB/CA/AU
+    if (tier === "global" || tier === "saturated") return 3000; // global + US/GB/CA/AU
     return 1500;                                     // emerging markets (GH/NG/KE/ZA)
   })();
 

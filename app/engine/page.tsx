@@ -40,6 +40,7 @@ const COUNTRIES: { value: string; label: string; name: string; symbol: string; f
   { value: "GB", label: "United Kingdom",name: "UNITED KINGDOM",symbol: "£",  flag: "🇬🇧" },
   { value: "CA", label: "Canada",       name: "CANADA",        symbol: "CA$", flag: "🇨🇦" },
   { value: "AU", label: "Australia",    name: "AUSTRALIA",     symbol: "A$",  flag: "🇦🇺" },
+  { value: "GLOBAL", label: "Global",   name: "GLOBAL",        symbol: "$",   flag: "🌍" },
 ];
 
 const TIERS = [
@@ -348,8 +349,8 @@ export default function EnginePage() {
           <label className="text-xs font-semibold uppercase tracking-wider block mb-2" style={{ color: "var(--muted)" }}>
             Country — What market are you targeting?
           </label>
-          <div className="grid grid-cols-4 gap-2">
-            {COUNTRIES.map((c) => (
+          <div className="grid grid-cols-4 gap-2 mb-2">
+            {COUNTRIES.filter((c) => c.value !== "GLOBAL").map((c) => (
               <button key={c.value} onClick={() => setCountry(c.value)}
                 className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
                 style={{
@@ -362,6 +363,17 @@ export default function EnginePage() {
               </button>
             ))}
           </div>
+          {/* Global mode — full-width, distinct from single-country options */}
+          <button onClick={() => setCountry("GLOBAL")}
+            className="flex items-center justify-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
+            style={{
+              background: country === "GLOBAL" ? "var(--accent)" : "var(--surface2)",
+              color: country === "GLOBAL" ? "#fff" : "var(--muted)",
+              border: `1px solid ${country === "GLOBAL" ? "var(--accent)" : "var(--border)"}`,
+            }}>
+            <span>🌍</span>
+            <span>Global — Universal pain, no country assumption. Borderless PDFs. Market suggestions included.</span>
+          </button>
         </div>
 
         {/* Diaspora toggle — only for African markets */}
@@ -433,12 +445,12 @@ export default function EnginePage() {
             className="px-8 py-3 text-sm font-bold text-white rounded-lg flex items-center gap-2"
             style={{ background: loading ? "var(--muted)" : "var(--accent)", cursor: loading ? "not-allowed" : "pointer" }}>
             {loading
-              ? <><span>⚙️</span> Scanning {countryMeta.flag} {countryMeta.label}…</>
-              : <>{countryMeta.flag} Discover What&apos;s Worth Making in {countryMeta.label}</>}
+              ? <><span>⚙️</span> Scanning {countryMeta.flag} {country === "GLOBAL" ? "all markets" : countryMeta.label}…</>
+              : <>{countryMeta.flag} {country === "GLOBAL" ? "Discover What the World Needs" : `Discover What's Worth Making in ${countryMeta.label}`}</>}
           </button>
           <span className="text-xs" style={{ color: "var(--muted)" }}>
-            {keyword ? `Keyword: "${keyword}"` : niche ? `Niche: "${niche}"` : `Full scan in ${countryMeta.label}`}
-            {keyword || niche ? ` · ${countryMeta.label}` : ""}
+            {keyword ? `Keyword: "${keyword}"` : niche ? `Niche: "${niche}"` : country === "GLOBAL" ? "Universal pain scan — all niches, all markets" : `Full scan in ${countryMeta.label}`}
+            {(keyword || niche) && country !== "GLOBAL" ? ` · ${countryMeta.label}` : ""}
             {" · "}7 sources · adaptive signal expansion · full quality gate
           </span>
         </div>
@@ -457,8 +469,8 @@ export default function EnginePage() {
           <div className="flex items-start justify-between flex-wrap gap-3">
             <div>
               <div className="text-base font-bold" style={{ color: "var(--text)" }}>
-                📊 WHAT&apos;S WORTH MAKING IN {COUNTRIES.find((c) => c.value === scanInfo.country)?.name}
-                {keyword ? ` · "${keyword.toUpperCase()}"` : " · LIVE DISCOVERY"}
+                📊 {scanInfo.country === "GLOBAL" ? "WHAT THE WORLD NEEDS" : `WHAT'S WORTH MAKING IN ${COUNTRIES.find((c) => c.value === scanInfo.country)?.name}`}
+                {keyword ? ` · "${keyword.toUpperCase()}"` : scanInfo.country === "GLOBAL" ? " · UNIVERSAL PAIN SCAN" : " · LIVE DISCOVERY"}
               </div>
               <div className="text-xs mt-0.5 flex items-center gap-3 flex-wrap" style={{ color: "var(--muted)" }}>
                 <span>Generated: {scanInfo.timestamp}</span>
@@ -503,7 +515,7 @@ export default function EnginePage() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12 }} className="p-16 text-center">
           <div className="text-4xl mb-4">{countryMeta.flag}</div>
           <p className="text-sm font-medium mb-1" style={{ color: "var(--text)" }}>
-            Scanning {countryMeta.label} — all categories…
+            {country === "GLOBAL" ? "Scanning universal pain — anxiety, grief, debt, career, health, relationships…" : `Scanning ${countryMeta.label} — all categories…`}
           </p>
           <p className="text-xs" style={{ color: "var(--muted)" }}>
             Google · YouTube · Bing · PAA variants · DuckDuckGo · Community signals · Answer gap scoring
@@ -516,11 +528,13 @@ export default function EnginePage() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12 }} className="p-16 text-center">
           <div className="text-5xl mb-4">{tab === "saved" ? "🔖" : countryMeta.flag}</div>
           <p className="text-sm font-medium mb-2" style={{ color: "var(--text)" }}>
-            {tab === "saved" ? "No saved ideas yet" : `Ready to discover what ${countryMeta.label} needs?`}
+            {tab === "saved" ? "No saved ideas yet" : country === "GLOBAL" ? "Ready to discover what the world needs?" : `Ready to discover what ${countryMeta.label} needs?`}
           </p>
           <p className="text-xs" style={{ color: "var(--muted)" }}>
             {tab === "saved"
               ? "Click the 🏷️ bookmark on any result to save it here."
+              : country === "GLOBAL"
+              ? "Global mode scans universal pain — grief, debt, anxiety, relationships, career. No country assumption. The market emerges from the data."
               : `Click the button above — the engine scans everything and surfaces only what's worth making.`}
           </p>
         </div>
