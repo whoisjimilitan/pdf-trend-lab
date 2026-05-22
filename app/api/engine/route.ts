@@ -720,7 +720,7 @@ function scoreCommercialPain(query: string): PainScore {
   if (/recover|lost|stolen|blocked|failed|rejected|denied|wrong|mistake|fix|scam|fraud|cheat/.test(q)) {
     score += 15; flags.push("FEAR");
   }
-  if (/money|payment|transfer|fund|fee|cost|salary|income|debt|loan|refund|withdraw|charge/.test(q)) {
+  if (/money|payment|transfer|fund|fee|cost|salary|income|debt|loan|refund|withdraw|charge|credit|invest|savings|budget|afford|bankrupt|financial|pension|inheritance/.test(q)) {
     score += 15; flags.push("MONEY");
   }
 
@@ -760,14 +760,20 @@ function scoreCommercialPain(query: string): PainScore {
     score += 8; flags.push("GUIDE-INTENT");
   }
 
-  // HEALTH ANXIETY — always high-intent
-  if (/symptom|sick|disease|hospital|medical|health|pain|treatment|cure/.test(q)) {
-    score += 8; flags.push("HEALTH");
+  // HEALTH ANXIETY — always high-intent (physical + mental health)
+  if (/symptom|sick|disease|hospital|medical|health|pain|treatment|cure|anxiety|depression|grief|trauma|burnout|mental health|disorder|addiction|chronic|therapy|therapist|counsell|ptsd|adhd|autism|bipolar|stress|overwhelm|panic|phobia|insomnia|infertil/.test(q)) {
+    score += 12; flags.push("HEALTH");
+  }
+
+  // RELATIONSHIP PAIN — divorce, toxic people, loss, family breakdown
+  // Converts as well as financial pain — buyer is desperate and isolated
+  if (/divorce|separation|toxic|narciss|affair|infidelity|break.?up|breakup|co.?parent|custody|single parent|abus|domestic|loneliness|lonely|bereavement|widow|mourn|grief|estranged|gaslighting/.test(q)) {
+    score += 12; flags.push("RELATIONSHIP");
   }
 
   // CAREER / FINANCIAL STRESS
-  if (/job|career|fired|unemployed|promotion|interview|salary|business|start a business/.test(q)) {
-    score += 6; flags.push("CAREER");
+  if (/job|career|fired|unemployed|redundan|promotion|interview|salary|business|start a business|freelanc|self.employed|side hustle|resign/.test(q)) {
+    score += 10; flags.push("CAREER");
   }
 
   // CONSEQUENCE SCORING — what happens if they get this wrong?
@@ -800,7 +806,7 @@ function scoreCommercialPain(query: string): PainScore {
   // PAIN DENSITY BONUS — queries with 3+ primary flags simultaneously
   // are where real PDF sales happen. Multi-pain = multi-motivated buyer.
   const primaryFlagCount = flags.filter((f) =>
-    ["FEAR","MONEY","DIASPORA","DEADLINE","IMMIGRATION","LEGAL","PROCESS","HEALTH"].includes(f)
+    ["FEAR","MONEY","DIASPORA","DEADLINE","IMMIGRATION","LEGAL","PROCESS","HEALTH","RELATIONSHIP"].includes(f)
   ).length;
   if (primaryFlagCount >= 3) { score += 20; flags.push("HIGH-DENSITY"); }
   else if (primaryFlagCount >= 2) { score += 10; flags.push("MULTI-PAIN"); }
@@ -839,7 +845,7 @@ function scoreCommercialPain(query: string): PainScore {
 
   // ── PDF SUITABILITY — positive confirmation ────────────────────────────────
   // Must contain at least one signal that a structured guide is the right format
-  const hasPDFFormat = /how to|step by step|guide|process|register|apply|renew|obtain|recover|documents|checklist|requirements|procedure|certificate|application|from uk|from abroad|abroad|setup|start a|side hustle|exam|pass |avoid|without mistake|correctly/.test(q);
+  const hasPDFFormat = /how to|step by step|guide|process|register|apply|renew|obtain|recover|documents|checklist|requirements|procedure|certificate|application|from uk|from abroad|abroad|setup|start a|side hustle|exam|pass |avoid|without mistake|correctly|cope|coping|overcome|manage|handle|survive|heal|navigate|deal with/.test(q);
 
   const isPDFSuitable =
     !isJunk &&
@@ -907,7 +913,7 @@ export async function POST(req: Request) {
   // Community signals = Quora/Reddit forum questions (verified pain in exact human language).
   // Reddit = community posts for real problem phrasing.
   const top3Queries = baseQueries.slice(0, 3);
-  const mainQuery   = keyword || niche || COUNTRY_LABEL[country] || "";
+  const mainQuery   = keyword || niche || COUNTRY_LABEL[country] || baseQueries[0] || "";
 
   const [googleArrays, youtubeArrays, bingArrays, redditSignals, questionVariants, ddgResults, communitySignals] = await Promise.all([
     Promise.all(queries.map(fetchAutocompleteSuggestions)),
@@ -970,7 +976,7 @@ export async function POST(req: Request) {
   // Score and filter every query before anything else touches it.
   // This stops weak seeds at the door.
   // PRIMARY CONVERSION FLAGS — at least one must be present to pass
-  const PRIMARY_FLAGS = new Set(["FEAR", "MONEY", "DIASPORA", "DEADLINE", "IMMIGRATION", "LEGAL", "PROCESS", "HEALTH"]);
+  const PRIMARY_FLAGS = new Set(["FEAR", "MONEY", "DIASPORA", "DEADLINE", "IMMIGRATION", "LEGAL", "PROCESS", "HEALTH", "RELATIONSHIP"]);
   const MIN_PAIN_SCORE = 12;
 
   const initialScored = rawSearches
