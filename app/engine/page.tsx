@@ -28,6 +28,7 @@ type Opportunity = {
   saved: boolean;
   isQuickWin: boolean;
   isDiaspora: boolean;
+  _explore?: boolean;
 };
 
 
@@ -46,6 +47,7 @@ const TIERS = [
   { min: 90, max: 100, label: "🟢 HIGH OPPORTUNITY (90–100)",  action: "✅ SAVE & CREATE", color: "#10B981", bg: "#10B98112", border: "#10B98130" },
   { min: 80, max: 89,  label: "🟡 STRONG OPPORTUNITY (80–89)", action: "✅ SAVE & CREATE", color: "#F59E0B", bg: "#F59E0B12", border: "#F59E0B30" },
   { min: 70, max: 79,  label: "🟠 GOOD OPPORTUNITY (70–79)",   action: "✅ SAVE & CREATE", color: "#F97316", bg: "#F9731612", border: "#F9731630" },
+  { min: 0,  max: 69,  label: "💡 IDEAS WORTH EXPLORING",      action: "📌 NOTE & REFINE",  color: "#8B5CF6", bg: "#8B5CF608", border: "#8B5CF625" },
 ];
 
 const TREND_ICON: Record<string, string> = { rising: "⬆️", stable: "↔️", declining: "⬇️" };
@@ -540,9 +542,8 @@ export default function EnginePage() {
             </div>
           ))}
           <div className="px-4 py-3 rounded-lg text-xs"
-            style={{ background: "#EF444410", border: "1px solid #EF444430", color: "#EF4444" }}>
-            ❌ Filtered out automatically: score below 70, or fewer than 15,000 searches/month, or no clear knowledge gap.
-            This model only works when real demand meets an unfilled information need.
+            style={{ background: "#8B5CF608", border: "1px solid #8B5CF625", color: "#8B5CF6" }}>
+            💡 <strong>Ideas Worth Exploring</strong> = below the commercial threshold but worth thinking about. Add a specific keyword to these topics to surface stronger, more targeted signals on your next scan.
           </div>
         </div>
       )}

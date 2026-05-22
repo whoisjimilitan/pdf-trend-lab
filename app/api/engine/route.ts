@@ -1271,12 +1271,17 @@ AXIS 4 — FIRST-MOVER WINDOW (15 pts max)
 SCORING:
 90–100: Plant immediately. Commercial pain + monopoly + real demand.
 80–89:  Strong seed. Build after the 90+ ones.
-75–79:  Acceptable if diaspora or monopoly opportunity.
-Below 75: Do not include. Return nothing rather than a weak seed.
+70–79:  Good opportunity — include it.
+60–69:  Include as an explore idea — mark with "_explore": true in the result object.
+Below 60: Do not include.
 
-FINAL GATE — ask this before including any result:
+TWO-TIER OUTPUT:
+Tier 1 (score 70+): Ready-to-plant seeds. High confidence, real demand, clear PDF product.
+Tier 2 (score 60–69): Marked with "_explore": true. Interesting directions that may not yet be fully validated but are worth exploring. Include up to 5 of these only when you have fewer than 10 tier-1 results.
+
+FINAL GATE — ask this before including any tier-1 result:
 "Would someone who just discovered they have a problem RIGHT NOW pay ${pricing.symbol}${pricing.min} for a clear PDF answer to this?"
-If the honest answer is "maybe" or "probably not" — exclude it.
+If the honest answer is "maybe" or "probably not" — move it to tier 2, not exclusion.
 
 HOOK POTENTIAL — every PDF opportunity must be evaluated for TikTok/Reels/Pinterest virality.
 This is the discovery engine: a 5-second faceless video drives strangers to the profile, 1–2% buy the PDF.
@@ -1417,6 +1422,7 @@ OUTPUT FORMAT
   "gapScore": <integer 0-100 — copy from gap: annotation if provided; otherwise: 0 if strong guides exist, 50 if gov/Wikipedia only, 80 if outdated or video-only coverage>,
   "platformOfOrigin": "autocomplete | paa | duckduckgo | community — copy from origin: annotation if provided, otherwise autocomplete",
   "distributionStrategy": "Primary: [platform + content format + specific community]. Secondary: [backup channel]. 2-3 sentences max.",
+  "_explore": false,
   "videoScript": {
     "hook": "The scroll-stopper — 0-2s. Exact situation named. Immediate pain or PSA. No intro.",
     "tease": "Stakes or payoff — 2-4s. What they risk or gain. One specific sentence.",
@@ -1492,6 +1498,9 @@ Return ONLY valid JSON: { "results": [...] }`,
     return o;
   });
 
+  // Keep a copy of all AI results before filtering — used for fallback explore ideas
+  const allAiResults = [...opportunities];
+
   // Hard filter by real volume.
   // When DataForSEO ran, use the strict 5k floor (real numbers).
   // When it didn't, use a softer 2k floor — AI estimates undercount African/diaspora demand.
@@ -1501,10 +1510,21 @@ Return ONLY valid JSON: { "results": [...] }`,
     Number(o.opportunityScore) >= 70
   );
 
+  // Cascading fallback — never return empty-handed.
+  // Fallback 1: relax score to 60 (explore-tier ideas)
   if (opportunities.length === 0) {
-    return NextResponse.json({
-      error: `No plantable opportunities found in this scan. Try adding a keyword or niche to focus the search, or switch markets.`,
-    }, { status: 422 });
+    opportunities = allAiResults.filter((o) =>
+      Number(o.searchVolume) >= volumeFloor &&
+      Number(o.opportunityScore) >= 60
+    ).map((o) => ({ ...o, _explore: true }));
+  }
+
+  // Fallback 2: volume-floor was the problem — best ideas regardless of volume
+  if (opportunities.length === 0) {
+    opportunities = allAiResults
+      .sort((a, b) => Number(b.opportunityScore ?? 0) - Number(a.opportunityScore ?? 0))
+      .slice(0, 8)
+      .map((o) => ({ ...o, _explore: true }));
   }
 
   // Bulk-load existing keyword fingerprints for semantic dedup.
@@ -1527,7 +1547,8 @@ Return ONLY valid JSON: { "results": [...] }`,
       }
       existingFingerprints.add(fp); // block within-run duplication too
 
-      const score       = Math.min(100, Math.max(0, Number(o.opportunityScore) || 70));
+      const isExplore   = Boolean(o._explore) || Number(o.opportunityScore ?? 0) < 70;
+      const score       = Math.min(100, Math.max(0, Number(o.opportunityScore) || 65));
       const competition = String(o.competition || "medium");
       const volume      = Number(o.searchVolume) || 0;
       const isQuickWin  = score >= 80 && competition === "low" && kw.trim().split(/\s+/).length >= 4 && volume >= ABSOLUTE_MIN_VOLUME * 2;
@@ -1562,7 +1583,8 @@ Return ONLY valid JSON: { "results": [...] }`,
           isDiaspora: Boolean(diaspora),
         },
       });
-      saved.push(created);
+      // Annotate explore-tier items on the response object (not stored in DB)
+      saved.push(isExplore ? { ...created, _explore: true } : created);
     } catch (e) {
       console.error("[engine] Failed to save opportunity:", e);
     }
