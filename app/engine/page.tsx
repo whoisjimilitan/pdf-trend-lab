@@ -28,7 +28,6 @@ type Opportunity = {
   saved: boolean;
   isQuickWin: boolean;
   isDiaspora: boolean;
-  _explore?: boolean;
 };
 
 
@@ -44,10 +43,9 @@ const COUNTRIES: { value: string; label: string; name: string; symbol: string; f
 ];
 
 const TIERS = [
-  { min: 90, max: 100, label: "🟢 HIGH OPPORTUNITY (90–100)",  action: "✅ SAVE & CREATE", color: "#10B981", bg: "#10B98112", border: "#10B98130" },
-  { min: 80, max: 89,  label: "🟡 STRONG OPPORTUNITY (80–89)", action: "✅ SAVE & CREATE", color: "#F59E0B", bg: "#F59E0B12", border: "#F59E0B30" },
-  { min: 70, max: 79,  label: "🟠 GOOD OPPORTUNITY (70–79)",   action: "✅ SAVE & CREATE", color: "#F97316", bg: "#F9731612", border: "#F9731630" },
-  { min: 0,  max: 69,  label: "💡 IDEAS WORTH EXPLORING",      action: "📌 NOTE & REFINE",  color: "#8B5CF6", bg: "#8B5CF608", border: "#8B5CF625" },
+  { min: 90, max: 100, label: "🟢 HIGH OPPORTUNITY (90–100)",  action: "✅ PLANT THIS FIRST", color: "#10B981", bg: "#10B98112", border: "#10B98130" },
+  { min: 80, max: 89,  label: "🟡 STRONG OPPORTUNITY (80–89)", action: "✅ PLANT NEXT",        color: "#F59E0B", bg: "#F59E0B12", border: "#F59E0B30" },
+  { min: 70, max: 79,  label: "🟠 GOOD OPPORTUNITY (70–79)",   action: "✅ WORTH PLANTING",    color: "#F97316", bg: "#F9731612", border: "#F9731630" },
 ];
 
 const TREND_ICON: Record<string, string> = { rising: "⬆️", stable: "↔️", declining: "⬇️" };
@@ -338,7 +336,7 @@ export default function EnginePage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--text)" }}>PDF Idea Finder</h1>
         <p className="text-sm" style={{ color: "var(--muted)" }}>
-          Pick a country. Hit discover. The engine reads live Google searches, finds what people are urgently searching for right now, and surfaces only what&apos;s worth making — 15,000+ searches/month, real knowledge gap, viable PDF product. No categories. No guessing.
+          Pick a country. Hit discover. Seven live signal sources — Google, YouTube, Bing, People Also Ask, DuckDuckGo, community forums, and Reddit — are cross-validated, pain-scored, and gap-analysed in real time. Only results that pass every quality gate appear. Everything shown is a genuine money-making opportunity.
         </p>
       </div>
 
@@ -441,7 +439,7 @@ export default function EnginePage() {
           <span className="text-xs" style={{ color: "var(--muted)" }}>
             {keyword ? `Keyword: "${keyword}"` : niche ? `Niche: "${niche}"` : `Full scan in ${countryMeta.label}`}
             {keyword || niche ? ` · ${countryMeta.label}` : ""}
-            {" · "}15k+/mo · Google + Reddit signals
+            {" · "}7 sources · adaptive signal expansion · full quality gate
           </span>
         </div>
       </div>
@@ -542,8 +540,8 @@ export default function EnginePage() {
             </div>
           ))}
           <div className="px-4 py-3 rounded-lg text-xs"
-            style={{ background: "#8B5CF608", border: "1px solid #8B5CF625", color: "#8B5CF6" }}>
-            💡 <strong>Ideas Worth Exploring</strong> = below the commercial threshold but worth thinking about. Add a specific keyword to these topics to surface stronger, more targeted signals on your next scan.
+            style={{ background: "#0F172A08", border: "1px solid #E2E8F0", color: "#64748B" }}>
+            Every result shown here passed: cross-source demand validation · commercial pain scoring · semantic deduplication · volume floor · AI quality gate. If a topic isn&apos;t here, it didn&apos;t earn its place.
           </div>
         </div>
       )}

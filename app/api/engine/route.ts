@@ -353,6 +353,11 @@ const UNIVERSAL_STARTERS = [
   "step by step",
   "complete guide",
   "how to deal with",
+  "what to do when",
+  "how to recover from",
+  "what documents do i need",
+  "checklist for",
+  "how to avoid mistakes",
 ];
 
 const COUNTRY_ANCHORS: Record<string, string[]> = {
@@ -368,9 +373,18 @@ const COUNTRY_ANCHORS: Record<string, string[]> = {
     "ghana driving license",
     "ghana health insurance",
     "ghana university admission",
-    "ghana work",
     "ghana investment",
     "poultry farming ghana",
+    "ghana catfish farming",
+    "ghana land registration",
+    "ghana ssnit contribution",
+    "ghana small business loan",
+    "ghana birth certificate",
+    "ghana online business",
+    "ghana work permit",
+    "ghana tax filing",
+    "ghana sole proprietorship",
+    "ghana apprenticeship",
   ],
   NG: [
     "nigeria",
@@ -387,6 +401,15 @@ const COUNTRY_ANCHORS: Record<string, string[]> = {
     "nigeria investment",
     "catfish farming nigeria",
     "nigeria driving license",
+    "bvn nigeria",
+    "nin nigeria registration",
+    "nigeria freelance",
+    "nigeria online business",
+    "nigeria work abroad",
+    "nigeria tax clearance",
+    "nigeria land registration",
+    "mushroom farming nigeria",
+    "nigeria grant",
   ],
   KE: [
     "kenya",
@@ -403,6 +426,14 @@ const COUNTRY_ANCHORS: Record<string, string[]> = {
     "kenya driving license",
     "kenya health insurance",
     "kenya investment",
+    "kenya side hustle",
+    "kenya online business",
+    "boda boda business kenya",
+    "kenya chama registration",
+    "kenya land registration",
+    "kenya tax returns",
+    "kenya freelance",
+    "poultry farming kenya",
   ],
   ZA: [
     "south africa",
@@ -419,6 +450,13 @@ const COUNTRY_ANCHORS: Record<string, string[]> = {
     "south africa driving license",
     "south africa university admission",
     "south africa health insurance",
+    "south africa side hustle",
+    "sassa grant",
+    "south africa freelance",
+    "south africa rental income",
+    "south africa unemployment",
+    "south africa small business funding",
+    "south africa work permit",
   ],
   US: [
     "how to start a business",
@@ -433,6 +471,12 @@ const COUNTRY_ANCHORS: Record<string, string[]> = {
     "side hustle ideas",
     "how to start a blog",
     "how to retire early",
+    "how to get out of debt",
+    "how to negotiate salary",
+    "how to start an LLC",
+    "how to fix credit score",
+    "how to make money online",
+    "how to find a mentor",
   ],
   GB: [
     "how to start a business uk",
@@ -445,6 +489,13 @@ const COUNTRY_ANCHORS: Record<string, string[]> = {
     "hmrc tax return",
     "how to get a job uk",
     "uk scholarship",
+    "how to claim benefits uk",
+    "uk side hustle",
+    "self employed uk",
+    "uk pension guide",
+    "how to get promoted uk",
+    "uk student loan",
+    "uk right to work",
   ],
   CA: [
     "how to start a business canada",
@@ -935,10 +986,18 @@ export async function POST(req: Request) {
   // Pull winning keywords from previous runs (score ≥ 80) as additional discovery anchors.
   // The engine builds on its own successes — each run expands the frontier by autocompleting
   // off proven winners to surface hyper-specific variations. Run 5 finds what Run 1 missed.
+  // Progressive seeds: include 72+ (not just 80+) for wider frontier expansion.
+  // Exclude very recent (<48h) seeds — they're already in rawSearches from the previous run.
+  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
   const progressiveRaw = await prisma.opportunity.findMany({
-    where: { country, isDiaspora: diaspora, opportunityScore: { gte: 80 } },
+    where: {
+      country,
+      isDiaspora: diaspora,
+      opportunityScore: { gte: 72 },
+      createdAt: { lt: twoDaysAgo },
+    },
     orderBy: { opportunityScore: "desc" },
-    take: 25,
+    take: 20,
     select: { keyword: true },
   });
   const progressiveSeeds = progressiveRaw.map((r) => r.keyword);
@@ -1052,7 +1111,7 @@ export async function POST(req: Request) {
   // ── SEMANTIC CLUSTER DEDUP ────────────────────────────────────────────────
   // Keeps only the best-scored query per topic fingerprint. Near-duplicates no longer
   // compete for the same AI output slots — every slot goes to a distinct opportunity.
-  const clusterDeduped = (() => {
+  let clusterDeduped = (() => {
     const seen = new Map<string, typeof allScored[0]>();
     for (const item of allScored) {
       const fp = getQueryFingerprint(item.query);
@@ -1065,6 +1124,55 @@ export async function POST(req: Request) {
   const confirmedCount  = [...sourceFrequency.values()].filter((n) => n >= 3).length;
   const validatedCount  = [...sourceFrequency.values()].filter((n) => n === 2).length;
   console.log(`[engine] ${country}${diaspora ? " DIASPORA" : ""} (${market.tier}): ${rawSearches.length} raw (${confirmedCount} 3-src, ${validatedCount} 2-src, ${communitySet.size} community, ${questionVariantSet.size} paa-variant) → ${allScored.length} pain-scored → ${clusterDeduped.length} clusters. Top: ${clusterDeduped[0]?.score ?? 0} [${clusterDeduped[0]?.flags.join("+")}]`);
+
+  // ── ADAPTIVE SIGNAL AMPLIFICATION ─────────────────────────────────────────
+  // When pain-scored signal is thin, automatically drill deeper on the best signals found.
+  // Preserves full quality standards — only expands the INPUT, never relaxes the OUTPUT.
+  // The AI always receives rich material; we just make sure it has enough to work with.
+  const MIN_SIGNALS_FOR_AI = 20;
+
+  if (clusterDeduped.length < MIN_SIGNALS_FOR_AI && clusterDeduped.length > 0) {
+    console.log(`[engine] Signal thin (${clusterDeduped.length}) — auto-expanding with question variants + depth autocomplete...`);
+    const topForDrill = clusterDeduped.slice(0, Math.min(5, clusterDeduped.length)).map((s) => s.query);
+
+    // Drill 1: Question variants — surfaces "what documents", "how long does it take", "can I", etc.
+    const variantArrays = await Promise.allSettled(topForDrill.map(fetchQuestionVariants));
+    const variantRaw = variantArrays.flatMap((r) => r.status === "fulfilled" ? r.value : []);
+
+    // Drill 2: Second-pass autocomplete on the best 3 signals — different completions on re-query
+    const depth2Arrays = await Promise.allSettled(topForDrill.slice(0, 3).map(fetchAutocompleteSuggestions));
+    const depth2Raw = depth2Arrays.flatMap((r) => r.status === "fulfilled" ? r.value : []);
+
+    // Pain-score the new signals with the same full quality gate
+    const newSignalSet = [...new Set([...variantRaw, ...depth2Raw])].filter((q) => q.length > 8);
+    const drillScored  = newSignalSet
+      .map((q) => ({ query: q, ...scoreCommercialPain(q) }))
+      .filter((s) =>
+        s.isPDFSuitable &&
+        s.score >= MIN_PAIN_SCORE &&
+        s.flags.some((f) => PRIMARY_FLAGS.has(f))
+      );
+
+    // Register new signals (1-source, not yet cross-validated)
+    for (const s of drillScored) {
+      if (!sourceFrequency.has(s.query)) sourceFrequency.set(s.query, 1);
+    }
+
+    // Merge all signals and re-deduplicate at semantic level
+    const combinedScored = [...allScored, ...drillScored].sort((a, b) => b.score - a.score);
+    const rededuped = (() => {
+      const seen = new Map<string, typeof combinedScored[0]>();
+      for (const item of combinedScored) {
+        const fp = getQueryFingerprint(item.query);
+        const existing = seen.get(fp);
+        if (!existing || item.score > existing.score) seen.set(fp, item);
+      }
+      return [...seen.values()].sort((a, b) => b.score - a.score);
+    })();
+
+    clusterDeduped = rededuped;
+    console.log(`[engine] Expansion complete: ${clusterDeduped.length} clusters (was ${confirmedCount + validatedCount} cross-validated + ${drillScored.length} drilled)`);
+  }
 
   // Phase 2 — Real volumes via DataForSEO on clustered queries
   const topForVolume = clusterDeduped.slice(0, 80).map((s) => s.query);
@@ -1272,16 +1380,11 @@ SCORING:
 90–100: Plant immediately. Commercial pain + monopoly + real demand.
 80–89:  Strong seed. Build after the 90+ ones.
 70–79:  Good opportunity — include it.
-60–69:  Include as an explore idea — mark with "_explore": true in the result object.
-Below 60: Do not include.
+Below 70: Do not include. A weak seed wastes build time on a guide that won't sell.
 
-TWO-TIER OUTPUT:
-Tier 1 (score 70+): Ready-to-plant seeds. High confidence, real demand, clear PDF product.
-Tier 2 (score 60–69): Marked with "_explore": true. Interesting directions that may not yet be fully validated but are worth exploring. Include up to 5 of these only when you have fewer than 10 tier-1 results.
-
-FINAL GATE — ask this before including any tier-1 result:
+FINAL GATE — ask this before including any result:
 "Would someone who just discovered they have a problem RIGHT NOW pay ${pricing.symbol}${pricing.min} for a clear PDF answer to this?"
-If the honest answer is "maybe" or "probably not" — move it to tier 2, not exclusion.
+If the honest answer is "maybe" or "probably not" — exclude it. Integrity of results is everything.
 
 HOOK POTENTIAL — every PDF opportunity must be evaluated for TikTok/Reels/Pinterest virality.
 This is the discovery engine: a 5-second faceless video drives strangers to the profile, 1–2% buy the PDF.
@@ -1422,7 +1525,6 @@ OUTPUT FORMAT
   "gapScore": <integer 0-100 — copy from gap: annotation if provided; otherwise: 0 if strong guides exist, 50 if gov/Wikipedia only, 80 if outdated or video-only coverage>,
   "platformOfOrigin": "autocomplete | paa | duckduckgo | community — copy from origin: annotation if provided, otherwise autocomplete",
   "distributionStrategy": "Primary: [platform + content format + specific community]. Secondary: [backup channel]. 2-3 sentences max.",
-  "_explore": false,
   "videoScript": {
     "hook": "The scroll-stopper — 0-2s. Exact situation named. Immediate pain or PSA. No intro.",
     "tease": "Stakes or payoff — 2-4s. What they risk or gain. One specific sentence.",
@@ -1498,42 +1600,58 @@ Return ONLY valid JSON: { "results": [...] }`,
     return o;
   });
 
-  // Keep a copy of all AI results before filtering — used for fallback explore ideas
-  const allAiResults = [...opportunities];
+  // Context-sensitive volume floor — smarter than a flat number.
+  // Diaspora: small market but high-intent + Western price point → low floor.
+  // Emerging African markets: AI undercounts → generous floor.
+  // Saturated (US/GB): strong noise filter needed → higher floor.
+  const volumeFloor = (() => {
+    if (hasRealVolumes) return ABSOLUTE_MIN_VOLUME; // trust real DataForSEO data
+    if (diaspora) return 800;                        // diaspora = niche but premium
+    const tier = MARKET_CONTEXT[country]?.tier;
+    if (tier === "saturated") return 3000;           // US/GB/CA/AU
+    return 1500;                                     // emerging markets (GH/NG/KE/ZA)
+  })();
 
-  // Hard filter by real volume.
-  // When DataForSEO ran, use the strict 5k floor (real numbers).
-  // When it didn't, use a softer 2k floor — AI estimates undercount African/diaspora demand.
-  const volumeFloor = hasRealVolumes ? ABSOLUTE_MIN_VOLUME : 2000;
+  const allAiResults = [...opportunities];
   opportunities = opportunities.filter((o) =>
     Number(o.searchVolume) >= volumeFloor &&
     Number(o.opportunityScore) >= 70
   );
 
-  // Cascading fallback — never return empty-handed.
-  // Fallback 1: relax score to 60 (explore-tier ideas)
   if (opportunities.length === 0) {
-    opportunities = allAiResults.filter((o) =>
-      Number(o.searchVolume) >= volumeFloor &&
-      Number(o.opportunityScore) >= 60
-    ).map((o) => ({ ...o, _explore: true }));
-  }
-
-  // Fallback 2: volume-floor was the problem — best ideas regardless of volume
-  if (opportunities.length === 0) {
-    opportunities = allAiResults
+    // Helpful error: tell the user what almost made it, so they know what to dig into
+    const topMissed = allAiResults
       .sort((a, b) => Number(b.opportunityScore ?? 0) - Number(a.opportunityScore ?? 0))
-      .slice(0, 8)
-      .map((o) => ({ ...o, _explore: true }));
+      .slice(0, 3)
+      .map((o) => `"${String(o.keyword)}"`)
+      .join(", ");
+    const suggestion = topMissed
+      ? ` Closest signals found: ${topMissed} — try one of these as a keyword to get a deeper, focused scan.`
+      : ` Try a specific keyword like "passport renewal", "business registration", or "mobile money" to anchor the search.`;
+    return NextResponse.json({
+      error: `Scan complete — strong pain signals found but none hit the commercial threshold for this market.${suggestion}`,
+    }, { status: 422 });
   }
 
-  // Bulk-load existing keyword fingerprints for semantic dedup.
-  // Catches near-duplicates across runs ("ghana passport renewal uk" vs "renew ghana passport from uk").
-  const existingRecs = await prisma.opportunity.findMany({
-    where: { country },
-    select: { keyword: true },
-  });
-  const existingFingerprints = new Set(existingRecs.map((r) => getQueryFingerprint(r.keyword)));
+  // Smart semantic dedup — balances freshness against variety.
+  // Block: (1) anything seen in the last 7 days (prevents immediate repeats),
+  //        (2) anything already turned into a product (no point re-doing done work).
+  // Allow: opportunities older than 7 days that haven't been acted on — good ideas deserve a second look.
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const [recentRecs, convertedRecs] = await Promise.all([
+    prisma.opportunity.findMany({
+      where: { country, createdAt: { gte: sevenDaysAgo } },
+      select: { keyword: true },
+    }),
+    prisma.opportunity.findMany({
+      where: { country, products: { some: {} } },
+      select: { keyword: true },
+    }),
+  ]);
+  const existingFingerprints = new Set([
+    ...recentRecs.map((r) => getQueryFingerprint(r.keyword)),
+    ...convertedRecs.map((r) => getQueryFingerprint(r.keyword)),
+  ]);
 
   const saved = [];
   for (const o of opportunities) {
@@ -1547,8 +1665,7 @@ Return ONLY valid JSON: { "results": [...] }`,
       }
       existingFingerprints.add(fp); // block within-run duplication too
 
-      const isExplore   = Boolean(o._explore) || Number(o.opportunityScore ?? 0) < 70;
-      const score       = Math.min(100, Math.max(0, Number(o.opportunityScore) || 65));
+      const score       = Math.min(100, Math.max(0, Number(o.opportunityScore) || 70));
       const competition = String(o.competition || "medium");
       const volume      = Number(o.searchVolume) || 0;
       const isQuickWin  = score >= 80 && competition === "low" && kw.trim().split(/\s+/).length >= 4 && volume >= ABSOLUTE_MIN_VOLUME * 2;
@@ -1583,8 +1700,7 @@ Return ONLY valid JSON: { "results": [...] }`,
           isDiaspora: Boolean(diaspora),
         },
       });
-      // Annotate explore-tier items on the response object (not stored in DB)
-      saved.push(isExplore ? { ...created, _explore: true } : created);
+      saved.push(created);
     } catch (e) {
       console.error("[engine] Failed to save opportunity:", e);
     }
