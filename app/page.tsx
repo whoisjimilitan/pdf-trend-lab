@@ -17,9 +17,8 @@ type Guide = {
 };
 
 const MESSAGES = [
-  "Reading your situation…",
   "Searching our library…",
-  "Found it — checking the details…",
+  "Found a match — checking the details…",
   "Almost ready…",
 ];
 
@@ -231,19 +230,48 @@ export default function HomePage() {
           margin-top: 14px; line-height: 1.6;
         }
 
+        /* ── COUNTRY STEP ── */
+        .pg-country-wrap {
+          display: flex; flex-direction: column; align-items: center;
+          width: 100%; max-width: 520px;
+          animation: step-enter 0.35s ease both;
+        }
+        @keyframes step-enter {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .pg-country-label {
+          font-size: 0.82rem; font-weight: 600;
+          color: #B07D2A; letter-spacing: 0.01em;
+          margin: 0 0 12px; text-align: center;
+        }
+
+        /* ── AMBER INPUT (country step) ── */
+        .pg-input-wrap--amber {
+          border-color: #FDE68A;
+        }
+        .pg-input-wrap--amber:focus-within {
+          border-color: #F59E0B;
+          box-shadow: 0 4px 24px rgba(245,158,11,0.12);
+        }
+        .pg-btn--amber {
+          background: linear-gradient(135deg, #D97706, #B45309);
+          box-shadow: 0 4px 14px rgba(217,119,6,0.3);
+        }
+
         /* ── LOCKED PILL ── */
         .pg-locked {
           display: flex; align-items: center; gap: 10px;
-          background: #F0EDFF; border: 1.5px solid #DDD6FE;
+          background: #FFFBEB; border: 1.5px solid #FDE68A;
           border-radius: 999px; padding: 10px 16px;
           margin-bottom: 14px; cursor: pointer;
           max-width: 520px; width: 100%;
           transition: background 0.15s;
         }
-        .pg-locked:hover { background: #E9E4FF; }
-        .pg-locked-dot { width: 7px; height: 7px; border-radius: 50%; background: #7C3AED; flex-shrink: 0; }
-        .pg-locked-text { font-size: 0.88rem; color: #5B21B6; font-weight: 600; flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .pg-locked-x { font-size: 0.75rem; color: #A78BFA; flex-shrink: 0; }
+        .pg-locked:hover { background: #FEF3C7; }
+        .pg-locked-dot { width: 7px; height: 7px; border-radius: 50%; background: #F59E0B; flex-shrink: 0; }
+        .pg-locked-text { font-size: 0.88rem; color: #92400E; font-weight: 600; flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pg-locked-x { font-size: 0.75rem; color: #FCD34D; flex-shrink: 0; }
 
         /* ── ERROR ── */
         .pg-error {
@@ -482,10 +510,10 @@ export default function HomePage() {
           {/* ── IDLE ── */}
           {step === "idle" && (
             <>
-              <span className="pg-hero-eyebrow">Guides for the hard stuff</span>
-              <h1 className="pg-hero-h1">The guide for the thing you keep putting off.</h1>
+              <span className="pg-hero-eyebrow">A guide for everything you are unsure about</span>
+              <h1 className="pg-hero-h1">There&apos;s a guide for whatever you&apos;re confused about.</h1>
               <p className="pg-hero-sub">
-                Whatever you&apos;re dreading — forms, fees, offices, paperwork — we&apos;ll match you to the exact guide that gets it done. No more figuring it out yourself.
+                Ask a direct question. We&apos;ll find the guide written to answer it — step by step, for your exact situation.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
@@ -494,7 +522,7 @@ export default function HomePage() {
                       className="pg-input"
                       value={situation}
                       onChange={e => setSituation(e.target.value)}
-                      placeholder="What have you been putting off?"
+                      placeholder="Ask your question directly."
                       autoFocus
                       required
                     />
@@ -502,7 +530,7 @@ export default function HomePage() {
                   </div>
                 </form>
                 <div className="pg-hint">
-                  e.g. &ldquo;renewing my passport&rdquo; · &ldquo;registering a business&rdquo; · &ldquo;applying for a visa&rdquo;
+                  e.g. &ldquo;How do I register a business in Ghana?&rdquo;
                 </div>
               </div>
             </>
@@ -510,30 +538,31 @@ export default function HomePage() {
 
           {/* ── COUNTRY ── */}
           {step === "country" && (
-            <>
+            <div className="pg-country-wrap">
               <div className="pg-locked" onClick={reset}>
                 <div className="pg-locked-dot" />
                 <div className="pg-locked-text">{situation}</div>
                 <div className="pg-locked-x">change ×</div>
               </div>
+              <p className="pg-country-label">Which country do you want to search in?</p>
               <div className="pg-form">
                 <form onSubmit={handleGenerate}>
-                  <div className="pg-input-wrap">
+                  <div className="pg-input-wrap pg-input-wrap--amber">
                     <input
                       ref={countryRef}
                       className="pg-input"
                       value={country}
                       onChange={e => setCountry(e.target.value)}
-                      placeholder="Which country are you in?"
+                      placeholder="Type your country"
                       required
                     />
-                    <button type="submit" className="pg-btn">Find My Guide →</button>
+                    <button type="submit" className="pg-btn pg-btn--amber">Find My Guide →</button>
                   </div>
                 </form>
                 {error && <div className="pg-error">{error}</div>}
                 <div className="pg-hint">Nigeria · United Kingdom · Ghana · Kenya · United States · Canada</div>
               </div>
-            </>
+            </div>
           )}
 
           {/* ── GENERATING ── */}
