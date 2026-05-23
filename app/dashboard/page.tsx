@@ -95,7 +95,7 @@ export default async function DashboardPage() {
             People are already searching for this. No useful PDF guide exists yet.
           </p>
           <Link href={`/factory?id=${featuredSeed.id}`}
-            style={{ display: "inline-block", background: "var(--accent)", color: "#fff", fontWeight: 700, fontSize: "0.88rem", padding: "12px 24px", borderRadius: 10, textDecoration: "none" }}>
+            style={{ display: "inline-block", background: "linear-gradient(135deg, #7C3AED, #4F46E5)", color: "#fff", fontWeight: 700, fontSize: "0.88rem", padding: "12px 28px", borderRadius: 999, textDecoration: "none", boxShadow: "0 4px 14px rgba(124,58,237,0.28)" }}>
             Plant This Seed →
           </Link>
         </div>
@@ -105,7 +105,7 @@ export default async function DashboardPage() {
           <div style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text)", marginBottom: 6 }}>Ready to find your next seed?</div>
           <p style={{ fontSize: "0.83rem", color: "var(--muted)", margin: "0 0 18px" }}>Browse today&apos;s opportunities and pick one worth planting.</p>
           <Link href="/engine"
-            style={{ display: "inline-block", background: "var(--accent)", color: "#fff", fontWeight: 700, fontSize: "0.88rem", padding: "12px 24px", borderRadius: 10, textDecoration: "none" }}>
+            style={{ display: "inline-block", background: "linear-gradient(135deg, #7C3AED, #4F46E5)", color: "#fff", fontWeight: 700, fontSize: "0.88rem", padding: "12px 28px", borderRadius: 999, textDecoration: "none", boxShadow: "0 4px 14px rgba(124,58,237,0.28)" }}>
             Find a Seed →
           </Link>
         </div>
@@ -127,7 +127,7 @@ export default async function DashboardPage() {
           </div>
         </div>
         <Link href={today.href}
-          style={{ display: "inline-block", background: "var(--surface2)", color: "var(--accent)", fontWeight: 700, fontSize: "0.83rem", padding: "10px 20px", borderRadius: 9, textDecoration: "none", border: "1px solid var(--border)" }}>
+          style={{ display: "inline-block", background: "#F5F3FF", color: "#7C3AED", fontWeight: 700, fontSize: "0.83rem", padding: "10px 22px", borderRadius: 999, textDecoration: "none", border: "1px solid #DDD6FE" }}>
           Start Today&apos;s Planting →
         </Link>
       </div>

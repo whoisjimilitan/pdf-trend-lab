@@ -11,9 +11,10 @@ export const metadata: Metadata = {
 };
 
 const nav = [
-  { href: "/engine",   label: "Seeds",    icon: "🌱", sub: "Discover gaps" },
+  { href: "/dashboard", label: "My Farm",  icon: "🏡", sub: "Overview"          },
+  { href: "/engine",   label: "Seeds",    icon: "🌱", sub: "Discover gaps"      },
   { href: "/factory",  label: "Guides",   icon: "📄", sub: "Your planted seeds" },
-  { href: "/harvests", label: "Harvests", icon: "🌾", sub: "Earnings" },
+  { href: "/harvests", label: "Harvests", icon: "🌾", sub: "Earnings"           },
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -29,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Link href="/dashboard" style={{ textDecoration: "none" }}>
             <div className="px-5 py-5" style={{ borderBottom: "1px solid var(--border)" }}>
               <div className="flex items-center gap-2.5">
-                <div style={{ width: 28, height: 28, background: "var(--accent)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.85rem", flexShrink: 0 }}>
+                <div style={{ width: 28, height: 28, background: "linear-gradient(135deg, #7C3AED, #4F46E5)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.85rem", flexShrink: 0, boxShadow: "0 3px 8px rgba(124,58,237,0.3)" }}>
                   🌱
                 </div>
                 <div>
@@ -44,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <nav className="flex-1 px-3 py-4 space-y-0.5">
             {nav.map(({ href, label, icon, sub }) => (
               <Link key={href} href={href}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-[#EEF2FF] hover:text-[#4F46E5]"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-[#F5F3FF] hover:text-[#7C3AED]"
                 style={{ textDecoration: "none", color: "var(--muted)" }}>
                 <span style={{ fontSize: "1rem" }}>{icon}</span>
                 <div>

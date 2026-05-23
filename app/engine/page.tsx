@@ -324,7 +324,7 @@ export default function EnginePage() {
               {o.saved ? "🔖" : "🏷️"}
             </button>
             <button onClick={(e) => { e.stopPropagation(); router.push(`/factory?id=${o.id}`); }}
-              className="px-3 py-1.5 text-xs font-bold text-white rounded-lg" style={{ background: "var(--accent)" }}>
+              className="px-3 py-1.5 text-xs font-bold text-white" style={{ background: "linear-gradient(135deg, #7C3AED, #4F46E5)", borderRadius: 999, boxShadow: "0 2px 8px rgba(124,58,237,0.25)" }}>
               Build →
             </button>
             <span className="text-xs ml-0.5 select-none" style={{ color: "var(--muted)" }}>{isExpanded ? "▲" : "▼"}</span>
@@ -587,8 +587,8 @@ export default function EnginePage() {
 
         <div className="mt-4 flex items-center gap-3">
           <button onClick={discover} disabled={loading}
-            className="px-8 py-3 text-sm font-bold text-white rounded-lg flex items-center gap-2"
-            style={{ background: loading ? "var(--muted)" : "var(--accent)", cursor: loading ? "not-allowed" : "pointer" }}>
+            className="px-8 py-3 text-sm font-bold text-white flex items-center gap-2"
+            style={{ background: loading ? "#9CA3AF" : "linear-gradient(135deg, #7C3AED, #4F46E5)", borderRadius: 999, boxShadow: loading ? "none" : "0 4px 16px rgba(124,58,237,0.3)", cursor: loading ? "not-allowed" : "pointer" }}>
             {loading
               ? <><span>⚙️</span> Scanning {countryMeta.flag} {country === "GLOBAL" ? "all markets" : countryMeta.label}…</>
               : <>{countryMeta.flag} {country === "GLOBAL" ? "Discover What the World Needs" : `Discover What's Worth Making in ${countryMeta.label}`}</>}
