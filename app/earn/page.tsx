@@ -203,6 +203,44 @@ export default function EarnPage() {
           font-size: 1rem; margin-top: 1px;
         }
 
+        /* ── EARNINGS MATH ── */
+        .earn-math {
+          background: #F5F3FF;
+          border: 1.5px solid #DDD6FE;
+          border-radius: 20px;
+          padding: 32px 36px;
+          margin-bottom: 64px;
+        }
+        .earn-math-label {
+          font-size: 0.72rem; font-weight: 700;
+          color: #7C3AED; letter-spacing: 0.1em;
+          text-transform: uppercase; margin-bottom: 14px;
+        }
+        .earn-math-base {
+          font-size: 0.95rem; color: #4B3D30;
+          margin-bottom: 24px; line-height: 1.6;
+        }
+        .earn-math-base strong { color: #1A1008; }
+        .earn-math-examples {
+          display: flex; flex-direction: column; gap: 10px;
+          margin-bottom: 16px;
+        }
+        .earn-math-ex {
+          display: flex; align-items: center; gap: 12px;
+          background: #FFFFFF; border-radius: 12px;
+          padding: 12px 16px;
+          border: 1px solid #EDE9FE;
+        }
+        .earn-math-ex-icon { font-size: 1.1rem; flex-shrink: 0; }
+        .earn-math-ex-text { flex: 1; font-size: 0.88rem; color: #8C7D6E; }
+        .earn-math-ex-earn {
+          font-size: 1rem; font-weight: 800;
+          color: #5B21B6; flex-shrink: 0;
+        }
+        .earn-math-note {
+          font-size: 0.78rem; color: #A78BFA; line-height: 1.6;
+        }
+
         /* ── PRICE BLOCK ── */
         .earn-price-block {
           background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
@@ -338,9 +376,37 @@ export default function EarnPage() {
             </div>
             <div className="earn-step">
               <span className="earn-step-icon">🌾</span>
-              <div className="earn-step-title">Earn passively</div>
-              <div className="earn-step-body">Every time someone clicks your link and buys, you earn. The guide delivers itself. You do nothing after planting.</div>
+              <div className="earn-step-title">Earn 30%</div>
+              <div className="earn-step-body">You earn 30% of every sale — £2.99 per guide sold. The guide delivers itself. You do nothing after planting.</div>
             </div>
+          </div>
+        </section>
+
+        {/* EARNINGS STRIP */}
+        <section className="earn-section" style={{ paddingBottom: 0 }}>
+          <div className="earn-math">
+            <div className="earn-math-label">How the maths works</div>
+            <div className="earn-math-row">
+              <div className="earn-math-base">Guide price £9.99 &nbsp;×&nbsp; your 30% &nbsp;=&nbsp; <strong>£2.99 per sale</strong></div>
+            </div>
+            <div className="earn-math-examples">
+              <div className="earn-math-ex">
+                <span className="earn-math-ex-icon">🌱</span>
+                <span className="earn-math-ex-text">1 guide · 10 buyers</span>
+                <span className="earn-math-ex-earn">£29.90</span>
+              </div>
+              <div className="earn-math-ex">
+                <span className="earn-math-ex-icon">🌿</span>
+                <span className="earn-math-ex-text">5 guides · 10 buyers each</span>
+                <span className="earn-math-ex-earn">£149.50</span>
+              </div>
+              <div className="earn-math-ex">
+                <span className="earn-math-ex-icon">🌾</span>
+                <span className="earn-math-ex-text">20 guides · 10 buyers each</span>
+                <span className="earn-math-ex-earn">£598.00</span>
+              </div>
+            </div>
+            <div className="earn-math-note">10 buyers per guide is conservative — one well-placed post in the right group can exceed that easily.</div>
           </div>
         </section>
 
@@ -371,8 +437,9 @@ export default function EarnPage() {
         <section className="earn-section">
           <h2 className="earn-get-h2">What you get for £19.99</h2>
           <ul className="earn-get-list">
+            <li><strong>30% commission on every sale you drive</strong> — £2.99 per guide, paid automatically</li>
             <li>Lifetime access to the full PDF guide library — 100+ guides and growing</li>
-            <li>Your own farmer link for every guide in the library</li>
+            <li>Your own unique farmer link for every guide in the library</li>
             <li>New guides added automatically as new search demand is spotted</li>
             <li>A dashboard to track what you&apos;ve planted and what&apos;s earning</li>
             <li>Guides covering immigration, business, finance, health, legal — real topics people pay for</li>
@@ -409,7 +476,7 @@ export default function EarnPage() {
             </div>
             <div className="earn-faq-item">
               <div className="earn-faq-q">How much can I earn?</div>
-              <p className="earn-faq-a">Guides sell for £9.99–£29.99. The more you plant in the right places — relevant groups, forums, social media — the more you earn. There&apos;s no cap.</p>
+              <p className="earn-faq-a">You earn 30% of every sale — £2.99 per guide at the standard price. There&apos;s no cap. Plant a guide in a relevant WhatsApp group or Facebook community and 10 buyers earns you £29.90 from a single post. Plant more guides in more places and the income compounds.</p>
             </div>
             <div className="earn-faq-item">
               <div className="earn-faq-q">What if the guides don&apos;t sell?</div>
