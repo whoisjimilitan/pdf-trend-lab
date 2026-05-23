@@ -73,7 +73,7 @@ function volumeDisplay(vol: number) {
   if (vol >= 30000)  return { label: fmt(vol) + "/mo", color: "#10B981", bg: "#10B98118", tier: "✅ High Demand"    };
   if (vol >= 15000)  return { label: fmt(vol) + "/mo", color: "#10B981", bg: "#10B98116", tier: "✅ Strong Demand"  };
   if (vol >= 8000)   return { label: fmt(vol) + "/mo", color: "#F59E0B", bg: "#F59E0B18", tier: "✅ Good Demand"    };
-  return               { label: fmt(vol) + "/mo", color: "#EF4444", bg: "#EF444415", tier: "❌ Below Threshold" };
+  return               { label: fmt(vol) + "/mo", color: "#9CA3AF", bg: "#9CA3AF12", tier: "Emerging Demand" };
 }
 
 function fmt(v: number) {
