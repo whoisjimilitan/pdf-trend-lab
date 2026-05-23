@@ -518,7 +518,7 @@ export default function HomePage() {
               <span className="pg-hero-eyebrow">Step-by-step guides for the hard stuff</span>
               <h1 className="pg-hero-h1">Stop Googling. There&apos;s a PDF guide for that.</h1>
               <p className="pg-hero-sub">
-                If you&apos;ve Googled it, we&apos;ve already written the guide.
+                Whatever you&apos;re trying to figure out — someone has already written the guide. We find it for you in seconds.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
@@ -527,7 +527,7 @@ export default function HomePage() {
                       className="pg-input"
                       value={situation}
                       onChange={e => setSituation(e.target.value)}
-                      placeholder="What do you keep Googling?"
+                      placeholder="What are you trying to figure out?"
                       autoFocus
                       required
                     />
