@@ -444,15 +444,29 @@ const COUNTRY_DOMAIN_SEEDS: Record<string, string[]> = {
 
 // Deterministic rotation based on current hour — different combination each scan.
 // Same seed list, different order → different autocomplete paths → variety without repetition.
-function rotateByScan(items: string[]): string[] {
-  const hourSlot = Math.floor(Date.now() / (60 * 60 * 1000));
+function rotateByScan(items: string[], seed: number): string[] {
   return [...items]
-    .map((item, i) => ({ item, rank: (i * 7 + hourSlot) % (items.length || 1) }))
+    .map((item, i) => ({ item, rank: (i * 7 + seed) % (items.length || 1) }))
     .sort((a, b) => a.rank - b.rank)
     .map(({ item }) => item);
 }
 
-function buildDiscoveryQueries(country: string, keyword: string, niche: string, diaspora = false): string[] {
+// Alphabet-soup expansion: appending a single letter forces autocomplete to surface
+// long-tail completions that never appear in standard top-10 results.
+// "passport " → standard completions. "passport a" → "passport abroad", "passport after divorce"...
+// Each letter opens a completely different branch of real human searches.
+async function fetchAlphabetExpansion(seeds: string[], lettersPerSeed = 5): Promise<string[]> {
+  const pool = ["a","b","c","d","e","f","g","h","i","j","l","m","n","o","p","r","s","t","u","w"];
+  const results: string[] = [];
+  for (const seed of seeds) {
+    const picked = [...pool].sort(() => Math.random() - 0.5).slice(0, lettersPerSeed);
+    const fetched = await Promise.allSettled(picked.map((l) => fetchAutocompleteSuggestions(`${seed} ${l}`)));
+    for (const r of fetched) if (r.status === "fulfilled") results.push(...r.value);
+  }
+  return results;
+}
+
+function buildDiscoveryQueries(country: string, keyword: string, niche: string, diaspora = false, scanSeed = 0): string[] {
   const label = COUNTRY_LABEL[country] ?? "";
 
   if (country === "GLOBAL") {
@@ -550,8 +564,8 @@ function buildDiscoveryQueries(country: string, keyword: string, niche: string, 
   const domainSeeds = COUNTRY_DOMAIN_SEEDS[country] ?? [];
 
   if (domainSeeds.length > 0) {
-    const rotatedSeeds    = rotateByScan(domainSeeds);
-    const rotatedPatterns = rotateByScan(PAIN_PATTERNS);
+    const rotatedSeeds    = rotateByScan(domainSeeds, scanSeed);
+    const rotatedPatterns = rotateByScan(PAIN_PATTERNS, scanSeed);
     // Direct seeds → autocomplete expands these into long-tail variations
     const directQueries = rotatedSeeds.slice(0, 10);
     // Hybrid: top patterns × top seeds → specific, actionable queries
@@ -990,10 +1004,17 @@ export async function POST(req: Request) {
   });
   const progressiveSeeds = progressiveRaw.map((r) => r.keyword);
 
-  const baseQueries = buildDiscoveryQueries(country, keyword || "", niche || "", diaspora);
-  // Union: fixed anchors + progressive seeds. Seeds run through autocomplete to surface
-  // deeper, more specific variations of what's already proven to be commercially painful.
+  // Per-scan random seed: every scan explores a different corner of query space.
+  // Two users running simultaneously get completely different discovery paths.
+  const scanSeed = Math.floor(Math.random() * 100000);
+  const baseQueries = buildDiscoveryQueries(country, keyword || "", niche || "", diaspora, scanSeed);
   const queries = [...new Set([...baseQueries, ...progressiveSeeds])];
+
+  // Alphabet-soup seeds: short domain terms that get letter-appended to surface
+  // long-tail completions that never appear in standard autocomplete top-10.
+  const alphabetBase = (!keyword && !niche)
+    ? (COUNTRY_DOMAIN_SEEDS[country] ?? GLOBAL_PAIN_SEEDS).slice(0, 6)
+    : baseQueries.slice(0, 3);
 
   // Phase 1 — 7-source parallel discovery.
   // Google/YouTube/Bing = cross-algorithm autocomplete validation.
@@ -1004,7 +1025,7 @@ export async function POST(req: Request) {
   const top3Queries = baseQueries.slice(0, 3);
   const mainQuery   = keyword || niche || COUNTRY_LABEL[country] || baseQueries[0] || "";
 
-  const [googleArrays, youtubeArrays, bingArrays, redditSignals, questionVariants, ddgResults, communitySignals] = await Promise.all([
+  const [googleArrays, youtubeArrays, bingArrays, redditSignals, questionVariants, ddgResults, communitySignals, alphabetSuggestions] = await Promise.all([
     Promise.all(queries.map(fetchAutocompleteSuggestions)),
     Promise.all(queries.map(fetchYouTubeSuggestions)),
     Promise.all(queries.map(fetchBingSuggestions)),
@@ -1017,11 +1038,13 @@ export async function POST(req: Request) {
     ),
     fetchDuckDuckGoTopics(mainQuery).catch(() => [] as string[]),
     fetchCommunitySignals(mainQuery, country).catch(() => [] as string[]),
+    fetchAlphabetExpansion(alphabetBase, 5).catch(() => [] as string[]),
   ]);
 
   // Cross-source demand validation: count distinct sources per query.
   // Dedup within each source first — then count source appearances.
-  const googleSet  = new Set(googleArrays.flat().filter((q) => q.length > 8));
+  // Alphabet expansion merges into Google set — treated as Google-sourced long-tail signals
+  const googleSet  = new Set([...googleArrays.flat(), ...alphabetSuggestions].filter((q) => q.length > 8));
   const youtubeSet = new Set(youtubeArrays.flat().filter((q) => q.length > 8));
   const bingSet    = new Set(bingArrays.flat().filter((q) => q.length > 8));
 
@@ -1563,10 +1586,14 @@ PAIN-SCORED SEARCH DATA — sorted by commercial intensity (highest pain first):
 ${enrichedList}${redditSection}
 
 INSTRUCTIONS:
+— SHELF GAP FIRST: Actively prefer topics where gap: is 60+. These are empty shelves — real demand, no quality supply. A topic with 3,000 searches and gap:80 beats one with 50,000 searches and gap:5. Winners are found in the underserved corners, not the obvious popular ones.
+— QUALITY GATE (mandatory pass/fail before selecting any topic): "Would this genuinely help someone more than 30 minutes of Googling?" If no, reject it regardless of pain score. You are building certainty, not content.
+— OFFER CLARITY TEST: For each opportunity you select, confirm you can complete this sentence specifically: "This PDF helps [exact person] do [what they want] without [what they hate]." If you cannot fill it in with specifics, the topic is too vague — skip it.
+— MAXIMUM VARIETY: The ${count} opportunities must be as different from each other as possible. Maximum 2 from the same niche. Maximum 1 addressing the same underlying situation. Actively seek the least obvious angle — if the obvious guide is "how to renew a passport" look instead for what step causes rejection, what document no one mentions, what timing mistake costs people.
 — Prioritise "← HIGH PRIORITY" queries. These have the strongest emotional-commercial signals.
 — Queries with FEAR+MONEY, DIASPORA+PROCESS, or DEADLINE flags convert best to PDF sales.
 — Reject any query that wouldn't make a clean, structured, downloadable guide.
-— For each opportunity, write a pain point that makes a reader say: "that's exactly my situation."
+— For each opportunity, the painPoint must make a reader say: "this understands my exact situation right now" — not a general category, but the specific moment they are in.
 
 ─────────────────────────────────────────
 OUTPUT FORMAT
@@ -1592,7 +1619,7 @@ OUTPUT FORMAT
   "actionabilityRating": "easy | medium | hard",
   "gapScore": <integer 0-100 — copy from gap: annotation if provided; otherwise: 0 if strong guides exist, 50 if gov/Wikipedia only, 80 if outdated or video-only coverage>,
   "platformOfOrigin": "autocomplete | paa | duckduckgo | community — copy from origin: annotation if provided, otherwise autocomplete",
-  "distributionStrategy": "Primary: [platform + content format + specific community]. Secondary: [backup channel]. 2-3 sentences max.",
+  "distributionStrategy": "Primary: [platform + content format + specific community]. Secondary: [backup channel]. FEEDER ANGLE: one sentence on the free or low-cost mini-guide that builds trust and funnels buyers to this PDF (e.g. 'Free 1-page checklist: documents you need before your appointment — ends with CTA to the full guide'). If this IS already a flagship-level comprehensive guide, note what feeder content should point to it.",
   "videoScript": {
     "hook": "The scroll-stopper — 0-2s. Exact situation named. Immediate pain or PSA. No intro.",
     "tease": "Stakes or payoff — 2-4s. What they risk or gain. One specific sentence.",

@@ -149,12 +149,12 @@ export default function EnginePage() {
   useEffect(() => { loadSaved(); }, [loadSaved]);
 
   const LOADING_STAGES = [
-    { label: "Fetching signals from 7 live sources",   detail: "Google · YouTube · Bing · PAA variants · DuckDuckGo · Community forums · Reddit", seconds: 7 },
-    { label: "Pain-scoring every signal",              detail: "Commercial intent · emotional flags · PDF suitability gate", seconds: 10 },
-    { label: "Checking real search volumes",           detail: "DataForSEO live data for top clusters", seconds: 12 },
-    { label: "Analysing answer gaps",                  detail: "How poorly does the internet currently answer these?", seconds: 10 },
-    { label: "AI quality gate running",                detail: "Gemini reviewing, scoring, and compressing into opportunities", seconds: 18 },
-    { label: "Finalising results",                     detail: "Writing hook angles, video scripts, distribution strategies", seconds: 999 },
+    { label: "Scanning what people are actively searching for",  detail: "Casting a wide net across multiple live sources", seconds: 7 },
+    { label: "Scoring for urgency and real pain",                detail: "Filtering out curiosity — keeping only genuine unresolved need", seconds: 10 },
+    { label: "Verifying real demand",                            detail: "Confirming these aren't just passing interests", seconds: 12 },
+    { label: "Finding the empty shelves",                        detail: "Checking where demand exists but no good answer does", seconds: 10 },
+    { label: "Quality gate running",                             detail: "Only keeping what genuinely solves a real problem better than a Google search", seconds: 18 },
+    { label: "Building your results",                            detail: "Writing titles, outlines, and sales copy for each opportunity", seconds: 999 },
   ];
 
   useEffect(() => {
@@ -493,7 +493,7 @@ export default function EnginePage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--text)" }}>PDF Idea Finder</h1>
         <p className="text-sm" style={{ color: "var(--muted)" }}>
-          Pick a country. Hit discover. Seven live signal sources are cross-validated, pain-scored, and gap-analysed in real time. Only results that pass every quality gate appear.
+          Pick a market. Hit discover. The engine finds what people are urgently trying to resolve, checks how poorly the internet currently answers it, and only surfaces what genuinely clears the bar.
         </p>
       </div>
 
@@ -618,7 +618,7 @@ export default function EnginePage() {
               </div>
               <div className="text-xs mt-0.5 flex items-center gap-3 flex-wrap" style={{ color: "var(--muted)" }}>
                 <span>{scanInfo.timestamp}</span>
-                <span style={{ color: "#10B981" }}>✓ 7-source · pain-scored · AI quality gate</span>
+                <span style={{ color: "#10B981" }}>✓ Quality gate passed · real demand · genuinely underserved</span>
                 {(scanInfo.keyword || scanInfo.niche) && (
                   <span style={{ color: "var(--accent)" }}>
                     {scanInfo.keyword ? `Keyword: "${scanInfo.keyword}"` : `Niche: "${scanInfo.niche}"`}
@@ -801,7 +801,7 @@ export default function EnginePage() {
           ))}
           <div className="px-4 py-3 rounded-lg text-xs"
             style={{ background: "#0F172A08", border: "1px solid #E2E8F0", color: "#64748B" }}>
-            Every result shown here passed: cross-source demand validation · commercial pain scoring · semantic deduplication · volume floor · AI quality gate.
+            Every result shown here passed a full quality gate — real demand, genuinely underserved, and useful enough to be worth paying for.
           </div>
         </div>
       )}
