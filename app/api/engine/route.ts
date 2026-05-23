@@ -1496,8 +1496,8 @@ Structure:
 Output as a JSON object with three string keys: hook, tease, cta.
 
 PAIN POINT WRITING — this is your most important output:
-Format: "[Specific group of people] [what they're trying to do] [what keeps going wrong] [the real cost of not solving it]"
-40–80 words. Raw, honest, first-person. This becomes the emotional hook — the intro of the PDF, the TikTok script, the buy page opener.
+Format: Part 1 (3–5 sentences): [Specific group of people] [what they're trying to do] [what keeps going wrong] [the real cost of not solving it — time, money, consequences]. Part 2 (1 sentence): What life looks like the moment this IS resolved — the exact after state they crave.
+40–80 words total. Raw, honest, present-tense. The buyer must read this and think: "this was written for me, right now." This becomes the PDF intro, the TikTok script, the buy page opener, and the psychological frame for every chapter inside the guide.
 
 ✅ EXAMPLE:
 SEARCH: "how to recover deleted momo transaction ghana" | pain:52 [FEAR+MONEY+PROCESS] ← HIGH PRIORITY
@@ -1552,24 +1552,29 @@ TITLE RULES (apply to ALL formulas):
 — Add year (2026) for registration, legal, exam, visa, government topics
 — Use dual acronyms where known: "WAEC / WASSCE", "JAMB / UTME", "KCSE / KNEC"
 
-PDF OUTLINE — 6–8 chapters. This IS the table of contents. Guides the reader from confusion → clarity → action.
+PDF OUTLINE — 6–8 chapters. This IS the table of contents. Guides the reader from confusion → clarity → certainty.
 Structure every outline using this arc:
-  Ch 1: The problem (why this matters, what keeps going wrong)
-  Ch 2: What you need to know first (requirements, key concepts, landscape)
-  Ch 3–6: The steps (numbered, one clear action per chapter)
-  Ch 7: Common mistakes & how to avoid them
-  Ch 8: Quick reference / Checklist / What to do next
-Each chapter: SHORT title (5–8 words) + ONE brief sentence on exactly what the reader learns.
+  Ch 1: Mirror the buyer's exact moment. Open with "You're here because…" — name the specific situation they're in right now, what they've already tried, why it hasn't worked. The reader must feel seen and understood before any instruction begins. This is not an intro — it is proof that this guide was built for them.
+  Ch 2: What you need to know first (requirements, key concepts, the full landscape — give them the map before the journey so nothing surprises them halfway through)
+  Ch 3–6: The steps (numbered, one clear action per chapter — each step ends with a concrete action the reader can take immediately)
+  Ch 7: Common mistakes & how to avoid them (name the exact traps most people fall into — specific, not generic)
+  Ch 8: Quick reference / Checklist — everything on one page, designed to be printed and ticked off as they go
+Each chapter: SHORT title (5–8 words) + ONE brief sentence on exactly what the reader learns or does.
 
 SALES PAGE COPY — five fields, copy-paste ready for Gumroad / Payhip / Selar.
 headline: One line. Mirrors the exact pain. Loss-aversion or relief trigger. Max 15 words. NOT the PDF title — this is the sales page opener.
   ✅ "Stop Guessing — Here Is the Exact Step-by-Step Process for [Problem]"
   ✅ "Thousands of [Group] Have Already Solved This — Now It's Your Turn"
 subHeadline: Expands the promise. Who it's for + what they walk away with. Max 20 words.
-bullets: 5 benefit bullets. Each starts with a verb. Outcome-focused, not feature-focused.
-  ✅ "Discover exactly which documents you need — no more back-and-forth"
-  ✅ "Learn the one step most people skip that causes rejection"
-  ✅ "Get a complete checklist you can print and tick off as you go"
+bullets: 5 benefit bullets. Each starts with a verb. AFTER-STATE focused — describe what changes for the buyer, not what is inside the guide. Sell the life after, not the contents.
+  ✅ "Walk into the embassy knowing exactly which documents you need — no guessing, no costly return trips"
+  ✅ "Know the one step most people skip that causes rejection — so you get it right on the first attempt"
+  ✅ "Tick off every step in order — nothing falls through the cracks, nothing delays you"
+  ✅ "Avoid the exact mistakes that cost people weeks of waiting — each one named, explained, prevented"
+  ✅ "Finally have the clear answer you've been trying to piece together for weeks"
+  ❌ "Comprehensive checklist included" — feature, not after-state
+  ❌ "Download instantly" — feature, not after-state
+  ❌ "Covers everything about X" — feature, not transformation
 cta: The button text. Action + value. 4–8 words. "Get the Complete Guide — [Price]"
 guarantee: One sentence. Removes purchase fear. "30-day money-back guarantee — if this guide doesn't [specific promise], you get a full refund, no questions asked."
 
@@ -1600,7 +1605,7 @@ OUTPUT FORMAT
 ─────────────────────────────────────────
 
 {
-  "painPoint": "40–80 words. Specific group + what they're trying to do + what keeps going wrong + the real cost. Raw and honest.",
+  "painPoint": "40–80 words. Specific group + what they're trying to do + what keeps going wrong + real cost. Final sentence: what life looks like the moment this is resolved. The buyer must think: 'this was written for me right now.'",
   "keyword": "exact verbatim phrase from the data above — copy precisely",
   "pdfTitle": "MANDATORY: pick ONE formula based on flags. FEAR+MONEY → Formula 2: start with 'Stop' or 'No More', end with the result they crave. PROCESS+DIASPORA → Formula 1: start with 'How to', name who it's for, end with relief/result. Numbered topic → Formula 3: lead with a number. Comprehensive → Formula 4: 'The Complete/Ultimate/Only'. ACTION WORD FIRST — always. NO colons ever — 'Topic: Subtitle' is banned. NO word limit — write until the psychological punch lands. Must feel like the answer to a 2am desperate search.",
   "niche": "health | finance | education | business | farming | technology | relationships | home | career | mindset | other",
