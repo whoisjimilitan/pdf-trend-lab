@@ -169,7 +169,7 @@ export default function HomePage() {
           display: inline-block;
           font-size: 0.72rem; font-weight: 700;
           color: #9B8AF0; letter-spacing: 0.12em;
-          text-transform: uppercase; margin-bottom: 20px;
+          text-transform: uppercase; margin-bottom: 28px;
         }
         .pg-hero-h1 {
           font-size: clamp(2rem, 6vw, 3.2rem);
