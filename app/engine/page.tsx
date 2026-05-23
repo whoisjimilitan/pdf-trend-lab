@@ -489,7 +489,7 @@ export default function EnginePage() {
 
   // ── Page ──────────────────────────────────────────────────────────────────
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--text)" }}>PDF Idea Finder</h1>
         <p className="text-sm" style={{ color: "var(--muted)" }}>
@@ -503,7 +503,7 @@ export default function EnginePage() {
           <label className="text-xs font-semibold uppercase tracking-wider block mb-2" style={{ color: "var(--muted)" }}>
             Country — What market are you targeting?
           </label>
-          <div className="grid grid-cols-4 gap-2 mb-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2">
             {COUNTRIES.filter((c) => c.value !== "GLOBAL").map((c) => (
               <button key={c.value} onClick={() => setCountry(c.value)}
                 className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
@@ -555,8 +555,8 @@ export default function EnginePage() {
           </div>
         )}
 
-        <div className="flex flex-wrap gap-3 items-end">
-          <div className="flex flex-col gap-1.5 flex-1 min-w-44">
+        <div className="flex flex-col md:flex-row flex-wrap gap-3 items-end">
+          <div className="flex flex-col gap-1.5 flex-1" style={{ minWidth: 0 }}>
             <label className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--muted)" }}>
               Keyword <span className="normal-case font-normal tracking-normal">(optional)</span>
             </label>
@@ -566,7 +566,7 @@ export default function EnginePage() {
               className="px-3 py-2.5 text-sm rounded-lg"
               style={{ background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--text)", outline: "none" }} />
           </div>
-          <div className="flex flex-col gap-1.5 flex-1 min-w-44">
+          <div className="flex flex-col gap-1.5 flex-1" style={{ minWidth: 0 }}>
             <label className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--muted)" }}>
               Niche <span className="normal-case font-normal tracking-normal">(optional — go deep on one domain)</span>
             </label>
@@ -688,7 +688,7 @@ export default function EnginePage() {
             </button>
 
             {/* Sort */}
-            <div className="flex items-center gap-1 ml-auto">
+            <div className="flex items-center gap-1 md:ml-auto">
               <span className="text-xs mr-1" style={{ color: "var(--muted)" }}>Sort:</span>
               {(["score", "volume", "ease"] as const).map((s) => (
                 <button key={s} onClick={() => setSortBy(s)}

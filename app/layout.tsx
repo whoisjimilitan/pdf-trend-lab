@@ -20,8 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={geist.variable}>
       <body className="flex h-screen overflow-hidden">
+
+        {/* Sidebar — desktop only */}
         <aside style={{ background: "var(--surface)", borderRight: "1px solid var(--border)", width: 220 }}
-          className="flex-shrink-0 flex flex-col">
+          className="flex-shrink-0 flex-col hidden md:flex">
 
           {/* Logo */}
           <Link href="/dashboard" style={{ textDecoration: "none" }}>
@@ -61,9 +63,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </aside>
 
-        <main className="flex-1 overflow-y-auto" style={{ background: "var(--bg)" }}>
+        {/* Main content — extra bottom padding on mobile for bottom nav */}
+        <main className="flex-1 overflow-y-auto pb-16 md:pb-0" style={{ background: "var(--bg)" }}>
           {children}
         </main>
+
+        {/* Mobile bottom nav — hidden on desktop */}
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex"
+          style={{ background: "var(--surface)", borderTop: "1px solid var(--border)", boxShadow: "0 -2px 12px rgba(0,0,0,0.08)" }}>
+          {nav.map(({ href, label, icon }) => (
+            <Link key={href} href={href}
+              className="flex-1 flex flex-col items-center justify-center py-2 gap-0.5"
+              style={{ textDecoration: "none", color: "var(--muted)", minHeight: 56 }}>
+              <span style={{ fontSize: "1.25rem", lineHeight: 1 }}>{icon}</span>
+              <span style={{ fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.02em" }}>{label}</span>
+            </Link>
+          ))}
+        </nav>
+
       </body>
     </html>
   );
