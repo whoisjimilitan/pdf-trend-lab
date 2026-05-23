@@ -26,12 +26,12 @@ export async function POST(req: Request) {
 
   const unitAmount = Math.round((opp?.minPrice ?? 9.99) * 100);
 
-  const origin = req.headers.get("origin") ?? "https://pdfseeds.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pdfseeds.com";
 
   const session = await stripe.checkout.sessions.create({
     ui_mode: "embedded_page" as const,
     mode: "payment",
-    return_url: `${origin}/guide/${slug}?session_id={CHECKOUT_SESSION_ID}`,
+    return_url: `${siteUrl}/guide/${slug}?session_id={CHECKOUT_SESSION_ID}`,
     line_items: [{
       quantity: 1,
       price_data: {

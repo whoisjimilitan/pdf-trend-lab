@@ -242,36 +242,36 @@ export default function HomePage() {
         }
         .pg-country-label {
           font-size: 0.82rem; font-weight: 600;
-          color: #B07D2A; letter-spacing: 0.01em;
+          color: #5B21B6; letter-spacing: 0.01em;
           margin: 0 0 12px; text-align: center;
         }
 
-        /* ── AMBER INPUT (country step) ── */
-        .pg-input-wrap--amber {
-          border-color: #FDE68A;
+        /* ── DEEP PURPLE INPUT (country step) ── */
+        .pg-input-wrap--deep {
+          border-color: #A78BFA;
         }
-        .pg-input-wrap--amber:focus-within {
-          border-color: #F59E0B;
-          box-shadow: 0 4px 24px rgba(245,158,11,0.12);
+        .pg-input-wrap--deep:focus-within {
+          border-color: #6D28D9;
+          box-shadow: 0 4px 24px rgba(109,40,217,0.15);
         }
-        .pg-btn--amber {
-          background: linear-gradient(135deg, #D97706, #B45309);
-          box-shadow: 0 4px 14px rgba(217,119,6,0.3);
+        .pg-btn--deep {
+          background: linear-gradient(135deg, #5B21B6, #4C1D95);
+          box-shadow: 0 4px 14px rgba(91,33,182,0.4);
         }
 
         /* ── LOCKED PILL ── */
         .pg-locked {
           display: flex; align-items: center; gap: 10px;
-          background: #FFFBEB; border: 1.5px solid #FDE68A;
+          background: #EDE9FE; border: 1.5px solid #A78BFA;
           border-radius: 999px; padding: 10px 16px;
           margin-bottom: 14px; cursor: pointer;
           max-width: 520px; width: 100%;
           transition: background 0.15s;
         }
-        .pg-locked:hover { background: #FEF3C7; }
-        .pg-locked-dot { width: 7px; height: 7px; border-radius: 50%; background: #F59E0B; flex-shrink: 0; }
-        .pg-locked-text { font-size: 0.88rem; color: #92400E; font-weight: 600; flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .pg-locked-x { font-size: 0.75rem; color: #FCD34D; flex-shrink: 0; }
+        .pg-locked:hover { background: #E5DEFF; }
+        .pg-locked-dot { width: 7px; height: 7px; border-radius: 50%; background: #5B21B6; flex-shrink: 0; }
+        .pg-locked-text { font-size: 0.88rem; color: #3B0764; font-weight: 600; flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pg-locked-x { font-size: 0.75rem; color: #7C3AED; flex-shrink: 0; }
 
         /* ── ERROR ── */
         .pg-error {
@@ -374,6 +374,12 @@ export default function HomePage() {
 
         /* ── CHECKOUT ── */
         .pg-checkout { max-width: 520px; width: 100%; }
+        .pg-checkout-stripe {
+          background: #ffffff;
+          border-radius: 16px;
+          overflow: hidden;
+          color-scheme: light;
+        }
         .pg-checkout-back {
           display: inline-flex; align-items: center; gap: 6px;
           font-size: 0.82rem; color: #B0A89A;
@@ -510,10 +516,10 @@ export default function HomePage() {
           {/* ── IDLE ── */}
           {step === "idle" && (
             <>
-              <span className="pg-hero-eyebrow">A guide for everything you are unsure about</span>
-              <h1 className="pg-hero-h1">There&apos;s a guide for whatever you&apos;re confused about.</h1>
+              <span className="pg-hero-eyebrow">Step-by-step guides for the hard stuff</span>
+              <h1 className="pg-hero-h1">Stop Googling. There&apos;s a guide for that.</h1>
               <p className="pg-hero-sub">
-                Ask a direct question. We&apos;ll find the guide written to answer it — step by step, for your exact situation.
+                Whatever you&apos;re confused about — ask directly. We&apos;ve written a guide for your exact situation.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
@@ -531,6 +537,8 @@ export default function HomePage() {
                 </form>
                 <div className="pg-hint">
                   e.g. &ldquo;How do I register a business in Ghana?&rdquo;
+                  &nbsp;&nbsp;·&nbsp;&nbsp;
+                  <span style={{ color: "#9B8AF0", fontWeight: 600 }}>Over 2M guides written</span>
                 </div>
               </div>
             </>
@@ -547,7 +555,7 @@ export default function HomePage() {
               <p className="pg-country-label">Which country do you want to search in?</p>
               <div className="pg-form">
                 <form onSubmit={handleGenerate}>
-                  <div className="pg-input-wrap pg-input-wrap--amber">
+                  <div className="pg-input-wrap pg-input-wrap--deep">
                     <input
                       ref={countryRef}
                       className="pg-input"
@@ -556,7 +564,7 @@ export default function HomePage() {
                       placeholder="Type your country"
                       required
                     />
-                    <button type="submit" className="pg-btn pg-btn--amber">Find My Guide →</button>
+                    <button type="submit" className="pg-btn pg-btn--deep">Find My Guide →</button>
                   </div>
                 </form>
                 {error && <div className="pg-error">{error}</div>}
@@ -611,7 +619,9 @@ export default function HomePage() {
                 stripe={stripePromise}
                 options={{ fetchClientSecret, onComplete: () => setStep("paid") }}
               >
-                <EmbeddedCheckout />
+                <div className="pg-checkout-stripe">
+                  <EmbeddedCheckout />
+                </div>
               </EmbeddedCheckoutProvider>
             </div>
           )}
