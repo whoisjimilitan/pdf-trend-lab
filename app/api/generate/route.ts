@@ -78,7 +78,7 @@ Return ONLY valid JSON — no markdown, no explanation:
   "painPoint": "One sentence — the exact frustration they are living right now. Personal, specific.",
   "price": 9.99,
   "questions": [
-    "5 specific questions this guide must fully answer, each 8–15 words, ordered by urgency"
+    "7 to 8 specific questions this guide must fully answer, each 8–15 words, ordered by urgency"
   ]
 }`,
     }],
@@ -160,7 +160,10 @@ Return ONLY valid JSON:
     {"chapter": "Chapter 2", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
     {"chapter": "Chapter 3", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
     {"chapter": "Chapter 4", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
-    {"chapter": "Checklist", "title": "Your 5-Step Action Plan", "description": "Done in 30 minutes."}
+    {"chapter": "Chapter 5", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
+    {"chapter": "Chapter 6", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
+    {"chapter": "Chapter 7", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
+    {"chapter": "Checklist", "title": "Your Step-by-Step Action Plan", "description": "Everything in one place. Done in 30 minutes."}
   ],
   "faqItems": [
     {"q": "Most common objection specific to this topic", "a": "Direct answer. 2 sentences max."},
@@ -197,7 +200,7 @@ Return ONLY valid JSON:
   try {
     const raw = salesPageCopy.match(/\{[\s\S]*\}/)?.[0] ?? "{}";
     const sd = JSON.parse(raw);
-    chapters = (sd.whatsInside ?? []).slice(0, 4);
+    chapters = sd.whatsInside ?? [];
   } catch { /* preview is optional */ }
 
   return NextResponse.json({

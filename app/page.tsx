@@ -13,11 +13,11 @@ type Guide = {
 };
 
 const MESSAGES = [
-  "Understanding your situation…",
-  "Researching the right approach…",
-  "Finding your guide…",
-  "Adding country-specific details…",
-  "Preparing your download page…",
+  "Reading your situation…",
+  "Searching the guide library…",
+  "Matching to your exact situation…",
+  "Found it — verifying the details…",
+  "Preparing your guide preview…",
   "Almost ready…",
 ];
 
@@ -236,20 +236,25 @@ export default function HomePage() {
           padding: 12px 16px; background: #FAFAFA; border-radius: 10px;
           border-left: 3px solid #DDD6FE;
         }
-        .sp-chapters { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+        .sp-inside-label {
+          font-size: 0.68rem; font-weight: 700; color: #9CA3AF;
+          text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;
+        }
+        .sp-chapters { display: flex; flex-direction: column; gap: 0; margin-bottom: 28px;
+          border: 1.5px solid #EDE9FE; border-radius: 14px; overflow: hidden;
+        }
         .sp-chapter {
-          display: flex; align-items: flex-start; gap: 12px;
-          background: #FAFAFA; border: 1px solid #F3F4F6;
-          border-radius: 10px; padding: 12px 14px;
+          display: flex; align-items: flex-start; gap: 14px;
+          background: #FFFFFF; padding: 13px 16px;
+          border-bottom: 1px solid #F5F3FF;
         }
-        .sp-chapter-badge {
-          font-size: 0.65rem; font-weight: 700; color: #7C3AED;
-          background: #EDE9FE; border: 1px solid #DDD6FE;
-          border-radius: 5px; padding: 2px 7px;
-          white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+        .sp-chapter:last-child { border-bottom: none; }
+        .sp-chapter-num {
+          font-size: 0.68rem; font-weight: 800; color: #A78BFA;
+          width: 22px; flex-shrink: 0; margin-top: 2px; text-align: right;
         }
-        .sp-chapter-title { font-size: 0.85rem; font-weight: 600; color: #111111; line-height: 1.4; }
-        .sp-chapter-desc { font-size: 0.78rem; color: #9CA3AF; margin-top: 2px; }
+        .sp-chapter-title { font-size: 0.87rem; font-weight: 600; color: #111111; line-height: 1.4; }
+        .sp-chapter-desc { font-size: 0.78rem; color: #9CA3AF; margin-top: 2px; line-height: 1.4; }
         .sp-result-cta {
           display: block; width: 100%; text-align: center;
           background: linear-gradient(135deg, #7C3AED, #4F46E5);
@@ -350,7 +355,7 @@ export default function HomePage() {
                     placeholder="Which country are you in?"
                     required
                   />
-                  <button type="submit" className="sp-btn">Build My Guide →</button>
+                  <button type="submit" className="sp-btn">Find My Guide →</button>
                 </div>
               </form>
               {error && <div className="sp-error">{error}</div>}
@@ -385,25 +390,28 @@ export default function HomePage() {
         {step === "result" && guide && (
           <div className="sp-result">
             <div className="sp-result-badge">
-              <span>✓</span> Your guide is ready
+              <span>✓</span> Guide matched to your situation
             </div>
             <div className="sp-result-title">{guide.title}</div>
             <div className="sp-result-pain">&ldquo;{guide.painPoint}&rdquo;</div>
 
             {guide.chapters.length > 0 && (
-              <div className="sp-chapters">
-                {guide.chapters.map((ch, i) => (
-                  <div key={i} className="sp-chapter">
-                    <div className="sp-chapter-badge">{ch.chapter}</div>
-                    <div>
-                      <div className="sp-chapter-title">{ch.title}</div>
-                      {ch.description && (
-                        <div className="sp-chapter-desc">{ch.description}</div>
-                      )}
+              <>
+                <div className="sp-inside-label">What&apos;s inside your guide</div>
+                <div className="sp-chapters">
+                  {guide.chapters.map((ch, i) => (
+                    <div key={i} className="sp-chapter">
+                      <div className="sp-chapter-num">{i + 1 < guide.chapters.length ? String(i + 1).padStart(2, "0") : "✓"}</div>
+                      <div>
+                        <div className="sp-chapter-title">{ch.title}</div>
+                        {ch.description && (
+                          <div className="sp-chapter-desc">{ch.description}</div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </>
             )}
 
             <a href={`/sell/${guide.slug}`} className="sp-result-cta">
