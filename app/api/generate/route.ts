@@ -145,9 +145,12 @@ Write in markdown.`,
 Title: "${oppData.pdfTitle}"
 Country: ${country} | Price: ${resolved.currency}${(oppData.price ?? 9.99).toFixed(2)}
 Pain: "${oppData.painPoint}"
-Chapters answer: ${oppData.questions.join(" / ")}
 
-Return ONLY valid JSON:
+THE EXACT QUESTIONS THIS GUIDE ANSWERS — one chapter per question, in this exact order:
+${oppData.questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+
+Return ONLY valid JSON. CRITICAL RULE: each whatsInside entry MUST directly correspond to one question above — the title is what the reader knows or can do after that chapter. Do NOT write generic titles. The titles must feel like they were written for this specific person's situation.
+
 {
   "heroTagline": "One sentence, max 15 words, names their exact situation.",
   "bulletedPain": [
@@ -156,13 +159,13 @@ Return ONLY valid JSON:
     "A third specific pain — fear, cost, or wrong information — max 12 words"
   ],
   "whatsInside": [
-    {"chapter": "Chapter 1", "title": "5–7 word outcome they walk away with", "description": "One sentence max 10 words."},
-    {"chapter": "Chapter 2", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
-    {"chapter": "Chapter 3", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
-    {"chapter": "Chapter 4", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
-    {"chapter": "Chapter 5", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
-    {"chapter": "Chapter 6", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
-    {"chapter": "Chapter 7", "title": "5–7 word outcome", "description": "One sentence max 10 words."},
+    {"chapter": "Chapter 1", "title": "Answer to question 1 — phrased as what they walk away knowing, 6–9 words", "description": "One sentence. What specifically they can do after this chapter. Max 12 words."},
+    {"chapter": "Chapter 2", "title": "Answer to question 2 — specific to their situation, 6–9 words", "description": "One sentence. Max 12 words."},
+    {"chapter": "Chapter 3", "title": "Answer to question 3 — specific to their situation, 6–9 words", "description": "One sentence. Max 12 words."},
+    {"chapter": "Chapter 4", "title": "Answer to question 4 — specific to their situation, 6–9 words", "description": "One sentence. Max 12 words."},
+    {"chapter": "Chapter 5", "title": "Answer to question 5 — specific to their situation, 6–9 words", "description": "One sentence. Max 12 words."},
+    {"chapter": "Chapter 6", "title": "Answer to question 6 — specific to their situation, 6–9 words", "description": "One sentence. Max 12 words."},
+    {"chapter": "Chapter 7", "title": "Answer to question 7 — specific to their situation, 6–9 words", "description": "One sentence. Max 12 words."},
     {"chapter": "Checklist", "title": "Your Step-by-Step Action Plan", "description": "Everything in one place. Done in 30 minutes."}
   ],
   "faqItems": [
