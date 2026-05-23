@@ -49,6 +49,13 @@ type OppData = {
   questions: string[];
 };
 
+function chaptersFromSalesCopy(salesPageCopy: string) {
+  try {
+    const raw = salesPageCopy.match(/\{[\s\S]*\}/)?.[0] ?? "{}";
+    return (JSON.parse(raw).whatsInside ?? []) as { chapter: string; title: string; description: string }[];
+  } catch { return []; }
+}
+
 export async function POST(req: Request) {
   const { situation, country } = await req.json();
   if (!situation?.trim() || !country?.trim()) {
@@ -61,6 +68,46 @@ export async function POST(req: Request) {
     apiKey: process.env.GOOGLE_AI_API_KEY,
     baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
   });
+
+  // ── Step 0: Quick keyword extraction for deduplication check ──────────────
+  const kwRes = await openai.chat.completions.create({
+    model: "gemini-2.5-flash",
+    response_format: { type: "json_object" },
+    messages: [{
+      role: "user",
+      content: `Extract the core search keyword (4–7 words) from this situation: "${situation}". Return ONLY: {"keyword": "..."}`,
+    }],
+  });
+  const quickKeyword: string = (() => {
+    try { return (JSON.parse(kwRes.choices[0].message.content ?? "{}").keyword ?? "").toLowerCase(); }
+    catch { return ""; }
+  })();
+
+  // Check for an existing published guide that closely matches
+  if (quickKeyword.length > 4) {
+    const words = quickKeyword.split(" ").filter(w => w.length > 3).slice(0, 3);
+    const existing = await prisma.product.findFirst({
+      where: {
+        published: true,
+        opportunity: { country: resolved.code },
+        AND: words.map(w => ({ title: { contains: w, mode: "insensitive" as const } })),
+      },
+      include: { opportunity: true },
+      orderBy: { createdAt: "desc" },
+    });
+    if (existing) {
+      const currency = existing.opportunity?.isDiaspora ? "£" : (resolved.currency);
+      const price = existing.opportunity?.minPrice ?? 9.99;
+      return NextResponse.json({
+        slug: existing.slug,
+        title: existing.title,
+        price: `${currency}${price.toFixed(2)}`,
+        painPoint: existing.opportunity?.painPoint ?? "",
+        chapters: chaptersFromSalesCopy(existing.salesPageCopy),
+        cached: true,
+      });
+    }
+  }
 
   // Step 1: Parse the user's situation into structured opportunity data
   const parseRes = await openai.chat.completions.create({
@@ -198,13 +245,7 @@ Return ONLY valid JSON. CRITICAL RULE: each whatsInside entry MUST directly corr
     },
   });
 
-  // Parse chapters for the preview shown to the user
-  let chapters: { chapter: string; title: string; description: string }[] = [];
-  try {
-    const raw = salesPageCopy.match(/\{[\s\S]*\}/)?.[0] ?? "{}";
-    const sd = JSON.parse(raw);
-    chapters = sd.whatsInside ?? [];
-  } catch { /* preview is optional */ }
+  const chapters = chaptersFromSalesCopy(salesPageCopy);
 
   return NextResponse.json({
     slug: product.slug,
