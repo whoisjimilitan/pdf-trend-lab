@@ -110,7 +110,7 @@ export default function HomePage() {
       <style>{`
         body > aside { display: none !important; }
         body > nav  { display: none !important; }
-        body { display: block !important; overflow-y: auto !important; height: auto !important; padding-bottom: 0 !important; background: #FAF9F7 !important; }
+        body { display: block !important; overflow-y: auto !important; height: auto !important; padding-bottom: 0 !important; background: #FAF9F7 !important; color-scheme: light !important; }
         body > main { overflow: visible !important; height: auto !important; padding-bottom: 0 !important; }
         * { box-sizing: border-box; }
 

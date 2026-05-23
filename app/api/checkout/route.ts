@@ -38,8 +38,10 @@ export async function POST(req: Request) {
         currency,
         unit_amount: unitAmount,
         product_data: {
-          name: product.title,
-          description: opp?.painPoint ?? "Step-by-step PDF guide — instant download",
+          name: product.title.length > 60
+            ? product.title.slice(0, 57).trimEnd() + "…"
+            : product.title,
+          description: "Step-by-step PDF guide · Instant download",
         },
       },
     }],
