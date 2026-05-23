@@ -508,8 +508,6 @@ export default function HomePage() {
             <div className="pg-logo-mark">🌱</div>
             <span className="pg-logo-name">PDF Seeds</span>
           </a>
-          <a href="/earn" className="pg-farm-link" style={{ marginRight: 16 }}>Earn →</a>
-          <a href="/signin" className="pg-farm-link">Farm login →</a>
         </header>
 
         <main className="pg-main">
