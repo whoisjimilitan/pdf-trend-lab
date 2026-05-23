@@ -126,7 +126,7 @@ export default function EarnPage() {
         }
         .earn-step {
           background: #FFFFFF;
-          border: 1.5px solid #EAE6E0;
+          border: 1.5px solid #DDD6FE;
           border-radius: 20px;
           padding: 28px 24px;
           text-align: center;
