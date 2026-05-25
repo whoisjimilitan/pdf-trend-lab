@@ -619,7 +619,7 @@ export default function HomePage() {
               <span className="pg-hero-eyebrow">Step-by-step guides for the hard stuff</span>
               <h1 className="pg-hero-h1">Stop Googling. There&apos;s a PDF guide for that.</h1>
               <p className="pg-hero-sub">
-                Whatever you&apos;re trying to figure out — someone has already written the guide. We find it for you in seconds.
+                For the things Google sends you in circles — visa applications, business registration, tax returns. One clear guide, written for your country.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
@@ -637,17 +637,6 @@ export default function HomePage() {
                 </form>
                 <div className="pg-hint">
                   e.g. &ldquo;How do I register a business in Ghana?&rdquo;
-                  &nbsp;&nbsp;·&nbsp;&nbsp;
-                  <span style={{ color: "#9B8AF0", fontWeight: 600 }}>Over 2M guides written</span>
-                </div>
-                <div style={{ marginTop: 16, fontSize: "0.78rem", color: "#C4BAB0" }}>
-                  Can&apos;t find what you need?&nbsp;
-                  <button
-                    style={{ background: "none", border: "none", color: "#9B8AF0", fontWeight: 600, cursor: "pointer", padding: 0, fontSize: "inherit" }}
-                    onClick={() => setStep("waitlist")}
-                  >
-                    We&apos;ll build it for you →
-                  </button>
                 </div>
               </div>
             </>
