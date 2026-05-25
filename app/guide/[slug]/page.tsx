@@ -107,8 +107,8 @@ export default async function GuidePage({ params }: Props) {
   });
 
   const isBJ       = BJ_NICHES.has(opportunity?.niche ?? "");
-  const accent     = isBJ ? "#C8973E" : "#6366F1";
-  const accentHover = isBJ ? "#A87930" : "#4F46E5";
+  const accent     = isBJ ? "#D4A243" : "#6366F1";
+  const accentHover = isBJ ? "#B88830" : "#4F46E5";
 
   const seoHtml    = renderMarkdown(product.seoPageContent);
   const keyword    = opportunity?.keyword ?? product.title;
@@ -165,8 +165,8 @@ export default async function GuidePage({ params }: Props) {
         .guide-wrap p { line-height: ${isBJ ? "1.9" : "1.75"}; color: #94a3b8; margin: 0 0 ${isBJ ? "20px" : "14px"}; font-style: ${isBJ ? "italic" : "normal"}; }
         .guide-wrap ul { padding-left: 20px; margin: 0 0 14px; }
         .guide-wrap li { line-height: 1.75; color: #94a3b8; margin-bottom: 4px; }
-        .pain-banner { background: ${isBJ ? "#C8973E08" : "#EF444410"}; border-left: 3px solid ${isBJ ? "#C8973E" : "#EF4444"}; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 0 0 28px; color: ${isBJ ? "#D4A574" : "#fca5a5"}; font-size: 0.95rem; line-height: 1.75; font-style: italic; }
-        .cta-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid ${isBJ ? "#C8973E30" : "#334155"}; border-radius: 16px; padding: 36px 32px; text-align: center; margin: 40px 0; }
+        .pain-banner { background: ${isBJ ? "#D4A24308" : "#EF444410"}; border-left: 3px solid ${isBJ ? "#D4A243" : "#EF4444"}; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 0 0 28px; color: ${isBJ ? "#D4A574" : "#fca5a5"}; font-size: 0.95rem; line-height: 1.75; font-style: italic; }
+        .cta-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid ${isBJ ? "#D4A24330" : "#334155"}; border-radius: 16px; padding: 36px 32px; text-align: center; margin: 40px 0; }
         .cta-box .cta-title { font-size: ${isBJ ? "1.3rem" : "1.5rem"}; font-weight: ${isBJ ? "500" : "800"}; color: #f8fafc; margin: 0 0 8px; font-style: ${isBJ ? "italic" : "normal"}; }
         .cta-box .cta-sub { color: #94a3b8; font-size: 0.9rem; margin: 0 0 24px; font-style: ${isBJ ? "italic" : "normal"}; }
         .cta-box .cta-price { font-size: 2rem; font-weight: 900; color: ${accent}; margin: 0 0 20px; }

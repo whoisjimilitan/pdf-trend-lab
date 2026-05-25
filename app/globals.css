@@ -39,8 +39,8 @@ body {
 
 /* Brother Jimi brand theme — applied via data-brand attribute set by AppShell */
 [data-brand="brotherjimi"] {
-  --accent: #C8973E;
-  --accent-hover: #A87930;
+  --accent: #D4A243;
+  --accent-hover: #B88830;
 }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }

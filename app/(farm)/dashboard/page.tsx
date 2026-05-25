@@ -23,7 +23,7 @@ const DAILY: Record<number, { icon: string; action: string; tip: string; est: st
 };
 
 export default async function DashboardPage() {
-  const [totalSeeds, liveSeeds, salesData, featuredSeed, recentGuides] = await Promise.all([
+  const [totalSeeds, liveSeeds, salesData, featuredSeed, recentGuides, topSearches] = await Promise.all([
     prisma.product.count(),
     prisma.product.count({ where: { published: true } }),
     prisma.product.aggregate({ _sum: { revenue: true } }),
@@ -35,6 +35,12 @@ export default async function DashboardPage() {
       orderBy: { createdAt: "desc" },
       take: 4,
       include: { opportunity: true },
+    }),
+    prisma.searchQuery.groupBy({
+      by: ["query"],
+      _count: { query: true },
+      orderBy: { _count: { query: "desc" } },
+      take: 8,
     }),
   ]);
 
@@ -176,6 +182,54 @@ export default async function DashboardPage() {
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Search Intelligence — what real people typed into pdfseeds.com */}
+      {topSearches.length > 0 && (
+        <div style={{ marginTop: 32 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+            <div>
+              <div style={{ fontSize: "0.83rem", fontWeight: 700, color: "var(--text)", marginBottom: 2 }}>
+                🔍 What people are searching for
+              </div>
+              <div style={{ fontSize: "0.72rem", color: "var(--muted)" }}>
+                Real queries typed on pdfseeds.com — each one is a demand signal
+              </div>
+            </div>
+            <Link href="/engine" style={{ fontSize: "0.75rem", color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
+              Build one →
+            </Link>
+          </div>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, overflow: "hidden" }}>
+            {topSearches.map((s, i) => (
+              <div key={s.query} style={{
+                padding: "12px 20px",
+                borderBottom: i < topSearches.length - 1 ? "1px solid var(--border)" : "none",
+                display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
+              }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: "0.85rem", color: "var(--text)", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    &ldquo;{s.query}&rdquo;
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                  <span style={{ fontSize: "0.72rem", color: "var(--muted)", fontWeight: 600 }}>
+                    {s._count.query}×
+                  </span>
+                  <Link
+                    href={`/engine?keyword=${encodeURIComponent(s.query)}`}
+                    style={{ fontSize: "0.72rem", color: "var(--accent)", textDecoration: "none", fontWeight: 700, background: "var(--surface2)", padding: "3px 10px", borderRadius: 6, border: "1px solid var(--border)" }}
+                  >
+                    Build →
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: "0.7rem", color: "var(--muted)", marginTop: 8, textAlign: "right" }}>
+            Showing top 8 by search frequency
+          </div>
         </div>
       )}
 

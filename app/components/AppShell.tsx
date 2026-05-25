@@ -11,9 +11,15 @@ const BRANDS: Record<Brand, {
   shadow: string;
   name: string;
   tagline: string;
+  sidebarBg: string;
+  sidebarBorder: string;
+  headerBg: string;
   hoverBg: string;
   hoverColor: string;
   footerText: string;
+  footerColor: string;
+  nameColor: string;
+  taglineColor: string;
 }> = {
   pdfseeds: {
     icon: "🌱",
@@ -21,19 +27,31 @@ const BRANDS: Record<Brand, {
     shadow: "rgba(124,58,237,0.3)",
     name: "PDF Seeds",
     tagline: "Find confusion. Sell clarity.",
+    sidebarBg: "var(--surface)",
+    sidebarBorder: "var(--border)",
+    headerBg: "transparent",
     hoverBg: "#F5F3FF",
     hoverColor: "#7C3AED",
     footerText: "Find confusion. Sell clarity.",
+    footerColor: "var(--muted)",
+    nameColor: "var(--text)",
+    taglineColor: "var(--muted)",
   },
   brotherjimi: {
     icon: "🕊️",
-    gradient: "linear-gradient(135deg, #C8973E, #A87930)",
-    shadow: "rgba(200,151,62,0.3)",
+    gradient: "linear-gradient(135deg, #D4A243, #B88830)",
+    shadow: "rgba(212,162,67,0.4)",
     name: "Brother Jimi",
     tagline: "The pastoral word",
-    hoverBg: "#FEF7ED",
-    hoverColor: "#C8973E",
+    sidebarBg: "#FBF6EC",
+    sidebarBorder: "#D4A24328",
+    headerBg: "linear-gradient(135deg, #D4A243 0%, #B88830 100%)",
+    hoverBg: "#FEF0D4",
+    hoverColor: "#96610A",
     footerText: "Walk in the Word.",
+    footerColor: "#B88830",
+    nameColor: "#FFFFFF",
+    taglineColor: "rgba(255,255,255,0.75)",
   },
 };
 
@@ -62,35 +80,66 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   const b = BRANDS[brand];
+  const isBJ = brand === "brotherjimi";
 
   return (
     <div className="flex h-screen overflow-hidden">
 
       {/* Sidebar — desktop only */}
       <aside
-        style={{ background: "var(--surface)", borderRight: "1px solid var(--border)", width: 220, transition: "border-color 0.3s" }}
+        style={{
+          background: b.sidebarBg,
+          borderRight: `1px solid ${b.sidebarBorder}`,
+          width: 220,
+          transition: "background 0.4s, border-color 0.4s",
+        }}
         className="flex-shrink-0 flex-col hidden md:flex"
       >
-        {/* Logo */}
+        {/* Logo / brand header — full gradient when BJ */}
         <Link href="/dashboard" style={{ textDecoration: "none" }}>
-          <div className="px-5 py-5" style={{ borderBottom: "1px solid var(--border)" }}>
+          <div
+            style={{
+              background: b.headerBg,
+              borderBottom: `1px solid ${b.sidebarBorder}`,
+              padding: "20px",
+              transition: "background 0.4s",
+            }}
+          >
             <div className="flex items-center gap-2.5">
+              {/* Icon badge */}
               <div style={{
-                width: 28, height: 28,
-                background: b.gradient,
-                borderRadius: 7,
+                width: 32, height: 32,
+                background: isBJ ? "rgba(255,255,255,0.2)" : b.gradient,
+                borderRadius: 8,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: "0.85rem", flexShrink: 0,
-                boxShadow: `0 3px 8px ${b.shadow}`,
-                transition: "background 0.35s, box-shadow 0.35s",
+                fontSize: isBJ ? "1.1rem" : "0.9rem",
+                flexShrink: 0,
+                boxShadow: isBJ ? "0 2px 8px rgba(0,0,0,0.15)" : `0 3px 8px ${b.shadow}`,
+                transition: "all 0.4s",
+                border: isBJ ? "1px solid rgba(255,255,255,0.3)" : "none",
               }}>
                 {b.icon}
               </div>
               <div>
-                <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--text)", letterSpacing: "-0.01em", lineHeight: 1.2, transition: "color 0.3s" }}>
+                <div style={{
+                  fontSize: "0.92rem",
+                  fontWeight: 700,
+                  color: b.nameColor,
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.2,
+                  transition: "color 0.4s",
+                  fontStyle: isBJ ? "italic" : "normal",
+                }}>
                   {b.name}
                 </div>
-                <div style={{ fontSize: "0.58rem", fontWeight: 600, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.08em", transition: "color 0.3s" }}>
+                <div style={{
+                  fontSize: "0.6rem",
+                  fontWeight: 600,
+                  color: b.taglineColor,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  transition: "color 0.4s",
+                }}>
                   {b.tagline}
                 </div>
               </div>
@@ -105,31 +154,38 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               key={href}
               href={href}
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors"
-              style={{
-                textDecoration: "none",
-                color: "var(--muted)",
-              }}
+              style={{ textDecoration: "none", color: isBJ ? "#7A5010" : "var(--muted)" }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLAnchorElement).style.background = b.hoverBg;
                 (e.currentTarget as HTMLAnchorElement).style.color = b.hoverColor;
               }}
               onMouseLeave={e => {
                 (e.currentTarget as HTMLAnchorElement).style.background = "";
-                (e.currentTarget as HTMLAnchorElement).style.color = "var(--muted)";
+                (e.currentTarget as HTMLAnchorElement).style.color = isBJ ? "#7A5010" : "var(--muted)";
               }}
             >
               <span style={{ fontSize: "1rem" }}>{icon}</span>
               <div>
                 <div style={{ fontSize: "0.85rem", fontWeight: 600, lineHeight: 1.2 }}>{label}</div>
-                <div style={{ fontSize: "0.68rem", opacity: 0.7, lineHeight: 1.2 }}>{sub}</div>
+                <div style={{ fontSize: "0.68rem", opacity: 0.6, lineHeight: 1.2 }}>{sub}</div>
               </div>
             </Link>
           ))}
         </nav>
 
         {/* Footer */}
-        <div className="px-5 py-4" style={{ borderTop: "1px solid var(--border)" }}>
-          <div style={{ fontSize: "0.72rem", color: "var(--muted)", fontWeight: 600, letterSpacing: "0.02em", transition: "color 0.3s" }}>
+        <div
+          className="px-5 py-4"
+          style={{ borderTop: `1px solid ${b.sidebarBorder}` }}
+        >
+          <div style={{
+            fontSize: "0.72rem",
+            color: b.footerColor,
+            fontWeight: 600,
+            letterSpacing: "0.02em",
+            transition: "color 0.4s",
+            fontStyle: isBJ ? "italic" : "normal",
+          }}>
             {b.footerText}
           </div>
         </div>
@@ -143,14 +199,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Mobile bottom nav */}
       <nav
         className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex"
-        style={{ background: "var(--surface)", borderTop: "1px solid var(--border)", boxShadow: "0 -2px 12px rgba(0,0,0,0.08)" }}
+        style={{
+          background: isBJ ? "#FBF6EC" : "var(--surface)",
+          borderTop: `1px solid ${b.sidebarBorder}`,
+          boxShadow: "0 -2px 12px rgba(0,0,0,0.08)",
+          transition: "background 0.4s",
+        }}
       >
         {nav.map(({ href, label, icon }) => (
           <Link
             key={href}
             href={href}
             className="flex-1 flex flex-col items-center justify-center py-2 gap-0.5"
-            style={{ textDecoration: "none", color: "var(--muted)", minHeight: 56 }}
+            style={{ textDecoration: "none", color: isBJ ? "#96610A" : "var(--muted)", minHeight: 56 }}
           >
             <span style={{ fontSize: "1.25rem", lineHeight: 1 }}>{icon}</span>
             <span style={{ fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.02em" }}>{label}</span>

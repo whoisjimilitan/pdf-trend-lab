@@ -6,7 +6,7 @@ import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-type Step = "idle" | "country" | "generating" | "result" | "checkout" | "paid";
+type Step = "idle" | "country" | "generating" | "result" | "checkout" | "paid" | "waitlist";
 
 type Guide = {
   slug: string;
@@ -15,6 +15,9 @@ type Guide = {
   painPoint: string;
   chapters: { chapter: string; title: string; description: string }[];
 };
+
+type RelatedGuide = { slug: string; title: string; price: string };
+type WaitlistStatus = "idle" | "sending" | "done";
 
 const MESSAGES = [
   "Searching our library…",
@@ -30,6 +33,9 @@ export default function HomePage() {
   const [error, setError] = useState("");
   const [msgIndex, setMsgIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [relatedGuides, setRelatedGuides] = useState<RelatedGuide[]>([]);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistStatus, setWaitlistStatus] = useState<WaitlistStatus>("idle");
   const countryRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -108,6 +114,32 @@ export default function HomePage() {
     return data.clientSecret as string;
   }, [guide]);
 
+  // Fetch 3 related guides from the store after purchase for upsell
+  const fetchRelated = useCallback(async (slug: string) => {
+    try {
+      const res = await fetch(`/api/related?slug=${encodeURIComponent(slug)}&limit=3`);
+      if (!res.ok) return;
+      const data = await res.json() as RelatedGuide[];
+      if (Array.isArray(data)) setRelatedGuides(data);
+    } catch {}
+  }, []);
+
+  async function submitWaitlist(e: { preventDefault(): void }) {
+    e.preventDefault();
+    if (!waitlistEmail.trim()) return;
+    setWaitlistStatus("sending");
+    try {
+      await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: waitlistEmail.trim(), query: situation.trim(), country: country.trim() }),
+      });
+      setWaitlistStatus("done");
+    } catch {
+      setWaitlistStatus("done");
+    }
+  }
+
   function reset() {
     abortRef.current?.abort();
     setStep("idle");
@@ -115,6 +147,9 @@ export default function HomePage() {
     setCountry("");
     setGuide(null);
     setError("");
+    setRelatedGuides([]);
+    setWaitlistEmail("");
+    setWaitlistStatus("idle");
   }
 
   return (
@@ -421,6 +456,40 @@ export default function HomePage() {
           box-shadow: 0 4px 16px rgba(124,58,237,0.3);
         }
 
+        /* ── UPSELL (post-purchase related guides) ── */
+        .pg-upsell { max-width: 420px; width: 100%; margin-top: 36px; }
+        .pg-upsell-heading {
+          font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+          letter-spacing: 0.1em; color: #B0A89A; margin-bottom: 14px;
+        }
+        .pg-upsell-grid { display: flex; flex-direction: column; gap: 10px; }
+        .pg-upsell-card {
+          background: #FFFFFF; border: 1.5px solid #EAE6E0;
+          border-radius: 14px; padding: 14px 16px;
+          display: flex; align-items: center; justify-content: space-between;
+          gap: 12px; text-decoration: none;
+          transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .pg-upsell-card:hover { border-color: #C4B5FD; box-shadow: 0 4px 16px rgba(124,58,237,0.1); }
+        .pg-upsell-card-title { font-size: 0.88rem; font-weight: 600; color: #1A1008; line-height: 1.35; text-align: left; }
+        .pg-upsell-card-price { font-size: 0.82rem; font-weight: 700; color: #7C3AED; flex-shrink: 0; white-space: nowrap; }
+
+        /* ── WAITLIST ── */
+        .pg-waitlist { max-width: 440px; width: 100%; text-align: center; }
+        .pg-waitlist-icon { font-size: 2.5rem; margin-bottom: 20px; }
+        .pg-waitlist-title { font-size: 1.4rem; font-weight: 800; color: #1A1008; margin-bottom: 10px; letter-spacing: -0.02em; }
+        .pg-waitlist-sub { font-size: 0.9rem; color: #8C7D6E; line-height: 1.7; margin-bottom: 24px; max-width: 360px; margin-left: auto; margin-right: auto; }
+        .pg-waitlist-query {
+          display: inline-block; background: #EDE9FE; border-radius: 999px;
+          padding: 6px 16px; font-size: 0.83rem; font-weight: 600; color: #5B21B6;
+          margin-bottom: 24px;
+        }
+        .pg-waitlist-done {
+          font-size: 0.95rem; font-weight: 600; color: #15803D;
+          background: #F0FDF4; border: 1px solid #BBF7D0;
+          border-radius: 14px; padding: 18px 24px; margin-bottom: 20px;
+        }
+
         /* ── FOOTER ── */
         .pg-footer {
           text-align: center; padding: 16px 24px;
@@ -441,6 +510,12 @@ export default function HomePage() {
           .pg-paid { max-width: 480px; }
           .pg-result-cta { padding: 22px; font-size: 1.15rem; }
           .pg-btn { padding: 14px 26px; font-size: 0.95rem; }
+        }
+
+        /* ── RESPONSIVE: TABLET / IPAD (601–1024px) ── */
+        @media (min-width: 601px) and (max-width: 1024px) {
+          .pg-upsell { max-width: 480px; }
+          .pg-waitlist { max-width: 500px; }
         }
 
         /* ── RESPONSIVE: MOBILE (≤ 600px) ── */
@@ -497,6 +572,13 @@ export default function HomePage() {
           .pg-paid-sub { font-size: 0.88rem; }
           .pg-paid-btn { display: block; text-align: center; padding: 16px 24px; font-size: 0.95rem; }
 
+          .pg-upsell { max-width: 100%; }
+          .pg-upsell-card-title { font-size: 0.83rem; }
+
+          .pg-waitlist { max-width: 100%; }
+          .pg-waitlist-title { font-size: 1.25rem; }
+          .pg-waitlist-sub { font-size: 0.86rem; }
+
           .pg-footer { padding: 14px 20px; font-size: 0.7rem; }
         }
 
@@ -550,6 +632,15 @@ export default function HomePage() {
                   e.g. &ldquo;How do I register a business in Ghana?&rdquo;
                   &nbsp;&nbsp;·&nbsp;&nbsp;
                   <span style={{ color: "#9B8AF0", fontWeight: 600 }}>Over 2M guides written</span>
+                </div>
+                <div style={{ marginTop: 16, fontSize: "0.78rem", color: "#C4BAB0" }}>
+                  Can&apos;t find what you need?&nbsp;
+                  <button
+                    style={{ background: "none", border: "none", color: "#9B8AF0", fontWeight: 600, cursor: "pointer", padding: 0, fontSize: "inherit" }}
+                    onClick={() => setStep("waitlist")}
+                  >
+                    We&apos;ll build it for you →
+                  </button>
                 </div>
               </div>
             </>
@@ -617,6 +708,15 @@ export default function HomePage() {
                 <span>📱 Any device</span>
               </div>
               <button className="pg-result-again" onClick={reset}>Search for a different guide</button>
+              <div style={{ marginTop: 14, fontSize: "0.78rem", color: "#C4BAB0" }}>
+                Not quite right?&nbsp;
+                <button
+                  style={{ background: "none", border: "none", color: "#9B8AF0", fontWeight: 600, cursor: "pointer", padding: 0, fontSize: "inherit" }}
+                  onClick={() => setStep("waitlist")}
+                >
+                  Request a custom guide →
+                </button>
+              </div>
             </div>
           )}
 
@@ -628,7 +728,7 @@ export default function HomePage() {
               </button>
               <EmbeddedCheckoutProvider
                 stripe={stripePromise}
-                options={{ fetchClientSecret, onComplete: () => setStep("paid") }}
+                options={{ fetchClientSecret, onComplete: () => { setStep("paid"); if (guide) fetchRelated(guide.slug); } }}
               >
                 <div className="pg-checkout-stripe">
                   <EmbeddedCheckout />
@@ -647,6 +747,65 @@ export default function HomePage() {
                 You can also open it right now.
               </div>
               <a href={`/guide/${guide.slug}`} className="pg-paid-btn">Open My Guide →</a>
+
+              {relatedGuides.length > 0 && (
+                <div className="pg-upsell">
+                  <div className="pg-upsell-heading">People who got this also needed</div>
+                  <div className="pg-upsell-grid">
+                    {relatedGuides.map(g => (
+                      <a key={g.slug} href={`/sell/${g.slug}`} className="pg-upsell-card">
+                        <div className="pg-upsell-card-title">{g.title}</div>
+                        <div className="pg-upsell-card-price">{g.price} →</div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── WAITLIST ── */}
+          {step === "waitlist" && (
+            <div className="pg-waitlist">
+              <div className="pg-waitlist-icon">📬</div>
+              <div className="pg-waitlist-title">We&apos;ll build it for you</div>
+              <p className="pg-waitlist-sub">
+                Leave your email and we&apos;ll create a guide specifically for your situation — usually within 24 hours.
+              </p>
+              {situation && (
+                <div className="pg-waitlist-query">&ldquo;{situation}&rdquo;</div>
+              )}
+              {waitlistStatus === "done" ? (
+                <div className="pg-waitlist-done">
+                  ✓ You&apos;re on the list! We&apos;ll email you when your guide is ready.
+                </div>
+              ) : (
+                <div className="pg-form" style={{ marginBottom: 0 }}>
+                  <form onSubmit={submitWaitlist}>
+                    <div className="pg-input-wrap">
+                      <input
+                        className="pg-input"
+                        type="email"
+                        value={waitlistEmail}
+                        onChange={e => setWaitlistEmail(e.target.value)}
+                        placeholder="Your email address"
+                        required
+                        autoFocus
+                      />
+                      <button type="submit" className="pg-btn" disabled={waitlistStatus === "sending"}>
+                        {waitlistStatus === "sending" ? "Sending…" : "Notify Me →"}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+              <button
+                className="pg-result-again"
+                onClick={reset}
+                style={{ marginTop: 20, display: "block", margin: "20px auto 0" }}
+              >
+                ← Search again
+              </button>
             </div>
           )}
 

@@ -137,7 +137,7 @@ const BRAND_META: Record<Brand, {
     painLabel: "What they are carrying",
     emptyHeading: () => "Ready to find what needs a pastoral word?",
     emptyBody: "The engine listens to real human searches — grief, doubt, shame, loneliness — and surfaces the emotional weight that has no clean packaged answer yet.",
-    accentColor: "#C8973E",
+    accentColor: "#D4A243",
     symbol: "£",
   },
 };
