@@ -234,14 +234,14 @@ export default function HomePage() {
           line-height: 1.1;
           letter-spacing: -0.04em;
           margin: 0 0 14px;
-          max-width: 540px;
+          max-width: 680px;
         }
         .pg-hero-sub {
           font-size: clamp(0.95rem, 2.5vw, 1.05rem);
           color: #8C7D6E;
           line-height: 1.7;
           margin: 0 0 40px;
-          max-width: 520px;
+          max-width: 400px;
         }
         .pg-form {
           width: 100%;
