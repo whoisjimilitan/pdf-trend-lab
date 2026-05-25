@@ -121,7 +121,7 @@ export default function HomePage() {
     const data = await res.json();
     if (!data.clientSecret) throw new Error("Could not initialise payment");
     return data.clientSecret as string;
-  }, [guide]);
+  }, [guide, partnerRef, isFirstBuy]);
 
   // Fetch 3 related guides from the store after purchase for upsell
   const fetchRelated = useCallback(async (slug: string) => {

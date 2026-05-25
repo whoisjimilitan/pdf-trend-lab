@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 export default function EarnPage() {
   const [loading, setLoading] = useState(false);
   const [liveSearches, setLiveSearches] = useState<string[]>([]);
+  const [justJoined, setJustJoined] = useState(false);
   const [recovery, setRecovery] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState("");
   const [recoveryStatus, setRecoveryStatus] = useState<"idle" | "sending" | "done" | "notfound">("idle");
@@ -20,6 +21,13 @@ export default function EarnPage() {
     const data = await res.json() as { found: boolean };
     setRecoveryStatus(data.found ? "done" : "notfound");
   }
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("joined") === "true") {
+      setJustJoined(true);
+      window.history.replaceState({}, "", "/earn");
+    }
+  }, []);
 
   useEffect(() => {
     fetch("/api/search-log")
@@ -470,6 +478,18 @@ export default function EarnPage() {
           </a>
           <a href="/" className="earn-header-link">Find a guide →</a>
         </header>
+
+        {/* JOINED SUCCESS BANNER */}
+        {justJoined && (
+          <div style={{ background: "#F0FDF4", borderBottom: "1px solid #BBF7D0", padding: "20px 32px", textAlign: "center" }}>
+            <div style={{ fontSize: "1.05rem", fontWeight: 800, color: "#15803D", marginBottom: 4 }}>
+              ✓ You&apos;re in. Welcome to the Partner Programme.
+            </div>
+            <div style={{ fontSize: "0.85rem", color: "#16A34A" }}>
+              Check your email — your dashboard link and WhatsApp templates are on their way.
+            </div>
+          </div>
+        )}
 
         {/* HERO */}
         <section className="earn-hero">
