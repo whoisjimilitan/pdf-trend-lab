@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: Request) {
-  const { slug, ref } = await req.json();
+  const { slug, ref, tripwire } = await req.json();
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
 
   const product = await prisma.product.findFirst({
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   const opp = product.opportunity;
   const currency = "gbp";
 
-  const unitAmount = Math.round((opp?.minPrice ?? 9.99) * 100);
+  const unitAmount = tripwire ? 100 : Math.round((opp?.minPrice ?? 9.99) * 100);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pdfseeds.com";
 

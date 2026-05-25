@@ -37,6 +37,7 @@ export default function HomePage() {
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistStatus, setWaitlistStatus] = useState<WaitlistStatus>("idle");
   const [partnerRef, setPartnerRef] = useState("");
+  const [isFirstBuy, setIsFirstBuy] = useState(true);
   const countryRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -44,6 +45,7 @@ export default function HomePage() {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get("ref");
     if (ref) setPartnerRef(ref);
+    if (localStorage.getItem("pdfseeds_purchased")) setIsFirstBuy(false);
   }, []);
 
   useEffect(() => {
@@ -114,7 +116,7 @@ export default function HomePage() {
     const res = await fetch("/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ slug: guide.slug, ...(partnerRef ? { ref: partnerRef } : {}) }),
+      body: JSON.stringify({ slug: guide.slug, ...(partnerRef ? { ref: partnerRef } : {}), ...(isFirstBuy ? { tripwire: true } : {}) }),
     });
     const data = await res.json();
     if (!data.clientSecret) throw new Error("Could not initialise payment");
@@ -695,8 +697,16 @@ export default function HomePage() {
             <div className="pg-result">
               <div className="pg-result-badge">✓ Guide found</div>
               <div className="pg-result-title">{guide.title}</div>
+              {isFirstBuy && (
+                <div style={{ display: "inline-block", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 999, padding: "4px 14px", fontSize: "0.72rem", fontWeight: 700, color: "#15803D", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>
+                  ✦ First guide — intro price
+                </div>
+              )}
               <button className="pg-result-cta" onClick={() => setStep("checkout")}>
-                Get My Guide — {guide.price} →
+                {isFirstBuy
+                  ? <>Get My Guide — <span style={{ textDecoration: "line-through", opacity: 0.55, fontWeight: 400 }}>{guide.price}</span> £1.00 →</>
+                  : <>Get My Guide — {guide.price} →</>
+                }
               </button>
               <div className="pg-result-trust">
                 <span>📥 Instant download</span>
@@ -724,7 +734,7 @@ export default function HomePage() {
               </button>
               <EmbeddedCheckoutProvider
                 stripe={stripePromise}
-                options={{ fetchClientSecret, onComplete: () => { setStep("paid"); if (guide) fetchRelated(guide.slug); } }}
+                options={{ fetchClientSecret, onComplete: () => { setStep("paid"); setIsFirstBuy(false); localStorage.setItem("pdfseeds_purchased", "1"); if (guide) fetchRelated(guide.slug); } }}
               >
                 <div className="pg-checkout-stripe">
                   <EmbeddedCheckout />

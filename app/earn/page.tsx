@@ -5,6 +5,21 @@ import { useState, useEffect } from "react";
 export default function EarnPage() {
   const [loading, setLoading] = useState(false);
   const [liveSearches, setLiveSearches] = useState<string[]>([]);
+  const [recovery, setRecovery] = useState(false);
+  const [recoveryEmail, setRecoveryEmail] = useState("");
+  const [recoveryStatus, setRecoveryStatus] = useState<"idle" | "sending" | "done" | "notfound">("idle");
+
+  async function handleRecovery(e: { preventDefault(): void }) {
+    e.preventDefault();
+    setRecoveryStatus("sending");
+    const res = await fetch("/api/partner/recover", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: recoveryEmail.trim() }),
+    });
+    const data = await res.json() as { found: boolean };
+    setRecoveryStatus(data.found ? "done" : "notfound");
+  }
 
   useEffect(() => {
     fetch("/api/search-log")
@@ -682,6 +697,61 @@ export default function EarnPage() {
             </button>
             <div className="earn-trust-line">One-time payment · 30-day money-back guarantee</div>
           </div>
+        </section>
+
+        {/* PARTNER RECOVERY */}
+        <section className="earn-section" style={{ paddingBottom: 48 }}>
+          {!recovery ? (
+            <div style={{ textAlign: "center" }}>
+              <button
+                onClick={() => setRecovery(true)}
+                style={{ background: "none", border: "none", color: "#C4BAB0", fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline", textDecorationColor: "#E8E4DE" }}
+              >
+                Already a partner? Resend my dashboard link →
+              </button>
+            </div>
+          ) : (
+            <div style={{ background: "#FFFFFF", border: "1.5px solid #EAE6E0", borderRadius: 16, padding: "28px 32px", maxWidth: 480, margin: "0 auto" }}>
+              <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#1A1008", marginBottom: 6 }}>Resend my dashboard link</div>
+              <div style={{ fontSize: "0.8rem", color: "#B0A89A", marginBottom: 20 }}>Enter the email you used when you joined and we&apos;ll send it straight over.</div>
+
+              {recoveryStatus === "done" ? (
+                <div style={{ fontSize: "0.88rem", color: "#15803D", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 12, padding: "14px 18px" }}>
+                  ✓ Check your inbox — your dashboard link is on its way.
+                </div>
+              ) : recoveryStatus === "notfound" ? (
+                <div>
+                  <div style={{ fontSize: "0.88rem", color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 12, padding: "14px 18px", marginBottom: 14 }}>
+                    No partner account found with that email. Try the address you used when you paid.
+                  </div>
+                  <button onClick={() => setRecoveryStatus("idle")} style={{ background: "none", border: "none", color: "#7C3AED", fontSize: "0.82rem", cursor: "pointer", padding: 0, fontWeight: 600 }}>
+                    Try a different email →
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleRecovery}>
+                  <div style={{ background: "#FAF9F7", border: "1.5px solid #EAE6E0", borderRadius: 12, padding: "5px 5px 5px 16px", display: "flex", alignItems: "center", gap: 8 }}>
+                    <input
+                      type="email"
+                      value={recoveryEmail}
+                      onChange={e => setRecoveryEmail(e.target.value)}
+                      placeholder="Your email address"
+                      required
+                      autoFocus
+                      style={{ flex: 1, border: "none", outline: "none", fontSize: "0.92rem", color: "#1A1008", background: "transparent", padding: "10px 0" }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={recoveryStatus === "sending"}
+                      style={{ background: "linear-gradient(135deg,#7C3AED,#5B21B6)", color: "#fff", fontWeight: 700, fontSize: "0.83rem", padding: "10px 18px", border: "none", borderRadius: 9, cursor: "pointer", whiteSpace: "nowrap", opacity: recoveryStatus === "sending" ? 0.65 : 1 }}
+                    >
+                      {recoveryStatus === "sending" ? "Sending…" : "Send link →"}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          )}
         </section>
 
         <footer className="earn-footer">
