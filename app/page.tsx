@@ -25,6 +25,8 @@ const MESSAGES = [
   "Getting your PDF file…",
 ];
 
+const EXAMPLE_COUNTRIES = ["Ghana", "Nigeria", "United Kingdom", "Canada", "Australia", "Kenya", "South Africa", "United States", "Jamaica", "Ireland"];
+
 export default function HomePage() {
   const [step, setStep] = useState<Step>("idle");
   const [situation, setSituation] = useState("");
@@ -38,6 +40,7 @@ export default function HomePage() {
   const [waitlistStatus, setWaitlistStatus] = useState<WaitlistStatus>("idle");
   const [partnerRef, setPartnerRef] = useState("");
   const [isFirstBuy, setIsFirstBuy] = useState(true);
+  const [exampleCountryIdx, setExampleCountryIdx] = useState(0);
   const countryRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -51,6 +54,11 @@ export default function HomePage() {
   useEffect(() => {
     if (step === "country") countryRef.current?.focus();
   }, [step]);
+
+  useEffect(() => {
+    const id = setInterval(() => setExampleCountryIdx(i => (i + 1) % EXAMPLE_COUNTRIES.length), 2500);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     if (step !== "generating") return;
@@ -284,6 +292,16 @@ export default function HomePage() {
         .pg-hint {
           font-size: 0.78rem; color: #C4BAB0;
           margin-top: 14px; line-height: 1.6;
+        }
+        @keyframes country-fade {
+          from { opacity: 0; transform: translateY(3px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .pg-example-country {
+          display: inline-block;
+          animation: country-fade 0.35s ease both;
+          color: #8C7D6E;
+          font-weight: 600;
         }
 
         /* ── COUNTRY STEP ── */
@@ -638,7 +656,7 @@ export default function HomePage() {
                   </div>
                 </form>
                 <div className="pg-hint">
-                  e.g. &ldquo;How do I register a business in Ghana?&rdquo;
+                  e.g. How do I register a business in <span key={exampleCountryIdx} className="pg-example-country">{EXAMPLE_COUNTRIES[exampleCountryIdx]}</span>?
                 </div>
               </div>
             </>
@@ -818,7 +836,7 @@ export default function HomePage() {
         </main>
 
         <footer className="pg-footer">
-          © {new Date().getFullYear()} PDF Seeds
+          © {new Date().getFullYear()}{" "}PDF Seeds
           &nbsp;&nbsp;·&nbsp;&nbsp;
           <a href="/earn" style={{ color: "#C4BAB0", textDecoration: "none" }}>Affiliates →</a>
           &nbsp;&nbsp;·&nbsp;&nbsp;
