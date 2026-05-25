@@ -5,7 +5,7 @@ import { resend, FROM, purchaseConfirmEmail, partnerWelcomeEmail } from "@/lib/r
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pdfseeds.com";
-const COMMISSION = 0.30;
+const COMMISSION = 0.80;
 
 function generateCode(email: string): string {
   const prefix = email.split("@")[0].replace(/[^a-zA-Z0-9]/g, "").slice(0, 5).toLowerCase();

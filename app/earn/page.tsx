@@ -500,7 +500,7 @@ export default function EarnPage() {
             <em>Start getting paid for the next one.</em>
           </h1>
           <p className="earn-sub">
-            Share PDF Seeds guides with your community. Earn 30% on every sale — automatically.
+            Share guides your community is already searching for. Keep 80% of every sale — for life.
           </p>
           <div>
             <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>
@@ -518,18 +518,18 @@ export default function EarnPage() {
           <div className="earn-steps">
             <div className="earn-step">
               <span className="earn-step-icon">🎯</span>
-              <div className="earn-step-title">Find your guides</div>
-              <div className="earn-step-body">Browse the library. Pick guides that match the questions your community actually asks. There is one for almost every real-life situation.</div>
+              <div className="earn-step-title">Pick your guides</div>
+              <div className="earn-step-body">Browse the library. There&apos;s a guide for almost every real-life question your community asks — visa, tax, business, housing.</div>
             </div>
             <div className="earn-step">
               <span className="earn-step-icon">🔗</span>
-              <div className="earn-step-title">Share your link</div>
-              <div className="earn-step-body">Every guide has your unique partner link. Share it exactly where you already share things — WhatsApp, a group, your newsletter, a story, a comment.</div>
+              <div className="earn-step-title">Drop your link</div>
+              <div className="earn-step-body">You get a unique link for every guide. Drop it in your WhatsApp group, newsletter, or Facebook community — wherever you already show up.</div>
             </div>
             <div className="earn-step">
               <span className="earn-step-icon">💷</span>
-              <div className="earn-step-title">Earn while you sleep</div>
-              <div className="earn-step-body">Every time someone buys through your link, you earn 30%. The guide delivers itself. You never handle a query, a refund, or a single customer message.</div>
+              <div className="earn-step-title">Get paid</div>
+              <div className="earn-step-body">Someone buys — you keep 80%. The guide delivers itself. No support, no refunds, nothing to handle. Ever.</div>
             </div>
           </div>
         </section>
@@ -539,26 +539,26 @@ export default function EarnPage() {
           <div className="earn-math">
             <div className="earn-math-label">What one message can return</div>
             <div className="earn-math-base">
-              Guide price £9.99 &nbsp;×&nbsp; your 30% &nbsp;=&nbsp; <strong>£2.99 per sale</strong>
+              Guide price £9.99 &nbsp;×&nbsp; your 80% &nbsp;=&nbsp; <strong>£7.99 per sale</strong>
             </div>
             <div className="earn-math-examples">
               <div className="earn-math-ex">
                 <span className="earn-math-ex-icon">💬</span>
                 <span className="earn-math-ex-text">One WhatsApp message · 10 people buy</span>
-                <span className="earn-math-ex-earn">£29.90</span>
+                <span className="earn-math-ex-earn">£79.90</span>
               </div>
               <div className="earn-math-ex">
                 <span className="earn-math-ex-icon">📌</span>
                 <span className="earn-math-ex-text">Pinned in 3 community groups · 10 buyers each</span>
-                <span className="earn-math-ex-earn">£89.70</span>
+                <span className="earn-math-ex-earn">£239.70</span>
               </div>
               <div className="earn-math-ex">
                 <span className="earn-math-ex-icon">📧</span>
                 <span className="earn-math-ex-text">Newsletter mention · 50 buyers over a month</span>
-                <span className="earn-math-ex-earn">£149.50</span>
+                <span className="earn-math-ex-earn">£399.50</span>
               </div>
             </div>
-            <div className="earn-math-note">10 buyers is conservative. In a group that already trusts your recommendations, it&apos;s usually more — and a good guide gets forwarded.</div>
+            <div className="earn-math-note">These are conservative numbers. In a community that already trusts you, 10 buyers is a quiet week — and a good guide gets forwarded.</div>
           </div>
         </section>
 
@@ -568,10 +568,10 @@ export default function EarnPage() {
         <section className="earn-section">
           <h2 className="earn-get-h2">What you get for £19.99</h2>
           <ul className="earn-get-list">
-            <li><strong>30% commission on every sale</strong> — paid automatically, nothing to chase</li>
+            <li><strong>80% commission on every sale — for life.</strong> Paid automatically, nothing to chase</li>
             <li>Your unique partner link for every guide in the library — share any, earn on all</li>
-            <li>Ready-to-send WhatsApp templates — start sharing within minutes of joining</li>
-            <li>A dashboard showing every sale and every penny earned. No writing, no delivery, no support.</li>
+            <li>WhatsApp templates ready to send within minutes of joining</li>
+            <li>A dashboard showing every sale and every penny earned. No writing, no delivery, no support. Ever.</li>
           </ul>
         </section>
 
@@ -608,7 +608,7 @@ export default function EarnPage() {
             <div className="earn-price-label">Partner Programme Access</div>
             <div className="earn-price-amount">£19.99</div>
             <div className="earn-price-sub">One-time. No subscriptions. Start earning today.</div>
-            <div className="earn-price-recover">Your first 7 sales pay for it. Everything after that is yours.</div>
+            <div className="earn-price-recover">3 sales cover the £19.99. Every sale after that is pure earnings.</div>
             <div>
               <button className="earn-cta-white" onClick={handleGetAccess} disabled={loading}>
                 {loading ? "Opening checkout…" : "Become a Partner →"}

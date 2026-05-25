@@ -10,7 +10,7 @@ const TEMPLATES = (link: string) => [
   {
     type: "General community",
     icon: "💬",
-    text: `Saw this and thought of the group. There's a site with step-by-step PDF guides for things like visa applications, business registration, and tax returns — written for our situation, not generic advice. Only £9.99 and instant download. Might save someone a lot of headaches → ${link}`,
+    text: `Saw this and thought of the group — a site with clear PDF guides for things like visa applications, business registration, and tax returns. No Google rabbit holes. Just one guide that explains it properly. Only £9.99 → ${link}`,
   },
   {
     type: "Diaspora / immigration",
@@ -147,7 +147,7 @@ export default async function PartnerDashboard({ params }: { params: Promise<{ c
             <div className="pd-stat-label">Earned</div>
           </div>
           <div className="pd-stat">
-            <div className="pd-stat-val">30%</div>
+            <div className="pd-stat-val">80%</div>
             <div className="pd-stat-label">Your cut</div>
           </div>
         </div>
@@ -176,7 +176,7 @@ export default async function PartnerDashboard({ params }: { params: Promise<{ c
                 <div>
                   <div className="pd-guide-title">{g.title}</div>
                   <div className="pd-guide-meta">
-                    £{(g.opportunity.minPrice ?? 9.99).toFixed(2)} · {g.salesCount} sold · you earn £{((g.opportunity.minPrice ?? 9.99) * 0.30).toFixed(2)}
+                    £{(g.opportunity.minPrice ?? 9.99).toFixed(2)} · {g.salesCount} sold · you earn £{((g.opportunity.minPrice ?? 9.99) * 0.80).toFixed(2)}
                   </div>
                 </div>
                 <div className="pd-guide-copy">
