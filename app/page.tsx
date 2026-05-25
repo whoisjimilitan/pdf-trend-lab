@@ -36,8 +36,15 @@ export default function HomePage() {
   const [relatedGuides, setRelatedGuides] = useState<RelatedGuide[]>([]);
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistStatus, setWaitlistStatus] = useState<WaitlistStatus>("idle");
+  const [partnerRef, setPartnerRef] = useState("");
   const countryRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref) setPartnerRef(ref);
+  }, []);
 
   useEffect(() => {
     if (step === "country") countryRef.current?.focus();
@@ -107,7 +114,7 @@ export default function HomePage() {
     const res = await fetch("/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ slug: guide.slug }),
+      body: JSON.stringify({ slug: guide.slug, ...(partnerRef ? { ref: partnerRef } : {}) }),
     });
     const data = await res.json();
     if (!data.clientSecret) throw new Error("Could not initialise payment");

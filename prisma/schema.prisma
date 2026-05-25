@@ -109,6 +109,28 @@ model SearchQuery {
   createdAt DateTime @default(now())
 }
 
+model Partner {
+  id          String        @id @default(cuid())
+  email       String        @unique
+  code        String        @unique
+  name        String?
+  referredBy  String?
+  totalEarned Float         @default(0)
+  salesCount  Int           @default(0)
+  createdAt   DateTime      @default(now())
+  sales       PartnerSale[]
+}
+
+model PartnerSale {
+  id          String   @id @default(cuid())
+  partnerId   String
+  partner     Partner  @relation(fields: [partnerId], references: [id])
+  productSlug String
+  saleAmount  Float
+  commission  Float
+  createdAt   DateTime @default(now())
+}
+
 model DailyLoop {
   id        String   @id @default(cuid())
   date      String

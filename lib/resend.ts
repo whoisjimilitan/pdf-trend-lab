@@ -108,6 +108,30 @@ export function waitlistEmail3(query: string) {
   return { subject, html };
 }
 
+// ── Partner welcome ───────────────────────────────────────────────────────
+export function partnerWelcomeEmail(code: string, dashboardUrl: string) {
+  const subject = "You're in — here's your partner dashboard";
+  const html = base(`
+    ${h("Welcome to the Partner Programme. 🌱")}
+    ${p("Your partner access is confirmed. Here's everything you need to start earning.")}
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F3FF;border-radius:12px;padding:20px 24px;margin-bottom:20px;border:1px solid #DDD6FE;">
+      <tr>
+        <td>
+          <div style="font-size:0.72rem;font-weight:700;color:#7C3AED;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">Your partner code</div>
+          <div style="font-size:1.5rem;font-weight:900;color:#1A1008;letter-spacing:0.05em;">${code}</div>
+          <div style="font-size:0.82rem;color:#8C7D6E;margin-top:4px;">Your link: https://pdfseeds.com/?ref=${code}</div>
+        </td>
+      </tr>
+    </table>
+    ${p("Your dashboard has your WhatsApp templates, top guides to recommend, and your earnings — all in one place.")}
+    ${p("Bookmark the link below. It's your permanent dashboard — no password needed.")}
+    ${btn(dashboardUrl, "Open My Partner Dashboard →")}
+    ${p("Start with the WhatsApp templates on your dashboard. Pick the one that fits your community, copy it, and send it. That's your first planting.")}
+    ${muted("Questions? Reply to this email. We read every one.")}
+  `);
+  return { subject, html };
+}
+
 // ── Post-purchase confirmation ─────────────────────────────────────────────
 export function purchaseConfirmEmail(title: string, guideUrl: string) {
   const subject = `Your guide is ready: ${title}`;

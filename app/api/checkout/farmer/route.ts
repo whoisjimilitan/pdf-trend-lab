@@ -14,12 +14,14 @@ export async function POST() {
         currency: "gbp",
         unit_amount: 1999,
         product_data: {
-          name: "PDF Seeds — Farmer Access",
-          description: "Lifetime access to the farmer dashboard. Plant guides. Earn passively.",
+          name: "PDF Seeds — Partner Access",
+          description: "Lifetime access to your partner dashboard. Share guides. Earn 30% per sale.",
         },
       },
     }],
-    success_url: `${siteUrl}/signin?welcome=farmer`,
+    metadata: { type: "partner" },
+    customer_creation: "always",
+    success_url: `${siteUrl}/earn?joined=true`,
     cancel_url: `${siteUrl}/earn`,
   });
 

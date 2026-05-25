@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: Request) {
-  const { slug } = await req.json();
+  const { slug, ref } = await req.json();
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
 
   const product = await prisma.product.findFirst({
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       },
     }],
     payment_intent_data: {
-      metadata: { slug, productId: product.id },
+      metadata: { slug, productId: product.id, ...(ref ? { partnerCode: String(ref) } : {}) },
     },
   });
 
