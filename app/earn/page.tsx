@@ -500,68 +500,13 @@ export default function EarnPage() {
             <em>Start getting paid for the next one.</em>
           </h1>
           <p className="earn-sub">
-            You&apos;re already the person your community turns to — for visa questions, business registration, tax advice, housing rights.
-            PDF Seeds lets you turn that trusted position into income without changing a single thing you already do.
+            Share PDF Seeds guides with your community. Earn 30% on every sale — automatically.
           </p>
           <div>
             <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>
               {loading ? "Opening checkout…" : "Join as a Partner — £19.99"}
             </button>
             <div className="earn-trust-line">One-time payment · No monthly fees · Start today</div>
-          </div>
-        </section>
-
-        <hr className="earn-divider" />
-
-        {/* WHO THIS IS FOR */}
-        <section className="earn-section">
-          <div className="earn-for">
-            <div className="earn-for-label">Who this is for</div>
-            <h2 className="earn-for-h2">You&apos;re the person people call when they&apos;re stuck.</h2>
-            <ul className="earn-for-list">
-              <li>Your WhatsApp group pings you first when someone needs to register a business, apply for a visa, or figure out a tax return</li>
-              <li>You run a diaspora community, church group, or local forum — and the same questions come in every single week</li>
-              <li>You&apos;re a professional — an accountant, social worker, pastor, immigration advisor — who already gives guidance informally, for free</li>
-              <li>You have a newsletter, a YouTube channel, or a Facebook group where real people ask real questions and genuinely trust your answers</li>
-              <li>You&apos;re the one who shares resources — not the one who asks for them</li>
-            </ul>
-            <div className="earn-for-close">
-              If you read that and thought &ldquo;that&apos;s me&rdquo; — this programme was built for you specifically.
-            </div>
-          </div>
-        </section>
-
-        <hr className="earn-divider" />
-
-        {/* THE PAIN */}
-        <section className="earn-section">
-          <div className="earn-pitch">
-            <h2 className="earn-pitch-h2">You&apos;ve typed the same answer thirty times. For free.</h2>
-            <p className="earn-pitch-body">
-              The voice notes at midnight. The WhatsApp messages that start with &ldquo;can I just quickly ask you something?&rdquo; and turn into an hour. The links you track down, the forms you explain, the processes you walk people through — because that&apos;s who you are.
-            </p>
-            <p className="earn-pitch-body">
-              But the people asking you are the same ones spending £49 on a vague YouTube course from a stranger who barely understands their situation. They don&apos;t need a stranger — they need you. They just need what you know in a format they can read properly, save, and come back to.
-            </p>
-            <div className="earn-pitch-contrast">
-              You could be the one who gives them that — and earn from it every time. Not instead of helping. As a result of it.
-            </div>
-          </div>
-        </section>
-
-        <hr className="earn-divider" />
-
-        {/* PERMISSION SLIP */}
-        <section className="earn-section">
-          <div className="earn-permission">
-            <h3 className="earn-permission-h3">Let&apos;s be honest about something.</h3>
-            <p className="earn-permission-body">
-              Wanting something back for what you already give isn&apos;t greedy. It&apos;s sustainable.
-              The community leaders who burn out are the ones who give everything without return — and eventually stop.<br /><br />
-              You don&apos;t need to become a marketer. You don&apos;t need a funnel, a course, or a content strategy.
-              You just need to <strong>send the right link to the right person at the right moment</strong> — which you are already doing.
-              The guide delivers itself. Stripe pays you automatically. You carry on being exactly who you already are.
-            </p>
           </div>
         </section>
 
@@ -623,13 +568,10 @@ export default function EarnPage() {
         <section className="earn-section">
           <h2 className="earn-get-h2">What you get for £19.99</h2>
           <ul className="earn-get-list">
-            <li><strong>30% commission on every sale you drive</strong> — £2.99 per guide at standard price, paid automatically via Stripe</li>
-            <li>Your unique partner link for every guide in the library — share any, earn on all of them</li>
-            <li>Lifetime access — including every new guide added as new demand is spotted (new guides go in weekly)</li>
-            <li>Guides covering UK immigration, business registration, self-assessment tax, NHS navigation, housing rights, international finance, and more</li>
-            <li>A dashboard showing exactly what you&apos;ve shared, who bought, and what you&apos;ve earned</li>
-            <li>A ready-to-send WhatsApp message template for your community — share it within minutes of joining, no guesswork about what to say</li>
-            <li>No writing. No customer service. No delivery. No technical setup. No monthly fees. Ever.</li>
+            <li><strong>30% commission on every sale</strong> — paid automatically, nothing to chase</li>
+            <li>Your unique partner link for every guide in the library — share any, earn on all</li>
+            <li>Ready-to-send WhatsApp templates — start sharing within minutes of joining</li>
+            <li>A dashboard showing every sale and every penny earned. No writing, no delivery, no support.</li>
           </ul>
         </section>
 
@@ -683,24 +625,16 @@ export default function EarnPage() {
           <h2 className="earn-faq-h2">Questions</h2>
           <div className="earn-faq">
             <div className="earn-faq-item">
-              <div className="earn-faq-q">Do I need a big audience or following?</div>
-              <p className="earn-faq-a">No. A single active WhatsApp group, a Facebook community you admin, or a small trusted newsletter is more than enough. The point is trust — not scale. 50 people who genuinely trust your recommendations outperform 5,000 strangers every time.</p>
-            </div>
-            <div className="earn-faq-item">
-              <div className="earn-faq-q">What kind of guides are in the library?</div>
-              <p className="earn-faq-a">Real-life topics people actually search for and pay to understand: how to register a business in Ghana, Nigeria, or the UK. How to apply for indefinite leave to remain. How to complete a self-assessment tax return. How to navigate an NHS referral. Practical, specific, country-aware guides — not generic information you could already find on Google.</p>
+              <div className="earn-faq-q">Do I need a big audience?</div>
+              <p className="earn-faq-a">No. One trusted WhatsApp group is enough. Trust beats scale every time.</p>
             </div>
             <div className="earn-faq-item">
               <div className="earn-faq-q">Do I handle delivery, support, or refunds?</div>
-              <p className="earn-faq-a">Nothing. When someone buys through your link, the guide is delivered automatically, the payment is processed by Stripe, and if anything goes wrong we handle it. You share the link. That is the full extent of your involvement.</p>
+              <p className="earn-faq-a">Nothing. You share the link. We handle everything else.</p>
             </div>
             <div className="earn-faq-item">
-              <div className="earn-faq-q">When and how do I get paid?</div>
-              <p className="earn-faq-a">Commissions are attributed to your link automatically. Your dashboard shows every sale in real time. Payments are made via Stripe — the same payment processor used by millions of businesses worldwide.</p>
-            </div>
-            <div className="earn-faq-item">
-              <div className="earn-faq-q">Is there a monthly subscription?</div>
-              <p className="earn-faq-a">No. £19.99 once. You keep full partner access forever — including every new guide added to the library from the day you join.</p>
+              <div className="earn-faq-q">Is there a monthly fee?</div>
+              <p className="earn-faq-a">No. £19.99 once. Full access forever, including every new guide added.</p>
             </div>
           </div>
         </section>
