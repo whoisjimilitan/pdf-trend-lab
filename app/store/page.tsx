@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Instant answers to real problems. Practical PDF guides and pastoral reflection words — instant download, read on any device.",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 const BJ_NICHES = new Set(["grief","doubt","shame","loneliness","fear","exhaustion","faith","healing","identity"]);
 
@@ -146,6 +146,12 @@ export default async function StorePage() {
         @media (max-width: 480px) {
           .store-hero h1 { font-size: 1.5rem; }
           .seeds-card, .bj-card { padding: 14px; }
+        }
+        @media (max-width: 400px) {
+          .seeds-footer { flex-wrap: wrap; gap: 8px; }
+          .seeds-buy { margin-left: 0; width: 100%; text-align: center; }
+          .bj-card-footer { flex-wrap: wrap; gap: 8px; }
+          .bj-receive { margin-left: 0; width: 100%; text-align: center; }
         }
       `}</style>
 

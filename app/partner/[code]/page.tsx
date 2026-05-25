@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import CopyButton from "./CopyButton";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 const SITE = "https://pdfseeds.com";
 
@@ -32,19 +32,20 @@ const TEMPLATES = (link: string) => [
 export default async function PartnerDashboard({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
 
-  const partner = await prisma.partner.findUnique({
-    where: { code },
-    include: { sales: { orderBy: { createdAt: "desc" }, take: 10 } },
-  });
+  const [partner, topGuides] = await Promise.all([
+    prisma.partner.findUnique({
+      where: { code },
+      include: { sales: { orderBy: { createdAt: "desc" }, take: 10 } },
+    }),
+    prisma.product.findMany({
+      where: { published: true },
+      orderBy: { salesCount: "desc" },
+      take: 3,
+      include: { opportunity: { select: { minPrice: true, country: true } } },
+    }),
+  ]);
 
   if (!partner) notFound();
-
-  const topGuides = await prisma.product.findMany({
-    where: { published: true },
-    orderBy: { salesCount: "desc" },
-    take: 3,
-    include: { opportunity: { select: { minPrice: true, country: true } } },
-  });
 
   const myLink = `${SITE}/?ref=${partner.code}`;
   const templates = TEMPLATES(myLink);
@@ -73,7 +74,7 @@ export default async function PartnerDashboard({ params }: { params: Promise<{ c
 
         .pd-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 32px; }
         .pd-stat { background: #FFFFFF; border: 1px solid #EAE6E0; border-radius: 12px; padding: 16px; text-align: center; }
-        .pd-stat-val { font-size: 1.35rem; font-weight: 800; color: #1A1008; letter-spacing: -0.02em; margin-bottom: 3px; }
+        .pd-stat-val { font-size: 1.35rem; font-weight: 800; color: #1A1008; letter-spacing: -0.02em; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .pd-stat-label { font-size: 0.62rem; color: #B0A89A; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; }
 
         .pd-section { margin-bottom: 32px; }

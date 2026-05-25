@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import type { Metadata } from "next";
 import EmailCapture from "./email-capture";
 
@@ -7,12 +8,12 @@ type Props = { params: Promise<{ slug: string }> };
 
 const BJ_NICHES = new Set(["grief","doubt","shame","loneliness","fear","exhaustion","faith","healing","identity"]);
 
-async function getProduct(slug: string) {
+const getProduct = cache(async (slug: string) => {
   return prisma.product.findFirst({
     where: { slug },
     include: { opportunity: true },
   });
-}
+});
 
 const BASE = "https://pdfseeds.com";
 
@@ -73,6 +74,8 @@ function renderMarkdown(md: string): string {
 
 export default async function GuidePage({ params }: Props) {
   const { slug } = await params;
+
+  // getProduct is cached — this call is deduplicated with generateMetadata's call
   const product = await getProduct(slug);
   if (!product) notFound();
 
@@ -89,7 +92,6 @@ export default async function GuidePage({ params }: Props) {
     : "$";
 
   const price = opportunity ? `${opportunity.minPrice.toFixed(2)}` : "9.99";
-  // Related guides — same niche or same country, different product
   const related = await prisma.product.findMany({
     where: {
       published: true,
@@ -185,6 +187,16 @@ export default async function GuidePage({ params }: Props) {
         .upsell-title { font-size: 0.88rem; font-weight: 600; color: #e2e8f0; margin-bottom: 2px; }
         .upsell-niche { font-size: 0.72rem; color: #475569; text-transform: uppercase; }
         .upsell-price { font-size: 0.95rem; font-weight: 800; color: #10B981; flex-shrink: 0; }
+
+        @media (max-width: 600px) {
+          .guide-wrap { padding: 24px 16px 60px; }
+          .guide-wrap h1 { font-size: 1.45rem; }
+          .guide-wrap h2 { font-size: 1.05rem; }
+          .cta-box { padding: 24px 18px; }
+          .cta-box .cta-price { font-size: 1.6rem; }
+          .cta-btn { display: block; text-align: center; padding: 14px 20px; }
+          .upsell-card { flex-wrap: wrap; }
+        }
       `}</style>
 
       <div className="guide-wrap">

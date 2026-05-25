@@ -61,7 +61,7 @@ export default function EmailCapture({ slug, country }: { slug: string; country:
           style={{
             padding: "10px 22px", borderRadius: 8, background: "#6366F1", color: "#fff",
             fontWeight: 700, fontSize: "0.9rem", border: "none", cursor: "pointer",
-            opacity: state === "loading" ? 0.6 : 1,
+            opacity: state === "loading" ? 0.6 : 1, flexShrink: 0,
           }}>
           {state === "loading" ? "Sending…" : "Send me the preview"}
         </button>
