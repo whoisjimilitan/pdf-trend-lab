@@ -212,8 +212,8 @@ function GuidesContent() {
         ) : guides.map((g) => (
           <div key={g.id}
             onClick={() => { setSelected(g); setPayUrl(g.gumroadUrl ?? ""); setHooksOpen(false); setScriptOpen(false); setContentOpen(false); setCustomContent(""); setArticleOpen(false); setCustomArticle(""); setEditingHookId(null); }}
-            style={{ padding: "12px 16px", borderBottom: "1px solid var(--border)", cursor: "pointer", background: selected?.id === g.id ? "var(--surface2)" : "transparent" }}>
-            <div style={{ fontSize: "0.82rem", fontWeight: 500, color: "var(--text)", marginBottom: 4, lineHeight: 1.4 }}>
+            style={{ padding: "12px 16px", borderBottom: "1px solid var(--border)", cursor: "pointer", background: selected?.id === g.id ? "var(--surface2)" : "transparent", position: "relative" }}>
+            <div style={{ fontSize: "0.82rem", fontWeight: 500, color: "var(--text)", marginBottom: 4, lineHeight: 1.4, paddingRight: 20 }}>
               {g.title}
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -225,6 +225,16 @@ function GuidesContent() {
                 <span style={{ fontSize: "0.65rem", color: "var(--amber)", fontWeight: 600 }}>£{g.revenue.toFixed(0)} earned</span>
               )}
             </div>
+            <button
+              onClick={(e) => { e.stopPropagation(); deleteGuide(g); }}
+              disabled={deleting}
+              title="Delete guide"
+              style={{ position: "absolute", top: 10, right: 10, background: "transparent", border: "none", cursor: "pointer", color: "var(--muted)", fontSize: "0.75rem", padding: "2px 4px", lineHeight: 1, opacity: 0.5 }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = "1")}
+              onMouseLeave={e => (e.currentTarget.style.opacity = "0.5")}
+            >
+              ✕
+            </button>
           </div>
         ))}
       </div>
@@ -250,6 +260,13 @@ function GuidesContent() {
                   ? (isBJPending ? "Writing the word…" : "Growing your guide…")
                   : (isBJPending ? "Write This Word →" : "Grow This Seed →")}
               </button>
+              {growing && (
+                <p style={{ fontSize: "0.78rem", color: "var(--muted)", margin: "14px 0 0", lineHeight: 1.6 }}>
+                  {isBJPending
+                    ? "✦ Writing in the background — the sidebar is still interactive. You can delete other guides while this one is being written."
+                    : "Growing in the background — the sidebar stays live. Delete or manage other guides while you wait."}
+                </p>
+              )}
             </div>
           );
         })()}

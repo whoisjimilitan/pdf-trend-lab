@@ -277,7 +277,10 @@ Return ONLY valid JSON with exactly these three keys:
     }),
   ]);
 
-  const pdfContent    = pdfRes.choices[0].message.content ?? "";
+  const rawPdfContent = pdfRes.choices[0].message.content ?? "";
+  const pdfContent = isBJ
+    ? `## A Christian perspective to ${opportunity.pdfTitle || opportunity.keyword}\n\n${rawPdfContent}`
+    : rawPdfContent;
   const salesPageCopy = salesRes.choices[0].message.content ?? "";
   const seoPageContent = seoRes.choices[0].message.content ?? "";
 

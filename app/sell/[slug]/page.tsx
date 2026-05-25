@@ -46,12 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${product.title} — ${isBJ ? "Receive the Word" : "Get Instant Access"}`,
     description: desc,
-    openGraph: {
-      title: product.title,
-      description: desc,
-      type: "website",
-      siteName,
-    },
+    openGraph: { title: product.title, description: desc, type: "website", siteName },
   };
 }
 
@@ -95,7 +90,7 @@ export default async function SellPage({ params }: Props) {
   const price     = `${currency}${priceNum.toFixed(2)}`;
   const buyUrl    = product.gumroadUrl || `/guide/${slug}`;
 
-  // ── JSON-LD structured data ───────────────────────────────────────────────
+  // ── JSON-LD ────────────────────────────────────────────────────────────────
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -111,33 +106,65 @@ export default async function SellPage({ params }: Props) {
     },
   };
 
-  // ── Copy variants ─────────────────────────────────────────────────────────
+  // ── Psychology copy variants ──────────────────────────────────────────────
+
+  // PERMISSION SLIP — removes guilt/blame before asking for money (Kennedy #1)
+  const permissionSlip = isBJ
+    ? "You haven't been failing at faith. You've been carrying something real — without a word for it, without anyone who named it clearly enough for you to set it down."
+    : `You're not stuck because you're not capable. You're stuck because the real answer is buried across dozens of browser tabs, half-finished forum threads, and people who gave you different advice. That's not a you problem. That's an information problem.`;
+
+  // FEAR ESCALATOR — cost of inaction (Kennedy #3)
+  const fearTitle = isBJ ? "What staying here costs you" : "The real cost of not having this";
+  const fearBody = isBJ
+    ? "The weight doesn't go away on its own. It either finds a word — or it compounds. Every week you carry it unnamed is a week it gets heavier. Not because you're weak. Because weight needs to be named before it can be set down."
+    : `Every week without this answer costs you something. Time spent re-searching the same questions. Decisions made with incomplete information. Mistakes you couldn't have known to avoid. The guide doesn't cost ${price}. Staying without it costs far more.`;
+
+  // TRANSFORMATION — before/after (who they become)
+  const transformTitle = isBJ ? "Where this takes you" : "Before and after this guide";
+  const beforeState = isBJ
+    ? "You arrive carrying something you haven't been able to name. It's heavier than it looks. You've tried talking about it. You've tried praying through it. But it's still there."
+    : "You're spending hours searching for the same answer in different places. Getting contradictory advice. Afraid to make the wrong move. Wondering if you're missing something obvious.";
+  const afterState = isBJ
+    ? "You leave with a word for it. Not a fix — a word. And when you can name what you're carrying, you can finally begin to set it down."
+    : "You have the complete map. Every step in order. The right fees, the right forms, the right sequence. You stop searching. You start doing.";
+
+  // PRICE ANCHOR — what they'd pay for the same value elsewhere
+  const priceAnchor = isBJ
+    ? `A single pastoral counselling session costs £60–£120 — and you may leave without a word for what you walked in with. This guide gives you that word, written specifically for what you're carrying. Yours to return to whenever you need it. For ${price}.`
+    : `A consultant would charge you £150–£300 for advice this specific. A professional — more. This guide gives you the same clarity, in structured steps, instantly. For ${price}.`;
+
+  // IMPLIED SOCIAL PROOF — no fake reviews, just implication (Makepeace)
+  const socialProof = isBJ
+    ? "People who received this word weren't at the end of their rope. They were faithful people — people who already prayed, already tried — who simply needed someone to name what they were carrying."
+    : "People who found this guide were already doing the hard work. Asking the right questions. Trying the right things. They just needed the right map. That's you.";
+
+  // ESTEEM REFRAME — you deserve clarity (Kennedy #2)
+  const esteemLine = isBJ
+    ? "You deserve to carry this with a word for it."
+    : "You deserve an answer that's actually complete.";
+
   const heroCtaText  = isBJ ? `Receive this word — ${price}` : `Get Instant Access — ${price}`;
   const finalCtaText = isBJ ? `✦ RECEIVE THIS GUIDE` : `📥 GET INSTANT ACCESS NOW`;
-  const painTitle    = isBJ ? "What you've been carrying" : "Sound familiar?";
   const insideTitle  = isBJ ? "What shifts in you" : "What's inside";
-  const priceNote    = isBJ ? "Appreciation-based · Yours to keep and return to" : "One-time payment · No subscription";
+  const priceNote    = isBJ ? "Appreciation-based · Yours to keep and return to" : "One-time payment · No subscription · Instant download";
   const guarantee    = isBJ
-    ? "If it doesn't reach you — return it in 30 days. No question asked."
-    : "✅ 30-day 100% money-back guarantee · No questions asked · No forms to fill";
+    ? "If it doesn't reach you — return it in 30 days. No question asked. Not because you have to prove it didn't work. Because that's what this should feel like."
+    : "30-day 100% money-back guarantee. If this doesn't give you the clarity you came for — full refund. No forms. No questions. No arguments.";
 
   const trustPills = isBJ
-    ? ["📖 Pastoral reflection guide", "🕊️ Yours to return to", "✦ Written for this exact moment", "🔒 30-day return policy"]
-    : ["📥 Instant Download", "📱 Read on Any Device", "🔒 30-Day Money-Back", "⚡ Updated 2026"];
+    ? ["📖 Pastoral reflection guide", "🕊️ Yours to return to whenever you need it", "✦ Written for this exact moment", "🔒 30-day full return"]
+    : ["📥 Instant Download", "📱 Read on Any Device", "🔒 30-Day Money-Back", "⚡ Complete & Specific"];
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <style>{`
         body > aside { display: none !important; }
         body { display: block !important; overflow-y: auto !important; height: auto !important; }
         body > main { overflow: visible !important; height: auto !important; }
-
         * { box-sizing: border-box; }
+
         .sp { background: #08090D; color: #E2E8F0; font-family: ${isBJ ? "'Georgia', 'Times New Roman', serif" : "system-ui, -apple-system, sans-serif"}; min-height: 100vh; }
 
         /* NAV */
@@ -148,7 +175,11 @@ export default async function SellPage({ params }: Props) {
 
         /* HERO */
         .sp-hero { max-width: 700px; margin: 0 auto; padding: 64px 24px 48px; text-align: center; }
-        .pain-hook { background: ${painBg}; border: 1px solid ${painBdr}; border-radius: 12px; padding: 16px 22px; margin-bottom: 32px; color: ${painText}; font-size: 0.95rem; line-height: 1.8; font-style: italic; }
+        .pain-hook { background: ${painBg}; border: 1px solid ${painBdr}; border-radius: 12px; padding: 16px 22px; margin-bottom: 24px; color: ${painText}; font-size: 0.95rem; line-height: 1.8; font-style: italic; }
+
+        /* PERMISSION SLIP — guilt release before the ask */
+        .permission-slip { max-width: 600px; margin: 0 auto 28px; padding: 18px 24px; background: ${accent}08; border-left: 3px solid ${accent}60; border-radius: 0 10px 10px 0; font-size: 0.92rem; color: #94A3B8; line-height: 1.8; font-style: ${isBJ ? "italic" : "normal"}; text-align: left; }
+
         .hero-tagline { font-size: 1.05rem; color: ${accent}; font-weight: 600; margin-bottom: 16px; line-height: 1.6; font-style: ${isBJ ? "italic" : "normal"}; }
         .sp-hero h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: ${isBJ ? "700" : "900"}; line-height: 1.2; color: #F8FAFC; margin: 0 0 24px; letter-spacing: ${isBJ ? "-0.01em" : "0"}; }
         .trust-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 32px; }
@@ -157,17 +188,35 @@ export default async function SellPage({ params }: Props) {
         .hero-cta-btn:hover { background: ${accentHover}; }
         .urgency-line { margin-top: 16px; font-size: 0.85rem; color: ${isBJ ? "#B07830" : "#F59E0B"}; font-weight: 500; font-style: ${isBJ ? "italic" : "normal"}; }
 
+        /* ESTEEM STRIP */
+        .esteem-strip { background: ${accent}10; border-top: 1px solid ${accent}20; border-bottom: 1px solid ${accent}20; padding: 14px 24px; text-align: center; font-size: 0.88rem; color: ${accent}; font-weight: 600; letter-spacing: 0.02em; font-style: ${isBJ ? "italic" : "normal"}; }
+
         /* SECTIONS */
         .sp-section { max-width: 700px; margin: 0 auto; padding: 56px 24px; }
         .sp-section-dark { background: #0D0E17; }
         .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #475569; margin-bottom: 20px; }
-        .section-title { font-size: 1.4rem; font-weight: ${isBJ ? "600" : "800"}; color: #F1F5F9; margin-bottom: 28px; line-height: 1.35; font-style: ${isBJ ? "italic" : "normal"}; }
+        .section-title { font-size: 1.4rem; font-weight: ${isBJ ? "600" : "800"}; color: #F1F5F9; margin-bottom: 16px; line-height: 1.35; font-style: ${isBJ ? "italic" : "normal"}; }
+        .section-body { font-size: 0.95rem; color: #64748B; line-height: 1.8; font-style: ${isBJ ? "italic" : "normal"}; }
 
         /* PAIN BULLETS */
         .pain-bullet { display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid #1F2333; }
         .pain-bullet:last-child { border-bottom: none; }
         .pain-marker { width: ${isBJ ? "6px" : "8px"}; height: ${isBJ ? "6px" : "8px"}; border-radius: 50%; background: ${painDot}; flex-shrink: 0; margin-top: 8px; ${isBJ ? "opacity: 0.7;" : ""} }
         .pain-text { font-size: 0.95rem; color: #94A3B8; line-height: 1.7; font-style: ${isBJ ? "italic" : "normal"}; }
+
+        /* FEAR ESCALATOR */
+        .fear-box { background: #EF444406; border: 1px solid #EF444418; border-radius: 14px; padding: 28px 28px; }
+        .fear-title { font-size: 1rem; font-weight: ${isBJ ? "500" : "700"}; color: #FCA5A5; margin-bottom: 12px; font-style: ${isBJ ? "italic" : "normal"}; }
+        .fear-body { font-size: 0.9rem; color: #94A3B8; line-height: 1.8; font-style: ${isBJ ? "italic" : "normal"}; }
+
+        /* TRANSFORMATION — before/after */
+        .transform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 560px) { .transform-grid { grid-template-columns: 1fr; } }
+        .transform-card { background: #0F1117; border: 1px solid #1F2333; border-radius: 12px; padding: 22px 20px; }
+        .transform-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+        .transform-label-before { color: #EF4444; }
+        .transform-label-after { color: #10B981; }
+        .transform-text { font-size: 0.88rem; color: #94A3B8; line-height: 1.75; font-style: ${isBJ ? "italic" : "normal"}; }
 
         /* WHAT'S INSIDE */
         .chapters-grid { display: grid; gap: 12px; }
@@ -176,6 +225,15 @@ export default async function SellPage({ params }: Props) {
         .chapter-badge { background: ${accentDim}; color: ${accent}; border: 1px solid ${accentBdr}; border-radius: 8px; padding: 4px 10px; font-size: 0.7rem; font-weight: ${isBJ ? "400" : "700"}; white-space: nowrap; flex-shrink: 0; margin-top: 2px; font-style: ${isBJ ? "italic" : "normal"}; }
         .chapter-title { font-size: 0.9rem; font-weight: ${isBJ ? "500" : "700"}; color: #E2E8F0; margin-bottom: 5px; line-height: 1.4; }
         .chapter-desc { font-size: 0.82rem; color: #64748B; line-height: 1.6; font-style: ${isBJ ? "italic" : "normal"}; }
+
+        /* SOCIAL PROOF (implied) */
+        .social-proof-box { background: #0F1117; border: 1px solid #1F2333; border-radius: 14px; padding: 24px 26px; }
+        .social-proof-text { font-size: 0.95rem; color: #94A3B8; line-height: 1.8; font-style: italic; }
+        .social-proof-attr { margin-top: 14px; font-size: 0.78rem; color: #475569; font-style: normal; }
+
+        /* PRICE ANCHOR */
+        .anchor-strip { text-align: center; padding: 16px 24px; border-radius: 10px; background: ${accentDim}; border: 1px solid ${accentBdr}; font-size: 0.88rem; color: #94A3B8; line-height: 1.75; font-style: ${isBJ ? "italic" : "normal"}; }
+        .anchor-strip strong { color: ${accent}; }
 
         /* FAQ */
         .faq-wrap { max-width: 640px; margin: 0 auto; }
@@ -193,14 +251,19 @@ export default async function SellPage({ params }: Props) {
         .price-box { max-width: 560px; margin: 0 auto; background: #0F1117; border: 1px solid ${accentBdr}; border-radius: 20px; padding: 40px 36px; text-align: center; }
         .price-box-title { font-size: 1.2rem; font-weight: ${isBJ ? "500" : "800"}; color: #F1F5F9; margin-bottom: 6px; font-style: ${isBJ ? "italic" : "normal"}; letter-spacing: ${isBJ ? "0.02em" : "0"}; }
         .price-box-sub { font-size: 0.85rem; color: #64748B; margin-bottom: 28px; line-height: 1.6; }
-        .price-display { font-size: 3rem; font-weight: 900; color: ${accent}; margin-bottom: 8px; line-height: 1; }
+        .price-display { font-size: 3rem; font-weight: 900; color: ${accent}; margin-bottom: 4px; line-height: 1; }
+        .price-vs { font-size: 0.75rem; color: #334155; margin-bottom: 24px; }
         .price-note { font-size: 0.78rem; color: #475569; margin-bottom: 28px; font-style: ${isBJ ? "italic" : "normal"}; }
         .price-includes { text-align: left; margin-bottom: 28px; list-style: none; padding: 0; }
         .price-includes li { font-size: 0.85rem; color: #94A3B8; padding: 6px 0; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; font-style: ${isBJ ? "italic" : "normal"}; }
         .price-includes li::before { content: "${isBJ ? "✦" : "✓"}"; color: ${accent}; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
         .price-cta-btn { display: block; background: ${accent}; color: #fff; font-weight: ${isBJ ? "500" : "800"}; font-size: 1rem; padding: 18px 32px; border-radius: 12px; text-decoration: none; margin-bottom: 14px; letter-spacing: ${isBJ ? "0.04em" : "0"}; transition: background 0.15s; }
         .price-cta-btn:hover { background: ${accentHover}; }
-        .guarantee-line { font-size: 0.78rem; color: #475569; line-height: 1.7; font-style: ${isBJ ? "italic" : "normal"}; }
+
+        /* GUARANTEE — strong risk reversal */
+        .guarantee-block { margin-top: 20px; padding: 20px; background: #10B98108; border: 1px solid #10B98120; border-radius: 12px; }
+        .guarantee-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #10B981; margin-bottom: 8px; }
+        .guarantee-text { font-size: 0.82rem; color: #64748B; line-height: 1.7; font-style: ${isBJ ? "italic" : "normal"}; }
 
         /* FOOTER */
         .sp-footer { text-align: center; padding: 32px 24px; border-top: 1px solid #1F2333; font-size: 0.78rem; color: #334155; }
@@ -209,7 +272,8 @@ export default async function SellPage({ params }: Props) {
       `}</style>
 
       <div className="sp">
-        {/* Nav */}
+
+        {/* Sticky nav */}
         <nav className="sp-nav">
           <span className="sp-nav-brand">{brandName}</span>
           <a href="#buy" className="sp-nav-cta">
@@ -217,21 +281,28 @@ export default async function SellPage({ params }: Props) {
           </a>
         </nav>
 
-        {/* Hero */}
+        {/* HERO — pain recognition + permission slip */}
         <div className="sp-hero">
           {painPoint && (
             <div className="pain-hook">&ldquo;{painPoint}&rdquo;</div>
           )}
+
+          {/* Permission slip — guilt release (Kennedy #1) */}
+          <div className="permission-slip">{permissionSlip}</div>
+
           {sd?.heroTagline && (
             <div className="hero-tagline">{sd.heroTagline}</div>
           )}
           <h1>{product.title}</h1>
+
           <div className="trust-pills">
             {trustPills.map((p, i) => (
               <span key={i} className="trust-pill">{p}</span>
             ))}
           </div>
+
           <a href="#buy" className="hero-cta-btn">{heroCtaText}</a>
+
           {sd?.urgencyLine && (
             <div className="urgency-line">
               {isBJ ? sd.urgencyLine : `⏳ ${sd.urgencyLine}`}
@@ -239,11 +310,14 @@ export default async function SellPage({ params }: Props) {
           )}
         </div>
 
-        {/* Pain section */}
+        {/* Esteem strip — you deserve this (Kennedy #2) */}
+        <div className="esteem-strip">{esteemLine}</div>
+
+        {/* Pain recognition — they feel seen */}
         {sd?.bulletedPain && sd.bulletedPain.length > 0 && (
           <div className="sp-section-dark">
             <div className="sp-section">
-              <div className="section-label">{painTitle}</div>
+              <div className="section-label">{isBJ ? "What you've been carrying" : "Sound familiar?"}</div>
               <div>
                 {sd.bulletedPain.map((line, i) => (
                   <div key={i} className="pain-bullet">
@@ -256,7 +330,32 @@ export default async function SellPage({ params }: Props) {
           </div>
         )}
 
-        {/* What's inside / What shifts */}
+        {/* Fear escalator — cost of inaction (Kennedy #3) */}
+        <div className="sp-section">
+          <div className="fear-box">
+            <div className="fear-title">{fearTitle}</div>
+            <div className="fear-body">{fearBody}</div>
+          </div>
+        </div>
+
+        {/* Transformation — before/after (who they become) */}
+        <div className="sp-section-dark">
+          <div className="sp-section">
+            <div className="section-label">{transformTitle}</div>
+            <div className="transform-grid">
+              <div className="transform-card">
+                <div className="transform-label transform-label-before">Before</div>
+                <div className="transform-text">{beforeState}</div>
+              </div>
+              <div className="transform-card">
+                <div className="transform-label transform-label-after">After</div>
+                <div className="transform-text">{afterState}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* What's inside */}
         {sd?.whatsInside && sd.whatsInside.length > 0 && (
           <div className="sp-section">
             <div className="section-label">{insideTitle}</div>
@@ -273,6 +372,22 @@ export default async function SellPage({ params }: Props) {
             </div>
           </div>
         )}
+
+        {/* Implied social proof — Makepeace principle */}
+        <div className="sp-section-dark">
+          <div className="sp-section">
+            <div className="section-label">{isBJ ? "Who this is for" : "Who finds this guide"}</div>
+            <div className="social-proof-box">
+              <div className="social-proof-text">&ldquo;{socialProof}&rdquo;</div>
+              <div className="social-proof-attr">— {isBJ ? "Brother Jimi" : "PDF Seeds"}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Price anchor — compare against alternative cost */}
+        <div className="sp-section">
+          <div className="anchor-strip">{priceAnchor}</div>
+        </div>
 
         {/* FAQ */}
         {sd?.faqItems && sd.faqItems.length > 0 && (
@@ -294,7 +409,7 @@ export default async function SellPage({ params }: Props) {
           </div>
         )}
 
-        {/* Price box + CTA */}
+        {/* Final CTA + price box + strong guarantee */}
         <div className="sp-section" id="buy">
           <div className="price-box">
             <div className="price-box-title">
@@ -302,29 +417,37 @@ export default async function SellPage({ params }: Props) {
             </div>
             <div className="price-box-sub">{product.title}</div>
             <div className="price-display">{price}</div>
+            <div className="price-vs">{isBJ ? "appreciation-based" : "one-time · no subscription"}</div>
             <div className="price-note">{priceNote}</div>
+
             <ul className="price-includes">
               {isBJ ? (
                 <>
-                  <li>The complete reflection guide — yours to keep</li>
+                  <li>The complete pastoral reflection — yours to keep</li>
                   <li>Read on any device at any hour</li>
-                  <li>Return to it whenever you need it</li>
-                  <li>Return within 30 days if it doesn&apos;t reach you</li>
+                  <li>Return to it whenever the weight returns</li>
+                  <li>30-day full return — no question asked</li>
                 </>
               ) : (
                 <>
-                  <li>Complete PDF guide — instant download</li>
+                  <li>Complete PDF guide — download immediately</li>
                   <li>Read on any device — phone, tablet, laptop</li>
-                  <li>Printable format</li>
-                  <li>Updated for 2026</li>
+                  <li>Printable format — works offline</li>
+                  <li>Specific to your exact situation</li>
                   <li>30-day money-back guarantee</li>
                 </>
               )}
             </ul>
+
             <a href={buyUrl} className="price-cta-btn">
               {finalCtaText}
             </a>
-            <div className="guarantee-line">{guarantee}</div>
+
+            {/* Strong risk reversal guarantee */}
+            <div className="guarantee-block">
+              <div className="guarantee-title">🛡️ {isBJ ? "30-Day Return" : "30-Day Money-Back Guarantee"}</div>
+              <div className="guarantee-text">{guarantee}</div>
+            </div>
           </div>
         </div>
 
@@ -342,6 +465,7 @@ export default async function SellPage({ params }: Props) {
             </a>
           </p>
         </footer>
+
       </div>
     </>
   );

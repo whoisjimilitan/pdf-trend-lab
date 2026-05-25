@@ -175,7 +175,8 @@ export default function EnginePage() {
   const [bjDomain, setBjDomain] = useState("grief");
   const [diaspora, setDiaspora] = useState(false);
   const [error, setError] = useState("");
-  const [tab, setTab] = useState<"results" | "saved">("results");
+  const [tab, setTab] = useState<"results" | "saved" | "history">("results");
+  const [history, setHistory] = useState<Opportunity[]>([]);
   const [scanInfo, setScanInfo] = useState<{ market: string; total: number; timestamp: string } | null>(null);
   const [loadingStage, setLoadingStage] = useState(0);
   const [loadingElapsed, setLoadingElapsed] = useState(0);
@@ -195,11 +196,40 @@ export default function EnginePage() {
       const res = await fetch("/api/engine");
       if (!res.ok) return;
       const data = await res.json();
-      if (Array.isArray(data)) setSaved(data.filter((o: Opportunity) => o.saved));
+      if (Array.isArray(data)) {
+        setSaved(data.filter((o: Opportunity) => o.saved));
+        setHistory(data);
+      }
     } catch {}
   }, []);
 
   useEffect(() => { loadSaved(); }, [loadSaved]);
+
+  // Dispatch brand-change event so AppShell sidebar syncs immediately
+  useEffect(() => {
+    localStorage.setItem("engine-brand", brand);
+    window.dispatchEvent(new CustomEvent("brand-change", { detail: brand }));
+  }, [brand]);
+
+  // Restore last scan from localStorage on mount
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem("engine-last-scan");
+      if (cached) {
+        const parsed = JSON.parse(cached) as { results: Opportunity[]; scanInfo: typeof scanInfo };
+        if (parsed.results?.length) {
+          setResults(parsed.results);
+          setScanInfo(parsed.scanInfo);
+          setSaved((prev) => prev.length ? prev : parsed.results.filter((o) => o.saved));
+        }
+      }
+      const savedBrand = localStorage.getItem("engine-brand") as Brand | null;
+      if (savedBrand && (savedBrand === "pdfseeds" || savedBrand === "brotherjimi")) {
+        setBrand(savedBrand);
+      }
+    } catch {}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!loading) { setLoadingStage(0); setLoadingElapsed(0); return; }
@@ -236,10 +266,16 @@ export default function EnginePage() {
       if (!Array.isArray(data)) throw new Error("Unexpected response");
       setResults(data);
       setTab("results");
-      setScanInfo({
+      const newScanInfo = {
         market: brand === "brotherjimi" ? BJ_PAIN_DOMAINS.find((d) => d.value === bjDomain)?.label ?? bjDomain : countryMeta.label,
         total: data.length,
         timestamp: new Date().toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" }),
+      };
+      setScanInfo(newScanInfo);
+      try { localStorage.setItem("engine-last-scan", JSON.stringify({ results: data, scanInfo: newScanInfo })); } catch {}
+      setHistory((prev) => {
+        const ids = new Set(data.map((o: Opportunity) => o.id));
+        return [...data, ...prev.filter((o) => !ids.has(o.id))];
       });
       setExpandedIds(new Set());
       setFilterComp(""); setFilterQuickWin(false); setSortBy("score");
@@ -269,7 +305,7 @@ export default function EnginePage() {
     });
   }
 
-  const displayList = tab === "saved" ? saved : results;
+  const displayList = tab === "saved" ? saved : tab === "history" ? history : results;
   const easeRank: Record<string, number> = { easy: 0, medium: 1, hard: 2 };
   const filteredList = displayList
     .filter((o) => !filterComp || o.competition === filterComp)
@@ -565,9 +601,9 @@ export default function EnginePage() {
 
       {/* Brand selector */}
       <div className="mb-6">
-        <div className="flex gap-2 mb-4">
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
           {(["pdfseeds", "brotherjimi"] as Brand[]).map((b) => (
-            <button key={b} onClick={() => { setBrand(b); setResults([]); setScanInfo(null); setError(""); }}
+            <button key={b} onClick={() => { setBrand(b); setResults([]); setScanInfo(null); setError(""); setTab("results"); }}
               className="px-5 py-2.5 rounded-full text-sm font-bold transition-all"
               style={{
                 background: brand === b ? BRAND_META[b].accentColor : "var(--surface2)",
@@ -578,8 +614,15 @@ export default function EnginePage() {
               {BRAND_META[b].name}
             </button>
           ))}
+          {history.length > 0 && (
+            <button onClick={() => setTab(tab === "history" ? "results" : "history")}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5"
+              style={{ background: tab === "history" ? bm.accentColor : "var(--surface2)", color: tab === "history" ? "#fff" : "var(--muted)", border: "1px solid var(--border)" }}>
+              🕐 History ({history.length})
+            </button>
+          )}
         </div>
-        <p className="text-sm" style={{ color: "var(--muted)" }}>{bm.tagline}</p>
+        <p className="text-sm" style={{ color: "var(--muted)" }}>{tab === "history" ? "All past scan results — click any row to expand" : bm.tagline}</p>
       </div>
 
       {/* Controls */}
@@ -724,12 +767,12 @@ export default function EnginePage() {
                 <span>{scanInfo.total} opportunities found</span>
               </div>
             </div>
-            <div className="flex gap-2">
-              {(["results", "saved"] as const).map((t) => (
+            <div className="flex gap-2 flex-wrap">
+              {(["results", "saved", "history"] as const).map((t) => (
                 <button key={t} onClick={() => setTab(t)}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium"
                   style={{ background: tab === t ? bm.accentColor : "var(--surface2)", color: tab === t ? "#fff" : "var(--muted)", border: "1px solid var(--border)" }}>
-                  {t === "results" ? `Results (${results.length})` : `Saved (${saved.length})`}
+                  {t === "results" ? `Results (${results.length})` : t === "saved" ? `Saved (${saved.length})` : `History (${history.length})`}
                 </button>
               ))}
               {results.length > 0 && (
@@ -809,7 +852,7 @@ export default function EnginePage() {
               <div key={i} className="rounded-full transition-all duration-300" style={{ width: i === loadingStage ? 16 : 6, height: 6, background: i <= loadingStage ? bm.accentColor : "var(--border)" }} />
             ))}
           </div>
-          <p className="text-xs" style={{ color: "var(--muted)" }}>{loadingElapsed}s · quality gate running — don&apos;t refresh</p>
+          <p className="text-xs" style={{ color: "var(--muted)" }}>{loadingElapsed}s · results saved to History — safe to navigate away</p>
         </div>
       )}
 
@@ -818,10 +861,10 @@ export default function EnginePage() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12 }} className="p-16 text-center">
           <div className="text-5xl mb-4">{tab === "saved" ? "🔖" : brand === "brotherjimi" ? BJ_PAIN_DOMAINS.find((d) => d.value === bjDomain)?.flag : countryMeta.flag}</div>
           <p className="text-sm font-medium mb-2" style={{ color: "var(--text)" }}>
-            {tab === "saved" ? "No saved ideas yet" : bm.emptyHeading(brand === "brotherjimi" ? (BJ_PAIN_DOMAINS.find((d) => d.value === bjDomain)?.label ?? bjDomain) : countryMeta.label)}
+            {tab === "saved" ? "No saved ideas yet" : tab === "history" ? "No scan history yet" : bm.emptyHeading(brand === "brotherjimi" ? (BJ_PAIN_DOMAINS.find((d) => d.value === bjDomain)?.label ?? bjDomain) : countryMeta.label)}
           </p>
           <p className="text-xs" style={{ color: "var(--muted)" }}>
-            {tab === "saved" ? "Click the 🏷️ bookmark on any result to save it here." : bm.emptyBody}
+            {tab === "saved" ? "Click the 🏷️ bookmark on any result to save it here." : tab === "history" ? "Past scan results appear here — even if you navigated away during the scan." : bm.emptyBody}
           </p>
         </div>
       )}

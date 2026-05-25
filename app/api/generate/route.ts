@@ -314,7 +314,10 @@ Return ONLY valid JSON:
     }),
   ]);
 
-  const pdfContent = pdfRes.choices[0].message.content ?? "";
+  const rawPdfContent = pdfRes.choices[0].message.content ?? "";
+  const pdfContent = brand === "brotherjimi"
+    ? `## A Christian perspective to ${oppData.pdfTitle}\n\n${rawPdfContent}`
+    : rawPdfContent;
   const salesPageCopy = salesRes.choices[0].message.content ?? "";
   const socialCaptions: Record<string, string> = (() => {
     try { return JSON.parse(socialRes.choices[0].message.content ?? "{}"); }
