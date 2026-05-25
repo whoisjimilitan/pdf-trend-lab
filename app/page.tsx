@@ -621,7 +621,7 @@ export default function HomePage() {
               <span className="pg-hero-eyebrow">Step-by-step guides for the hard stuff</span>
               <h1 className="pg-hero-h1">Stop Googling. There&apos;s a PDF guide for that.</h1>
               <p className="pg-hero-sub">
-                For the things Google sends you in circles — visa applications, business registration, tax returns. One clear guide, written for your country.
+                Visa applications. Business registration. Tax returns. No more wrong guides.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
