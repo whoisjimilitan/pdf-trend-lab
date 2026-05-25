@@ -101,6 +101,14 @@ model PlantingLog {
   notes     String?
 }
 
+model SearchQuery {
+  id        String   @id @default(cuid())
+  query     String
+  country   String?
+  source    String   @default("homepage")
+  createdAt DateTime @default(now())
+}
+
 model DailyLoop {
   id        String   @id @default(cuid())
   date      String

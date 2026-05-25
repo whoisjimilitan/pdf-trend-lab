@@ -47,6 +47,8 @@ const COUNTRIES = [
   { value: "GLOBAL", label: "Global",         symbol: "$",   flag: "🌍" },
 ];
 
+const BJ_NICHES = new Set(["grief","doubt","shame","loneliness","fear","exhaustion","faith","healing","identity"]);
+
 const BJ_PAIN_DOMAINS = [
   { value: "grief",      label: "Grief & Loss",         flag: "🕊️" },
   { value: "doubt",      label: "Doubt & Distance",     flag: "🌫️" },
@@ -135,7 +137,7 @@ const BRAND_META: Record<Brand, {
     painLabel: "What they are carrying",
     emptyHeading: () => "Ready to find what needs a pastoral word?",
     emptyBody: "The engine listens to real human searches — grief, doubt, shame, loneliness — and surfaces the emotional weight that has no clean packaged answer yet.",
-    accentColor: "#B07830",
+    accentColor: "#C8973E",
     symbol: "£",
   },
 };
@@ -305,7 +307,11 @@ export default function EnginePage() {
     });
   }
 
-  const displayList = tab === "saved" ? saved : tab === "history" ? history : results;
+  const isBJNiche = (niche: string) => BJ_NICHES.has(niche);
+  const brandFilter = (o: Opportunity) => brand === "brotherjimi" ? isBJNiche(o.niche) : !isBJNiche(o.niche);
+  const brandedHistory = history.filter(brandFilter);
+  const brandedSaved   = saved.filter(brandFilter);
+  const displayList = tab === "saved" ? brandedSaved : tab === "history" ? brandedHistory : results;
   const easeRank: Record<string, number> = { easy: 0, medium: 1, hard: 2 };
   const filteredList = displayList
     .filter((o) => !filterComp || o.competition === filterComp)
@@ -618,7 +624,7 @@ export default function EnginePage() {
             <button onClick={() => setTab(tab === "history" ? "results" : "history")}
               className="px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5"
               style={{ background: tab === "history" ? bm.accentColor : "var(--surface2)", color: tab === "history" ? "#fff" : "var(--muted)", border: "1px solid var(--border)" }}>
-              🕐 History ({history.length})
+              🕐 History ({brandedHistory.length})
             </button>
           )}
         </div>
@@ -772,7 +778,7 @@ export default function EnginePage() {
                 <button key={t} onClick={() => setTab(t)}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium"
                   style={{ background: tab === t ? bm.accentColor : "var(--surface2)", color: tab === t ? "#fff" : "var(--muted)", border: "1px solid var(--border)" }}>
-                  {t === "results" ? `Results (${results.length})` : t === "saved" ? `Saved (${saved.length})` : `History (${history.length})`}
+                  {t === "results" ? `Results (${results.length})` : t === "saved" ? `Saved (${brandedSaved.length})` : `History (${brandedHistory.length})`}
                 </button>
               ))}
               {results.length > 0 && (

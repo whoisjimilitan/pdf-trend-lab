@@ -26,13 +26,13 @@ const BRANDS: Record<Brand, {
     footerText: "Find confusion. Sell clarity.",
   },
   brotherjimi: {
-    icon: "✦",
-    gradient: "linear-gradient(135deg, #B07830, #8B6520)",
-    shadow: "rgba(176,120,48,0.3)",
+    icon: "🕊️",
+    gradient: "linear-gradient(135deg, #C8973E, #A87930)",
+    shadow: "rgba(200,151,62,0.3)",
     name: "Brother Jimi",
     tagline: "The pastoral word",
     hoverBg: "#FEF7ED",
-    hoverColor: "#B07830",
+    hoverColor: "#C8973E",
     footerText: "Walk in the Word.",
   },
 };

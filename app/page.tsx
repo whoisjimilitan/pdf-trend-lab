@@ -51,6 +51,12 @@ export default function HomePage() {
   function handleSituation(e: { preventDefault: () => void }) {
     e.preventDefault();
     if (!situation.trim()) return;
+    // Fire-and-forget — log the search query for demand intelligence
+    fetch("/api/search-log", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: situation.trim(), source: "homepage" }),
+    }).catch(() => {});
     setStep("country");
   }
 
@@ -59,6 +65,12 @@ export default function HomePage() {
     if (!country.trim()) return;
     setError("");
     setStep("generating");
+    // Update the log with the country now that we have it
+    fetch("/api/search-log", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: situation.trim(), country: country.trim(), source: "homepage-with-country" }),
+    }).catch(() => {});
     abortRef.current = new AbortController();
     const timeoutId = setTimeout(() => abortRef.current?.abort(), 90_000);
     try {
@@ -527,7 +539,7 @@ export default function HomePage() {
                       className="pg-input"
                       value={situation}
                       onChange={e => setSituation(e.target.value)}
-                      placeholder="What are you trying to figure out?"
+                      placeholder="Type your question here"
                       autoFocus
                       required
                     />
@@ -643,9 +655,9 @@ export default function HomePage() {
         <footer className="pg-footer">
           © {new Date().getFullYear()} PDF Seeds
           &nbsp;&nbsp;·&nbsp;&nbsp;
-          <a href="/earn" style={{ color: "#C4BAB0", textDecoration: "none" }}>Become a farmer →</a>
+          <a href="/earn" style={{ color: "#C4BAB0", textDecoration: "none" }}>Affiliates →</a>
           &nbsp;&nbsp;·&nbsp;&nbsp;
-          <a href="/signin" style={{ color: "#C4BAB0", textDecoration: "none" }}>Farm login</a>
+          <a href="/signin" style={{ color: "#C4BAB0", textDecoration: "none" }}>Login</a>
         </footer>
 
       </div>

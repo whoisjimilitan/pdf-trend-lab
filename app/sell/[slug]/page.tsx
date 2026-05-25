@@ -61,13 +61,13 @@ export default async function SellPage({ params }: Props) {
   const painPoint = opportunity?.painPoint ?? "";
 
   // ── Brand tokens ──────────────────────────────────────────────────────────
-  const accent      = isBJ ? "#B07830" : "#6366F1";
-  const accentHover = isBJ ? "#8B6520" : "#4F46E5";
-  const accentDim   = isBJ ? "#B0783018" : "#6366F115";
-  const accentBdr   = isBJ ? "#B0783035" : "#6366F130";
-  const painDot     = isBJ ? "#B07830" : "#EF4444";
-  const painBg      = isBJ ? "#B0783008" : "#EF444408";
-  const painBdr     = isBJ ? "#B0783020" : "#EF444420";
+  const accent      = isBJ ? "#C8973E" : "#6366F1";
+  const accentHover = isBJ ? "#A87930" : "#4F46E5";
+  const accentDim   = isBJ ? "#C8973E18" : "#6366F115";
+  const accentBdr   = isBJ ? "#C8973E35" : "#6366F130";
+  const painDot     = isBJ ? "#C8973E" : "#EF4444";
+  const painBg      = isBJ ? "#C8973E08" : "#EF444408";
+  const painBdr     = isBJ ? "#C8973E20" : "#EF444420";
   const painText    = isBJ ? "#D4A574" : "#FCA5A5";
 
   const brandName   = isBJ ? "✦ Brother Jimi" : "🌱 PDF Seeds";
@@ -183,7 +183,7 @@ export default async function SellPage({ params }: Props) {
         .trust-pill { background: #1F2333; border: 1px solid #2A3050; border-radius: 20px; padding: 6px 14px; font-size: 0.78rem; color: #94A3B8; font-style: ${isBJ ? "italic" : "normal"}; }
         .hero-cta-btn { display: inline-block; background: ${accent}; color: #fff; font-weight: ${isBJ ? "500" : "800"}; font-size: 1.05rem; padding: 18px 48px; border-radius: 12px; text-decoration: none; letter-spacing: ${isBJ ? "0.02em" : "0.3px"}; transition: background 0.15s; }
         .hero-cta-btn:hover { background: ${accentHover}; }
-        .urgency-line { margin-top: 16px; font-size: 0.85rem; color: ${isBJ ? "#B07830" : "#F59E0B"}; font-weight: 500; font-style: ${isBJ ? "italic" : "normal"}; }
+        .urgency-line { margin-top: 16px; font-size: 0.85rem; color: ${isBJ ? "#C8973E" : "#F59E0B"}; font-weight: 500; font-style: ${isBJ ? "italic" : "normal"}; }
 
         /* ESTEEM STRIP */
         .esteem-strip { background: ${accent}10; border-top: 1px solid ${accent}20; border-bottom: 1px solid ${accent}20; padding: 14px 24px; text-align: center; font-size: 0.88rem; color: ${accent}; font-weight: 600; letter-spacing: 0.02em; font-style: ${isBJ ? "italic" : "normal"}; }

@@ -115,7 +115,7 @@ export default async function StorePage() {
         .seeds-buy:hover { background: #4F46E5; }
 
         /* BJ — domain group headers */
-        .bj-domain-header { display: flex; align-items: flex-start; gap: 12px; margin: 32px 0 14px; padding-bottom: 12px; border-bottom: 1px solid #B0783018; }
+        .bj-domain-header { display: flex; align-items: flex-start; gap: 12px; margin: 32px 0 14px; padding-bottom: 12px; border-bottom: 1px solid #C8973E18; }
         .bj-domain-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
         .bj-domain-name { font-size: 0.9rem; font-weight: 600; color: #D4A574; font-style: italic; margin-bottom: 2px; }
         .bj-domain-caption { font-size: 0.75rem; color: #5A6080; font-style: italic; }
@@ -123,13 +123,13 @@ export default async function StorePage() {
 
         /* BJ — product cards */
         .bj-card { background: #0A0B0F; border: 1px solid #1A1B22; border-radius: 14px; padding: 20px 22px; margin-bottom: 10px; transition: border-color 0.2s; }
-        .bj-card:hover { border-color: #B0783040; }
+        .bj-card:hover { border-color: #C8973E40; }
         .bj-card-title { font-size: 0.95rem; font-weight: 500; color: #D4C4B0; line-height: 1.45; margin-bottom: 10px; font-style: italic; font-family: Georgia, 'Times New Roman', serif; }
         .bj-card-pain { font-size: 0.82rem; color: #5A6080; line-height: 1.65; margin-bottom: 14px; font-style: italic; font-family: Georgia, 'Times New Roman', serif; }
         .bj-card-footer { display: flex; align-items: center; gap: 10px; }
-        .bj-price { font-size: 0.95rem; font-weight: 700; color: #B07830; }
-        .bj-receive { display: inline-block; background: transparent; color: #B07830; font-size: 0.78rem; padding: 7px 16px; border-radius: 8px; text-decoration: none; border: 1px solid #B0783040; font-style: italic; margin-left: auto; transition: all 0.15s; }
-        .bj-receive:hover { background: #B0783018; border-color: #B07830; }
+        .bj-price { font-size: 0.95rem; font-weight: 700; color: #C8973E; }
+        .bj-receive { display: inline-block; background: transparent; color: #C8973E; font-size: 0.78rem; padding: 7px 16px; border-radius: 8px; text-decoration: none; border: 1px solid #C8973E40; font-style: italic; margin-left: auto; transition: all 0.15s; }
+        .bj-receive:hover { background: #C8973E18; border-color: #C8973E; }
 
         /* DIVIDER */
         .brand-divider { border: none; border-top: 1px solid #1F2333; margin: 48px 0; }
