@@ -137,7 +137,7 @@ export default async function DashboardPage() {
         {[
           { icon: "🌱", value: totalSeeds,                       label: "Seeds planted"  },
           { icon: "📄", value: liveSeeds,                        label: "Guides live"    },
-          { icon: "🌾", value: `£${totalEarned.toFixed(0)}`,     label: "Total harvested" },
+          { icon: "💰", value: `£${totalEarned.toFixed(0)}`,     label: "Total revenue" },
         ].map((s) => (
           <div key={s.label} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12, padding: "16px", textAlign: "center" }}>
             <div style={{ fontSize: "1.1rem", marginBottom: 8 }}>{s.icon}</div>

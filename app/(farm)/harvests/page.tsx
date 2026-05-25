@@ -24,7 +24,7 @@ export default async function HarvestsPage() {
 
       <div style={{ marginBottom: 36 }}>
         <h1 style={{ fontSize: "1.55rem", fontWeight: 700, color: "var(--text)", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
-          Harvests 🌾
+          Revenue 💰
         </h1>
         <p style={{ fontSize: "0.85rem", color: "var(--muted)", margin: 0 }}>
           What your farm has earned so far.
@@ -48,7 +48,7 @@ export default async function HarvestsPage() {
       {guides.length === 0 ? (
         <div style={{ ...card, padding: "48px 32px", textAlign: "center" }}>
           <div style={{ fontSize: "2.5rem", marginBottom: 14 }}>🌾</div>
-          <div style={{ fontSize: "0.97rem", fontWeight: 600, color: "var(--text)", marginBottom: 8 }}>No harvests yet.</div>
+          <div style={{ fontSize: "0.97rem", fontWeight: 600, color: "var(--text)", marginBottom: 8 }}>No revenue yet.</div>
           <p style={{ fontSize: "0.85rem", color: "var(--muted)", margin: "0 0 20px", lineHeight: 1.7 }}>
             Plant your first seed and publish a guide to start earning.
           </p>

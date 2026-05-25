@@ -160,9 +160,6 @@ export default async function SellPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <style>{`
-        body > aside { display: none !important; }
-        body { display: block !important; overflow-y: auto !important; height: auto !important; }
-        body > main { overflow: visible !important; height: auto !important; }
         * { box-sizing: border-box; }
 
         .sp { background: #08090D; color: #E2E8F0; font-family: ${isBJ ? "'Georgia', 'Times New Roman', serif" : "system-ui, -apple-system, sans-serif"}; min-height: 100vh; }
