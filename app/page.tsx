@@ -619,7 +619,7 @@ export default function HomePage() {
           {/* ── IDLE ── */}
           {step === "idle" && (
             <>
-              <span className="pg-hero-eyebrow">Your guide, written in 60 seconds</span>
+              <span className="pg-hero-eyebrow">Specific to your country. Specific to your situation.</span>
               <h1 className="pg-hero-h1">Stop Googling. Describe your situation.</h1>
               <p className="pg-hero-sub">
                 Tell us what you&apos;re trying to figure out — we write you a step-by-step guide, specific to your country and situation.
