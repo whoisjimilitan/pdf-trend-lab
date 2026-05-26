@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { Lock } from "lucide-react";
 
 type Step = "idle" | "country" | "generating" | "result" | "waitlist";
 
@@ -392,15 +393,83 @@ export default function HomePage() {
           background: #F0FDF4; border: 1px solid #BBF7D0;
           border-radius: 999px; padding: 5px 14px;
           font-size: 0.72rem; font-weight: 700; color: #15803D;
-          margin-bottom: 24px; letter-spacing: 0.04em;
+          margin-bottom: 20px; letter-spacing: 0.04em;
           text-transform: uppercase;
         }
         .pg-result-title {
           font-size: clamp(1.2rem, 3.5vw, 1.55rem);
           font-weight: 800; color: #1A1008;
-          line-height: 1.3; margin-bottom: 32px;
-          letter-spacing: -0.02em;
+          line-height: 1.3; margin-bottom: 10px;
+          letter-spacing: -0.02em; text-align: center;
         }
+        .pg-result-echo {
+          font-size: 0.83rem; color: #B0A89A; font-style: italic;
+          margin-bottom: 22px; text-align: center; line-height: 1.5;
+        }
+
+        /* Chapter preview card */
+        .pg-chapters {
+          width: 100%; background: #fff;
+          border: 1.5px solid #EAE6E0; border-radius: 18px;
+          overflow: hidden; margin-bottom: 20px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .pg-chapters-head {
+          padding: 12px 18px; border-bottom: 1px solid #EAE6E0;
+          display: flex; align-items: center; justify-content: space-between;
+          font-size: 0.68rem; font-weight: 700; color: #9B8AF0;
+          letter-spacing: 0.1em; text-transform: uppercase;
+        }
+        .pg-chapter {
+          padding: 14px 18px; border-bottom: 1px solid #F5F0EB;
+        }
+        .pg-chapter:last-child { border-bottom: none; }
+        .pg-chapter-label {
+          font-size: 0.62rem; font-weight: 700; color: #C4BAB0;
+          letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px;
+        }
+        .pg-chapter-title {
+          font-size: 0.9rem; font-weight: 700; color: #1A1008;
+          line-height: 1.35; margin-bottom: 3px;
+        }
+        .pg-chapter-desc {
+          font-size: 0.77rem; color: #6B5E52; line-height: 1.6;
+        }
+
+        /* Locked chapters */
+        .pg-chapters-locked { position: relative; }
+        .pg-chapters-locked-fade {
+          position: absolute; top: 0; left: 0; right: 0; height: 32px;
+          background: linear-gradient(to bottom, #ffffff, transparent);
+          pointer-events: none; z-index: 1;
+        }
+        .pg-chapter--locked { opacity: 0.38; user-select: none; }
+        .pg-chapter--locked .pg-chapter-title { filter: blur(4px); }
+        .pg-chapters-lock {
+          padding: 12px 18px; border-top: 1px solid #EAE6E0;
+          display: flex; align-items: center; justify-content: center; gap: 6px;
+          font-size: 0.75rem; font-weight: 600; color: #9B8AF0;
+          background: #F9F7FF;
+        }
+
+        /* Offer pill */
+        .pg-result-offer {
+          width: 100%; display: flex; align-items: center; justify-content: center;
+          gap: 10px; background: #F0FDF4; border: 1px solid #BBF7D0;
+          border-radius: 12px; padding: 10px 18px; margin-bottom: 12px;
+        }
+        .pg-result-offer-old {
+          font-size: 0.88rem; color: #9B8AF0;
+          text-decoration: line-through; font-weight: 500;
+        }
+        .pg-result-offer-new {
+          font-size: 1.15rem; font-weight: 900; color: #15803D; letter-spacing: -0.02em;
+        }
+        .pg-result-offer-label {
+          font-size: 0.68rem; font-weight: 700; color: #15803D;
+          letter-spacing: 0.04em; text-transform: uppercase;
+        }
+
         .pg-result-cta {
           display: block; width: 100%;
           background: linear-gradient(135deg, #7C3AED, #5B21B6);
@@ -409,22 +478,20 @@ export default function HomePage() {
           border: none; cursor: pointer;
           box-shadow: 0 8px 28px rgba(124,58,237,0.35);
           transition: opacity 0.15s, transform 0.1s;
-          margin-bottom: 14px;
-          letter-spacing: -0.01em;
+          margin-bottom: 14px; letter-spacing: -0.01em;
         }
         .pg-result-cta:hover { opacity: 0.92; }
         .pg-result-cta:active { transform: scale(0.99); }
         .pg-result-trust {
-          display: flex; gap: 20px; justify-content: center;
-          font-size: 0.78rem; color: #B0A89A;
-          flex-wrap: wrap; margin-bottom: 28px;
+          display: flex; gap: 8px; justify-content: center; align-items: center;
+          font-size: 0.74rem; color: #C4BAB0; flex-wrap: wrap; margin-bottom: 24px;
         }
+        .pg-result-trust-sep { color: #E8E4DE; }
         .pg-result-again {
           font-size: 0.82rem; color: #C4BAB0;
           background: none; border: none; cursor: pointer;
           padding: 0; text-decoration: underline;
-          text-decoration-color: #E8E4DE;
-          transition: color 0.15s;
+          text-decoration-color: #E8E4DE; transition: color 0.15s;
         }
         .pg-result-again:hover { color: #7C3AED; }
 
@@ -730,22 +797,67 @@ export default function HomePage() {
             <div className="pg-result">
               <div className="pg-result-badge">✓ Guide found</div>
               <div className="pg-result-title">{guide.title}</div>
-              {isFirstBuy && (
-                <div style={{ display: "inline-block", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 999, padding: "4px 14px", fontSize: "0.72rem", fontWeight: 700, color: "#15803D", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>
-                  ✦ First guide — intro price
+              {situation && (
+                <div className="pg-result-echo">&ldquo;{situation}&rdquo;</div>
+              )}
+
+              {/* Chapter preview */}
+              {guide.chapters && guide.chapters.length > 0 && (
+                <div className="pg-chapters">
+                  <div className="pg-chapters-head">
+                    <span>What&apos;s inside</span>
+                    <span>{guide.chapters.length} chapters</span>
+                  </div>
+
+                  {/* Visible chapters */}
+                  {guide.chapters.slice(0, 3).map((ch, i) => (
+                    <div key={i} className="pg-chapter">
+                      <div className="pg-chapter-label">Chapter {ch.chapter}</div>
+                      <div className="pg-chapter-title">{ch.title}</div>
+                      <div className="pg-chapter-desc">{ch.description}</div>
+                    </div>
+                  ))}
+
+                  {/* Locked chapters */}
+                  {guide.chapters.length > 3 && (
+                    <div className="pg-chapters-locked">
+                      <div className="pg-chapters-locked-fade" />
+                      {guide.chapters.slice(3, 6).map((ch, i) => (
+                        <div key={i} className="pg-chapter pg-chapter--locked">
+                          <div className="pg-chapter-label">Chapter {ch.chapter}</div>
+                          <div className="pg-chapter-title">{ch.title}</div>
+                        </div>
+                      ))}
+                      <div className="pg-chapters-lock">
+                        <Lock size={13} strokeWidth={2} />
+                        {guide.chapters.length - 3} more chapters — unlocked with your guide
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
+
+              {/* Offer */}
+              {isFirstBuy && (
+                <div className="pg-result-offer">
+                  <span className="pg-result-offer-old">{guide.price}</span>
+                  <span className="pg-result-offer-new">£1.00</span>
+                  <span className="pg-result-offer-label">· First guide — intro price</span>
+                </div>
+              )}
+
               <button className="pg-result-cta" onClick={handleBuy}>
-                {isFirstBuy
-                  ? <>Get My Guide — <span style={{ textDecoration: "line-through", opacity: 0.55, fontWeight: 400 }}>{guide.price}</span> £1.00 →</>
-                  : <>Get My Guide — {guide.price} →</>
-                }
+                {isFirstBuy ? "Get My Guide — £1.00 →" : `Get My Guide — ${guide.price} →`}
               </button>
+
               <div className="pg-result-trust">
-                <span>📥 Instant download</span>
-                <span>🔒 30-day money-back</span>
-                <span>📱 Any device</span>
+                <span>Instant PDF</span>
+                <span className="pg-result-trust-sep">·</span>
+                <span>30-day money-back</span>
+                <span className="pg-result-trust-sep">·</span>
+                <span>Any device</span>
               </div>
+
               <button className="pg-result-again" onClick={reset}>Search for a different guide</button>
               <div style={{ marginTop: 14, fontSize: "0.78rem", color: "#C4BAB0" }}>
                 Not quite right?&nbsp;
