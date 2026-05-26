@@ -202,7 +202,7 @@ export default function EarnPage() {
         .e-trust-label { font-size: 0.83rem; font-weight: 800; color: #0F0A1A; margin-bottom: 2px; }
         .e-trust-desc { font-size: 0.72rem; color: #6B5E52; line-height: 1.55; }
         .e-trust-arrow { align-self: center; color: #DDD6FE; font-size: 1.4rem; flex-shrink: 0; }
-        .e-icon-grey { filter: grayscale(1) opacity(0.45); }
+        .e-icon-grey { filter: grayscale(1) brightness(0); }
 
         /* ─── HERO COPY ─── */
         .e-chip {
@@ -585,7 +585,7 @@ export default function EarnPage() {
             <div className="e-hero-copy">
               <div className="e-chip">For WhatsApp admins, newsletter writers &amp; community leaders</div>
               <h1 className="e-h1">
-                They&apos;re asking the group.<br />
+                They keep asking.<br />
                 But the group doesn&apos;t always know.<br />
                 <em>You will — in 60 seconds.</em>
               </h1>
