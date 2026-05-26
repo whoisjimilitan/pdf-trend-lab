@@ -13,96 +13,81 @@ export default function OgImage() {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
+        alignItems: "center",
         justifyContent: "center",
         fontFamily: "system-ui, sans-serif",
-        padding: "80px 96px",
+        textAlign: "center",
+        padding: "60px 80px",
       }}
     >
-      {/* Logo row */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 52 }}>
-        <div
-          style={{
-            width: 52,
-            height: 52,
-            borderRadius: 14,
-            background: "linear-gradient(135deg, #7C3AED, #4F46E5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 28,
-          }}
-        >
-          🌱
-        </div>
-        <span style={{ fontSize: 26, fontWeight: 800, color: "#1A1008", letterSpacing: "-0.02em" }}>
-          PDF Seeds
-        </span>
-      </div>
-
-      {/* Eyebrow */}
+      {/* Logo mark */}
       <div
         style={{
-          fontSize: 18,
-          fontWeight: 700,
-          color: "#9B8AF0",
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          marginBottom: 24,
+          width: 96,
+          height: 96,
+          borderRadius: 24,
+          background: "linear-gradient(135deg, #7C3AED, #4F46E5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 52,
+          marginBottom: 20,
+          boxShadow: "0 16px 48px rgba(124,58,237,0.25)",
         }}
       >
-        Specific to your country. Specific to your situation.
+        🌱
+      </div>
+
+      {/* Brand name */}
+      <div
+        style={{
+          fontSize: 28,
+          fontWeight: 800,
+          color: "#1A1008",
+          letterSpacing: "-0.02em",
+          marginBottom: 48,
+        }}
+      >
+        PDF Seeds
       </div>
 
       {/* Headline */}
       <div
         style={{
-          fontSize: 76,
+          fontSize: 80,
           fontWeight: 900,
           color: "#1A1008",
-          lineHeight: 1.05,
+          lineHeight: 1.08,
           letterSpacing: "-0.04em",
-          marginBottom: 32,
+          marginBottom: 12,
         }}
       >
         Stop Googling.
       </div>
       <div
         style={{
-          fontSize: 76,
+          fontSize: 80,
           fontWeight: 900,
           color: "#7C3AED",
-          lineHeight: 1.05,
+          lineHeight: 1.08,
           letterSpacing: "-0.04em",
-          marginBottom: 40,
+          marginBottom: 48,
         }}
       >
         Describe your situation.
       </div>
 
-      {/* Sub */}
+      {/* URL */}
       <div
         style={{
-          fontSize: 24,
-          color: "#8C7D6E",
-          lineHeight: 1.6,
-          maxWidth: 720,
+          fontSize: 22,
+          color: "#B0A89A",
+          fontWeight: 500,
+          letterSpacing: "0.02em",
         }}
       >
-        You get a step-by-step guide — not ten links and a rabbit hole.
+        pdfseeds.com
       </div>
-
-      {/* Bottom bar */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 6,
-          background: "linear-gradient(90deg, #7C3AED, #4F46E5)",
-        }}
-      />
     </div>,
     { ...size },
   );

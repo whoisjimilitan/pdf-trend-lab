@@ -9,7 +9,11 @@ export const metadata: Metadata = {
   title: "PDF Seeds - Stop Googling. Describe your situation.",
   description: "Tell us what you're trying to figure out. You get a step-by-step guide specific to your country and situation - not ten links and a rabbit hole.",
   icons: {
-    icon: "/icon.svg",
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
     apple: "/icon.svg",
   },
   openGraph: {
