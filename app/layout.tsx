@@ -6,22 +6,22 @@ const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://pdfseeds.com"),
-  title: "PDF Seeds — Stop Googling. There's a PDF guide for that.",
-  description: "Ask a direct question. We find the step-by-step PDF guide written for your exact situation. Instant download.",
+  title: "PDF Seeds - Stop Googling. Describe your situation.",
+  description: "Tell us what you're trying to figure out. You get a step-by-step guide specific to your country and situation - not ten links and a rabbit hole.",
   icons: {
     icon: "/icon.svg",
     apple: "/icon.svg",
   },
   openGraph: {
-    title: "Stop Googling. There's a PDF guide for that.",
-    description: "Ask a direct question. We find the step-by-step PDF guide written for your exact situation.",
+    title: "Stop Googling. Describe your situation.",
+    description: "Tell us what you're trying to figure out. You get a step-by-step guide specific to your country and situation - not ten links and a rabbit hole.",
     siteName: "PDF Seeds",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Stop Googling. There's a PDF guide for that.",
-    description: "Ask a direct question. We find the step-by-step PDF guide written for your exact situation.",
+    title: "Stop Googling. Describe your situation.",
+    description: "Tell us what you're trying to figure out. You get a step-by-step guide specific to your country and situation - not ten links and a rabbit hole.",
   },
 };
 
