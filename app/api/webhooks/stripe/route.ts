@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
     if (email) {
       const product = await prisma.product.findFirst({ where: { slug } });
       if (product) {
-        const { subject, html } = purchaseConfirmEmail(product.title, `${SITE}/guide/${slug}`);
+        const { subject, html } = purchaseConfirmEmail(product.title, `${SITE}/guide/${slug}/pdf`);
         await resend.emails.send({ from: FROM, to: email, subject, html }).catch(() => {});
       }
     }

@@ -794,7 +794,7 @@ export default function HomePage() {
                 Check your email for your receipt and download link.<br />
                 You can also open it right now.
               </div>
-              <a href={`/guide/${guide.slug}`} className="pg-paid-btn">Open My Guide →</a>
+              <a href={`/guide/${guide.slug}/pdf`} className="pg-paid-btn">Open My Guide →</a>
 
               {relatedGuides.length > 0 && (
                 <div className="pg-upsell">
