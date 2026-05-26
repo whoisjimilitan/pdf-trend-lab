@@ -237,14 +237,19 @@ export default function HomePage() {
           width: 100%;
           max-width: 520px;
         }
+        .pg-form-inner {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
         .pg-input-wrap {
+          flex: 1;
           background: #FFFFFF;
           border: 1.5px solid #EAE6E0;
           border-radius: 16px;
           padding: 6px 6px 6px 20px;
           display: flex;
           align-items: center;
-          gap: 8px;
           box-shadow: 0 4px 20px rgba(0,0,0,0.06);
           transition: border-color 0.2s, box-shadow 0.2s;
         }
@@ -605,14 +610,14 @@ export default function HomePage() {
 
         /* ── SMALL MOBILE (≤ 480px) — stack button below input ── */
         @media (max-width: 480px) {
-          .pg-input-wrap {
+          .pg-form-inner {
             flex-direction: column;
             align-items: stretch;
-            padding: 10px;
-            gap: 8px;
+            gap: 10px;
           }
-          .pg-input { padding: 10px 8px; font-size: 1rem; }
-          .pg-btn { width: 100%; padding: 15px 20px; font-size: 0.92rem; border-radius: 10px; }
+          .pg-input-wrap { padding: 6px 6px 6px 16px; }
+          .pg-input { padding: 10px 0; font-size: 1rem; }
+          .pg-btn { width: 100%; padding: 15px 20px; font-size: 0.92rem; border-radius: 12px; }
         }
 
         /* ── EXTRA SMALL (≤ 375px) ── */
@@ -648,20 +653,22 @@ export default function HomePage() {
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
-                  <div className="pg-input-wrap">
-                    <input
-                      className="pg-input"
-                      value={situation}
-                      onChange={e => setSituation(e.target.value)}
-                      placeholder="What are you trying to figure out?"
-                      autoFocus
-                      required
-                    />
+                  <div className="pg-form-inner">
+                    <div className="pg-input-wrap">
+                      <input
+                        className="pg-input"
+                        value={situation}
+                        onChange={e => setSituation(e.target.value)}
+                        placeholder="What are you trying to figure out?"
+                        autoFocus
+                        required
+                      />
+                    </div>
                     <button type="submit" className="pg-btn">Get My Guide →</button>
                   </div>
                 </form>
                 <div className="pg-hint">
-                  e.g. How do I register a business in Ghana?
+                  e.g. How do I register a business in Nigeria?
                 </div>
               </div>
             </>
@@ -678,15 +685,17 @@ export default function HomePage() {
               <p className="pg-country-label">Which country are you in?</p>
               <div className="pg-form">
                 <form onSubmit={handleGenerate}>
-                  <div className="pg-input-wrap pg-input-wrap--deep">
-                    <input
-                      ref={countryRef}
-                      className="pg-input"
-                      value={country}
-                      onChange={e => setCountry(e.target.value)}
-                      placeholder="Type your country"
-                      required
-                    />
+                  <div className="pg-form-inner">
+                    <div className="pg-input-wrap pg-input-wrap--deep">
+                      <input
+                        ref={countryRef}
+                        className="pg-input"
+                        value={country}
+                        onChange={e => setCountry(e.target.value)}
+                        placeholder="Type your country"
+                        required
+                      />
+                    </div>
                     <button type="submit" className="pg-btn pg-btn--deep">Find My Guide →</button>
                   </div>
                 </form>
