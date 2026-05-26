@@ -277,11 +277,49 @@ Only include resources you are confident are real and relevant to ${country}. If
 DESIGN NOTES — embed throughout wherever layout would help the reader:
 Use [Design Note: ...] to flag layout decisions for the template engine — be specific about visual treatment, colour, and purpose. These are stripped from display and used only by the layout engine.
 
-WRITING RULES:
-- Authoritative expertise, human voice — expert talking to a person, not writing for other experts
-- Short paragraphs — 4 sentences max. Direct. No passive voice. No filler.
-- Never: "in conclusion", "moreover", "it is important to note", "this section explores"
-- Reader must feel: expert-guided, completely clear, capable of acting immediately
+WRITING PHILOSOPHY — the voice and thinking standard:
+
+You are not writing an article. You are an intelligent human thinking in public.
+The reader should voluntarily finish every paragraph, remember it later, and feel it was worth paying for.
+
+Hidden principle: People pay for compressed thinking that feels obvious only after they read it.
+
+BEFORE WRITING EACH SECTION — think first, silently:
+1. What do most people believe about this step?
+2. What is incomplete or wrong about that belief?
+3. What actually appears to be true?
+4. Why does the difference matter to this specific reader in ${country}?
+Structure each section around that discovery. Surface the unexpected observation, the hidden pattern, the second-order effect that a generic guide would never mention.
+
+VOICE — sound like a person, not a writer:
+- Spoken English over written English. Ordinary words before sophisticated ones.
+- Short sentences as default. Vary rhythm naturally.
+- Remove any phrase nobody would say aloud.
+- Never write to perform intelligence. Never use formality as a substitute for thinking.
+
+DEPTH — say something the reader didn't already know:
+- Ask before every paragraph: "What would make a smart reader stop and think?"
+- Avoid motivational fluff, generic advice, consensus summaries, obvious conclusions.
+- Write claims as strongly as possible without becoming false.
+  BAD: "Many factors influence this process."
+  BETTER: "Most people get stuck here not because they lack information — but because they do step 3 before step 1, and the system rejects them for it."
+
+USEFULNESS — every paragraph must be: true, specific, important, and somewhat new to this reader. Reject vague correctness, empty sophistication, safe neutrality.
+
+MOMENTUM — build it paragraph by paragraph:
+- One idea per paragraph. 2–5 sentences.
+- Open with tension. End with movement that earns the next paragraph.
+- Transitions feel invisible — move by curiosity, tension, implication. Never by "firstly", "next", "in conclusion".
+
+CONFIDENCE — write like an expert who has nothing to prove:
+- Assume reader intelligence. Never overexplain. Never hedge excessively.
+- Confidence comes from precision, not volume.
+
+DELETE IMMEDIATELY:
+"in today's world", "it is important to note", "numerous", "facilitate", "leverage",
+"moreover", "therefore", "in conclusion", "this section explores", "needless to say",
+"it goes without saying", "as mentioned above", "aforementioned"
+Replace with: clear nouns + strong verbs.
 
 FLOW: Start → Do → Get Result → Avoid Mistakes → Move Forward
 
@@ -289,9 +327,11 @@ FINAL QUALITY TEST — verify before outputting:
 1. Could someone act immediately after reading each chapter?
 2. Is every useful detail preserved and specific to ${country}?
 3. Does each chapter reduce decisions, not multiply them?
-4. Does the Real-World Example feel specific and real, not generic?
-5. Does this feel worth paying for — or does it read like a free blog post?
-If any answer is no — rewrite that section.
+4. Does the Real-World Example feel specific — not a paraphrase of general advice?
+5. Does each paragraph say something the reader didn't already know?
+6. Would a smart stranger voluntarily read the next paragraph — or stop?
+7. Does this feel worth paying for — or like a free blog post dressed up?
+If any answer is no — rewrite that section. Do not output a paragraph that fails this test.
 
 8–10 pages of content. Specific to ${country} — real processes, real fees, real offices, real deadlines.
 Specificity IS authority. Write in markdown.`;
