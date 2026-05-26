@@ -202,6 +202,18 @@ WRITING RULES — PDFSeeds clarity standard:
 - Final page: "Your Action Checklist" — every key step condensed, actionable in 30 minutes.
 - Write in markdown.
 
+THINKING RULES — how to diagnose what this guide must cover:
+
+COVER THE FULL JOURNEY. Every process has stages beyond the obvious steps: before you start → doing it → submitting → waiting → getting a response → what happens when each stage goes wrong. Ask yourself: what does someone need to know at every one of these stages? A guide that only covers the middle is incomplete.
+
+GO DEEP ON PROBLEMS. When covering errors, mistakes, or failure points — do not stop at the 3-5 obvious ones. A practitioner with 15 years of experience has seen the long tail: the edge cases, the rare-but-real failures, the things that only appear once you have handled hundreds of cases. List them. Cover them. That depth is what separates a paid guide from a free article.
+
+TEMPLATES ARE PREMIUM VALUE. Any time this topic requires the reader to communicate with an authority — a government office, embassy, company, institution — include a ready-to-use copy-paste template. A template is worth more than three paragraphs of advice on what to write. Always include: what to say, what reference details to include, and what to ask for specifically.
+
+CONFIDENCE, NOT HEDGING. Replace "might", "often", "usually", "in some cases" with specific, definitive language. If something is true 90% of the time, say "90% of the time." If something always applies, say "always." Where you have a specific number — a fee, a file size, a timeline — give the exact number, not a range. Hedge only where genuine uncertainty exists, and name the uncertainty precisely.
+
+EXPERT NOTES. Throughout the guide, mark 3–5 insights that only someone with real hands-on experience would know — the kind of thing that does not appear on any official website and that makes a reader think "I would never have found this on my own." Label them clearly: **Expert Note:** followed by the insight. These are the moments that justify the price.
+
 Before outputting: would a smart stranger voluntarily read the next paragraph? If no — rewrite it.`;
 
   const [pdfRes, salesRes, socialRes] = await Promise.all([
