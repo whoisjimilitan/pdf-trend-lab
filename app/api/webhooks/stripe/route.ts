@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       update: {},
     });
 
-    const dashboardUrl = `${SITE}/partner/${code}`;
+    const dashboardUrl = `${SITE}/affiliate/${code}`;
     const { subject, html } = partnerWelcomeEmail(code, dashboardUrl);
     await resend.emails.send({ from: FROM, to: email, subject, html }).catch(() => {});
 

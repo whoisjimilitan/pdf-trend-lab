@@ -14,6 +14,8 @@ const COUNTRIES = [
   { value: "United States",  label: "🇺🇸 United States" },
 ];
 
+const OTHER = "__other__";
+
 type Result = {
   slug: string;
   title: string;
@@ -24,11 +26,15 @@ type Result = {
 const SITE = "https://pdfseeds.com";
 
 export default function GenerateGuide({ partnerCode }: { partnerCode: string }) {
-  const [question, setQuestion]   = useState("");
-  const [country, setCountry]     = useState("United Kingdom");
-  const [loading, setLoading]     = useState(false);
-  const [result, setResult]       = useState<Result | null>(null);
-  const [error, setError]         = useState("");
+  const [question, setQuestion]     = useState("");
+  const [country, setCountry]       = useState("United Kingdom");
+  const [otherCountry, setOtherCountry] = useState("");
+  const [showOther, setShowOther]   = useState(false);
+  const [loading, setLoading]       = useState(false);
+  const [result, setResult]         = useState<Result | null>(null);
+  const [error, setError]           = useState("");
+
+  const effectiveCountry = showOther ? otherCountry.trim() || "United Kingdom" : country;
 
   const guideLink = result ? `${SITE}/sell/${result.slug}?ref=${partnerCode}` : "";
   const waMessage = result
@@ -42,7 +48,7 @@ export default function GenerateGuide({ partnerCode }: { partnerCode: string }) 
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ situation: question.trim(), country, brand: "pdfseeds" }),
+        body: JSON.stringify({ situation: question.trim(), country: effectiveCountry, brand: "pdfseeds" }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Something went wrong. Try again.");
@@ -91,43 +97,81 @@ export default function GenerateGuide({ partnerCode }: { partnerCode: string }) 
       />
 
       {/* Country picker */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: showOther ? 10 : 16 }}>
         {COUNTRIES.map((c) => (
           <button
             key={c.value}
-            onClick={() => setCountry(c.value)}
+            onClick={() => { setCountry(c.value); setShowOther(false); }}
             style={{
               padding: "6px 14px",
               borderRadius: 999,
               fontSize: "0.78rem",
               fontWeight: 600,
               cursor: "pointer",
-              border: country === c.value ? "1.5px solid #8B5CF6" : "1px solid #EAE6E0",
-              background: country === c.value ? "#F5F3FF" : "#FFFFFF",
-              color: country === c.value ? "#7C3AED" : "#8C7D6E",
+              border: !showOther && country === c.value ? "1.5px solid #8B5CF6" : "1px solid #EAE6E0",
+              background: !showOther && country === c.value ? "#F5F3FF" : "#FFFFFF",
+              color: !showOther && country === c.value ? "#7C3AED" : "#8C7D6E",
               transition: "all 0.15s",
             }}
           >
             {c.label}
           </button>
         ))}
+        <button
+          key={OTHER}
+          onClick={() => setShowOther(true)}
+          style={{
+            padding: "6px 14px",
+            borderRadius: 999,
+            fontSize: "0.78rem",
+            fontWeight: 600,
+            cursor: "pointer",
+            border: showOther ? "1.5px solid #8B5CF6" : "1px solid #EAE6E0",
+            background: showOther ? "#F5F3FF" : "#FFFFFF",
+            color: showOther ? "#7C3AED" : "#8C7D6E",
+            transition: "all 0.15s",
+          }}
+        >
+          🌍 Other
+        </button>
       </div>
+      {showOther && (
+        <input
+          type="text"
+          value={otherCountry}
+          onChange={(e) => setOtherCountry(e.target.value)}
+          placeholder="Type your country, e.g. India, Jamaica, Philippines…"
+          style={{
+            width: "100%",
+            background: "#FFFFFF",
+            border: "1.5px solid #8B5CF6",
+            borderRadius: 10,
+            padding: "10px 14px",
+            fontSize: "0.88rem",
+            color: "#1A1008",
+            outline: "none",
+            fontFamily: "inherit",
+            boxSizing: "border-box",
+            marginBottom: 16,
+          }}
+        />
+      )}
 
       {/* Generate button */}
       <button
         onClick={generate}
-        disabled={loading || !question.trim()}
+        disabled={loading || !question.trim() || (showOther && !otherCountry.trim())}
         style={{
           width: "100%",
           padding: "14px 24px",
-          background: loading || !question.trim() ? "#C4C0D8" : "linear-gradient(135deg, #8B5CF6, #6D28D9)",
+          background: loading || !question.trim() || (showOther && !otherCountry.trim()) ? "#C4C0D8" : "linear-gradient(135deg, #8B5CF6, #6D28D9)",
           color: "#FFFFFF",
           border: "none",
           borderRadius: 12,
           fontSize: "0.95rem",
           fontWeight: 700,
-          cursor: loading || !question.trim() ? "not-allowed" : "pointer",
-          boxShadow: loading || !question.trim() ? "none" : "0 4px 16px rgba(139,92,246,0.35)",
+          cursor: loading || !question.trim() || (showOther && !otherCountry.trim()) ? "not-allowed" : "pointer",
+          boxShadow: loading || !question.trim() || (showOther && !otherCountry.trim()) ? "none" : "0 4px 16px rgba(139,92,246,0.35)",
           transition: "all 0.2s",
         }}
       >

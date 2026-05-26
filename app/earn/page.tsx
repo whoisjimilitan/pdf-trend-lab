@@ -83,7 +83,7 @@ export default function EarnPage() {
   async function handleRecovery(e: { preventDefault(): void }) {
     e.preventDefault();
     setRecoveryStatus("sending");
-    const res = await fetch("/api/partner/recover", {
+    const res = await fetch("/api/affiliate/recover", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: recoveryEmail.trim() }),
@@ -568,8 +568,7 @@ export default function EarnPage() {
                 <em>Start getting paid for it.</em>
               </h1>
               <p className="e-hero-sub">
-                Whatever your niche — share guides your audience is already
-                searching for and keep <strong>80% of every sale</strong>. For life.
+                Any question your community asks — <strong>paste it in, get a professional guide in 60 seconds</strong>, share the link, and keep 80% of every sale. For life.
               </p>
               <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
               <div className="e-trust">One-time · No monthly fees · 30-day money-back guarantee</div>

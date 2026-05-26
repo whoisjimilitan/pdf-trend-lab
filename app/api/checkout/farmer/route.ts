@@ -14,8 +14,8 @@ export async function POST() {
         currency: "gbp",
         unit_amount: 1999,
         product_data: {
-          name: "PDF Seeds — Partner Access",
-          description: "Lifetime access to your partner dashboard. Share guides. Keep 80% of every sale — for life.",
+          name: "PDF Seeds — Affiliate Access",
+          description: "Lifetime access to your affiliate dashboard. Answer any community question with a guide in 60 seconds. Keep 80% of every sale — for life.",
         },
       },
     }],
