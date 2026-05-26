@@ -859,10 +859,9 @@ export default function HomePage() {
               </div>
 
               <button className="pg-result-again" onClick={reset}>Search for a different guide</button>
-              <div style={{ marginTop: 14, fontSize: "0.78rem", color: "#C4BAB0" }}>
-                Not quite right?&nbsp;
+              <div style={{ marginTop: 14 }}>
                 <button
-                  style={{ background: "none", border: "none", color: "#9B8AF0", fontWeight: 600, cursor: "pointer", padding: 0, fontSize: "inherit" }}
+                  style={{ background: "none", border: "none", color: "#C4BAB0", fontWeight: 600, cursor: "pointer", padding: 0, fontSize: "0.78rem" }}
                   onClick={() => setStep("waitlist")}
                 >
                   Request a custom guide →
