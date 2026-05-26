@@ -8,7 +8,8 @@ type Props = {
 
 function renderMarkdown(md: string | null | undefined): string {
   if (!md) return "";
-  return md
+  const cleaned = md.replace(/\[Design Note:[^\]]*\]/gi, "").replace(/\n{3,}/g, "\n\n").trim();
+  return cleaned
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/^## (.+)$/gm, "<h2>$1</h2>")
     .replace(/^# (.+)$/gm, "<h1>$1</h1>")
@@ -48,7 +49,7 @@ export default async function PdfPage({ params, searchParams }: Props) {
     <>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
 
       <style>{`
         body > aside { display: none !important; }
@@ -57,7 +58,7 @@ export default async function PdfPage({ params, searchParams }: Props) {
         * { box-sizing: border-box; }
 
         body {
-          font-family: 'Lora', Georgia, 'Times New Roman', serif;
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
           background: #F8F7F4;
           color: #1a1a2e;
         }
@@ -160,13 +161,13 @@ export default async function PdfPage({ params, searchParams }: Props) {
           margin-bottom: 22px;
         }
         .guide-title {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(1.9rem, 5vw, 2.7rem);
+          font-family: 'Sora', system-ui, sans-serif;
+          font-size: clamp(1.8rem, 5vw, 2.6rem);
           font-weight: 800;
-          line-height: 1.18;
-          color: #1a1a2e;
+          line-height: 1.15;
+          color: #0F0A1A;
           margin: 0 0 20px;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.03em;
         }
         .guide-meta {
           font-family: system-ui, -apple-system, sans-serif;
@@ -183,27 +184,31 @@ export default async function PdfPage({ params, searchParams }: Props) {
         }
 
         .content h1 {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: 1.65rem; font-weight: 800; color: #1a1a2e;
-          margin: 60px 0 16px; line-height: 1.25; letter-spacing: -0.01em;
+          font-family: 'Sora', system-ui, sans-serif;
+          font-size: 1.55rem; font-weight: 800; color: #0F0A1A;
+          margin: 64px 0 14px; line-height: 1.2; letter-spacing: -0.025em;
           padding-top: 52px; border-top: 1px solid #E2E8F0;
         }
         .content h1:first-child { border-top: none; padding-top: 0; margin-top: 0; }
         .content h2 {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: 1.2rem; font-weight: 700; color: #1e293b;
-          margin: 36px 0 12px; line-height: 1.3;
+          font-family: 'Sora', system-ui, sans-serif;
+          font-size: 1.05rem; font-weight: 700; color: #1e293b;
+          margin: 32px 0 10px; line-height: 1.3; letter-spacing: -0.01em;
+          text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.72rem; color: #7C3AED;
         }
         .content h3 {
-          font-family: 'Lora', Georgia, serif;
-          font-size: 1rem; font-weight: 600; color: #334155;
-          font-style: italic; margin: 24px 0 8px;
+          font-family: 'Sora', system-ui, sans-serif;
+          font-size: 0.98rem; font-weight: 600; color: #334155;
+          margin: 22px 0 8px; letter-spacing: -0.01em;
         }
-        .content p { font-size: 1.02rem; line-height: 1.92; color: #334155; margin: 0 0 18px; }
-        .content ul { padding-left: 22px; margin: 0 0 18px; }
-        .content li { font-size: 1rem; line-height: 1.85; color: #334155; margin-bottom: 6px; }
+        .content p { font-size: 0.97rem; line-height: 1.85; color: #374151; margin: 0 0 16px; }
+        .content ul { padding-left: 20px; margin: 0 0 16px; }
+        .content ol { padding-left: 20px; margin: 0 0 16px; counter-reset: step-counter; }
+        .content ol li { counter-increment: step-counter; list-style: none; padding-left: 8px; position: relative; }
+        .content ol li::before { content: counter(step-counter); position: absolute; left: -28px; top: 1px; width: 20px; height: 20px; background: #7C3AED; color: #fff; border-radius: 50%; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Sora', sans-serif; }
+        .content li { font-size: 0.97rem; line-height: 1.8; color: #374151; margin-bottom: 8px; }
         .content li.check { list-style: none; padding-left: 4px; font-weight: 600; }
-        .content strong { color: #1a1a2e; font-weight: 700; }
+        .content strong { color: #0F0A1A; font-weight: 600; }
 
         .content-pending {
           background: #F8F7F4;
@@ -265,15 +270,14 @@ export default async function PdfPage({ params, searchParams }: Props) {
         @media (max-width: 600px) {
           .pdf-wrap { padding: 32px 18px 60px; }
           .guide-cover { padding: 36px 0 32px; margin-bottom: 36px; }
-          .guide-title { font-size: 1.6rem; }
-          .content h1 { font-size: 1.35rem; }
-          .content h2 { font-size: 1.05rem; }
+          .guide-title { font-size: 1.5rem; }
+          .content h1 { font-size: 1.25rem; }
           .delivery-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
           .save-btn { width: 100%; text-align: center; }
         }
 
         @media print {
-          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; font-family: 'Lora', Georgia, serif; }
+          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; font-family: 'Inter', system-ui, sans-serif; }
           .delivery-bar, .top-bar, .save-footer, .copyright { display: none !important; }
           .pdf-wrap { padding: 48px 0 0; }
           .guide-cover { padding: 0 0 40px; }

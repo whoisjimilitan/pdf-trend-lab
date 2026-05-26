@@ -67,19 +67,73 @@ Write a practical PDF guide for someone with this exact situation: "${painPoint}
 TITLE: "${opportunity.pdfTitle || opportunity.keyword}"
 NICHE: ${opportunity.niche}
 
-CHAPTERS — answer each question completely, one per chapter:
+CHAPTERS — answer each question completely, one per chapter, in this order:
 ${questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
 
-WRITING RULES (non-negotiable):
-RULE 1 — CORRECT AND SPECIFIC. Every claim must be as precise as possible. Name the form, the fee, the office, the deadline. Precision is the product.
-RULE 2 — NO VAGUE CORRECTNESS. "It depends" is banned. Name the factors. List the things. Specify the conditions.
-RULE 3 — BOLD BUT TRUE. Never invent specific numbers, names, fees, or laws you are not certain of. If uncertain, tell the reader how to verify.
-RULE 4 — CONCRETE, NOT SURPRISING. Be specific where others are vague. Real fees. Real timelines. Real steps. Real common mistakes people actually make.
-RULE 5 — EVERY SENTENCE EARNS ITS PLACE. Does this directly help the reader solve the problem? If no, cut it.
-RULE 6 — IMPORTANT INFORMATION FIRST. Lead each chapter with the most consequential information.
-RULE 7 — LENGTH. 8–10 pages. Final page: "Your Action Checklist" — 5 immediate steps.
+WRITING RULES — PDFSeeds execution-first HOW-TO standard:
 
-Write in markdown. Plain language. Short paragraphs. Bullet points for steps and lists.
+You are an elite instructional editor. Convert this topic into a premium execution-first HOW-TO guide.
+
+Core principle: Do not simplify information. Simplify decision-making.
+
+PRESERVE in every chapter: all facts, all examples, all fees and timelines, all warnings, all caveats, all eligibility notes, all payment flows, all practical details.
+
+DO NOT: remove information, invent facts, turn specifics into vague advice, replace instructions with summaries, sound academic, sound AI-generated.
+
+CHAPTER STRUCTURE — use this EXACT layout for every chapter:
+
+# [Chapter heading — phrased as an Outcome or Milestone the reader achieves]
+
+[Design Note: Chapter opener — large chapter number, outcome headline, one-line context description]
+
+**What This Is**
+One short paragraph: what this chapter accomplishes and WHY this stage matters.
+
+**Goal**
+One concrete sentence. "Submit X to Y." Not "Understand X."
+
+**Time Required**
+Realistic estimate. If genuinely unknown, say "varies — usually X to Y weeks."
+
+**What You Need**
+Required: [list every document, account, fee, tool, or prerequisite]
+You do NOT need: [name fears they have that are not real blockers]
+
+**Exact Steps**
+[Design Note: Numbered steps as callout blocks with step number in accent colour]
+1. [Action verb + one specific action. Never two actions in one step.]
+2. Name every form, office, website, fee, and deadline as applicable.
+
+**Payment / Money Flow** (include only if money is involved in this chapter)
+[Design Note: Cost badge — amount in bold, context in smaller secondary text]
+Exact amount or range, how to pay, timing, what confirmation to expect.
+
+**What to Expect**
+Realistic outcomes. Likely delays. What "normal" looks like. Normalise difficulty.
+
+**Common Mistakes**
+[Design Note: Mistakes as red-flagged list with warning icon]
+Specific operational errors people actually make. Not generic warnings.
+
+**Move Forward When**
+A specific trigger. "Move to Chapter X once Y is complete." Not "when ready."
+
+---
+
+DESIGN NOTES — embed throughout wherever layout would help the reader:
+Use [Design Note: ...] to flag layout decisions for the template engine. They are stripped from display.
+
+WRITING STYLE:
+- Write like spoken intelligence — one person showing another exactly what to do
+- Short paragraphs. Direct sentences. No filler.
+- Reader must feel: smart, guided, capable — never overwhelmed
+
+FINAL PAGE — "Your Action Checklist":
+[Design Note: Full-width printable checklist, grouped by chapter, two columns, checkbox icons]
+Every step from every chapter condensed to one checklist. Actionable in 30 minutes.
+
+8–10 pages. Real processes, real fees, real offices, real deadlines. Specificity IS authority.
+Write in markdown.
 `.trim();
 
   // ── Sales copy prompt ───────────────────────────────────────────────────────

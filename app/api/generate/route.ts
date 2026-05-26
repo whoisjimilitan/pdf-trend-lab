@@ -188,13 +188,76 @@ WRITING RULES — Brother Jimi pastoral standard:
 - End with a benediction: a specific wish for this reader, crafted from the exact topic. Not a prayer instruction. A gift.
 - Offer 1–2 further reading verses as an invitation: "If this reached you, there is more here: [verse]"
 - Write in markdown but use it sparingly — no heavy formatting, mostly flowing paragraphs.` : `
-WRITING RULES — PDFSeeds clarity standard:
-- 8–10 pages. Specific to ${country} — real processes, fees, offices, deadlines where known.
-- Start each chapter with the single most important thing to know.
-- Short paragraphs. Numbered steps. No filler.
-- Specificity IS authority — name the form, the fee, the office, the timeline.
-- Final page: "Your 5-Step Action Checklist" — what they do immediately after reading.
-- Write in markdown.`;
+WRITING RULES — PDFSeeds execution-first HOW-TO standard:
+
+You are an elite instructional editor. Convert this topic into a premium execution-first HOW-TO guide.
+
+Core principle: Do not simplify information. Simplify decision-making.
+
+PRESERVE in every chapter: all facts, all examples, all fees and timelines (specific to ${country}), all warnings, all caveats, all eligibility notes, all payment flows, all practical details.
+
+DO NOT: remove information, invent facts, turn specifics into vague advice, replace instructions with summaries, sound academic, sound AI-generated.
+
+CHAPTER STRUCTURE — use this EXACT layout for every chapter:
+
+# [Chapter heading — phrased as an Outcome or Milestone the reader achieves]
+
+[Design Note: Chapter opener — large chapter number, outcome headline, one-line context description]
+
+**What This Is**
+One short paragraph: what this chapter accomplishes and WHY this stage matters.
+
+**Goal**
+One concrete sentence. "Submit X to Y." Not "Understand X."
+
+**Time Required**
+Realistic estimate. If genuinely unknown, say "varies — usually X to Y weeks."
+
+**What You Need**
+Required: [list every document, account, fee, tool, or prerequisite]
+You do NOT need: [name fears they have that are not real blockers]
+
+**Exact Steps**
+[Design Note: Numbered steps as callout blocks with step number in accent colour]
+1. [Action verb + one specific action. Never two actions in one step.]
+2. Name every form, office, website, fee, and deadline as it applies to ${country}.
+
+**Payment / Money Flow** (include only if money is involved in this chapter)
+[Design Note: Cost badge — amount in bold, context in smaller secondary text]
+Exact amount or range, how to pay, timing, what confirmation to expect.
+
+**What to Expect**
+Realistic outcomes. Likely delays. What "normal" looks like. Normalise difficulty.
+
+**Common Mistakes**
+[Design Note: Mistakes as red-flagged list with warning icon]
+Specific operational errors people actually make. Not generic warnings.
+
+**Move Forward When**
+A specific trigger. "Move to Chapter X once Y is complete." Not "when ready."
+
+---
+
+DESIGN NOTES — embed throughout wherever layout would help the reader:
+Use [Design Note: ...] to flag layout decisions. Examples:
+[Design Note: Pull quote — highlight this sentence], [Design Note: Info box — amber background, tip icon], [Design Note: Warning callout — red border, stop icon]
+These are stripped from display and used only by the layout engine.
+
+WRITING STYLE:
+- Write like spoken intelligence — one person showing another exactly what to do
+- Short paragraphs. Direct sentences. No filler.
+- Never: "in conclusion", "moreover", "it is important to note"
+- Reader must feel: smart, guided, capable — never overwhelmed
+
+FLOW: Start → Do → Get Result → Avoid Mistakes → Move Forward
+
+FINAL PAGE — "Your Action Checklist":
+[Design Note: Full-width printable checklist, grouped by chapter, two columns, checkbox icons]
+Every step from every chapter condensed to one checklist. Actionable in 30 minutes.
+
+8–10 pages. Specific to ${country} — real processes, real fees, real offices, real deadlines.
+Specificity IS authority — name the form, the fee, the office, the timeline.
+Write in markdown.`;
 
   const [pdfRes, salesRes, socialRes] = await Promise.all([
     openai.chat.completions.create({
