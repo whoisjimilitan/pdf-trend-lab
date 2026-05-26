@@ -619,10 +619,10 @@ export default function HomePage() {
           {/* ── IDLE ── */}
           {step === "idle" && (
             <>
-              <span className="pg-hero-eyebrow">Step-by-step guides for the hard stuff</span>
-              <h1 className="pg-hero-h1">Stop Googling. There&apos;s a PDF guide for that.</h1>
+              <span className="pg-hero-eyebrow">Your guide, written in 60 seconds</span>
+              <h1 className="pg-hero-h1">Stop Googling. Describe your situation.</h1>
               <p className="pg-hero-sub">
-                Visa applications. Business registration. Tax returns. <strong>Anything.</strong> No more wrong guides.
+                Tell us what you&apos;re trying to figure out — we write you a step-by-step guide, specific to your country and situation.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
@@ -631,11 +631,11 @@ export default function HomePage() {
                       className="pg-input"
                       value={situation}
                       onChange={e => setSituation(e.target.value)}
-                      placeholder="Type your question here"
+                      placeholder="What are you trying to figure out?"
                       autoFocus
                       required
                     />
-                    <button type="submit" className="pg-btn">Search →</button>
+                    <button type="submit" className="pg-btn">Get My Guide →</button>
                   </div>
                 </form>
                 <div className="pg-hint">
