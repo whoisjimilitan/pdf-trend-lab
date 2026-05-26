@@ -116,9 +116,9 @@ export async function POST(req: NextRequest) {
   if (email) {
     const product = await prisma.product.findFirst({ where: { slug } });
     if (product) {
-      const { subject, html } = purchaseConfirmEmail(product.title, `${SITE}/guide/${slug}/pdf`);
+      const { subject, html, text } = purchaseConfirmEmail(product.title, `${SITE}/guide/${slug}/pdf`);
       try {
-        await resend.emails.send({ from: FROM, to: email, subject, html });
+        await resend.emails.send({ from: FROM, to: email, subject, html, text });
         console.log("[webhook] Purchase confirmation email sent to", email, "for guide:", slug);
       } catch (err) {
         console.error("[webhook] Failed to send purchase confirmation email to", email, err);

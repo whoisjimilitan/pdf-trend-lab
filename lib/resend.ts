@@ -134,14 +134,14 @@ export function partnerWelcomeEmail(code: string, dashboardUrl: string) {
 
 // ── Post-purchase confirmation ─────────────────────────────────────────────
 export function purchaseConfirmEmail(title: string, guideUrl: string) {
-  const subject = `Your guide is ready: ${title}`;
+  const subject = `Your PDF Seeds guide: ${title}`;
   const html = base(`
-    ${h("Your guide is ready. 🌾")}
-    ${p(`You just got <strong style="color:#1A1008;">${title}</strong>.`)}
-    ${p("Click the button below to open it. You can read it on any device, save it, and come back to it any time.")}
-    ${btn(guideUrl, "Open My Guide →")}
-    ${p("If you ever have a question the guide doesn't answer, reply to this email.")}
-    ${muted("30-day money-back guarantee — no questions asked. Just reply to this email.")}
+    ${h("Your guide is ready.")}
+    ${p(`Thank you for your purchase. Your guide — <strong style="color:#1A1008;">${title}</strong> — is ready to read now.`)}
+    ${p(`Open it here: <a href="${guideUrl}" style="color:#7C3AED;font-weight:600;word-break:break-all;">${guideUrl}</a>`)}
+    ${p("You can read it on any device and save it as a PDF. Bookmark the link above so you can come back to it any time.")}
+    ${muted("Questions about your guide? Reply to this email. If it doesn't help, we'll refund you in full — just reply within 30 days.")}
   `);
-  return { subject, html };
+  const text = `Your guide is ready.\n\nThank you for your purchase. Your guide — ${title} — is ready:\n\n${guideUrl}\n\nBookmark that link. You can read it on any device and save it as a PDF.\n\nQuestions? Just reply to this email. 30-day refund if it doesn't help.\n\n— PDF Seeds`;
+  return { subject, html, text };
 }
