@@ -39,6 +39,10 @@ export default async function PdfPage({ params, searchParams }: Props) {
 
   return (
     <>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
       <style>{`
         body > aside { display: none !important; }
         body { display: block !important; overflow-y: auto !important; height: auto !important; margin: 0; }
@@ -46,7 +50,7 @@ export default async function PdfPage({ params, searchParams }: Props) {
         * { box-sizing: border-box; }
 
         body {
-          font-family: Georgia, 'Times New Roman', serif;
+          font-family: 'Lora', Georgia, 'Times New Roman', serif;
           background: #F8F7F4;
           color: #1a1a2e;
         }
@@ -134,37 +138,65 @@ export default async function PdfPage({ params, searchParams }: Props) {
           padding: 48px 32px 80px;
         }
 
+        .guide-cover {
+          padding: 52px 0 44px;
+          border-bottom: 1px solid #E2E8F0;
+          margin-bottom: 52px;
+        }
+        .guide-brand {
+          font-family: system-ui, -apple-system, sans-serif;
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #7C3AED;
+          margin-bottom: 22px;
+        }
         .guide-title {
-          font-size: 1.9rem;
-          font-weight: 900;
-          line-height: 1.2;
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: clamp(1.9rem, 5vw, 2.7rem);
+          font-weight: 800;
+          line-height: 1.18;
           color: #1a1a2e;
-          margin: 0 0 10px;
-          font-family: Georgia, serif;
+          margin: 0 0 20px;
+          letter-spacing: -0.02em;
         }
         .guide-meta {
           font-family: system-ui, -apple-system, sans-serif;
-          font-size: 0.78rem;
+          font-size: 0.7rem;
           color: #94A3B8;
-          margin-bottom: 40px;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.08em;
           text-transform: uppercase;
         }
         .guide-divider {
           border: none;
-          border-top: 2px solid #6366F1;
-          margin: 0 0 40px;
-          width: 48px;
+          border-top: 2px solid #7C3AED;
+          margin: 22px 0 0;
+          width: 40px;
         }
 
-        .content h1 { font-size: 1.5rem; font-weight: 900; color: #1a1a2e; margin: 48px 0 14px; padding-bottom: 10px; border-bottom: 1px solid #E2E8F0; }
-        .content h2 { font-size: 1.15rem; font-weight: 700; color: #1e293b; margin: 32px 0 10px; }
-        .content h3 { font-size: 1rem; font-weight: 700; color: #334155; margin: 22px 0 8px; }
-        .content p { font-size: 1rem; line-height: 1.85; color: #334155; margin: 0 0 16px; }
-        .content ul { padding-left: 22px; margin: 0 0 16px; }
-        .content li { font-size: 1rem; line-height: 1.8; color: #334155; margin-bottom: 5px; }
-        .content li.check { list-style: none; padding-left: 4px; font-weight: 500; }
-        .content strong { color: #1a1a2e; }
+        .content h1 {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: 1.65rem; font-weight: 800; color: #1a1a2e;
+          margin: 60px 0 16px; line-height: 1.25; letter-spacing: -0.01em;
+          padding-top: 52px; border-top: 1px solid #E2E8F0;
+        }
+        .content h1:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+        .content h2 {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: 1.2rem; font-weight: 700; color: #1e293b;
+          margin: 36px 0 12px; line-height: 1.3;
+        }
+        .content h3 {
+          font-family: 'Lora', Georgia, serif;
+          font-size: 1rem; font-weight: 600; color: #334155;
+          font-style: italic; margin: 24px 0 8px;
+        }
+        .content p { font-size: 1.02rem; line-height: 1.92; color: #334155; margin: 0 0 18px; }
+        .content ul { padding-left: 22px; margin: 0 0 18px; }
+        .content li { font-size: 1rem; line-height: 1.85; color: #334155; margin-bottom: 6px; }
+        .content li.check { list-style: none; padding-left: 4px; font-weight: 600; }
+        .content strong { color: #1a1a2e; font-weight: 700; }
 
         .save-footer {
           margin-top: 56px;
@@ -208,15 +240,21 @@ export default async function PdfPage({ params, searchParams }: Props) {
 
         @media (max-width: 600px) {
           .pdf-wrap { padding: 32px 18px 60px; }
-          .guide-title { font-size: 1.45rem; }
+          .guide-cover { padding: 36px 0 32px; margin-bottom: 36px; }
+          .guide-title { font-size: 1.6rem; }
+          .content h1 { font-size: 1.35rem; }
+          .content h2 { font-size: 1.05rem; }
           .delivery-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
           .save-btn { width: 100%; text-align: center; }
         }
 
         @media print {
-          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; }
+          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; font-family: 'Lora', Georgia, serif; }
           .delivery-bar, .top-bar, .save-footer, .copyright { display: none !important; }
-          .pdf-wrap { padding: 0; }
+          .pdf-wrap { padding: 48px 0 0; }
+          .guide-cover { padding: 0 0 40px; }
+          .content h1 { break-before: page; }
+          .content h1:first-child { break-before: avoid; }
         }
       `}</style>
 
@@ -247,9 +285,12 @@ export default async function PdfPage({ params, searchParams }: Props) {
       </div>
 
       <div className="pdf-wrap">
-        <div className="guide-meta">PDF Seeds · Digital Guide · {year}</div>
-        <h1 className="guide-title">{product.title}</h1>
-        <hr className="guide-divider" />
+        <div className="guide-cover">
+          <div className="guide-brand">PDF Seeds · Step-by-Step Guide</div>
+          <h1 className="guide-title">{product.title}</h1>
+          <div className="guide-meta">{year} · Instant Download · Any Device</div>
+          <hr className="guide-divider" />
+        </div>
 
         <div className="content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
 
