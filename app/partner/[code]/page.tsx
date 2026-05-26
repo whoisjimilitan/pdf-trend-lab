@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import CopyButton from "./CopyButton";
+import GenerateGuide from "./GenerateGuide";
 
 export const revalidate = 60;
 
@@ -120,13 +121,13 @@ export default async function PartnerDashboard({ params }: { params: Promise<{ c
             <div className="pd-logo-mark">🌱</div>
             <span className="pd-logo-name">PDF Seeds</span>
           </a>
-          <div className="pd-welcome">Your Partner Dashboard</div>
+          <div className="pd-welcome">Your Affiliate Dashboard</div>
           <p className="pd-sub">Everything you need to start earning. Bookmark this page.</p>
         </div>
 
         {/* Your unique link */}
         <div className="pd-code-block">
-          <div className="pd-code-label">Your unique partner link</div>
+          <div className="pd-code-label">Your unique affiliate link</div>
           <div className="pd-code-row">
             <div className="pd-code-link">{myLink}</div>
             <div className="pd-code-badge">{partner.code}</div>
@@ -162,6 +163,9 @@ export default async function PartnerDashboard({ params }: { params: Promise<{ c
             £{nextPayout} more in earnings will cover your £19.99 join fee. After that, it&apos;s all yours.
           </div>
         )}
+
+        {/* Generate a guide on demand */}
+        <GenerateGuide partnerCode={partner.code} />
 
         {/* Start here — top 3 guides */}
         <div className="pd-section">
