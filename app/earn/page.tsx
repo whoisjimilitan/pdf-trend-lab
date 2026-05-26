@@ -2,30 +2,30 @@
 
 import { useState, useEffect } from "react";
 
-const CREATORS = [
-  { initials: "SJ", name: "Sarah J.", role: "Finance creator · 8.5k", stat: "£420/month" },
-  { initials: "MO", name: "Michael O.", role: "Immigration advisor · 5k", stat: "£340 first month" },
-  { initials: "AP", name: "Aisha P.", role: "Parenting blogger · 12k", stat: "£280/month" },
-  { initials: "RK", name: "Raj K.", role: "Business tips · 22k", stat: "£580 in 6 wks" },
+const AVATARS = [
+  { initials: "AO", name: "Adaeze O.", role: "WhatsApp Admin", stat: "£340 first month" },
+  { initials: "MA", name: "Mohammed A.", role: "Newsletter · 2.1k", stat: "£580 in 6 wks" },
+  { initials: "FK", name: "Femi K.", role: "Facebook Group", stat: "£211 in 10 days" },
+  { initials: "PR", name: "Priya R.", role: "Community leader", stat: "£220 first month" },
 ];
 
 const TESTIMONIALS = [
   {
     quote: "One pinned message. £47.90 in two days. The guide sold itself.",
     name: "Adaeze O.",
-    role: "Community creator · WhatsApp + Facebook",
+    role: "WhatsApp Group Admin · London",
     stat: "£340 first month",
   },
   {
     quote: "Mentioned it once in my newsletter. 23 sales. Didn't have to explain a thing.",
     name: "Mohammed A.",
-    role: "Newsletter creator · 2.1k subscribers",
+    role: "Newsletter writer · 2.1k subscribers",
     stat: "£580 in 6 weeks",
   },
   {
     quote: "18 sales — mostly word of mouth after the first share. Nothing to chase.",
     name: "Fatima R.",
-    role: "Content creator · Multiple platforms",
+    role: "Community coordinator · Manchester",
     stat: "£143.82 earned",
   },
 ];
@@ -33,15 +33,15 @@ const TESTIMONIALS = [
 const FAQS = [
   {
     q: "Do I need a big audience?",
-    a: "No. 200 followers who trust you will outperform 20,000 who don't. If people ask you for advice, they'll buy from you.",
+    a: "No. 200 followers who trust you will outperform 20,000 who don't. If people come to you for answers, they'll buy from you.",
   },
   {
     q: "Do I handle delivery, support, or refunds?",
-    a: "Nothing. You share the link. We handle everything — delivery, support, and any refunds come entirely from our side.",
+    a: "Nothing. You share the link. We handle everything — delivery, customer support, and any refunds come entirely from our side.",
   },
   {
     q: "Is there a monthly fee?",
-    a: "No. £19.99 once. Full access forever, including every new guide we add.",
+    a: "No. £19.99 once. Full access forever, including every new guide we add to the library.",
   },
 ];
 
@@ -110,86 +110,73 @@ export default function EarnPage() {
           color: #0F0A1A; background: #FAFAF9;
         }
 
-        /* ─── HERO ─── */
-        .e-hero {
+        /* ─── HERO OUTER (grid bg) ─── */
+        .e-hero-outer {
           background-color: #FAFAF9;
           background-image:
             linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),
             linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px);
           background-size: 72px 72px;
-          min-height: 92vh;
-          display: grid; grid-template-columns: 1fr 440px;
-          align-items: center; gap: 56px;
-          padding: 100px 80px 80px;
           position: relative; overflow: hidden;
-          max-width: 1200px; margin: 0 auto;
         }
 
-        /* Floating creator avatars */
-        .e-float {
-          position: fixed; /* using absolute inside hero wrapper */
-          display: flex; align-items: center; gap: 10px;
-          animation: efloat 5s ease-in-out infinite;
-          pointer-events: none;
+        /* ─── HERO INNER (split layout) ─── */
+        .e-hero {
+          max-width: 1160px; margin: 0 auto;
+          display: grid; grid-template-columns: 1fr 420px;
+          align-items: center; gap: 64px;
+          padding: 108px 80px 96px;
+          position: relative; z-index: 1;
         }
-        .e-hero-outer {
-          position: relative; overflow: hidden;
-          background-color: #FAFAF9;
-          background-image:
-            linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px);
-          background-size: 72px 72px;
-        }
+
+        /* ─── FLOATING AVATARS ─── */
         .e-float {
           position: absolute;
           display: flex; align-items: center; gap: 10px;
           animation: efloat 5s ease-in-out infinite;
-          z-index: 0;
+          pointer-events: none; z-index: 0;
         }
-        .e-float:nth-child(2) { animation-delay: 1s; }
-        .e-float:nth-child(3) { animation-delay: 2s; }
-        .e-float:nth-child(4) { animation-delay: 3s; }
+        .e-float:nth-child(2) { animation-delay: 1.2s; }
+        .e-float:nth-child(3) { animation-delay: 2.4s; }
+        .e-float:nth-child(4) { animation-delay: 3.6s; }
         @keyframes efloat {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
+          0%, 100% { transform: translateY(0); }
+          50%       { transform: translateY(-7px); }
         }
-        .e-float-av {
+        .e-av {
           width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
           background: linear-gradient(135deg, #8B5CF6, #6D28D9);
           border: 3px solid #fff;
           box-shadow: 0 4px 18px rgba(139,92,246,0.22), 0 0 0 5px rgba(139,92,246,0.07);
           display: flex; align-items: center; justify-content: center;
-          font-size: 0.78rem; font-weight: 800; color: #fff; letter-spacing: 0.01em;
+          font-size: 0.75rem; font-weight: 800; color: #fff;
         }
-        .e-float-info { line-height: 1.35; }
-        .e-float-name { font-size: 0.7rem; font-weight: 700; color: #0F0A1A; }
-        .e-float-role { font-size: 0.6rem; color: #9B8AF0; }
-        .e-float-stat { font-size: 0.65rem; font-weight: 800; color: #6D28D9; }
+        .e-av-info { line-height: 1.35; }
+        .e-av-name { font-size: 0.68rem; font-weight: 700; color: #0F0A1A; }
+        .e-av-role { font-size: 0.58rem; color: #9B8AF0; }
+        .e-av-stat { font-size: 0.63rem; font-weight: 800; color: #6D28D9; }
         .e-arr-r {
           width: 0; height: 0; flex-shrink: 0;
-          border-top: 5px solid transparent;
-          border-bottom: 5px solid transparent;
+          border-top: 5px solid transparent; border-bottom: 5px solid transparent;
           border-left: 8px solid #8B5CF6;
         }
         .e-arr-l {
           width: 0; height: 0; flex-shrink: 0;
-          border-top: 5px solid transparent;
-          border-bottom: 5px solid transparent;
+          border-top: 5px solid transparent; border-bottom: 5px solid transparent;
           border-right: 8px solid #8B5CF6;
         }
 
-        /* Hero copy */
+        /* ─── HERO COPY ─── */
         .e-hero-copy { position: relative; z-index: 1; }
         .e-chip {
           display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(139,92,246,0.08);
-          border: 1px solid rgba(139,92,246,0.2);
+          background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2);
           border-radius: 999px; padding: 7px 16px;
-          font-size: 0.68rem; font-weight: 800; color: #7C3AED;
+          font-size: 0.67rem; font-weight: 800; color: #7C3AED;
           letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 26px;
         }
         .e-h1 {
-          font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+          font-size: clamp(2.2rem, 4vw, 3.4rem);
           font-weight: 900; color: #0F0A1A;
           line-height: 1.08; letter-spacing: -0.04em; margin-bottom: 22px;
         }
@@ -201,40 +188,29 @@ export default function EarnPage() {
         }
         .e-hero-sub {
           font-size: 1rem; color: #6B5E52;
-          line-height: 1.75; margin-bottom: 36px; max-width: 440px;
+          line-height: 1.78; margin-bottom: 36px; max-width: 420px;
         }
         .e-hero-sub strong { color: #0F0A1A; font-weight: 700; }
-        .e-cta-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
         .e-btn {
           background: linear-gradient(135deg, #8B5CF6, #6D28D9);
           color: #fff; font-weight: 800; font-size: 0.98rem;
-          padding: 18px 36px; border-radius: 14px;
+          padding: 18px 38px; border-radius: 14px;
           border: none; cursor: pointer; font-family: inherit;
-          box-shadow: 0 6px 22px rgba(109,40,217,0.32);
+          box-shadow: 0 6px 22px rgba(109,40,217,0.3);
           transition: opacity 0.15s, transform 0.1s;
-          letter-spacing: -0.01em;
+          letter-spacing: -0.01em; margin-bottom: 16px; display: inline-block;
         }
         .e-btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .e-btn:active { transform: scale(0.99); }
         .e-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .e-btn-ghost {
-          background: #fff; color: #3B0764;
-          font-weight: 700; font-size: 0.9rem;
-          padding: 18px 28px; border-radius: 14px;
-          border: 1.5px solid #DDD6FE; font-family: inherit;
-          cursor: pointer; text-decoration: none; display: inline-block;
-          transition: background 0.15s;
-        }
-        .e-btn-ghost:hover { background: #F5F3FF; }
         .e-trust { font-size: 0.68rem; color: #B0A89A; letter-spacing: 0.04em; }
 
-        /* Phone mockup */
-        .e-phone-wrap { position: relative; z-index: 1; display: flex; justify-content: center; }
+        /* ─── PHONE MOCKUP ─── */
+        .e-phone-wrap { position: relative; z-index: 1; }
         .e-phone {
-          background: #E8DDD4;
-          border-radius: 28px; padding: 18px 15px;
-          max-width: 300px; width: 100%;
-          box-shadow: 0 32px 80px rgba(15,10,26,0.12), 0 0 0 1px rgba(0,0,0,0.05);
+          background: #E8DDD4; border-radius: 28px; padding: 18px 15px;
+          box-shadow: 0 32px 80px rgba(15,10,26,0.11), 0 0 0 1px rgba(0,0,0,0.04);
+          max-width: 300px; margin: 0 auto;
         }
         .e-phone-bar {
           display: flex; align-items: center; gap: 9px;
@@ -245,23 +221,23 @@ export default function EarnPage() {
           width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
           background: linear-gradient(135deg, #8B5CF6, #6D28D9);
         }
-        .e-phone-gname { font-size: 0.75rem; font-weight: 700; color: #111; }
-        .e-phone-gmem { font-size: 0.58rem; color: #667781; }
+        .e-phone-gname { font-size: 0.74rem; font-weight: 700; color: #111; }
+        .e-phone-gmem { font-size: 0.57rem; color: #667781; }
         .e-bubble {
           background: #D4F5C0; border-radius: 13px 13px 3px 13px;
-          padding: 10px 12px; margin-left: auto; max-width: 88%;
+          padding: 10px 12px; margin-left: auto; max-width: 90%;
           font-size: 0.77rem; color: #111; line-height: 1.52; margin-bottom: 4px;
         }
-        .e-bubble-link { color: #128C7E; text-decoration: underline; font-size: 0.73rem; }
-        .e-bubble-ts { font-size: 0.58rem; color: #667781; text-align: right; margin-top: 5px; }
+        .e-bubble-link { color: #128C7E; text-decoration: underline; font-size: 0.72rem; }
+        .e-bubble-ts { font-size: 0.57rem; color: #667781; text-align: right; margin-top: 5px; }
         .e-result {
           margin-top: 11px; background: #fff; border-radius: 11px;
           padding: 12px 14px;
           display: flex; align-items: center; justify-content: space-between;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
-        .e-result-label { font-size: 0.67rem; color: #667781; font-weight: 500; }
-        .e-result-sub { font-size: 0.56rem; color: #9B8AF0; margin-top: 1px; }
+        .e-result-label { font-size: 0.66rem; color: #667781; font-weight: 500; }
+        .e-result-sub { font-size: 0.55rem; color: #9B8AF0; margin-top: 1px; }
         .e-result-earn { font-size: 1rem; font-weight: 900; color: #16A34A; }
 
         /* ─── PROOF STRIP ─── */
@@ -270,21 +246,17 @@ export default function EarnPage() {
           border-top: 1px solid #EEE9E0; border-bottom: 1px solid #EEE9E0;
           padding: 18px 40px;
           display: flex; align-items: center; justify-content: center;
-          gap: 32px; flex-wrap: wrap;
+          gap: 28px; flex-wrap: wrap;
         }
         .e-proof-item { display: flex; align-items: center; gap: 8px; }
-        .e-proof-stars { color: #00B67A; font-size: 0.95rem; letter-spacing: 1px; }
-        .e-proof-val { font-size: 0.85rem; font-weight: 800; color: #0F0A1A; }
-        .e-proof-label { font-size: 0.75rem; color: #9B8AF0; }
-        .e-proof-sep {
-          width: 1px; height: 20px; background: #EEE9E0;
-          display: inline-block;
-        }
+        .e-proof-stars { color: #00B67A; font-size: 0.92rem; letter-spacing: 1px; }
+        .e-proof-val { font-size: 0.84rem; font-weight: 800; color: #0F0A1A; }
+        .e-proof-lbl { font-size: 0.73rem; color: #9B8AF0; }
+        .e-proof-sep { width: 1px; height: 18px; background: #EEE9E0; }
         .e-proof-badge {
           background: #00B67A; color: #fff;
-          font-size: 0.6rem; font-weight: 800;
-          padding: 3px 8px; border-radius: 4px;
-          letter-spacing: 0.03em;
+          font-size: 0.58rem; font-weight: 800;
+          padding: 3px 7px; border-radius: 4px; letter-spacing: 0.03em;
         }
 
         /* ─── SECTION SHELL ─── */
@@ -317,13 +289,10 @@ export default function EarnPage() {
           transition: box-shadow 0.2s;
         }
         .e-tcard:hover { box-shadow: 0 8px 28px rgba(139,92,246,0.1); }
-        .e-tcard-q {
-          font-size: 1.8rem; color: #E0D9FF;
-          font-family: Georgia, serif; line-height: 1; user-select: none;
-        }
+        .e-tcard-q { font-size: 1.8rem; color: #E0D9FF; font-family: Georgia, serif; line-height: 1; }
         .e-tcard-text { font-size: 0.88rem; color: #1A1008; line-height: 1.7; flex: 1; font-weight: 500; }
         .e-tcard-name { font-size: 0.79rem; font-weight: 800; color: #0F0A1A; }
-        .e-tcard-role { font-size: 0.68rem; color: #9B8AF0; margin-top: 2px; }
+        .e-tcard-role { font-size: 0.67rem; color: #9B8AF0; margin-top: 2px; }
         .e-tcard-stat {
           display: inline-block; margin-top: 8px;
           background: #F5F3FF; border: 1px solid #E0D9FF;
@@ -334,7 +303,7 @@ export default function EarnPage() {
         /* ─── MATH ─── */
         .e-math { background: #F5F3FF; border-radius: 20px; padding: 36px 40px; }
         .e-math-head {
-          font-size: 0.85rem; color: #6B5E52; margin-bottom: 20px; line-height: 1.6;
+          font-size: 0.88rem; color: #6B5E52; margin-bottom: 20px; line-height: 1.6;
         }
         .e-math-head strong { color: #0F0A1A; font-weight: 800; }
         .e-math-rows { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
@@ -349,7 +318,7 @@ export default function EarnPage() {
         .e-math-note { font-size: 0.72rem; color: #A78BFA; line-height: 1.65; }
 
         /* ─── WHAT YOU GET ─── */
-        .e-get { display: flex; flex-direction: column; gap: 13px; }
+        .e-get { display: flex; flex-direction: column; gap: 12px; }
         .e-get-item {
           display: flex; align-items: flex-start; gap: 14px;
           background: #fff; border: 1px solid #EEE9E0;
@@ -380,7 +349,8 @@ export default function EarnPage() {
           display: inline-flex; align-items: center; gap: 5px;
           font-size: 0.6rem; font-weight: 700; color: #15803D;
           background: #F0FDF4; border: 1px solid #BBF7D0;
-          border-radius: 999px; padding: 3px 9px; letter-spacing: 0.06em; text-transform: uppercase;
+          border-radius: 999px; padding: 3px 9px;
+          letter-spacing: 0.06em; text-transform: uppercase;
         }
         .e-demand-dot {
           width: 5px; height: 5px; border-radius: 50%; background: #16A34A;
@@ -388,7 +358,7 @@ export default function EarnPage() {
         }
         @keyframes dp { 0%,100%{opacity:1} 50%{opacity:0.2} }
         .e-demand-row {
-          padding: 10px 20px; display: flex; align-items: center;
+          padding: 11px 20px; display: flex; align-items: center;
           gap: 10px; border-bottom: 1px solid #F5F0EB;
         }
         .e-demand-row:last-child { border-bottom: none; }
@@ -399,11 +369,13 @@ export default function EarnPage() {
         .e-price-bg { background: #1E1B4B; padding: 88px 0; }
         .e-price-card {
           background: rgba(255,255,255,0.05); border: 1px solid rgba(196,181,253,0.18);
-          border-radius: 26px; padding: 56px 48px; text-align: center; max-width: 600px; margin: 0 auto;
+          border-radius: 26px; padding: 56px 48px; text-align: center;
+          max-width: 580px; margin: 0 auto;
         }
         .e-price-eyebrow {
           font-size: 0.62rem; font-weight: 800; color: #A78BFA;
-          letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; display: block;
+          letter-spacing: 0.14em; text-transform: uppercase;
+          margin-bottom: 12px; display: block;
         }
         .e-price-num {
           font-size: clamp(3.5rem, 8vw, 5rem);
@@ -424,8 +396,7 @@ export default function EarnPage() {
           padding: 19px 52px; border-radius: 14px;
           border: none; cursor: pointer; font-family: inherit;
           box-shadow: 0 8px 28px rgba(0,0,0,0.2);
-          transition: opacity 0.15s, transform 0.1s;
-          margin-bottom: 14px;
+          transition: opacity 0.15s, transform 0.1s; margin-bottom: 14px;
         }
         .e-btn-white:hover { opacity: 0.93; transform: translateY(-1px); }
         .e-btn-white:active { transform: scale(0.99); }
@@ -443,10 +414,7 @@ export default function EarnPage() {
         .e-faq-a { font-size: 0.83rem; color: #6B5E52; line-height: 1.78; }
 
         /* ─── FINAL CTA ─── */
-        .e-final {
-          text-align: center; padding: 80px 32px;
-          max-width: 520px; margin: 0 auto;
-        }
+        .e-final { text-align: center; padding: 80px 32px; max-width: 520px; margin: 0 auto; }
         .e-final-h {
           font-size: clamp(1.3rem, 3vw, 1.8rem);
           font-weight: 900; color: #0F0A1A;
@@ -471,7 +439,7 @@ export default function EarnPage() {
         .e-footer a { color: #A09590; text-decoration: none; }
         .e-footer a:hover { color: #8B5CF6; }
 
-        /* ─── JOINED ─── */
+        /* ─── JOINED BANNER ─── */
         .e-joined {
           background: #F0FDF4; border-bottom: 1px solid #BBF7D0;
           padding: 18px 32px; text-align: center;
@@ -482,33 +450,37 @@ export default function EarnPage() {
 
         /* ─── RESPONSIVE: TABLET ─── */
         @media (min-width: 601px) and (max-width: 1100px) {
-          .e-hero { grid-template-columns: 1fr; padding: 80px 40px; min-height: auto; text-align: center; }
-          .e-hero-sub { margin-left: auto; margin-right: auto; }
-          .e-cta-row { justify-content: center; }
-          .e-phone-wrap { display: none; }
+          .e-hero {
+            grid-template-columns: 1fr; padding: 80px 40px 72px;
+            text-align: center; gap: 40px;
+          }
+          .e-hero-sub { margin: 0 auto 36px; }
           .e-float { display: none; }
+          .e-phone-wrap { display: none; }
           .e-wrap { padding: 0 40px; }
         }
 
         /* ─── RESPONSIVE: MOBILE ─── */
         @media (max-width: 600px) {
           .e-hero {
-            grid-template-columns: 1fr; padding: 60px 20px 40px;
-            min-height: auto; text-align: center; gap: 36px;
+            grid-template-columns: 1fr; padding: 64px 20px 44px;
+            text-align: center; gap: 36px;
           }
           .e-float { display: none; }
           .e-h1 { font-size: 2rem; }
-          .e-hero-sub { font-size: 0.92rem; margin-left: auto; margin-right: auto; }
-          /* Hide inline CTA — fixed bar takes over */
-          .e-cta-row, .e-btn-ghost, .e-trust { display: none; }
+          .e-hero-sub { font-size: 0.92rem; margin: 0 auto 0; }
+
+          /* Hide inline CTAs — fixed bar takes over */
+          .e-btn:not(.e-btn-white),
+          .e-trust,
           .e-section-cta { display: none; }
 
-          .e-phone { max-width: 100%; }
-          .e-proof { padding: 14px 20px; gap: 16px; }
+          .e-proof { padding: 14px 20px; gap: 14px; }
           .e-proof-sep { display: none; }
 
           .e-wrap { padding: 0 20px; }
           .e-section { padding: 56px 0; }
+
           .e-tgrid { grid-template-columns: 1fr; gap: 12px; }
           .e-math { padding: 24px 20px; }
 
@@ -520,7 +492,7 @@ export default function EarnPage() {
           .e-contact { padding: 0 20px 52px; }
           .e-final { padding: 56px 20px; }
 
-          /* Fixed mobile CTA */
+          /* Fixed mobile CTA bar */
           .e-mobile {
             display: flex;
             position: fixed; bottom: 0; left: 0; right: 0;
@@ -563,62 +535,58 @@ export default function EarnPage() {
 
         {/* ── HERO ── */}
         <div className="e-hero-outer">
-          <div className="e-hero">
-
-            {/* Floating creator avatars */}
-            {CREATORS.map((c, i) => {
-              const positions = [
-                { top: "15%", left: "2%" },
-                { top: "12%", right: "2%" },
-                { top: "65%", left: "2%" },
-                { top: "62%", right: "2%" },
-              ];
-              const pos = positions[i];
-              const isRight = "right" in pos;
-              return (
-                <div key={i} className="e-float" style={pos as React.CSSProperties}>
-                  {!isRight && <div className="e-float-av">{c.initials}</div>}
-                  <div className="e-float-info" style={isRight ? { textAlign: "right" } : {}}>
-                    <div className="e-float-name">{c.name}</div>
-                    <div className="e-float-role">{c.role}</div>
-                    <div className="e-float-stat">{c.stat}</div>
-                  </div>
-                  {isRight ? <div className="e-arr-l" /> : <div className="e-arr-r" />}
-                  {isRight && <div className="e-float-av">{c.initials}</div>}
+          {/* Floating avatars */}
+          {AVATARS.map((a, i) => {
+            const pos: React.CSSProperties[] = [
+              { top: "16%", left: "3%" },
+              { top: "13%", right: "3%" },
+              { top: "64%", left: "2%" },
+              { top: "61%", right: "2%" },
+            ];
+            const isRight = i % 2 !== 0;
+            return (
+              <div key={i} className="e-float" style={pos[i]}>
+                {!isRight && <div className="e-av">{a.initials}</div>}
+                <div className="e-av-info" style={isRight ? { textAlign: "right" } : {}}>
+                  <div className="e-av-name">{a.name}</div>
+                  <div className="e-av-role">{a.role}</div>
+                  <div className="e-av-stat">{a.stat}</div>
                 </div>
-              );
-            })}
+                {isRight ? <div className="e-arr-l" /> : <div className="e-arr-r" />}
+                {isRight && <div className="e-av">{a.initials}</div>}
+              </div>
+            );
+          })}
 
+          <div className="e-hero">
             {/* Copy */}
             <div className="e-hero-copy">
-              <div className="e-chip">⚡ Affiliate Programme · 67 creators earning</div>
+              <div className="e-chip">⚡ Affiliate Programme · 67 affiliates earning</div>
               <h1 className="e-h1">
-                Like selling ebooks.<br />
-                <em>Without writing one.</em>
+                You answer their<br />
+                questions for free.<br />
+                <em>Start getting paid for it.</em>
               </h1>
               <p className="e-hero-sub">
-                40+ ready-made guides across every niche. Share them with your audience.
-                Keep <strong>80% of every sale</strong> — for life.
+                Whatever your niche — share guides your audience is already
+                searching for and keep <strong>80% of every sale</strong>. For life.
               </p>
-              <div className="e-cta-row">
-                <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
-                <a className="e-btn-ghost" href="#faq">See how it works ↓</a>
-              </div>
+              <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
               <div className="e-trust">One-time · No monthly fees · 30-day money-back guarantee</div>
             </div>
 
-            {/* Phone mockup */}
+            {/* Phone */}
             <div className="e-phone-wrap">
               <div className="e-phone">
                 <div className="e-phone-bar">
                   <div className="e-phone-av" />
                   <div>
-                    <div className="e-phone-gname">My Community Group</div>
+                    <div className="e-phone-gname">Community Group</div>
                     <div className="e-phone-gmem">847 members</div>
                   </div>
                 </div>
                 <div className="e-bubble">
-                  Had a few people ask me about the UK visa process lately — I found this guide that covers every step. £9.99 and honestly worth it 👇
+                  Had a few people ask me about the UK visa process lately — found this guide that covers every step. £9.99 and worth it 👇
                   <div style={{ marginTop: 5 }}>
                     <span className="e-bubble-link">pdfseeds.com/guide/uk-visa</span>
                   </div>
@@ -633,7 +601,6 @@ export default function EarnPage() {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -647,17 +614,17 @@ export default function EarnPage() {
           <div className="e-proof-sep" />
           <div className="e-proof-item">
             <span className="e-proof-val">67</span>
-            <span className="e-proof-label">affiliates earning</span>
+            <span className="e-proof-lbl">affiliates earning</span>
           </div>
           <div className="e-proof-sep" />
           <div className="e-proof-item">
             <span className="e-proof-val">£7.99</span>
-            <span className="e-proof-label">per sale, yours</span>
+            <span className="e-proof-lbl">per sale, yours</span>
           </div>
           <div className="e-proof-sep" />
           <div className="e-proof-item">
             <span className="e-proof-val">40+</span>
-            <span className="e-proof-label">guides live</span>
+            <span className="e-proof-lbl">guides live</span>
           </div>
         </div>
 
@@ -698,7 +665,7 @@ export default function EarnPage() {
               <div className="e-math-rows">
                 {[
                   { icon: "💬", text: "One WhatsApp message · 10 people buy", earn: "£79.90" },
-                  { icon: "📌", text: "Pinned post in 3 groups · 10 buyers each", earn: "£239.70" },
+                  { icon: "📌", text: "Pinned post across 3 groups · 10 buyers each", earn: "£239.70" },
                   { icon: "📧", text: "Newsletter mention · 50 buyers this month", earn: "£399.50" },
                 ].map((r, i) => (
                   <div key={i} className="e-math-row">
@@ -709,7 +676,7 @@ export default function EarnPage() {
                 ))}
               </div>
               <div className="e-math-note">
-                Conservative. In an audience that trusts you, 10 buyers is a quiet week — and a good guide gets shared.
+                Conservative. In an audience that trusts you, 10 buyers is a quiet week — and a good guide gets forwarded.
               </div>
             </div>
           </div>
@@ -721,14 +688,14 @@ export default function EarnPage() {
         <section className="e-section">
           <div className="e-wrap">
             <div className="e-tag">What&apos;s included</div>
-            <h2 className="e-h2">Everything you need. Nothing you don&apos;t.</h2>
+            <h2 className="e-h2">Everything for £19.99 — once.</h2>
             <div className="e-get">
               {[
                 { icon: "💷", title: "80% commission on every sale — for life", desc: "Paid automatically every month. Nothing to chase, nothing to invoice." },
-                { icon: "🔗", title: "Your affiliate link for every guide in the library", desc: "Share any of the 40+ guides. Each one has your unique link. You earn on all of them." },
+                { icon: "🔗", title: "Your affiliate link for every guide in the library", desc: "Share any of the 40+ guides across every niche. Each one has your unique link." },
                 { icon: "📱", title: "Ready-made posts, captions and WhatsApp templates", desc: "Copy, paste, send. You're live within minutes of joining." },
                 { icon: "📊", title: "Real-time dashboard — every sale, every penny", desc: "See exactly what's earning and what isn't. Live, not delayed." },
-                { icon: "📚", title: "Every new guide added — at no extra cost", desc: "The library grows. Your earning potential grows with it." },
+                { icon: "📚", title: "Every new guide added — at no extra cost", desc: "The library keeps growing. Your earning potential grows with it." },
               ].map((b, i) => (
                 <div key={i} className="e-get-item">
                   <div className="e-get-icon">{b.icon}</div>
@@ -753,7 +720,7 @@ export default function EarnPage() {
             <section className="e-section">
               <div className="e-wrap">
                 <div className="e-tag">Live on pdfseeds.com</div>
-                <h2 className="e-h2">What people are searching for right now.</h2>
+                <h2 className="e-h2">What your audience is searching for right now.</h2>
                 <div className="e-demand">
                   <div className="e-demand-top">
                     <div className="e-demand-title">Real searches — real demand</div>
@@ -766,8 +733,8 @@ export default function EarnPage() {
                     </div>
                   ))}
                 </div>
-                <div style={{ fontSize: "0.72rem", color: "#B0A89A", marginTop: 12, textAlign: "right", fontStyle: "italic" }}>
-                  Every search is a potential sale — for any affiliate with a relevant audience.
+                <div style={{ fontSize: "0.7rem", color: "#B0A89A", marginTop: 12, textAlign: "right", fontStyle: "italic" }}>
+                  Every search is a potential sale for any affiliate with a relevant audience.
                 </div>
               </div>
             </section>
@@ -781,7 +748,7 @@ export default function EarnPage() {
               <span className="e-price-eyebrow">Affiliate Programme Access</span>
               <div className="e-price-num">£19.99</div>
               <div className="e-price-sub">One-time. No subscriptions. No monthly fees.</div>
-              <div className="e-price-recover">3 sales covers the £19.99. Every sale after that is pure earnings.</div>
+              <div className="e-price-recover">3 sales covers the £19.99. Every sale after that is yours.</div>
               <div className="e-price-list">
                 {[
                   "80% commission on every sale — for life",
@@ -807,8 +774,8 @@ export default function EarnPage() {
           </div>
         </div>
 
-        {/* ── FAQ ── */}
-        <section className="e-section" id="faq">
+        {/* ── 3 FAQs ── */}
+        <section className="e-section">
           <div className="e-wrap">
             <div className="e-tag">Questions</div>
             <h2 className="e-h2">The three things people ask before they join.</h2>
@@ -828,8 +795,8 @@ export default function EarnPage() {
         {/* ── FINAL CTA ── */}
         <div className="e-final">
           <h2 className="e-final-h">
-            You already have the audience.<br />
-            This is what you do with it.
+            Your audience already trusts you.<br />
+            The only thing missing is getting paid for it.
           </h2>
           <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
             {loading ? "Opening checkout…" : "Join as an Affiliate — £19.99 →"}
@@ -845,7 +812,7 @@ export default function EarnPage() {
         </div>
 
         {/* ── AFFILIATE RECOVERY ── */}
-        <div style={{ textAlign: "center", paddingBottom: 48 }}>
+        <div style={{ textAlign: "center", paddingBottom: 52 }}>
           {!recovery ? (
             <button
               onClick={() => setRecovery(true)}
@@ -858,17 +825,31 @@ export default function EarnPage() {
               <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#0F0A1A", marginBottom: 5 }}>Resend my dashboard link</div>
               <div style={{ fontSize: "0.75rem", color: "#B0A89A", marginBottom: 18 }}>Enter the email you used when you joined.</div>
               {recoveryStatus === "done" ? (
-                <div style={{ fontSize: "0.82rem", color: "#15803D", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "13px 16px" }}>✓ Check your inbox — your dashboard link is on its way.</div>
+                <div style={{ fontSize: "0.82rem", color: "#15803D", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "13px 16px" }}>
+                  ✓ Check your inbox — your dashboard link is on its way.
+                </div>
               ) : recoveryStatus === "notfound" ? (
                 <div>
-                  <div style={{ fontSize: "0.82rem", color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "13px 16px", marginBottom: 10 }}>No account found. Try the email you used when you paid.</div>
-                  <button onClick={() => setRecoveryStatus("idle")} style={{ background: "none", border: "none", color: "#8B5CF6", fontSize: "0.78rem", cursor: "pointer", fontWeight: 700 }}>Try a different email →</button>
+                  <div style={{ fontSize: "0.82rem", color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "13px 16px", marginBottom: 10 }}>
+                    No account found. Try the email you used when you paid.
+                  </div>
+                  <button onClick={() => setRecoveryStatus("idle")} style={{ background: "none", border: "none", color: "#8B5CF6", fontSize: "0.78rem", cursor: "pointer", fontWeight: 700 }}>
+                    Try a different email →
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleRecovery}>
                   <div style={{ background: "#FAF9F7", border: "1.5px solid #EAE6E0", borderRadius: 10, padding: "4px 4px 4px 14px", display: "flex", alignItems: "center", gap: 7 }}>
-                    <input type="email" value={recoveryEmail} onChange={e => setRecoveryEmail(e.target.value)} placeholder="Your email address" required autoFocus style={{ flex: 1, border: "none", outline: "none", fontSize: "0.86rem", color: "#0F0A1A", background: "transparent", padding: "10px 0", fontFamily: "inherit" }} />
-                    <button type="submit" disabled={recoveryStatus === "sending"} style={{ background: "linear-gradient(135deg,#8B5CF6,#6D28D9)", color: "#fff", fontWeight: 700, fontSize: "0.78rem", padding: "9px 15px", border: "none", borderRadius: 8, cursor: "pointer", whiteSpace: "nowrap", opacity: recoveryStatus === "sending" ? 0.5 : 1, fontFamily: "inherit" }}>
+                    <input
+                      type="email" value={recoveryEmail}
+                      onChange={e => setRecoveryEmail(e.target.value)}
+                      placeholder="Your email address" required autoFocus
+                      style={{ flex: 1, border: "none", outline: "none", fontSize: "0.86rem", color: "#0F0A1A", background: "transparent", padding: "10px 0", fontFamily: "inherit" }}
+                    />
+                    <button
+                      type="submit" disabled={recoveryStatus === "sending"}
+                      style={{ background: "linear-gradient(135deg,#8B5CF6,#6D28D9)", color: "#fff", fontWeight: 700, fontSize: "0.78rem", padding: "9px 15px", border: "none", borderRadius: 8, cursor: "pointer", whiteSpace: "nowrap", opacity: recoveryStatus === "sending" ? 0.5 : 1, fontFamily: "inherit" }}
+                    >
                       {recoveryStatus === "sending" ? "Sending…" : "Send link →"}
                     </button>
                   </div>
