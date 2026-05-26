@@ -120,16 +120,55 @@ export default function EarnPage() {
           position: relative; overflow: hidden;
         }
 
-        /* ─── HERO INNER (split layout) ─── */
+        /* ─── HERO INNER (centered) ─── */
         .e-hero {
-          max-width: 1160px; margin: 0 auto;
-          display: grid; grid-template-columns: 1fr 420px;
-          align-items: center; gap: 64px;
-          padding: 108px 80px 96px;
+          max-width: 700px; margin: 0 auto;
+          display: flex; flex-direction: column; align-items: center;
+          text-align: center;
+          padding: 108px 40px 80px;
           position: relative; z-index: 1;
         }
 
-        /* ─── AVATARS ─── */
+        /* ─── ORBITING AVATARS (hero corners) ─── */
+        .e-orb {
+          position: absolute; display: flex; flex-direction: column;
+          align-items: center; gap: 6px;
+          animation: efloat 5s ease-in-out infinite;
+          pointer-events: none; z-index: 0;
+        }
+        .e-orb:nth-child(2) { animation-delay: 1.4s; }
+        .e-orb:nth-child(3) { animation-delay: 2.8s; }
+        .e-orb:nth-child(4) { animation-delay: 4.2s; }
+        @keyframes efloat {
+          0%, 100% { transform: translateY(0); }
+          50%       { transform: translateY(-8px); }
+        }
+        .e-orb-row { display: flex; align-items: center; gap: 10px; }
+        .e-orb-circle {
+          width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+          background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+          border: 3px solid #fff;
+          box-shadow: 0 8px 28px rgba(139,92,246,0.28), 0 0 0 6px rgba(139,92,246,0.07);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 0.85rem; font-weight: 800; color: #fff;
+        }
+        .e-orb-stat {
+          font-size: 0.62rem; font-weight: 800; color: #6D28D9;
+          background: #F5F3FF; border: 1px solid #E0D9FF;
+          border-radius: 999px; padding: 3px 10px; white-space: nowrap;
+        }
+        .e-orb-arr--r {
+          width: 0; height: 0; flex-shrink: 0;
+          border-top: 7px solid transparent; border-bottom: 7px solid transparent;
+          border-left: 11px solid rgba(139,92,246,0.5);
+        }
+        .e-orb-arr--l {
+          width: 0; height: 0; flex-shrink: 0;
+          border-top: 7px solid transparent; border-bottom: 7px solid transparent;
+          border-right: 11px solid rgba(139,92,246,0.5);
+        }
+
+        /* ─── AVATAR PILLS (testimonials section) ─── */
         .e-av {
           width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
           background: linear-gradient(135deg, #8B5CF6, #6D28D9);
@@ -142,11 +181,7 @@ export default function EarnPage() {
         .e-av-name { font-size: 0.68rem; font-weight: 700; color: #0F0A1A; }
         .e-av-role { font-size: 0.58rem; color: #9B8AF0; }
         .e-av-stat { font-size: 0.63rem; font-weight: 800; color: #6D28D9; }
-
-        /* ─── AVATAR ROW (testimonials) ─── */
-        .e-av-row {
-          display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;
-        }
+        .e-av-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
         .e-av-pill {
           display: flex; align-items: center; gap: 10px;
           background: #fff; border: 1px solid #EEE9E0;
@@ -179,7 +214,6 @@ export default function EarnPage() {
         .e-trust-arrow { align-self: center; color: #DDD6FE; font-size: 1.4rem; flex-shrink: 0; }
 
         /* ─── HERO COPY ─── */
-        .e-hero-copy { position: relative; z-index: 1; }
         .e-chip {
           display: inline-flex; align-items: center; gap: 8px;
           background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2);
@@ -199,8 +233,8 @@ export default function EarnPage() {
           text-underline-offset: 5px;
         }
         .e-hero-sub {
-          font-size: 1rem; color: #6B5E52;
-          line-height: 1.78; margin-bottom: 36px; max-width: 420px;
+          font-size: 1.05rem; color: #6B5E52;
+          line-height: 1.7; margin-bottom: 36px; max-width: 460px;
         }
         .e-hero-sub strong { color: #0F0A1A; font-weight: 700; }
         .e-btn {
@@ -218,7 +252,7 @@ export default function EarnPage() {
         .e-trust { font-size: 0.68rem; color: #B0A89A; letter-spacing: 0.04em; }
 
         /* ─── PHONE MOCKUP ─── */
-        .e-phone-wrap { position: relative; z-index: 1; }
+        .e-phone-wrap { margin-top: 52px; width: 100%; max-width: 300px; }
         .e-phone {
           background: #E8DDD4; border-radius: 28px; padding: 18px 15px;
           box-shadow: 0 32px 80px rgba(15,10,26,0.11), 0 0 0 1px rgba(0,0,0,0.04);
@@ -462,12 +496,8 @@ export default function EarnPage() {
 
         /* ─── RESPONSIVE: TABLET ─── */
         @media (min-width: 601px) and (max-width: 1100px) {
-          .e-hero {
-            grid-template-columns: 1fr; padding: 80px 40px 72px;
-            text-align: center; gap: 40px;
-          }
-          .e-hero-sub { margin: 0 auto 36px; }
-          .e-phone-wrap { display: none; }
+          .e-hero { padding: 80px 40px 64px; }
+          .e-orb { display: none; }
           .e-wrap { padding: 0 40px; }
           .e-trust-outer { padding: 20px 40px; }
           .e-trust-step { padding: 0 16px; }
@@ -475,12 +505,10 @@ export default function EarnPage() {
 
         /* ─── RESPONSIVE: MOBILE ─── */
         @media (max-width: 600px) {
-          .e-hero {
-            grid-template-columns: 1fr; padding: 64px 20px 44px;
-            text-align: center; gap: 36px;
-          }
+          .e-hero { padding: 56px 20px 44px; }
+          .e-orb { display: none; }
           .e-h1 { font-size: 2rem; }
-          .e-hero-sub { font-size: 0.92rem; margin: 0 auto 0; }
+          .e-hero-sub { font-size: 0.92rem; }
 
           /* Hide inline CTAs — fixed bar takes over */
           .e-btn:not(.e-btn-white),
@@ -553,25 +581,44 @@ export default function EarnPage() {
         {/* ── HERO ── */}
         <div className="e-hero-outer">
 
-          <div className="e-hero">
-            {/* Copy */}
-            <div className="e-hero-copy">
-              <div className="e-chip">For WhatsApp admins, newsletter writers &amp; community leaders</div>
-              <h1 className="e-h1">
-                They&apos;re asking the group.<br />
-                The group doesn&apos;t know.<br />
-                <em>You will — in 60 seconds.</em>
-              </h1>
-              <p className="e-hero-sub">
-                Paste their question. Get a detailed guide. Read it. Share only what you&apos;d recommend yourself. <strong>Earn 80% — forever.</strong>
-              </p>
-              <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
-                {loading ? "Opening checkout…" : "Become a Curator →"}
-              </button>
-              <div className="e-trust">£19.99 one-time · No monthly fees · 30-day money-back guarantee</div>
-            </div>
+          {/* Orbiting avatars — 4 corners, Clause-style */}
+          {AVATARS.map((a, i) => {
+            const pos: React.CSSProperties[] = [
+              { top: "16%", left: "6%" },
+              { top: "16%", right: "6%" },
+              { bottom: "14%", left: "6%" },
+              { bottom: "14%", right: "6%" },
+            ];
+            const isRight = i % 2 !== 0;
+            return (
+              <div key={i} className="e-orb" style={pos[i]}>
+                <div className="e-orb-row">
+                  {!isRight && <div className="e-orb-circle">{a.initials}</div>}
+                  {!isRight && <div className="e-orb-arr--r" />}
+                  {isRight && <div className="e-orb-arr--l" />}
+                  {isRight && <div className="e-orb-circle">{a.initials}</div>}
+                </div>
+                <div className="e-orb-stat">{a.stat}</div>
+              </div>
+            );
+          })}
 
-            {/* Phone */}
+          <div className="e-hero">
+            <div className="e-chip">For WhatsApp admins, newsletter writers &amp; community leaders</div>
+            <h1 className="e-h1">
+              They&apos;re asking the group.<br />
+              The group doesn&apos;t know.<br />
+              <em>You will — in 60 seconds.</em>
+            </h1>
+            <p className="e-hero-sub">
+              Share only what you&apos;d stand behind. <strong>Earn 80% — forever.</strong>
+            </p>
+            <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
+              {loading ? "Opening checkout…" : "Become a Curator →"}
+            </button>
+            <div className="e-trust">£19.99 one-time · No monthly fees · 30-day money-back guarantee</div>
+
+            {/* Phone mockup — visual proof of mechanism */}
             <div className="e-phone-wrap">
               <div className="e-phone">
                 <div className="e-phone-bar">
@@ -582,7 +629,7 @@ export default function EarnPage() {
                   </div>
                 </div>
                 <div className="e-bubble">
-                  Had a few people ask me about the UK visa process lately — found this guide that covers every step. £9.99 and worth it 👇
+                  Had a few people ask me about the UK visa process — found this guide that covers every step. Worth it 👇
                   <div style={{ marginTop: 5 }}>
                     <span className="e-bubble-link">pdfseeds.com/guide/uk-visa</span>
                   </div>
