@@ -6,7 +6,8 @@ type Props = {
   searchParams: Promise<{ session_id?: string }>;
 };
 
-function renderMarkdown(md: string): string {
+function renderMarkdown(md: string | null | undefined): string {
+  if (!md) return "";
   return md
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/^## (.+)$/gm, "<h2>$1</h2>")
@@ -28,13 +29,19 @@ export default async function PdfPage({ params, searchParams }: Props) {
   const sp = await searchParams;
   const justPurchased = !!sp?.session_id;
 
-  const product = await prisma.product.findFirst({
-    where: { slug },
-    include: { opportunity: true },
-  });
+  let product;
+  try {
+    product = await prisma.product.findFirst({
+      where: { slug },
+      include: { opportunity: true },
+    });
+  } catch {
+    product = null;
+  }
   if (!product) notFound();
 
   const contentHtml = renderMarkdown(product.pdfContent);
+  const isEmpty = !contentHtml.trim();
   const year = new Date().getFullYear();
 
   return (
@@ -198,6 +205,23 @@ export default async function PdfPage({ params, searchParams }: Props) {
         .content li.check { list-style: none; padding-left: 4px; font-weight: 600; }
         .content strong { color: #1a1a2e; font-weight: 700; }
 
+        .content-pending {
+          background: #F8F7F4;
+          border: 1.5px solid #E2E8F0;
+          border-radius: 14px;
+          padding: 36px 32px;
+          text-align: center;
+          font-family: system-ui, -apple-system, sans-serif;
+          margin-bottom: 40px;
+        }
+        .content-pending p {
+          font-size: 0.95rem;
+          color: #64748B;
+          line-height: 1.7;
+          margin: 0 0 10px;
+        }
+        .content-pending p:last-child { margin: 0; }
+
         .save-footer {
           margin-top: 56px;
           padding-top: 32px;
@@ -292,7 +316,14 @@ export default async function PdfPage({ params, searchParams }: Props) {
           <hr className="guide-divider" />
         </div>
 
-        <div className="content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+        {isEmpty ? (
+          <div className="content-pending">
+            <p>Your guide is being finalised — it will be ready within a few minutes.</p>
+            <p>A copy has been sent to your email. Bookmark this page and refresh shortly.</p>
+          </div>
+        ) : (
+          <div className="content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+        )}
 
         <div className="save-footer">
           <p>Save this guide so you can come back to it any time.</p>
