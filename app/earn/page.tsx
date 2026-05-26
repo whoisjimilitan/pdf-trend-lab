@@ -565,10 +565,11 @@ export default function EarnPage() {
               <h1 className="e-h1">
                 Your community is lost<br />
                 in a rabbit hole.<br />
-                <em>You&apos;re the way out.</em>
+                <em>You&apos;re their way out.</em>
               </h1>
               <p className="e-hero-sub">
-                Any question they ask — <strong>paste it in, get a complete guide in 60 seconds</strong>, drop your link. You become the person who always comes through. Keep 80% of every sale. For life.
+                Any question they ask — you answer in 60 seconds.<br />
+                <strong>Keep 80% of every sale. Forever.</strong>
               </p>
               <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
               <div className="e-trust">One-time · No monthly fees · 30-day money-back guarantee</div>

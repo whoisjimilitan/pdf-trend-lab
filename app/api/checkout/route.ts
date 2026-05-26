@@ -15,20 +15,17 @@ export async function POST(req: Request) {
   if (!product) return NextResponse.json({ error: "Guide not found" }, { status: 404 });
 
   const opp = product.opportunity;
-  const currency = "gbp";
-
   const unitAmount = tripwire ? 100 : Math.round((opp?.minPrice ?? 9.99) * 100);
-
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pdfseeds.com";
 
   const session = await stripe.checkout.sessions.create({
-    ui_mode: "embedded",
     mode: "payment",
-    return_url: `${siteUrl}/guide/${slug}/pdf?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${siteUrl}/guide/${slug}/pdf?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: siteUrl,
     line_items: [{
       quantity: 1,
       price_data: {
-        currency,
+        currency: "gbp",
         unit_amount: unitAmount,
         product_data: {
           name: product.title.length > 60
@@ -43,5 +40,5 @@ export async function POST(req: Request) {
     },
   });
 
-  return NextResponse.json({ clientSecret: session.client_secret });
+  return NextResponse.json({ url: session.url });
 }

@@ -1,12 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js";
+import { useState, useRef, useEffect } from "react";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-type Step = "idle" | "country" | "generating" | "result" | "checkout" | "paid" | "waitlist";
+type Step = "idle" | "country" | "generating" | "result" | "waitlist";
 
 type Guide = {
   slug: string;
@@ -16,7 +12,6 @@ type Guide = {
   chapters: { chapter: string; title: string; description: string }[];
 };
 
-type RelatedGuide = { slug: string; title: string; price: string };
 type WaitlistStatus = "idle" | "sending" | "done";
 
 const MESSAGES = [
@@ -34,7 +29,6 @@ export default function HomePage() {
   const [error, setError] = useState("");
   const [msgIndex, setMsgIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [relatedGuides, setRelatedGuides] = useState<RelatedGuide[]>([]);
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistStatus, setWaitlistStatus] = useState<WaitlistStatus>("idle");
   const [partnerRef, setPartnerRef] = useState("");
@@ -119,27 +113,16 @@ export default function HomePage() {
     }
   }
 
-  const fetchClientSecret = useCallback(async (): Promise<string> => {
-    if (!guide) throw new Error("No guide selected");
+  async function handleBuy() {
+    if (!guide) return;
     const res = await fetch("/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slug: guide.slug, ...(partnerRef ? { ref: partnerRef } : {}), ...(isFirstBuy ? { tripwire: true } : {}) }),
     });
     const data = await res.json();
-    if (!data.clientSecret) throw new Error("Could not initialise payment");
-    return data.clientSecret as string;
-  }, [guide, partnerRef, isFirstBuy]);
-
-  // Fetch 3 related guides from the store after purchase for upsell
-  const fetchRelated = useCallback(async (slug: string) => {
-    try {
-      const res = await fetch(`/api/related?slug=${encodeURIComponent(slug)}&limit=3`);
-      if (!res.ok) return;
-      const data = await res.json() as RelatedGuide[];
-      if (Array.isArray(data)) setRelatedGuides(data);
-    } catch {}
-  }, []);
+    if (data.url) window.location.href = data.url;
+  }
 
   async function submitWaitlist(e: { preventDefault(): void }) {
     e.preventDefault();
@@ -164,7 +147,6 @@ export default function HomePage() {
     setCountry("");
     setGuide(null);
     setError("");
-    setRelatedGuides([]);
     setWaitlistEmail("");
     setWaitlistStatus("idle");
   }
@@ -744,7 +726,7 @@ export default function HomePage() {
                   ✦ First guide — intro price
                 </div>
               )}
-              <button className="pg-result-cta" onClick={() => setStep("checkout")}>
+              <button className="pg-result-cta" onClick={handleBuy}>
                 {isFirstBuy
                   ? <>Get My Guide — <span style={{ textDecoration: "line-through", opacity: 0.55, fontWeight: 400 }}>{guide.price}</span> £1.00 →</>
                   : <>Get My Guide — {guide.price} →</>
@@ -765,50 +747,6 @@ export default function HomePage() {
                   Request a custom guide →
                 </button>
               </div>
-            </div>
-          )}
-
-          {/* ── CHECKOUT ── */}
-          {step === "checkout" && guide && (
-            <div className="pg-checkout">
-              <button className="pg-checkout-back" onClick={() => setStep("result")}>
-                ← Back
-              </button>
-              <EmbeddedCheckoutProvider
-                stripe={stripePromise}
-                options={{ fetchClientSecret, onComplete: () => { setStep("paid"); setIsFirstBuy(false); localStorage.setItem("pdfseeds_purchased", "1"); if (guide) fetchRelated(guide.slug); } }}
-              >
-                <div className="pg-checkout-stripe">
-                  <EmbeddedCheckout />
-                </div>
-              </EmbeddedCheckoutProvider>
-            </div>
-          )}
-
-          {/* ── PAID ── */}
-          {step === "paid" && guide && (
-            <div className="pg-paid">
-              <div className="pg-paid-orb">🌾</div>
-              <div className="pg-paid-title">Your guide is ready</div>
-              <div className="pg-paid-sub">
-                Check your email for your receipt and download link.<br />
-                You can also open it right now.
-              </div>
-              <a href={`/guide/${guide.slug}/pdf`} className="pg-paid-btn">Open My Guide →</a>
-
-              {relatedGuides.length > 0 && (
-                <div className="pg-upsell">
-                  <div className="pg-upsell-heading">People who got this also needed</div>
-                  <div className="pg-upsell-grid">
-                    {relatedGuides.map(g => (
-                      <a key={g.slug} href={`/sell/${g.slug}`} className="pg-upsell-card">
-                        <div className="pg-upsell-card-title">{g.title}</div>
-                        <div className="pg-upsell-card-price">{g.price} →</div>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
