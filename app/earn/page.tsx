@@ -500,7 +500,7 @@ export default function EarnPage() {
             <em>Start getting paid for the next one.</em>
           </h1>
           <p className="earn-sub">
-            Share guides your community is already searching for. Keep 80% of every sale — for life.
+            Share guides your community is already searching for. Keep 80% of every sale.
           </p>
           <div>
             <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>
@@ -613,7 +613,7 @@ export default function EarnPage() {
               <button className="earn-cta-white" onClick={handleGetAccess} disabled={loading}>
                 {loading ? "Opening checkout…" : "Become a Partner →"}
               </button>
-              <div className="earn-price-guarantee">30-day money-back guarantee · No questions asked</div>
+              <div className="earn-price-guarantee">80% commission — for life · 30-day money-back guarantee · No questions asked</div>
             </div>
           </div>
         </section>
