@@ -188,7 +188,7 @@ export default function EarnPage() {
         .e-trust-step:last-child { padding-right: 0; }
         .e-trust-icon {
           width: 36px; height: 36px; border-radius: 9px;
-          background: #F5F3FF; border: 1px solid #E0D9FF;
+          background: #F5F0EB; border: 1px solid #EEE9E0;
           display: flex; align-items: center; justify-content: center;
           font-size: 0.9rem; flex-shrink: 0;
         }
@@ -356,7 +356,7 @@ export default function EarnPage() {
         }
         .e-get-icon {
           width: 34px; height: 34px; border-radius: 9px;
-          background: #F5F3FF; border: 1px solid #E0D9FF;
+          background: #F5F0EB; border: 1px solid #EEE9E0;
           display: flex; align-items: center; justify-content: center;
           font-size: 0.85rem; flex-shrink: 0;
         }
@@ -577,11 +577,11 @@ export default function EarnPage() {
               <div className="e-chip">For WhatsApp admins, newsletter writers &amp; community leaders</div>
               <h1 className="e-h1">
                 They&apos;re asking the group.<br />
-                The group doesn&apos;t know.<br />
+                But the group doesn&apos;t always know.<br />
                 <em>You will — in 60 seconds.</em>
               </h1>
               <p className="e-hero-sub">
-                Share only PDF Guides you&apos;d stand behind that answer your audience. <strong>Earn 80% — forever.</strong>
+                Only share what you&apos;d stand behind. <strong>Earn 80% — forever.</strong>
               </p>
               <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
                 {loading ? "Opening checkout…" : "Become a Curator →"}
