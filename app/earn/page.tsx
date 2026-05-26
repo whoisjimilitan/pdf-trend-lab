@@ -563,12 +563,12 @@ export default function EarnPage() {
             <div className="e-hero-copy">
               <div className="e-chip">⚡ Affiliate Programme · 67 affiliates earning</div>
               <h1 className="e-h1">
-                You answer their<br />
-                questions for free.<br />
-                <em>Start getting paid for it.</em>
+                Your community is lost<br />
+                in a rabbit hole.<br />
+                <em>You&apos;re the way out.</em>
               </h1>
               <p className="e-hero-sub">
-                Any question your community asks — <strong>paste it in, get a professional guide in 60 seconds</strong>, share the link, and keep 80% of every sale. For life.
+                Any question they ask — <strong>paste it in, get a complete guide in 60 seconds</strong>, drop your link. You become the person who always comes through. Keep 80% of every sale. For life.
               </p>
               <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
               <div className="e-trust">One-time · No monthly fees · 30-day money-back guarantee</div>
@@ -794,8 +794,8 @@ export default function EarnPage() {
         {/* ── FINAL CTA ── */}
         <div className="e-final">
           <h2 className="e-final-h">
-            Your audience already trusts you.<br />
-            The only thing missing is getting paid for it.
+            Your community already comes to you.<br />
+            Now you have the answer every time — and 80% of what they pay for it.
           </h2>
           <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
             {loading ? "Opening checkout…" : "Join as an Affiliate — £19.99 →"}
