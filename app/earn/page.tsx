@@ -2,55 +2,47 @@
 
 import { useState, useEffect } from "react";
 
+const CREATORS = [
+  { initials: "SJ", name: "Sarah J.", role: "Finance creator · 8.5k", stat: "£420/month" },
+  { initials: "MO", name: "Michael O.", role: "Immigration advisor · 5k", stat: "£340 first month" },
+  { initials: "AP", name: "Aisha P.", role: "Parenting blogger · 12k", stat: "£280/month" },
+  { initials: "RK", name: "Raj K.", role: "Business tips · 22k", stat: "£580 in 6 wks" },
+];
+
 const TESTIMONIALS = [
-  { name: "Adaeze O.", role: "WhatsApp Group Admin · London", quote: "One pinned message. £47.90 in two days. The guide sold itself.", stat: "£340 first month" },
-  { name: "Mohammed A.", role: "Community Organiser · Birmingham", quote: "23 people from my Facebook group bought the tax guide. The templates did all the selling.", stat: "£580 in 6 weeks" },
-  { name: "Abena K.", role: "Ghana Community Manager · Leeds", quote: "400 people in my group. Pinned the housing guide — £159.80 in a week. Didn't explain a thing.", stat: "£159 first week" },
-  { name: "Priya S.", role: "Immigration Advisor · London", quote: "My followers already trust me on immigration. The guides are exactly what they'd pay for anyway. Now they pay me.", stat: "£220 first month" },
-  { name: "Femi B.", role: "WhatsApp Admin · Manchester", quote: "One message. Two guides. £211 in 10 days. Didn't expect it to be this clean.", stat: "£211 in 10 days" },
-  { name: "Amara D.", role: "Community Support Worker · Bristol", quote: "I felt weird about 'selling' to my community. Then I realised — I was just pointing them to answers they needed.", stat: "£180 first month" },
-  { name: "Chinwe E.", role: "Facebook Group Admin · London", quote: "Copied the template, changed two words, sent it. Three sales before I even put my phone down.", stat: "£300+ ongoing" },
-  { name: "Emeka O.", role: "Newsletter Writer · Glasgow", quote: "Made back the £19.99 within four days. Everything after that felt free.", stat: "ROI in 4 days" },
-  { name: "Fatima R.", role: "Community Coordinator · Manchester", quote: "18 sales — mostly word of mouth after the first share. Nothing to chase.", stat: "£143.82 earned" },
-];
-
-const GUIDES = [
-  { icon: "🛂", title: "UK Visa Application Guide", pages: 42, tag: "Top seller" },
-  { icon: "🏢", title: "Starting a Business in the UK", pages: 38, tag: "Popular" },
-  { icon: "🏠", title: "Housing & Renting Rights", pages: 31, tag: "High demand" },
-  { icon: "🧾", title: "Understanding Your Tax Return", pages: 28, tag: "Popular" },
-  { icon: "🏥", title: "NHS & Healthcare Access", pages: 35, tag: "Essential" },
-  { icon: "🏦", title: "Opening a UK Bank Account", pages: 22, tag: "Quick read" },
-  { icon: "💷", title: "Universal Credit Explained", pages: 29, tag: "Popular" },
-  { icon: "🚗", title: "Driving Licence Conversion", pages: 19, tag: "Quick win" },
-  { icon: "🎓", title: "Schools & Education in the UK", pages: 33, tag: "Families" },
-];
-
-const VIDEO_AFFILIATES = [
-  { initials: "AO", name: "Adaeze O.", role: "WhatsApp Admin" },
-  { initials: "MA", name: "Mohammed A.", role: "Community Organiser" },
-  { initials: "AK", name: "Abena K.", role: "Community Manager" },
-  { initials: "PS", name: "Priya S.", role: "Immigration Advisor" },
-  { initials: "FB", name: "Femi B.", role: "Group Admin" },
-  { initials: "AD", name: "Amara D.", role: "Support Worker" },
-  { initials: "CE", name: "Chinwe E.", role: "Facebook Admin" },
-  { initials: "EO", name: "Emeka O.", role: "Newsletter Writer" },
-  { initials: "FR", name: "Fatima R.", role: "Coordinator" },
-];
-
-const LOGOS = [
-  "UK African Communities", "Nigerian Community Trust", "Ghana Diaspora UK",
-  "South Asian Network UK", "Black Professionals UK", "Immigrant Support Hub",
-  "East African Alliance", "Caribbean Community Hub", "Muslim Support Network",
+  {
+    quote: "One pinned message. £47.90 in two days. The guide sold itself.",
+    name: "Adaeze O.",
+    role: "Community creator · WhatsApp + Facebook",
+    stat: "£340 first month",
+  },
+  {
+    quote: "Mentioned it once in my newsletter. 23 sales. Didn't have to explain a thing.",
+    name: "Mohammed A.",
+    role: "Newsletter creator · 2.1k subscribers",
+    stat: "£580 in 6 weeks",
+  },
+  {
+    quote: "18 sales — mostly word of mouth after the first share. Nothing to chase.",
+    name: "Fatima R.",
+    role: "Content creator · Multiple platforms",
+    stat: "£143.82 earned",
+  },
 ];
 
 const FAQS = [
-  { q: "Do I need a big audience?", a: "No. One trusted WhatsApp group is enough. Affiliates with 200 followers consistently outperform those with 20,000 because trust beats reach every time." },
-  { q: "Do I handle delivery, support, or refunds?", a: "Nothing. You share the link. We handle delivery, customer support, and any refunds — entirely on our side." },
-  { q: "Is there a monthly fee?", a: "No. £19.99 once. Full access forever, including every new guide we add to the library." },
-  { q: "When and how do I get paid?", a: "Automatically. Every sale through your link is tracked and your 80% is paid out monthly. You see every sale in your dashboard in real time." },
-  { q: "What if it doesn't work for my community?", a: "30-day money-back guarantee. No sales in 30 days — email us and we refund every penny. No forms, no questions asked." },
-  { q: "How is this different from other affiliate programmes?", a: "80% commission is unusually high — most pay 10–30%. These guides are built for immigrant communities, so they convert naturally. Your audience was already looking for the answer." },
+  {
+    q: "Do I need a big audience?",
+    a: "No. 200 followers who trust you will outperform 20,000 who don't. If people ask you for advice, they'll buy from you.",
+  },
+  {
+    q: "Do I handle delivery, support, or refunds?",
+    a: "Nothing. You share the link. We handle everything — delivery, support, and any refunds come entirely from our side.",
+  },
+  {
+    q: "Is there a monthly fee?",
+    a: "No. £19.99 once. Full access forever, including every new guide we add.",
+  },
 ];
 
 export default function EarnPage() {
@@ -60,33 +52,6 @@ export default function EarnPage() {
   const [recovery, setRecovery] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState("");
   const [recoveryStatus, setRecoveryStatus] = useState<"idle" | "sending" | "done" | "notfound">("idle");
-  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", whatsapp: "" });
-  const [formStatus, setFormStatus] = useState<"idle" | "sending" | "done">("idle");
-
-  async function handleRecovery(e: { preventDefault(): void }) {
-    e.preventDefault();
-    setRecoveryStatus("sending");
-    const res = await fetch("/api/partner/recover", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: recoveryEmail.trim() }),
-    });
-    const data = await res.json() as { found: boolean };
-    setRecoveryStatus(data.found ? "done" : "notfound");
-  }
-
-  async function handleForm(e: { preventDefault(): void }) {
-    e.preventDefault();
-    setFormStatus("sending");
-    try {
-      await fetch("/api/partner/interest", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-    } catch { /* fail silently */ }
-    setFormStatus("done");
-  }
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("joined") === "true") {
@@ -100,8 +65,7 @@ export default function EarnPage() {
       .then(r => r.json())
       .then((data: { query: string }[]) => {
         if (Array.isArray(data)) {
-          const unique = [...new Set(data.map(d => d.query))].slice(0, 6);
-          setLiveSearches(unique);
+          setLiveSearches([...new Set(data.map(d => d.query))].slice(0, 5));
         }
       })
       .catch(() => {});
@@ -113,1052 +77,697 @@ export default function EarnPage() {
       const res = await fetch("/api/checkout/farmer", { method: "POST" });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-    } catch {
-      setLoading(false);
-    }
+    } catch { setLoading(false); }
   }
 
-  const ctaLabel = loading ? "Opening checkout…" : "Join as an Affiliate — £19.99";
+  async function handleRecovery(e: { preventDefault(): void }) {
+    e.preventDefault();
+    setRecoveryStatus("sending");
+    const res = await fetch("/api/partner/recover", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: recoveryEmail.trim() }),
+    });
+    const data = await res.json() as { found: boolean };
+    setRecoveryStatus(data.found ? "done" : "notfound");
+  }
+
+  const btnLabel = loading ? "Opening checkout…" : "Join as an Affiliate — £19.99";
 
   return (
     <>
       <style>{`
-        body > aside { display: none !important; }
-        body > nav  { display: none !important; }
-        body { display: block !important; overflow-y: auto !important; height: auto !important; background: #FAFAF9 !important; color-scheme: light !important; }
+        body > aside, body > nav { display: none !important; }
+        body {
+          display: block !important; overflow-y: auto !important;
+          height: auto !important; background: #FAFAF9 !important;
+          color-scheme: light !important;
+        }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .earn {
+        .e {
           font-family: var(--font-geist-sans), -apple-system, system-ui, sans-serif;
           color: #0F0A1A; background: #FAFAF9;
         }
 
-        /* ── HERO (Clause-style: grid + floating avatars) ── */
-        .earn-hero {
+        /* ─── HERO ─── */
+        .e-hero {
           background-color: #FAFAF9;
           background-image:
-            linear-gradient(rgba(124,58,237,0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(124,58,237,0.05) 1px, transparent 1px);
+            linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px);
           background-size: 72px 72px;
           min-height: 92vh;
-          display: flex; flex-direction: column;
-          align-items: center; justify-content: center;
-          text-align: center;
-          padding: 100px 32px 80px;
+          display: grid; grid-template-columns: 1fr 440px;
+          align-items: center; gap: 56px;
+          padding: 100px 80px 80px;
           position: relative; overflow: hidden;
+          max-width: 1200px; margin: 0 auto;
         }
 
-        /* Floating affiliate avatars */
-        .earn-float {
+        /* Floating creator avatars */
+        .e-float {
+          position: fixed; /* using absolute inside hero wrapper */
+          display: flex; align-items: center; gap: 10px;
+          animation: efloat 5s ease-in-out infinite;
+          pointer-events: none;
+        }
+        .e-hero-outer {
+          position: relative; overflow: hidden;
+          background-color: #FAFAF9;
+          background-image:
+            linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px);
+          background-size: 72px 72px;
+        }
+        .e-float {
           position: absolute;
           display: flex; align-items: center; gap: 10px;
-          animation: float-bob 4s ease-in-out infinite;
+          animation: efloat 5s ease-in-out infinite;
+          z-index: 0;
         }
-        @keyframes float-bob {
-          0%,100% { transform: translateY(0); }
-          50% { transform: translateY(-6px); }
+        .e-float:nth-child(2) { animation-delay: 1s; }
+        .e-float:nth-child(3) { animation-delay: 2s; }
+        .e-float:nth-child(4) { animation-delay: 3s; }
+        @keyframes efloat {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
         }
-        .earn-float:nth-child(2) { animation-delay: 0.8s; }
-        .earn-float:nth-child(3) { animation-delay: 1.6s; }
-        .earn-float:nth-child(4) { animation-delay: 2.4s; }
-        .earn-float-avatar {
-          width: 54px; height: 54px; border-radius: 50%;
-          background: linear-gradient(135deg, #7C3AED, #4F46E5);
+        .e-float-av {
+          width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
+          background: linear-gradient(135deg, #8B5CF6, #6D28D9);
           border: 3px solid #fff;
-          box-shadow: 0 4px 20px rgba(124,58,237,0.25), 0 0 0 6px rgba(124,58,237,0.06);
+          box-shadow: 0 4px 18px rgba(139,92,246,0.22), 0 0 0 5px rgba(139,92,246,0.07);
           display: flex; align-items: center; justify-content: center;
-          font-size: 0.82rem; font-weight: 800; color: #fff;
-          flex-shrink: 0;
+          font-size: 0.78rem; font-weight: 800; color: #fff; letter-spacing: 0.01em;
         }
-        .earn-float-info { text-align: left; }
-        .earn-float-name { font-size: 0.72rem; font-weight: 700; color: #0F0A1A; line-height: 1.3; }
-        .earn-float-role { font-size: 0.62rem; color: #9B8AF0; }
-        .earn-float-arrow-r {
-          width: 0; height: 0;
-          border-top: 6px solid transparent;
-          border-bottom: 6px solid transparent;
-          border-left: 9px solid #7C3AED;
-          flex-shrink: 0;
+        .e-float-info { line-height: 1.35; }
+        .e-float-name { font-size: 0.7rem; font-weight: 700; color: #0F0A1A; }
+        .e-float-role { font-size: 0.6rem; color: #9B8AF0; }
+        .e-float-stat { font-size: 0.65rem; font-weight: 800; color: #6D28D9; }
+        .e-arr-r {
+          width: 0; height: 0; flex-shrink: 0;
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+          border-left: 8px solid #8B5CF6;
         }
-        .earn-float-arrow-l {
-          width: 0; height: 0;
-          border-top: 6px solid transparent;
-          border-bottom: 6px solid transparent;
-          border-right: 9px solid #7C3AED;
-          flex-shrink: 0;
+        .e-arr-l {
+          width: 0; height: 0; flex-shrink: 0;
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+          border-right: 8px solid #8B5CF6;
         }
 
-        /* Hero content */
-        .earn-hero-inner { position: relative; z-index: 1; max-width: 640px; }
-        .earn-chip {
+        /* Hero copy */
+        .e-hero-copy { position: relative; z-index: 1; }
+        .e-chip {
           display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(124,58,237,0.08);
-          border: 1px solid rgba(124,58,237,0.18);
-          border-radius: 999px; padding: 7px 18px;
-          font-size: 0.72rem; font-weight: 700;
-          color: #7C3AED; letter-spacing: 0.08em;
-          text-transform: uppercase; margin-bottom: 28px;
+          background: rgba(139,92,246,0.08);
+          border: 1px solid rgba(139,92,246,0.2);
+          border-radius: 999px; padding: 7px 16px;
+          font-size: 0.68rem; font-weight: 800; color: #7C3AED;
+          letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 26px;
         }
-        .earn-h1 {
-          font-size: clamp(2.3rem, 5.5vw, 3.8rem);
+        .e-h1 {
+          font-size: clamp(2.2rem, 4.5vw, 3.5rem);
           font-weight: 900; color: #0F0A1A;
-          line-height: 1.08; letter-spacing: -0.04em;
-          margin-bottom: 24px;
+          line-height: 1.08; letter-spacing: -0.04em; margin-bottom: 22px;
         }
-        .earn-h1 em {
-          font-style: normal; color: #7C3AED;
+        .e-h1 em {
+          font-style: normal; color: #8B5CF6;
           text-decoration: underline;
           text-decoration-color: #DDD6FE;
           text-underline-offset: 5px;
         }
-        .earn-hero-sub {
-          font-size: clamp(0.95rem, 2vw, 1.05rem);
-          color: #6B5E52; line-height: 1.75;
-          margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto;
+        .e-hero-sub {
+          font-size: 1rem; color: #6B5E52;
+          line-height: 1.75; margin-bottom: 36px; max-width: 440px;
         }
-        .earn-hero-sub strong { color: #0F0A1A; font-weight: 700; }
-        .earn-cta-group {
-          display: flex; align-items: center; justify-content: center;
-          gap: 14px; flex-wrap: wrap; margin-bottom: 20px;
-        }
-        .earn-cta-primary {
-          background: linear-gradient(135deg, #5B21B6, #3B0764);
-          color: #fff; font-weight: 800; font-size: 1rem;
-          padding: 18px 40px; border-radius: 14px;
-          border: none; cursor: pointer;
-          box-shadow: 0 6px 24px rgba(91,33,182,0.4);
+        .e-hero-sub strong { color: #0F0A1A; font-weight: 700; }
+        .e-cta-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+        .e-btn {
+          background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+          color: #fff; font-weight: 800; font-size: 0.98rem;
+          padding: 18px 36px; border-radius: 14px;
+          border: none; cursor: pointer; font-family: inherit;
+          box-shadow: 0 6px 22px rgba(109,40,217,0.32);
           transition: opacity 0.15s, transform 0.1s;
-          letter-spacing: -0.01em; font-family: inherit;
+          letter-spacing: -0.01em;
         }
-        .earn-cta-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-        .earn-cta-primary:active { transform: scale(0.99); }
-        .earn-cta-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .earn-cta-secondary {
+        .e-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .e-btn:active { transform: scale(0.99); }
+        .e-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .e-btn-ghost {
           background: #fff; color: #3B0764;
-          font-weight: 700; font-size: 0.95rem;
-          padding: 18px 32px; border-radius: 14px;
-          border: 1.5px solid #DDD6FE;
-          text-decoration: none; cursor: pointer;
-          transition: background 0.15s; font-family: inherit;
-          display: inline-block;
+          font-weight: 700; font-size: 0.9rem;
+          padding: 18px 28px; border-radius: 14px;
+          border: 1.5px solid #DDD6FE; font-family: inherit;
+          cursor: pointer; text-decoration: none; display: inline-block;
+          transition: background 0.15s;
         }
-        .earn-cta-secondary:hover { background: #F5F3FF; }
-        .earn-hero-trust { font-size: 0.72rem; color: #B0A89A; letter-spacing: 0.04em; }
+        .e-btn-ghost:hover { background: #F5F3FF; }
+        .e-trust { font-size: 0.68rem; color: #B0A89A; letter-spacing: 0.04em; }
 
-        /* ── PROOF STRIP ── */
-        .earn-proof-strip {
-          background: #fff;
-          border-top: 1px solid #EEE9E0; border-bottom: 1px solid #EEE9E0;
-          padding: 20px 40px;
-          display: flex; align-items: center; justify-content: space-between;
-          gap: 24px; flex-wrap: wrap;
+        /* Phone mockup */
+        .e-phone-wrap { position: relative; z-index: 1; display: flex; justify-content: center; }
+        .e-phone {
+          background: #E8DDD4;
+          border-radius: 28px; padding: 18px 15px;
+          max-width: 300px; width: 100%;
+          box-shadow: 0 32px 80px rgba(15,10,26,0.12), 0 0 0 1px rgba(0,0,0,0.05);
         }
-        .earn-proof-left {
-          display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-        }
-        .earn-proof-stars { color: #00B67A; font-size: 1.1rem; letter-spacing: 1px; }
-        .earn-proof-score { font-size: 0.9rem; font-weight: 800; color: #0F0A1A; }
-        .earn-proof-count { font-size: 0.78rem; color: #9B8AF0; }
-        .earn-proof-badge {
-          display: inline-flex; align-items: center; gap: 5px;
-          background: #00B67A; color: #fff;
-          font-size: 0.65rem; font-weight: 800;
-          padding: 4px 10px; border-radius: 5px;
-          letter-spacing: 0.02em;
-        }
-        .earn-proof-logos {
-          display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
-        }
-        .earn-proof-logo-item {
-          font-size: 0.7rem; font-weight: 800; color: #C4BAB0;
-          letter-spacing: 0.06em; text-transform: uppercase;
-          white-space: nowrap;
-        }
-
-        /* ── SECTION SHELL ── */
-        .earn-wrap { max-width: 800px; margin: 0 auto; padding: 0 32px; }
-        .earn-section { padding: 88px 0; }
-        .earn-section-tag {
-          display: inline-flex; align-items: center; gap: 7px;
-          font-size: 0.65rem; font-weight: 800;
-          color: #7C3AED; letter-spacing: 0.12em;
-          text-transform: uppercase; margin-bottom: 14px;
-        }
-        .earn-section-tag::before {
-          content: ''; display: block;
-          width: 16px; height: 2px;
-          background: #7C3AED; border-radius: 2px;
-        }
-        .earn-section-h2 {
-          font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-          font-weight: 900; color: #0F0A1A;
-          letter-spacing: -0.04em; line-height: 1.12;
-          margin-bottom: 48px;
-        }
-        .earn-divider { border: none; border-top: 1px solid #EEE9E0; }
-        .earn-section-cta { margin-top: 44px; text-align: center; }
-        .earn-section-cta .earn-cta-primary { display: inline-block; }
-
-        /* ── MECHANIC ── */
-        .earn-mechanic { background: #F5F2FF; padding: 88px 0; }
-        .earn-mechanic-layout {
-          display: grid; grid-template-columns: 1fr 1fr;
-          gap: 64px; align-items: center;
-        }
-        .earn-mechanic-copy .earn-section-h2 { margin-bottom: 20px; }
-        .earn-mechanic-copy p {
-          font-size: 0.92rem; color: #6B5E52; line-height: 1.82;
-        }
-        .earn-phone {
-          background: #ECE5DD; border-radius: 24px;
-          padding: 20px 16px;
-          box-shadow: 0 32px 80px rgba(15,10,26,0.14), 0 0 0 1px rgba(0,0,0,0.05);
-          max-width: 310px; margin: 0 auto;
-        }
-        .earn-phone-header {
-          display: flex; align-items: center; gap: 10px;
-          padding-bottom: 12px; margin-bottom: 14px;
+        .e-phone-bar {
+          display: flex; align-items: center; gap: 9px;
+          padding-bottom: 11px; margin-bottom: 12px;
           border-bottom: 1px solid rgba(0,0,0,0.07);
         }
-        .earn-phone-av {
-          width: 30px; height: 30px; border-radius: 50%;
-          background: linear-gradient(135deg, #7C3AED, #4F46E5); flex-shrink: 0;
+        .e-phone-av {
+          width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+          background: linear-gradient(135deg, #8B5CF6, #6D28D9);
         }
-        .earn-phone-gname { font-size: 0.78rem; font-weight: 700; color: #111; }
-        .earn-phone-members { font-size: 0.62rem; color: #667781; }
-        .earn-bubble {
-          background: #DCF8C6; border-radius: 14px 14px 4px 14px;
-          padding: 10px 13px; margin-left: auto; max-width: 90%;
-          font-size: 0.8rem; color: #111; line-height: 1.55; margin-bottom: 5px;
+        .e-phone-gname { font-size: 0.75rem; font-weight: 700; color: #111; }
+        .e-phone-gmem { font-size: 0.58rem; color: #667781; }
+        .e-bubble {
+          background: #D4F5C0; border-radius: 13px 13px 3px 13px;
+          padding: 10px 12px; margin-left: auto; max-width: 88%;
+          font-size: 0.77rem; color: #111; line-height: 1.52; margin-bottom: 4px;
         }
-        .earn-bubble-link { color: #128C7E; text-decoration: underline; font-size: 0.76rem; }
-        .earn-bubble-time { font-size: 0.6rem; color: #667781; text-align: right; margin-top: 5px; }
-        .earn-phone-result {
-          margin-top: 12px; background: #fff; border-radius: 12px;
-          padding: 13px 15px;
+        .e-bubble-link { color: #128C7E; text-decoration: underline; font-size: 0.73rem; }
+        .e-bubble-ts { font-size: 0.58rem; color: #667781; text-align: right; margin-top: 5px; }
+        .e-result {
+          margin-top: 11px; background: #fff; border-radius: 11px;
+          padding: 12px 14px;
           display: flex; align-items: center; justify-content: space-between;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.07);
         }
-        .earn-phone-result-label { font-size: 0.7rem; color: #667781; font-weight: 500; }
-        .earn-phone-result-earn { font-size: 1rem; font-weight: 900; color: #16A34A; }
+        .e-result-label { font-size: 0.67rem; color: #667781; font-weight: 500; }
+        .e-result-sub { font-size: 0.56rem; color: #9B8AF0; margin-top: 1px; }
+        .e-result-earn { font-size: 1rem; font-weight: 900; color: #16A34A; }
 
-        /* ── 3×3 GRIDS ── */
-        .earn-grid-3 {
-          display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+        /* ─── PROOF STRIP ─── */
+        .e-proof {
+          background: #fff;
+          border-top: 1px solid #EEE9E0; border-bottom: 1px solid #EEE9E0;
+          padding: 18px 40px;
+          display: flex; align-items: center; justify-content: center;
+          gap: 32px; flex-wrap: wrap;
+        }
+        .e-proof-item { display: flex; align-items: center; gap: 8px; }
+        .e-proof-stars { color: #00B67A; font-size: 0.95rem; letter-spacing: 1px; }
+        .e-proof-val { font-size: 0.85rem; font-weight: 800; color: #0F0A1A; }
+        .e-proof-label { font-size: 0.75rem; color: #9B8AF0; }
+        .e-proof-sep {
+          width: 1px; height: 20px; background: #EEE9E0;
+          display: inline-block;
+        }
+        .e-proof-badge {
+          background: #00B67A; color: #fff;
+          font-size: 0.6rem; font-weight: 800;
+          padding: 3px 8px; border-radius: 4px;
+          letter-spacing: 0.03em;
         }
 
-        /* ── TESTIMONIAL CARDS ── */
-        .earn-tcard {
+        /* ─── SECTION SHELL ─── */
+        .e-wrap { max-width: 800px; margin: 0 auto; padding: 0 32px; }
+        .e-section { padding: 80px 0; }
+        .e-tag {
+          font-size: 0.62rem; font-weight: 800; color: #8B5CF6;
+          letter-spacing: 0.14em; text-transform: uppercase;
+          margin-bottom: 12px; display: flex; align-items: center; gap: 7px;
+        }
+        .e-tag::before {
+          content: ''; width: 14px; height: 2px;
+          background: #8B5CF6; border-radius: 2px; flex-shrink: 0;
+        }
+        .e-h2 {
+          font-size: clamp(1.5rem, 3vw, 2rem);
+          font-weight: 900; color: #0F0A1A;
+          letter-spacing: -0.04em; line-height: 1.12; margin-bottom: 40px;
+        }
+        .e-divider { border: none; border-top: 1px solid #EEE9E0; }
+        .e-section-cta { margin-top: 40px; text-align: center; }
+
+        /* ─── TESTIMONIALS ─── */
+        .e-tgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .e-tcard {
           background: #fff; border: 1px solid #EEE9E0;
           border-radius: 18px; padding: 26px 22px;
           display: flex; flex-direction: column; gap: 14px;
           box-shadow: 0 2px 12px rgba(0,0,0,0.04);
           transition: box-shadow 0.2s;
         }
-        .earn-tcard:hover { box-shadow: 0 8px 32px rgba(124,58,237,0.1); }
-        .earn-tcard-quote { font-size: 2rem; color: #EDE9FE; font-family: Georgia, serif; line-height: 1; }
-        .earn-tcard-text { font-size: 0.88rem; color: #1A1008; line-height: 1.7; flex: 1; font-weight: 500; }
-        .earn-tcard-name { font-size: 0.8rem; font-weight: 800; color: #0F0A1A; }
-        .earn-tcard-role { font-size: 0.7rem; color: #9B8AF0; margin-top: 2px; }
-        .earn-tcard-stat {
-          display: inline-block; margin-top: 6px;
-          background: #F5F3FF; border: 1px solid #DDD6FE;
+        .e-tcard:hover { box-shadow: 0 8px 28px rgba(139,92,246,0.1); }
+        .e-tcard-q {
+          font-size: 1.8rem; color: #E0D9FF;
+          font-family: Georgia, serif; line-height: 1; user-select: none;
+        }
+        .e-tcard-text { font-size: 0.88rem; color: #1A1008; line-height: 1.7; flex: 1; font-weight: 500; }
+        .e-tcard-name { font-size: 0.79rem; font-weight: 800; color: #0F0A1A; }
+        .e-tcard-role { font-size: 0.68rem; color: #9B8AF0; margin-top: 2px; }
+        .e-tcard-stat {
+          display: inline-block; margin-top: 8px;
+          background: #F5F3FF; border: 1px solid #E0D9FF;
           border-radius: 7px; padding: 5px 11px;
-          font-size: 0.78rem; font-weight: 800; color: #5B21B6;
+          font-size: 0.77rem; font-weight: 800; color: #6D28D9;
         }
 
-        /* ── MATH BAND ── */
-        .earn-math-band { background: #5B21B6; padding: 80px 0; }
-        .earn-math-tag {
-          font-size: 0.65rem; font-weight: 800; color: #C4B5FD;
-          letter-spacing: 0.14em; text-transform: uppercase;
-          margin-bottom: 12px; display: flex; align-items: center; gap: 7px;
+        /* ─── MATH ─── */
+        .e-math { background: #F5F3FF; border-radius: 20px; padding: 36px 40px; }
+        .e-math-head {
+          font-size: 0.85rem; color: #6B5E52; margin-bottom: 20px; line-height: 1.6;
         }
-        .earn-math-tag::before {
-          content: ''; display: block; width: 14px; height: 2px;
-          background: #C4B5FD; border-radius: 2px;
+        .e-math-head strong { color: #0F0A1A; font-weight: 800; }
+        .e-math-rows { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+        .e-math-row {
+          display: flex; align-items: center; gap: 12px;
+          background: #fff; border: 1px solid #E0D9FF;
+          border-radius: 12px; padding: 13px 17px;
         }
-        .earn-math-headline {
-          font-size: clamp(1.3rem, 3vw, 1.9rem);
-          font-weight: 900; color: #fff;
-          letter-spacing: -0.035em; margin-bottom: 36px;
-          line-height: 1.2;
-        }
-        .earn-math-rows { display: flex; flex-direction: column; gap: 12px; }
-        .earn-math-row {
-          display: flex; align-items: center; gap: 14px;
-          background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 13px; padding: 15px 20px;
-        }
-        .earn-math-icon { font-size: 1.1rem; width: 26px; text-align: center; flex-shrink: 0; }
-        .earn-math-label-text { flex: 1; font-size: 0.86rem; color: rgba(255,255,255,0.65); }
-        .earn-math-earn { font-size: 1.05rem; font-weight: 900; color: #FDE68A; }
-        .earn-math-note { font-size: 0.73rem; color: #C4B5FD; margin-top: 14px; line-height: 1.65; }
+        .e-math-icon { font-size: 1rem; width: 22px; text-align: center; flex-shrink: 0; }
+        .e-math-lbl { flex: 1; font-size: 0.84rem; color: #6B5E52; }
+        .e-math-earn { font-size: 0.98rem; font-weight: 900; color: #6D28D9; }
+        .e-math-note { font-size: 0.72rem; color: #A78BFA; line-height: 1.65; }
 
-        /* ── STEPS ── */
-        .earn-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-        .earn-step {
+        /* ─── WHAT YOU GET ─── */
+        .e-get { display: flex; flex-direction: column; gap: 13px; }
+        .e-get-item {
+          display: flex; align-items: flex-start; gap: 14px;
           background: #fff; border: 1px solid #EEE9E0;
-          border-radius: 20px; padding: 32px 26px;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-          position: relative; overflow: hidden;
-        }
-        .earn-step-num {
-          font-size: 5rem; font-weight: 900;
-          color: #F5F2FF; letter-spacing: -0.06em;
-          line-height: 1; margin-bottom: 18px; user-select: none;
-        }
-        .earn-step-title { font-size: 0.98rem; font-weight: 800; color: #0F0A1A; margin-bottom: 9px; letter-spacing: -0.02em; }
-        .earn-step-body { font-size: 0.83rem; color: #6B5E52; line-height: 1.72; }
-
-        /* ── GUIDE CARDS ── */
-        .earn-guide-card {
-          background: #fff; border: 1px solid #EEE9E0;
-          border-radius: 16px; padding: 20px 17px;
-          display: flex; flex-direction: column; gap: 9px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-          transition: box-shadow 0.2s, transform 0.15s;
-        }
-        .earn-guide-card:hover { box-shadow: 0 8px 28px rgba(124,58,237,0.1); transform: translateY(-2px); }
-        .earn-guide-icon { font-size: 1.4rem; }
-        .earn-guide-title { font-size: 0.86rem; font-weight: 700; color: #0F0A1A; line-height: 1.4; }
-        .earn-guide-footer { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .earn-guide-pages { font-size: 0.72rem; color: #B0A89A; }
-        .earn-guide-tag {
-          font-size: 0.62rem; font-weight: 700; color: #7C3AED;
-          background: #F5F3FF; border-radius: 5px; padding: 2px 7px;
-        }
-
-        /* ── CTA BANNER ── */
-        .earn-cta-banner {
-          background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
-          border-radius: 24px; padding: 52px 48px; text-align: center;
-        }
-        .earn-cta-banner h3 {
-          font-size: clamp(1.2rem, 3vw, 1.7rem);
-          font-weight: 900; color: #fff;
-          letter-spacing: -0.03em; margin-bottom: 10px; line-height: 1.2;
-        }
-        .earn-cta-banner p {
-          font-size: 0.88rem; color: rgba(255,255,255,0.65); margin-bottom: 32px;
-        }
-        .earn-cta-banner .earn-cta-primary {
-          background: #fff; color: #5B21B6;
-          box-shadow: 0 6px 24px rgba(0,0,0,0.15);
-        }
-        .earn-cta-banner .earn-cta-primary:hover { opacity: 0.93; }
-
-        /* ── VIDEO PLACEHOLDERS ── */
-        .earn-video-bg { background: #0C0618; padding: 88px 0; }
-        .earn-video-card {
-          background: linear-gradient(145deg, #1A0B33, #2D1B69);
-          border-radius: 18px; aspect-ratio: 4/3;
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
-          gap: 10px; position: relative; overflow: hidden;
-          border: 1px solid rgba(167,139,250,0.12);
-          cursor: pointer;
-        }
-        .earn-video-card::before {
-          content: ''; position: absolute; inset: 0;
-          background: radial-gradient(circle at 50% 38%, rgba(124,58,237,0.22), transparent 68%);
-        }
-        .earn-video-btn {
-          width: 46px; height: 46px; border-radius: 50%;
-          border: 2px solid rgba(255,255,255,0.22);
-          background: rgba(255,255,255,0.08);
-          display: flex; align-items: center; justify-content: center;
-          color: rgba(255,255,255,0.75); position: relative;
-          font-size: 0.95rem; padding-left: 3px;
-          transition: background 0.2s;
-        }
-        .earn-video-card:hover .earn-video-btn { background: rgba(255,255,255,0.16); }
-        .earn-video-name { font-size: 0.76rem; font-weight: 700; color: #fff; position: relative; }
-        .earn-video-role { font-size: 0.62rem; color: rgba(255,255,255,0.4); position: relative; }
-        .earn-video-soon {
-          position: absolute; top: 9px; right: 9px;
-          font-size: 0.55rem; font-weight: 700; color: rgba(255,255,255,0.3);
-          letter-spacing: 0.08em; text-transform: uppercase;
-          background: rgba(255,255,255,0.05); border-radius: 4px; padding: 3px 7px;
-        }
-
-        /* ── CASE STUDIES ── */
-        .earn-cases { display: flex; flex-direction: column; gap: 22px; }
-        .earn-case {
-          background: #fff; border: 1px solid #EEE9E0;
-          border-radius: 20px; padding: 36px;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        }
-        .earn-case-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 22px; }
-        .earn-case-avatar {
-          width: 46px; height: 46px; border-radius: 50%;
-          background: linear-gradient(135deg, #7C3AED, #4F46E5);
-          display: flex; align-items: center; justify-content: center;
-          font-size: 1.2rem; flex-shrink: 0;
-        }
-        .earn-case-name { font-size: 0.98rem; font-weight: 800; color: #0F0A1A; margin-bottom: 2px; }
-        .earn-case-desc { font-size: 0.76rem; color: #9B8AF0; }
-        .earn-case-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .earn-case-col-label {
-          font-size: 0.62rem; font-weight: 800; letter-spacing: 0.1em;
-          text-transform: uppercase; margin-bottom: 7px;
-        }
-        .earn-case-col-label.b { color: #DC2626; }
-        .earn-case-col-label.a { color: #16A34A; }
-        .earn-case-col-body { font-size: 0.84rem; color: #4B3D30; line-height: 1.65; }
-        .earn-case-result {
-          margin-top: 16px; padding: 13px 16px;
-          background: #F5F3FF; border-left: 3px solid #7C3AED;
-          border-radius: 0 10px 10px 0;
-          font-size: 0.86rem; font-weight: 700; color: #0F0A1A;
-        }
-
-        /* ── BENEFITS ── */
-        .earn-benefits { display: flex; flex-direction: column; gap: 14px; }
-        .earn-benefit {
-          display: flex; align-items: flex-start; gap: 15px;
-          background: #fff; border: 1px solid #EEE9E0;
-          border-radius: 14px; padding: 20px 22px;
+          border-radius: 13px; padding: 19px 21px;
           box-shadow: 0 1px 6px rgba(0,0,0,0.03);
         }
-        .earn-benefit-icon {
-          width: 36px; height: 36px; border-radius: 10px;
-          background: #F5F3FF; border: 1px solid #DDD6FE;
+        .e-get-icon {
+          width: 34px; height: 34px; border-radius: 9px;
+          background: #F5F3FF; border: 1px solid #E0D9FF;
           display: flex; align-items: center; justify-content: center;
-          font-size: 0.9rem; flex-shrink: 0;
+          font-size: 0.85rem; flex-shrink: 0;
         }
-        .earn-benefit-title { font-size: 0.9rem; font-weight: 800; color: #0F0A1A; margin-bottom: 2px; }
-        .earn-benefit-desc { font-size: 0.8rem; color: #6B5E52; line-height: 1.65; }
+        .e-get-title { font-size: 0.88rem; font-weight: 800; color: #0F0A1A; margin-bottom: 2px; }
+        .e-get-desc { font-size: 0.79rem; color: #6B5E52; line-height: 1.65; }
 
-        /* ── 9 COMMUNITY LOGOS ── */
-        .earn-logos-grid {
-          display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-        }
-        .earn-logo-card {
+        /* ─── LIVE DEMAND ─── */
+        .e-demand {
           background: #fff; border: 1px solid #EEE9E0;
-          border-radius: 12px; padding: 16px 14px;
-          text-align: center; box-shadow: 0 1px 6px rgba(0,0,0,0.03);
-        }
-        .earn-logo-dot {
-          width: 26px; height: 26px; border-radius: 50%;
-          background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
-          margin: 0 auto 8px;
-        }
-        .earn-logo-name { font-size: 0.68rem; font-weight: 700; color: #9B8AF0; line-height: 1.4; }
-
-        /* ── LIVE DEMAND ── */
-        .earn-demand {
-          background: #fff; border: 1px solid #EEE9E0;
-          border-radius: 18px; overflow: hidden;
+          border-radius: 16px; overflow: hidden;
           box-shadow: 0 2px 12px rgba(0,0,0,0.04);
         }
-        .earn-demand-top {
-          padding: 14px 22px; border-bottom: 1px solid #EEE9E0;
+        .e-demand-top {
+          padding: 13px 20px; border-bottom: 1px solid #EEE9E0;
           display: flex; align-items: center; justify-content: space-between;
         }
-        .earn-demand-title { font-size: 0.8rem; font-weight: 700; color: #0F0A1A; }
-        .earn-demand-live {
+        .e-demand-title { font-size: 0.78rem; font-weight: 700; color: #0F0A1A; }
+        .e-demand-live {
           display: inline-flex; align-items: center; gap: 5px;
-          font-size: 0.62rem; font-weight: 700; color: #15803D;
+          font-size: 0.6rem; font-weight: 700; color: #15803D;
           background: #F0FDF4; border: 1px solid #BBF7D0;
-          border-radius: 999px; padding: 3px 9px;
-          letter-spacing: 0.06em; text-transform: uppercase;
+          border-radius: 999px; padding: 3px 9px; letter-spacing: 0.06em; text-transform: uppercase;
         }
-        .earn-demand-dot {
+        .e-demand-dot {
           width: 5px; height: 5px; border-radius: 50%; background: #16A34A;
-          animation: pulse 1.8s ease-in-out infinite;
+          animation: dp 1.8s ease-in-out infinite;
         }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
-        .earn-demand-row {
-          padding: 11px 22px; display: flex; align-items: center;
+        @keyframes dp { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        .e-demand-row {
+          padding: 10px 20px; display: flex; align-items: center;
           gap: 10px; border-bottom: 1px solid #F5F0EB;
         }
-        .earn-demand-row:last-child { border-bottom: none; }
-        .earn-demand-q { flex: 1; font-size: 0.84rem; color: #1A1008; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .earn-demand-sig { font-size: 0.68rem; color: #9B8AF0; font-weight: 600; }
+        .e-demand-row:last-child { border-bottom: none; }
+        .e-demand-q { flex: 1; font-size: 0.82rem; color: #1A1008; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .e-demand-sig { font-size: 0.66rem; color: #9B8AF0; font-weight: 600; }
 
-        /* ── PRICE BLOCK ── */
-        .earn-pricing-bg { background: #0C0618; padding: 88px 0; }
-        .earn-price-card {
-          background: rgba(255,255,255,0.04); border: 1px solid rgba(167,139,250,0.18);
-          border-radius: 28px; padding: 60px 52px; text-align: center;
+        /* ─── PRICE BLOCK ─── */
+        .e-price-bg { background: #1E1B4B; padding: 88px 0; }
+        .e-price-card {
+          background: rgba(255,255,255,0.05); border: 1px solid rgba(196,181,253,0.18);
+          border-radius: 26px; padding: 56px 48px; text-align: center; max-width: 600px; margin: 0 auto;
         }
-        .earn-price-eyebrow {
-          font-size: 0.65rem; font-weight: 800; color: #9B8AF0;
-          letter-spacing: 0.14em; text-transform: uppercase;
-          margin-bottom: 14px; display: block;
+        .e-price-eyebrow {
+          font-size: 0.62rem; font-weight: 800; color: #A78BFA;
+          letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; display: block;
         }
-        .earn-price-num {
-          font-size: clamp(3.5rem, 8vw, 5.5rem);
+        .e-price-num {
+          font-size: clamp(3.5rem, 8vw, 5rem);
           font-weight: 900; color: #fff;
-          letter-spacing: -0.06em; line-height: 1; margin-bottom: 6px;
+          letter-spacing: -0.06em; line-height: 1; margin-bottom: 5px;
         }
-        .earn-price-sub { font-size: 0.84rem; color: rgba(255,255,255,0.38); margin-bottom: 6px; }
-        .earn-price-recover { font-size: 0.84rem; font-weight: 600; color: rgba(255,255,255,0.65); margin-bottom: 40px; }
-        .earn-price-list {
-          display: flex; flex-direction: column; gap: 13px;
-          text-align: left; margin-bottom: 44px;
+        .e-price-sub { font-size: 0.82rem; color: rgba(255,255,255,0.35); margin-bottom: 5px; }
+        .e-price-recover { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 36px; }
+        .e-price-list { display: flex; flex-direction: column; gap: 12px; text-align: left; margin-bottom: 40px; }
+        .e-price-item {
+          display: flex; align-items: flex-start; gap: 10px;
+          font-size: 0.86rem; color: rgba(255,255,255,0.7); line-height: 1.5;
         }
-        .earn-price-item {
-          display: flex; align-items: flex-start; gap: 11px;
-          font-size: 0.87rem; color: rgba(255,255,255,0.7); line-height: 1.5;
-        }
-        .earn-price-check { color: #A78BFA; flex-shrink: 0; }
-        .earn-cta-white {
+        .e-price-check { color: #A78BFA; flex-shrink: 0; }
+        .e-btn-white {
           display: inline-block; background: #fff; color: #5B21B6;
           font-weight: 800; font-size: 1rem;
-          padding: 20px 52px; border-radius: 14px;
+          padding: 19px 52px; border-radius: 14px;
           border: none; cursor: pointer; font-family: inherit;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+          box-shadow: 0 8px 28px rgba(0,0,0,0.2);
           transition: opacity 0.15s, transform 0.1s;
-          margin-bottom: 16px;
+          margin-bottom: 14px;
         }
-        .earn-cta-white:hover { opacity: 0.93; transform: translateY(-1px); }
-        .earn-cta-white:active { transform: scale(0.99); }
-        .earn-cta-white:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .earn-price-guarantee { font-size: 0.7rem; color: rgba(167,139,250,0.6); line-height: 1.8; }
+        .e-btn-white:hover { opacity: 0.93; transform: translateY(-1px); }
+        .e-btn-white:active { transform: scale(0.99); }
+        .e-btn-white:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .e-price-guarantee { font-size: 0.68rem; color: rgba(167,139,250,0.6); line-height: 1.8; }
 
-        /* ── FAQ ── */
-        .earn-faq { display: flex; flex-direction: column; gap: 10px; }
-        .earn-faq-item {
+        /* ─── FAQ ─── */
+        .e-faqs { display: flex; flex-direction: column; gap: 10px; }
+        .e-faq {
           background: #fff; border: 1px solid #EEE9E0;
-          border-radius: 14px; padding: 22px 26px;
-          box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+          border-radius: 13px; padding: 21px 24px;
+          box-shadow: 0 1px 5px rgba(0,0,0,0.03);
         }
-        .earn-faq-q { font-size: 0.94rem; font-weight: 700; color: #0F0A1A; margin-bottom: 9px; }
-        .earn-faq-a { font-size: 0.84rem; color: #6B5E52; line-height: 1.78; }
+        .e-faq-q { font-size: 0.92rem; font-weight: 700; color: #0F0A1A; margin-bottom: 8px; }
+        .e-faq-a { font-size: 0.83rem; color: #6B5E52; line-height: 1.78; }
 
-        /* ── FORM ── */
-        .earn-form-card {
-          background: #fff; border: 1px solid #EEE9E0;
-          border-radius: 22px; padding: 48px;
-          box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+        /* ─── FINAL CTA ─── */
+        .e-final {
+          text-align: center; padding: 80px 32px;
+          max-width: 520px; margin: 0 auto;
         }
-        .earn-form-h2 {
-          font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+        .e-final-h {
+          font-size: clamp(1.3rem, 3vw, 1.8rem);
           font-weight: 900; color: #0F0A1A;
-          letter-spacing: -0.03em; margin-bottom: 8px;
+          letter-spacing: -0.035em; line-height: 1.2; margin-bottom: 28px;
         }
-        .earn-form-sub { font-size: 0.84rem; color: #6B5E52; margin-bottom: 30px; line-height: 1.72; }
-        .earn-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-        .earn-field { display: flex; flex-direction: column; gap: 6px; }
-        .earn-label { font-size: 0.7rem; font-weight: 700; color: #4B3D30; letter-spacing: 0.04em; text-transform: uppercase; }
-        .earn-input {
-          background: #FAFAF9; border: 1.5px solid #EAE6E0;
-          border-radius: 11px; padding: 13px 15px;
-          font-size: 0.9rem; color: #0F0A1A;
-          outline: none; transition: border-color 0.15s;
-          font-family: inherit; width: 100%;
-        }
-        .earn-input:focus { border-color: #7C3AED; background: #fff; }
-        .earn-form-full { margin-bottom: 14px; }
-        .earn-form-btn {
-          width: 100%; margin-top: 8px;
-          background: linear-gradient(135deg, #5B21B6, #3B0764);
-          color: #fff; font-weight: 800; font-size: 0.96rem;
-          padding: 18px 24px; border-radius: 13px;
-          border: none; cursor: pointer; font-family: inherit;
-          transition: opacity 0.15s;
-          box-shadow: 0 4px 18px rgba(91,33,182,0.3);
-        }
-        .earn-form-btn:hover { opacity: 0.9; }
-        .earn-form-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* ── CONTACT & FOOTER ── */
-        .earn-contact { text-align: center; padding: 0 32px 72px; }
-        .earn-contact a {
-          display: inline-flex; align-items: center; gap: 8px;
-          font-size: 0.84rem; font-weight: 700; color: #7C3AED;
-          text-decoration: none; padding: 13px 22px;
-          background: #F5F3FF; border-radius: 12px;
-          border: 1.5px solid #DDD6FE; transition: opacity 0.15s;
+        /* ─── CONTACT / FOOTER ─── */
+        .e-contact { text-align: center; padding: 0 32px 64px; }
+        .e-contact a {
+          display: inline-flex; align-items: center; gap: 7px;
+          font-size: 0.82rem; font-weight: 700; color: #8B5CF6;
+          text-decoration: none; padding: 12px 20px;
+          background: #F5F3FF; border-radius: 11px;
+          border: 1.5px solid #E0D9FF; transition: opacity 0.15s;
         }
-        .earn-contact a:hover { opacity: 0.8; }
-        .earn-footer {
-          text-align: center; padding: 22px;
-          font-size: 0.7rem; color: #C4BAB0;
+        .e-contact a:hover { opacity: 0.8; }
+        .e-footer {
+          text-align: center; padding: 20px;
+          font-size: 0.68rem; color: #C4BAB0;
           border-top: 1px solid #EEE9E0;
         }
-        .earn-footer a { color: #A09590; text-decoration: none; }
-        .earn-footer a:hover { color: #7C3AED; }
+        .e-footer a { color: #A09590; text-decoration: none; }
+        .e-footer a:hover { color: #8B5CF6; }
 
-        /* ── FINAL CTA ── */
-        .earn-final {
-          text-align: center; padding: 88px 32px;
-          max-width: 560px; margin: 0 auto;
-        }
-        .earn-final-h2 {
-          font-size: clamp(1.4rem, 3vw, 1.9rem);
-          font-weight: 900; color: #0F0A1A;
-          letter-spacing: -0.035em; line-height: 1.2; margin-bottom: 32px;
-        }
-
-        /* ── FIXED MOBILE CTA ── */
-        .earn-mobile-bar { display: none; }
-
-        /* ── JOINED BANNER ── */
-        .earn-joined {
+        /* ─── JOINED ─── */
+        .e-joined {
           background: #F0FDF4; border-bottom: 1px solid #BBF7D0;
           padding: 18px 32px; text-align: center;
         }
-        .earn-joined-h { font-size: 0.98rem; font-weight: 800; color: #15803D; margin-bottom: 3px; }
-        .earn-joined-sub { font-size: 0.8rem; color: #16A34A; }
 
-        /* ── RESPONSIVE: TABLET ── */
-        @media (min-width: 601px) and (max-width: 1024px) {
-          .earn-hero { padding: 80px 40px 70px; min-height: 80vh; }
-          .earn-wrap { padding: 0 40px; }
-          .earn-mechanic-layout { gap: 40px; }
-          .earn-grid-3 { gap: 14px; }
-          .earn-price-card { padding: 48px 36px; }
-          .earn-form-card { padding: 36px; }
-          .earn-case { padding: 28px; }
+        /* ─── MOBILE BAR ─── */
+        .e-mobile { display: none; }
+
+        /* ─── RESPONSIVE: TABLET ─── */
+        @media (min-width: 601px) and (max-width: 1100px) {
+          .e-hero { grid-template-columns: 1fr; padding: 80px 40px; min-height: auto; text-align: center; }
+          .e-hero-sub { margin-left: auto; margin-right: auto; }
+          .e-cta-row { justify-content: center; }
+          .e-phone-wrap { display: none; }
+          .e-float { display: none; }
+          .e-wrap { padding: 0 40px; }
         }
 
-        /* ── RESPONSIVE: MOBILE ── */
+        /* ─── RESPONSIVE: MOBILE ─── */
         @media (max-width: 600px) {
-          .earn-hero { padding: 64px 20px 72px; min-height: 80vh; }
-          .earn-h1 { font-size: 2rem; }
-          /* Hide floating avatars on mobile */
-          .earn-float { display: none; }
-          /* Hide inline hero CTA — fixed bar replaces it */
-          .earn-hero-inner .earn-cta-group,
-          .earn-hero-inner .earn-hero-trust,
-          .earn-section-cta { display: none; }
+          .e-hero {
+            grid-template-columns: 1fr; padding: 60px 20px 40px;
+            min-height: auto; text-align: center; gap: 36px;
+          }
+          .e-float { display: none; }
+          .e-h1 { font-size: 2rem; }
+          .e-hero-sub { font-size: 0.92rem; margin-left: auto; margin-right: auto; }
+          /* Hide inline CTA — fixed bar takes over */
+          .e-cta-row, .e-btn-ghost, .e-trust { display: none; }
+          .e-section-cta { display: none; }
 
-          .earn-proof-strip { padding: 16px 20px; gap: 12px; }
-          .earn-proof-logos { display: none; }
+          .e-phone { max-width: 100%; }
+          .e-proof { padding: 14px 20px; gap: 16px; }
+          .e-proof-sep { display: none; }
 
-          .earn-section { padding: 56px 0; }
-          .earn-wrap { padding: 0 20px; }
-          .earn-mechanic { padding: 56px 0; }
-          .earn-mechanic-layout { grid-template-columns: 1fr; gap: 32px; }
+          .e-wrap { padding: 0 20px; }
+          .e-section { padding: 56px 0; }
+          .e-tgrid { grid-template-columns: 1fr; gap: 12px; }
+          .e-math { padding: 24px 20px; }
 
-          .earn-grid-3 { grid-template-columns: 1fr; gap: 12px; }
-          .earn-grid-3.earn-grid-2col { grid-template-columns: 1fr 1fr; gap: 10px; }
+          .e-price-bg { padding: 56px 0; }
+          .e-price-card { padding: 36px 22px; }
+          .e-btn-white { width: 100%; display: block; padding: 17px; }
+          .e-price-num { font-size: 3.5rem; }
 
-          .earn-math-band { padding: 56px 0; }
-          .earn-video-bg { padding: 56px 0; }
+          .e-contact { padding: 0 20px 52px; }
+          .e-final { padding: 56px 20px; }
 
-          .earn-steps { grid-template-columns: 1fr; gap: 12px; }
-          .earn-step { padding: 22px 18px; }
-          .earn-step-num { font-size: 3.5rem; }
-
-          .earn-cases { gap: 14px; }
-          .earn-case { padding: 20px 18px; }
-          .earn-case-cols { grid-template-columns: 1fr; gap: 10px; }
-
-          .earn-cta-banner { padding: 36px 20px; }
-
-          .earn-pricing-bg { padding: 56px 0; }
-          .earn-price-card { padding: 36px 22px; }
-          .earn-cta-white { width: 100%; display: block; padding: 17px 24px; }
-          .earn-price-num { font-size: 3.5rem; }
-
-          .earn-form-card { padding: 26px 18px; }
-          .earn-form-row { grid-template-columns: 1fr; gap: 12px; }
-
-          .earn-logos-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-          .earn-logo-card { padding: 12px 8px; }
-          .earn-logo-name { font-size: 0.6rem; }
-
-          .earn-contact { padding: 0 20px 56px; }
-          .earn-final { padding: 56px 20px; }
-
-          /* Fixed mobile CTA bar */
-          .earn-mobile-bar {
+          /* Fixed mobile CTA */
+          .e-mobile {
             display: flex;
             position: fixed; bottom: 0; left: 0; right: 0;
-            padding: 12px 16px env(safe-area-inset-bottom, 8px);
-            background: rgba(12,6,24,0.97);
-            border-top: 1px solid rgba(167,139,250,0.18);
-            backdrop-filter: blur(16px);
-            z-index: 100;
+            padding: 12px 16px env(safe-area-inset-bottom, 6px);
+            background: rgba(30,27,75,0.97);
+            border-top: 1px solid rgba(196,181,253,0.18);
+            backdrop-filter: blur(16px); z-index: 100;
           }
-          .earn-mobile-bar button {
-            width: 100%; background: linear-gradient(135deg, #7C3AED, #5B21B6);
-            color: #fff; font-weight: 800; font-size: 0.96rem;
-            padding: 16px; border-radius: 13px;
-            border: none; cursor: pointer; min-height: 52px;
-            box-shadow: 0 4px 20px rgba(124,58,237,0.5);
+          .e-mobile button {
+            width: 100%;
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+            color: #fff; font-weight: 800; font-size: 0.95rem;
+            padding: 15px; border-radius: 13px;
+            border: none; cursor: pointer; min-height: 50px;
+            box-shadow: 0 4px 18px rgba(109,40,217,0.45);
             font-family: inherit;
           }
-          .earn-mobile-bar button:disabled { opacity: 0.5; }
-          .earn { padding-bottom: 76px; }
+          .e-mobile button:disabled { opacity: 0.5; }
+          .e { padding-bottom: 74px; }
         }
 
         @media (max-width: 380px) {
-          .earn-h1 { font-size: 1.8rem; }
-          .earn-logos-grid { grid-template-columns: 1fr 1fr; }
-          .earn-math-row { flex-wrap: wrap; }
+          .e-h1 { font-size: 1.8rem; }
+          .e-math-row { flex-wrap: wrap; }
         }
       `}</style>
 
-      <div className="earn">
+      <div className="e">
 
         {justJoined && (
-          <div className="earn-joined">
-            <div className="earn-joined-h">✓ You&apos;re in. Welcome to the Affiliate Programme.</div>
-            <div className="earn-joined-sub">Check your email — your dashboard link and WhatsApp templates are on their way.</div>
+          <div className="e-joined">
+            <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#15803D", marginBottom: 3 }}>
+              ✓ You&apos;re in. Welcome to the Affiliate Programme.
+            </div>
+            <div style={{ fontSize: "0.78rem", color: "#16A34A" }}>
+              Check your email — your dashboard link and WhatsApp templates are on their way.
+            </div>
           </div>
         )}
 
-        {/* ── HERO (Clause-style grid + floating avatars) ── */}
-        <section className="earn-hero">
-          {/* Floating affiliate avatars */}
-          <div className="earn-float" style={{ top: "16%", left: "7%" }}>
-            <div className="earn-float-avatar">AO</div>
-            <div className="earn-float-info">
-              <div className="earn-float-name">Adaeze O.</div>
-              <div className="earn-float-role">£340 first month</div>
-            </div>
-            <div className="earn-float-arrow-r" />
-          </div>
-          <div className="earn-float" style={{ top: "13%", right: "7%" }}>
-            <div className="earn-float-arrow-l" />
-            <div className="earn-float-info" style={{ textAlign: "right" }}>
-              <div className="earn-float-name">Mohammed A.</div>
-              <div className="earn-float-role">£580 in 6 weeks</div>
-            </div>
-            <div className="earn-float-avatar">MA</div>
-          </div>
-          <div className="earn-float" style={{ top: "62%", left: "5%" }}>
-            <div className="earn-float-avatar">FR</div>
-            <div className="earn-float-info">
-              <div className="earn-float-name">Fatima R.</div>
-              <div className="earn-float-role">£143 earned</div>
-            </div>
-            <div className="earn-float-arrow-r" />
-          </div>
-          <div className="earn-float" style={{ top: "60%", right: "5%" }}>
-            <div className="earn-float-arrow-l" />
-            <div className="earn-float-info" style={{ textAlign: "right" }}>
-              <div className="earn-float-name">Priya S.</div>
-              <div className="earn-float-role">£220 first month</div>
-            </div>
-            <div className="earn-float-avatar">PS</div>
-          </div>
+        {/* ── HERO ── */}
+        <div className="e-hero-outer">
+          <div className="e-hero">
 
-          <div className="earn-hero-inner">
-            <div className="earn-chip">⚡ Affiliate Programme · 67 affiliates earning</div>
-            <h1 className="earn-h1">
-              You&apos;ve been the expert<br />
-              for free long enough.<br />
-              <em>Time to get paid.</em>
-            </h1>
-            <p className="earn-hero-sub">
-              Share guides your community is already searching for.<br />
-              Keep <strong>80% of every sale</strong> — for life.
-            </p>
-            <div className="earn-cta-group">
-              <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>
-                {ctaLabel}
-              </button>
-              <a className="earn-cta-secondary" href="#interest-form">Not sure? Get the free guide →</a>
-            </div>
-            <div className="earn-hero-trust">One-time payment · No monthly fees · 30-day guarantee</div>
-          </div>
-        </section>
+            {/* Floating creator avatars */}
+            {CREATORS.map((c, i) => {
+              const positions = [
+                { top: "15%", left: "2%" },
+                { top: "12%", right: "2%" },
+                { top: "65%", left: "2%" },
+                { top: "62%", right: "2%" },
+              ];
+              const pos = positions[i];
+              const isRight = "right" in pos;
+              return (
+                <div key={i} className="e-float" style={pos as React.CSSProperties}>
+                  {!isRight && <div className="e-float-av">{c.initials}</div>}
+                  <div className="e-float-info" style={isRight ? { textAlign: "right" } : {}}>
+                    <div className="e-float-name">{c.name}</div>
+                    <div className="e-float-role">{c.role}</div>
+                    <div className="e-float-stat">{c.stat}</div>
+                  </div>
+                  {isRight ? <div className="e-arr-l" /> : <div className="e-arr-r" />}
+                  {isRight && <div className="e-float-av">{c.initials}</div>}
+                </div>
+              );
+            })}
 
-        {/* ── PROOF STRIP (Clause logo bar) ── */}
-        <div className="earn-proof-strip">
-          <div className="earn-proof-left">
-            <span className="earn-proof-stars">★★★★★</span>
-            <span className="earn-proof-score">4.8 / 5</span>
-            <span className="earn-proof-count">67 affiliate reviews</span>
-            <span className="earn-proof-badge">★ Trustpilot</span>
-          </div>
-          <div className="earn-proof-logos">
-            {["UK African Communities", "Nigerian Community Trust", "Ghana Diaspora UK", "South Asian Network UK", "Black Professionals UK"].map((n, i) => (
-              <div key={i} className="earn-proof-logo-item">{n}</div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── MECHANIC (WhatsApp lightbulb) ── */}
-        <div className="earn-mechanic">
-          <div className="earn-wrap">
-            <div className="earn-mechanic-layout">
-              <div className="earn-mechanic-copy">
-                <div className="earn-section-tag">How it works</div>
-                <h2 className="earn-section-h2">One message.<br />Copy. Paste. Done.</h2>
-                <p>
-                  You already know what your community struggles with.
-                  You already have the group. You already have the trust.<br /><br />
-                  We give you the guide, the link, and the exact message to send.
-                  Someone buys — you keep 80%. The guide delivers itself.
-                  No support. No chasing. Nothing.
-                </p>
+            {/* Copy */}
+            <div className="e-hero-copy">
+              <div className="e-chip">⚡ Affiliate Programme · 67 creators earning</div>
+              <h1 className="e-h1">
+                Like selling ebooks.<br />
+                <em>Without writing one.</em>
+              </h1>
+              <p className="e-hero-sub">
+                40+ ready-made guides across every niche. Share them with your audience.
+                Keep <strong>80% of every sale</strong> — for life.
+              </p>
+              <div className="e-cta-row">
+                <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
+                <a className="e-btn-ghost" href="#faq">See how it works ↓</a>
               </div>
-              <div className="earn-phone">
-                <div className="earn-phone-header">
-                  <div className="earn-phone-av" />
+              <div className="e-trust">One-time · No monthly fees · 30-day money-back guarantee</div>
+            </div>
+
+            {/* Phone mockup */}
+            <div className="e-phone-wrap">
+              <div className="e-phone">
+                <div className="e-phone-bar">
+                  <div className="e-phone-av" />
                   <div>
-                    <div className="earn-phone-gname">Community Group</div>
-                    <div className="earn-phone-members">847 members</div>
+                    <div className="e-phone-gname">My Community Group</div>
+                    <div className="e-phone-gmem">847 members</div>
                   </div>
                 </div>
-                <div className="earn-bubble">
-                  Had a few people ask me about the UK visa process this week — I found this guide that covers every step. £9.99 and worth it 👇
-                  <div style={{ marginTop: 6 }}>
-                    <span className="earn-bubble-link">pdfseeds.com/guide/uk-visa</span>
+                <div className="e-bubble">
+                  Had a few people ask me about the UK visa process lately — I found this guide that covers every step. £9.99 and honestly worth it 👇
+                  <div style={{ marginTop: 5 }}>
+                    <span className="e-bubble-link">pdfseeds.com/guide/uk-visa</span>
                   </div>
-                  <div className="earn-bubble-time">2:14 PM ✓✓</div>
+                  <div className="e-bubble-ts">2:14 PM ✓✓</div>
                 </div>
-                <div className="earn-phone-result">
+                <div className="e-result">
                   <div>
-                    <div className="earn-phone-result-label">6 people bought</div>
-                    <div style={{ fontSize: "0.6rem", color: "#9B8AF0", marginTop: 1 }}>from this one message</div>
+                    <div className="e-result-label">6 people bought</div>
+                    <div className="e-result-sub">from one message</div>
                   </div>
-                  <div className="earn-phone-result-earn">£47.94</div>
+                  <div className="e-result-earn">£47.94</div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
-        {/* ── 9 WRITTEN TESTIMONIALS ── */}
-        <section className="earn-section">
-          <div className="earn-wrap">
-            <div className="earn-section-tag">What affiliates say</div>
-            <h2 className="earn-section-h2">Real results. Real people.</h2>
-            <div className="earn-grid-3">
+        {/* ── PROOF STRIP ── */}
+        <div className="e-proof">
+          <div className="e-proof-item">
+            <span className="e-proof-stars">★★★★★</span>
+            <span className="e-proof-val">4.8 / 5</span>
+            <span className="e-proof-badge">Trustpilot</span>
+          </div>
+          <div className="e-proof-sep" />
+          <div className="e-proof-item">
+            <span className="e-proof-val">67</span>
+            <span className="e-proof-label">affiliates earning</span>
+          </div>
+          <div className="e-proof-sep" />
+          <div className="e-proof-item">
+            <span className="e-proof-val">£7.99</span>
+            <span className="e-proof-label">per sale, yours</span>
+          </div>
+          <div className="e-proof-sep" />
+          <div className="e-proof-item">
+            <span className="e-proof-val">40+</span>
+            <span className="e-proof-label">guides live</span>
+          </div>
+        </div>
+
+        {/* ── 3 TESTIMONIALS ── */}
+        <section className="e-section">
+          <div className="e-wrap">
+            <div className="e-tag">What affiliates say</div>
+            <div className="e-tgrid">
               {TESTIMONIALS.map((t, i) => (
-                <div key={i} className="earn-tcard">
-                  <div className="earn-tcard-quote">&ldquo;</div>
-                  <p className="earn-tcard-text">{t.quote}</p>
+                <div key={i} className="e-tcard">
+                  <div className="e-tcard-q">&ldquo;</div>
+                  <p className="e-tcard-text">{t.quote}</p>
                   <div>
-                    <div className="earn-tcard-name">{t.name}</div>
-                    <div className="earn-tcard-role">{t.role}</div>
-                    <div className="earn-tcard-stat">{t.stat}</div>
+                    <div className="e-tcard-name">{t.name}</div>
+                    <div className="e-tcard-role">{t.role}</div>
+                    <div className="e-tcard-stat">{t.stat}</div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="earn-section-cta">
-              <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>{ctaLabel}</button>
+            <div className="e-section-cta">
+              <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
             </div>
           </div>
         </section>
+
+        <hr className="e-divider" />
 
         {/* ── EARNINGS MATH ── */}
-        <div className="earn-math-band">
-          <div className="earn-wrap">
-            <div className="earn-math-tag">The numbers</div>
-            <h2 className="earn-math-headline">
-              Guide price £9.99 · your 80% · <span style={{ color: "#FDE68A" }}>£7.99 per sale</span>
-            </h2>
-            <div className="earn-math-rows">
-              {[
-                { icon: "💬", text: "One WhatsApp message · 10 people buy", earn: "£79.90" },
-                { icon: "📌", text: "Pinned in 3 community groups · 10 buyers each", earn: "£239.70" },
-                { icon: "📧", text: "Newsletter mention · 50 buyers over a month", earn: "£399.50" },
-              ].map((r, i) => (
-                <div key={i} className="earn-math-row">
-                  <span className="earn-math-icon">{r.icon}</span>
-                  <span className="earn-math-label-text">{r.text}</span>
-                  <span className="earn-math-earn">{r.earn}</span>
-                </div>
-              ))}
-            </div>
-            <div className="earn-math-note">Conservative numbers. In a community that trusts you, 10 buyers is a quiet week — and a good guide gets forwarded.</div>
-          </div>
-        </div>
-
-        {/* ── HOW IT WORKS (3 steps) ── */}
-        <section className="earn-section">
-          <div className="earn-wrap">
-            <div className="earn-section-tag">Three steps</div>
-            <h2 className="earn-section-h2">Simple by design.</h2>
-            <div className="earn-steps">
-              {[
-                { n: "01", title: "Pick your guides", body: "Browse 40+ guides built for your community — visa, tax, housing, business. There's a guide for almost every question they ask you." },
-                { n: "02", title: "Drop your link", body: "You get a unique affiliate link for each guide. WhatsApp group, newsletter, Facebook — wherever you already show up. Copy. Paste. Send." },
-                { n: "03", title: "Get paid", body: "Someone buys — you keep 80%. The guide delivers automatically. No support, no chasing, no refunds on your end. Ever." },
-              ].map((s, i) => (
-                <div key={i} className="earn-step">
-                  <div className="earn-step-num">{s.n}</div>
-                  <div className="earn-step-title">{s.title}</div>
-                  <div className="earn-step-body">{s.body}</div>
-                </div>
-              ))}
-            </div>
-            <div className="earn-section-cta">
-              <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>{ctaLabel}</button>
-              <div style={{ fontSize: "0.72rem", color: "#B0A89A", marginTop: 14 }}>One-time payment · No monthly fees</div>
-            </div>
-          </div>
-        </section>
-
-        <hr className="earn-divider" />
-
-        {/* ── GUIDE LIBRARY (9 cards 3×3) ── */}
-        <section className="earn-section">
-          <div className="earn-wrap">
-            <div className="earn-section-tag">Guide library</div>
-            <h2 className="earn-section-h2">40+ guides. Share any. Earn on all.</h2>
-            <div className="earn-grid-3">
-              {GUIDES.map((g, i) => (
-                <div key={i} className="earn-guide-card">
-                  <div className="earn-guide-icon">{g.icon}</div>
-                  <div className="earn-guide-title">{g.title}</div>
-                  <div className="earn-guide-footer">
-                    <span className="earn-guide-pages">{g.pages} pages</span>
-                    <span className="earn-guide-tag">{g.tag}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="earn-section-cta">
-              <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>{ctaLabel}</button>
-              <div style={{ fontSize: "0.72rem", color: "#B0A89A", marginTop: 14 }}>Access all 40+ guides with one payment</div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── CTA BANNER ── */}
-        <section className="earn-section" style={{ paddingTop: 0 }}>
-          <div className="earn-wrap">
-            <div className="earn-cta-banner">
-              <h3>Your community is already searching.<br />You could already be earning.</h3>
-              <p>3 sales cover the £19.99. Every sale after that is yours.</p>
-              <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>{ctaLabel}</button>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 9 VIDEO TESTIMONIALS ── */}
-        <div className="earn-video-bg">
-          <div className="earn-wrap">
-            <div className="earn-math-tag" style={{ marginBottom: 14 }}>Hear from affiliates</div>
-            <h2 className="earn-math-headline" style={{ marginBottom: 36 }}>Their words, not ours.</h2>
-            <div className="earn-grid-3">
-              {VIDEO_AFFILIATES.map((v, i) => (
-                <div key={i} className="earn-video-card">
-                  <div className="earn-video-soon">Coming soon</div>
-                  <div className="earn-video-btn">▶</div>
-                  <div className="earn-video-name">{v.name}</div>
-                  <div className="earn-video-role">{v.role}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ── CASE STUDIES ── */}
-        <section className="earn-section">
-          <div className="earn-wrap">
-            <div className="earn-section-tag">Affiliate transformations</div>
-            <h2 className="earn-section-h2">Before. After. The difference.</h2>
-            <div className="earn-cases">
-              <div className="earn-case">
-                <div className="earn-case-header">
-                  <div className="earn-case-avatar">👩🏾</div>
-                  <div>
-                    <div className="earn-case-name">Adaeze O.</div>
-                    <div className="earn-case-desc">WhatsApp group admin · Nigerian community · London</div>
-                  </div>
-                </div>
-                <div className="earn-case-cols">
-                  <div>
-                    <div className="earn-case-col-label b">Before</div>
-                    <div className="earn-case-col-body">Answering the same visa and housing questions every week — for free. No time left. Nothing to show for it.</div>
-                  </div>
-                  <div>
-                    <div className="earn-case-col-label a">After</div>
-                    <div className="earn-case-col-body">Shared one guide in her group. Pinned it. Community got their answers. She got paid every time someone read it.</div>
-                  </div>
-                </div>
-                <div className="earn-case-result">£340 earned in her first month · Zero time spent on delivery or support</div>
+        <section className="e-section">
+          <div className="e-wrap">
+            <div className="e-tag">The numbers</div>
+            <h2 className="e-h2">What one post can return.</h2>
+            <div className="e-math">
+              <div className="e-math-head">
+                Guide price <strong>£9.99</strong> × your <strong>80%</strong> = <strong>£7.99 per sale</strong>
               </div>
-              <div className="earn-case">
-                <div className="earn-case-header">
-                  <div className="earn-case-avatar">👨🏽</div>
-                  <div>
-                    <div className="earn-case-name">Mohammed A.</div>
-                    <div className="earn-case-desc">Newsletter writer · South Asian community · Birmingham</div>
+              <div className="e-math-rows">
+                {[
+                  { icon: "💬", text: "One WhatsApp message · 10 people buy", earn: "£79.90" },
+                  { icon: "📌", text: "Pinned post in 3 groups · 10 buyers each", earn: "£239.70" },
+                  { icon: "📧", text: "Newsletter mention · 50 buyers this month", earn: "£399.50" },
+                ].map((r, i) => (
+                  <div key={i} className="e-math-row">
+                    <span className="e-math-icon">{r.icon}</span>
+                    <span className="e-math-lbl">{r.text}</span>
+                    <span className="e-math-earn">{r.earn}</span>
                   </div>
-                </div>
-                <div className="earn-case-cols">
-                  <div>
-                    <div className="earn-case-col-label b">Before</div>
-                    <div className="earn-case-col-body">Writing long immigration tips in a weekly newsletter. Loyal readers. Trusted voice. Zero income from any of it.</div>
-                  </div>
-                  <div>
-                    <div className="earn-case-col-label a">After</div>
-                    <div className="earn-case-col-body">Added three guide links to one newsletter. Copied the template. Sent it exactly as he always would have.</div>
-                  </div>
-                </div>
-                <div className="earn-case-result">£580 in 6 weeks from 3 guides · Readers thanked him for the recommendation</div>
+                ))}
+              </div>
+              <div className="e-math-note">
+                Conservative. In an audience that trusts you, 10 buyers is a quiet week — and a good guide gets shared.
               </div>
             </div>
-            <div className="earn-section-cta">
-              <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>{ctaLabel}</button>
-            </div>
           </div>
         </section>
+
+        <hr className="e-divider" />
 
         {/* ── WHAT YOU GET ── */}
-        <section className="earn-section" style={{ background: "#F5F2FF", paddingTop: 88, paddingBottom: 88 }}>
-          <div className="earn-wrap">
-            <div className="earn-section-tag">What&apos;s included</div>
-            <h2 className="earn-section-h2">Everything for £19.99 — once.</h2>
-            <div className="earn-benefits">
+        <section className="e-section">
+          <div className="e-wrap">
+            <div className="e-tag">What&apos;s included</div>
+            <h2 className="e-h2">Everything you need. Nothing you don&apos;t.</h2>
+            <div className="e-get">
               {[
                 { icon: "💷", title: "80% commission on every sale — for life", desc: "Paid automatically every month. Nothing to chase, nothing to invoice." },
-                { icon: "🔗", title: "Unique affiliate link for every guide", desc: "Share any guide in the library. You earn on all of them with your unique link." },
-                { icon: "📱", title: "WhatsApp templates, ready to send", desc: "Copy, paste, send. Working within minutes of joining." },
-                { icon: "📊", title: "Real-time earnings dashboard", desc: "See every sale, every penny, the moment it happens." },
+                { icon: "🔗", title: "Your affiliate link for every guide in the library", desc: "Share any of the 40+ guides. Each one has your unique link. You earn on all of them." },
+                { icon: "📱", title: "Ready-made posts, captions and WhatsApp templates", desc: "Copy, paste, send. You're live within minutes of joining." },
+                { icon: "📊", title: "Real-time dashboard — every sale, every penny", desc: "See exactly what's earning and what isn't. Live, not delayed." },
                 { icon: "📚", title: "Every new guide added — at no extra cost", desc: "The library grows. Your earning potential grows with it." },
               ].map((b, i) => (
-                <div key={i} className="earn-benefit">
-                  <div className="earn-benefit-icon">{b.icon}</div>
+                <div key={i} className="e-get-item">
+                  <div className="e-get-icon">{b.icon}</div>
                   <div>
-                    <div className="earn-benefit-title">{b.title}</div>
-                    <div className="earn-benefit-desc">{b.desc}</div>
+                    <div className="e-get-title">{b.title}</div>
+                    <div className="e-get-desc">{b.desc}</div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="earn-section-cta">
-              <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>{ctaLabel}</button>
-              <div style={{ fontSize: "0.72rem", color: "#9B8AF0", marginTop: 14 }}>30-day money-back guarantee · No questions asked</div>
+            <div className="e-section-cta">
+              <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
+              <div style={{ fontSize: "0.68rem", color: "#B0A89A", marginTop: 14 }}>30-day money-back guarantee · No questions asked</div>
             </div>
           </div>
         </section>
 
-        {/* ── 9 COMMUNITY LOGOS ── */}
-        <section className="earn-section">
-          <div className="earn-wrap">
-            <div className="earn-section-tag">Trusted by affiliates from</div>
-            <div className="earn-logos-grid">
-              {LOGOS.map((name, i) => (
-                <div key={i} className="earn-logo-card">
-                  <div className="earn-logo-dot" />
-                  <div className="earn-logo-name">{name}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── LIVE DEMAND ── */}
+        {/* ── LIVE DEMAND (conditional) ── */}
         {liveSearches.length > 0 && (
           <>
-            <hr className="earn-divider" />
-            <section className="earn-section">
-              <div className="earn-wrap">
-                <div className="earn-section-tag">Live on pdfseeds.com</div>
-                <div className="earn-demand">
-                  <div className="earn-demand-top">
-                    <div className="earn-demand-title">What your community is searching for right now</div>
-                    <div className="earn-demand-live"><div className="earn-demand-dot" /> Live</div>
+            <hr className="e-divider" />
+            <section className="e-section">
+              <div className="e-wrap">
+                <div className="e-tag">Live on pdfseeds.com</div>
+                <h2 className="e-h2">What people are searching for right now.</h2>
+                <div className="e-demand">
+                  <div className="e-demand-top">
+                    <div className="e-demand-title">Real searches — real demand</div>
+                    <div className="e-demand-live"><div className="e-demand-dot" /> Live</div>
                   </div>
                   {liveSearches.map((q, i) => (
-                    <div key={i} className="earn-demand-row">
-                      <div className="earn-demand-q">&ldquo;{q}&rdquo;</div>
-                      <div className="earn-demand-sig">demand ↗</div>
+                    <div key={i} className="e-demand-row">
+                      <div className="e-demand-q">&ldquo;{q}&rdquo;</div>
+                      <div className="e-demand-sig">guide exists ↗</div>
                     </div>
                   ))}
+                </div>
+                <div style={{ fontSize: "0.72rem", color: "#B0A89A", marginTop: 12, textAlign: "right", fontStyle: "italic" }}>
+                  Every search is a potential sale — for any affiliate with a relevant audience.
                 </div>
               </div>
             </section>
@@ -1166,139 +775,100 @@ export default function EarnPage() {
         )}
 
         {/* ── PRICE BLOCK ── */}
-        <div className="earn-pricing-bg">
-          <div className="earn-wrap">
-            <div className="earn-price-card">
-              <span className="earn-price-eyebrow">Affiliate Programme Access</span>
-              <div className="earn-price-num">£19.99</div>
-              <div className="earn-price-sub">One-time. No subscriptions. No monthly fees.</div>
-              <div className="earn-price-recover">3 sales cover the £19.99. Every sale after that is pure earnings.</div>
-              <div className="earn-price-list">
+        <div className="e-price-bg">
+          <div className="e-wrap">
+            <div className="e-price-card">
+              <span className="e-price-eyebrow">Affiliate Programme Access</span>
+              <div className="e-price-num">£19.99</div>
+              <div className="e-price-sub">One-time. No subscriptions. No monthly fees.</div>
+              <div className="e-price-recover">3 sales covers the £19.99. Every sale after that is pure earnings.</div>
+              <div className="e-price-list">
                 {[
                   "80% commission on every sale — for life",
-                  "Affiliate link for every guide in the library",
-                  "WhatsApp templates ready to send today",
-                  "Real-time dashboard — every sale, every penny",
+                  "Your affiliate link for every guide in the library",
+                  "Ready-made captions, posts and WhatsApp templates",
+                  "Real-time earnings dashboard",
                   "Every new guide added, at no extra cost",
-                  "30-day money-back guarantee, no questions",
+                  "30-day money-back guarantee — no questions asked",
                 ].map((b, i) => (
-                  <div key={i} className="earn-price-item">
-                    <span className="earn-price-check">✓</span>
+                  <div key={i} className="e-price-item">
+                    <span className="e-price-check">✓</span>
                     <span>{b}</span>
                   </div>
                 ))}
               </div>
-              <button className="earn-cta-white" onClick={handleGetAccess} disabled={loading}>
+              <button className="e-btn-white" onClick={handleGetAccess} disabled={loading}>
                 {loading ? "Opening checkout…" : "Become an Affiliate →"}
               </button>
-              <div className="earn-price-guarantee">
-                80% commission — for life · 30-day money-back guarantee · No questions asked
+              <div className="e-price-guarantee">
+                80% commission · For life · 30-day money-back guarantee · No questions asked
               </div>
             </div>
           </div>
         </div>
 
         {/* ── FAQ ── */}
-        <section className="earn-section">
-          <div className="earn-wrap">
-            <div className="earn-section-tag">Questions</div>
-            <h2 className="earn-section-h2">Common objections, answered.</h2>
-            <div className="earn-faq">
+        <section className="e-section" id="faq">
+          <div className="e-wrap">
+            <div className="e-tag">Questions</div>
+            <h2 className="e-h2">The three things people ask before they join.</h2>
+            <div className="e-faqs">
               {FAQS.map((f, i) => (
-                <div key={i} className="earn-faq-item">
-                  <div className="earn-faq-q">{f.q}</div>
-                  <p className="earn-faq-a">{f.a}</p>
+                <div key={i} className="e-faq">
+                  <div className="e-faq-q">{f.q}</div>
+                  <p className="e-faq-a">{f.a}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <hr className="earn-divider" />
+        <hr className="e-divider" />
 
-        {/* ── LEAD FORM ── */}
-        <section className="earn-section" id="interest-form">
-          <div className="earn-wrap">
-            <div className="earn-form-card">
-              <h2 className="earn-form-h2">Not ready yet? Stay in the loop.</h2>
-              <p className="earn-form-sub">Leave your details and we&apos;ll send you the affiliate starter pack — including the exact WhatsApp message that made 23 sales in one week.</p>
-              {formStatus === "done" ? (
-                <div style={{ background: "#F0FDF4", border: "1.5px solid #BBF7D0", borderRadius: 13, padding: "24px 20px", textAlign: "center" }}>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#15803D", marginBottom: 4 }}>✓ You&apos;re on the list.</div>
-                  <div style={{ fontSize: "0.8rem", color: "#16A34A" }}>Check your inbox — the starter pack is on its way.</div>
-                </div>
-              ) : (
-                <form onSubmit={handleForm}>
-                  <div className="earn-form-row">
-                    <div className="earn-field">
-                      <label className="earn-label">First name</label>
-                      <input className="earn-input" type="text" required placeholder="Adaeze" value={form.firstName} onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))} />
-                    </div>
-                    <div className="earn-field">
-                      <label className="earn-label">Last name</label>
-                      <input className="earn-input" type="text" required placeholder="Okafor" value={form.lastName} onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))} />
-                    </div>
-                  </div>
-                  <div className="earn-form-full">
-                    <div className="earn-field">
-                      <label className="earn-label">Email address</label>
-                      <input className="earn-input" type="email" required placeholder="you@example.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
-                    </div>
-                  </div>
-                  <div className="earn-form-full">
-                    <div className="earn-field">
-                      <label className="earn-label">WhatsApp number <span style={{ color: "#B0A89A", fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>(optional)</span></label>
-                      <input className="earn-input" type="tel" placeholder="+44 7700 000000" value={form.whatsapp} onChange={e => setForm(f => ({ ...f, whatsapp: e.target.value }))} />
-                    </div>
-                  </div>
-                  <button type="submit" className="earn-form-btn" disabled={formStatus === "sending"}>
-                    {formStatus === "sending" ? "Sending…" : "Send me the affiliate starter pack →"}
-                  </button>
-                </form>
-              )}
-            </div>
+        {/* ── FINAL CTA ── */}
+        <div className="e-final">
+          <h2 className="e-final-h">
+            You already have the audience.<br />
+            This is what you do with it.
+          </h2>
+          <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
+            {loading ? "Opening checkout…" : "Join as an Affiliate — £19.99 →"}
+          </button>
+          <div style={{ fontSize: "0.68rem", color: "#B0A89A", marginTop: 14 }}>
+            One-time payment · 30-day money-back guarantee
           </div>
-        </section>
+        </div>
 
         {/* ── CONTACT ── */}
-        <div className="earn-contact">
+        <div className="e-contact">
           <a href="mailto:hello@pdfseeds.com">✉ Questions? Email hello@pdfseeds.com</a>
         </div>
 
-        {/* ── FINAL CTA ── */}
-        <div className="earn-final">
-          <h2 className="earn-final-h2">
-            Your community already trusts you.<br />
-            The only thing missing is getting paid for it.
-          </h2>
-          <button className="earn-cta-primary" onClick={handleGetAccess} disabled={loading}>
-            {loading ? "Opening checkout…" : "Join as an Affiliate — £19.99 →"}
-          </button>
-          <div style={{ fontSize: "0.72rem", color: "#B0A89A", marginTop: 16 }}>One-time payment · 30-day money-back guarantee</div>
-        </div>
-
         {/* ── AFFILIATE RECOVERY ── */}
-        <div style={{ textAlign: "center", paddingBottom: 52 }}>
+        <div style={{ textAlign: "center", paddingBottom: 48 }}>
           {!recovery ? (
-            <button onClick={() => setRecovery(true)} style={{ background: "none", border: "none", color: "#C4BAB0", fontSize: "0.77rem", cursor: "pointer", textDecoration: "underline", textDecorationColor: "#E8E4DE" }}>
+            <button
+              onClick={() => setRecovery(true)}
+              style={{ background: "none", border: "none", color: "#C4BAB0", fontSize: "0.75rem", cursor: "pointer", textDecoration: "underline", textDecorationColor: "#E8E4DE" }}
+            >
               Already an affiliate? Resend my dashboard link →
             </button>
           ) : (
-            <div style={{ background: "#fff", border: "1.5px solid #EAE6E0", borderRadius: 16, padding: "28px 32px", maxWidth: 480, margin: "0 auto" }}>
-              <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#0F0A1A", marginBottom: 6 }}>Resend my dashboard link</div>
-              <div style={{ fontSize: "0.77rem", color: "#B0A89A", marginBottom: 20 }}>Enter the email you used when you joined.</div>
+            <div style={{ background: "#fff", border: "1.5px solid #EAE6E0", borderRadius: 14, padding: "26px 28px", maxWidth: 440, margin: "0 auto" }}>
+              <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#0F0A1A", marginBottom: 5 }}>Resend my dashboard link</div>
+              <div style={{ fontSize: "0.75rem", color: "#B0A89A", marginBottom: 18 }}>Enter the email you used when you joined.</div>
               {recoveryStatus === "done" ? (
-                <div style={{ fontSize: "0.84rem", color: "#15803D", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 11, padding: "14px 18px" }}>✓ Check your inbox — your dashboard link is on its way.</div>
+                <div style={{ fontSize: "0.82rem", color: "#15803D", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "13px 16px" }}>✓ Check your inbox — your dashboard link is on its way.</div>
               ) : recoveryStatus === "notfound" ? (
                 <div>
-                  <div style={{ fontSize: "0.84rem", color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 11, padding: "14px 18px", marginBottom: 12 }}>No account found. Try the email you used when you paid.</div>
-                  <button onClick={() => setRecoveryStatus("idle")} style={{ background: "none", border: "none", color: "#7C3AED", fontSize: "0.8rem", cursor: "pointer", fontWeight: 700 }}>Try a different email →</button>
+                  <div style={{ fontSize: "0.82rem", color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "13px 16px", marginBottom: 10 }}>No account found. Try the email you used when you paid.</div>
+                  <button onClick={() => setRecoveryStatus("idle")} style={{ background: "none", border: "none", color: "#8B5CF6", fontSize: "0.78rem", cursor: "pointer", fontWeight: 700 }}>Try a different email →</button>
                 </div>
               ) : (
                 <form onSubmit={handleRecovery}>
-                  <div style={{ background: "#FAF9F7", border: "1.5px solid #EAE6E0", borderRadius: 11, padding: "5px 5px 5px 15px", display: "flex", alignItems: "center", gap: 8 }}>
-                    <input type="email" value={recoveryEmail} onChange={e => setRecoveryEmail(e.target.value)} placeholder="Your email address" required autoFocus style={{ flex: 1, border: "none", outline: "none", fontSize: "0.88rem", color: "#0F0A1A", background: "transparent", padding: "10px 0", fontFamily: "inherit" }} />
-                    <button type="submit" disabled={recoveryStatus === "sending"} style={{ background: "linear-gradient(135deg,#7C3AED,#5B21B6)", color: "#fff", fontWeight: 700, fontSize: "0.8rem", padding: "10px 16px", border: "none", borderRadius: 8, cursor: "pointer", whiteSpace: "nowrap", opacity: recoveryStatus === "sending" ? 0.55 : 1, fontFamily: "inherit" }}>
+                  <div style={{ background: "#FAF9F7", border: "1.5px solid #EAE6E0", borderRadius: 10, padding: "4px 4px 4px 14px", display: "flex", alignItems: "center", gap: 7 }}>
+                    <input type="email" value={recoveryEmail} onChange={e => setRecoveryEmail(e.target.value)} placeholder="Your email address" required autoFocus style={{ flex: 1, border: "none", outline: "none", fontSize: "0.86rem", color: "#0F0A1A", background: "transparent", padding: "10px 0", fontFamily: "inherit" }} />
+                    <button type="submit" disabled={recoveryStatus === "sending"} style={{ background: "linear-gradient(135deg,#8B5CF6,#6D28D9)", color: "#fff", fontWeight: 700, fontSize: "0.78rem", padding: "9px 15px", border: "none", borderRadius: 8, cursor: "pointer", whiteSpace: "nowrap", opacity: recoveryStatus === "sending" ? 0.5 : 1, fontFamily: "inherit" }}>
                       {recoveryStatus === "sending" ? "Sending…" : "Send link →"}
                     </button>
                   </div>
@@ -1308,7 +878,7 @@ export default function EarnPage() {
           )}
         </div>
 
-        <footer className="earn-footer">
+        <footer className="e-footer">
           © {new Date().getFullYear()} PDF Seeds &nbsp;·&nbsp;
           <a href="/">Find a guide</a> &nbsp;·&nbsp;
           <a href="/privacy">Privacy</a> &nbsp;·&nbsp;
@@ -1317,9 +887,9 @@ export default function EarnPage() {
 
       </div>
 
-      {/* ── FIXED MOBILE CTA BAR ── */}
-      <div className="earn-mobile-bar">
-        <button onClick={handleGetAccess} disabled={loading}>{ctaLabel}</button>
+      {/* ── FIXED MOBILE CTA ── */}
+      <div className="e-mobile">
+        <button onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
       </div>
     </>
   );
