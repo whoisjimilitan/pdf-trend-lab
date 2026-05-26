@@ -216,12 +216,22 @@ export default async function SellPage({ params }: Props) {
         .transform-text { font-size: 0.88rem; color: #94A3B8; line-height: 1.75; font-style: ${isBJ ? "italic" : "normal"}; }
 
         /* WHAT'S INSIDE */
-        .chapters-grid { display: grid; gap: 12px; }
-        .chapter-card { background: #0F1117; border: 1px solid #1F2333; border-radius: 12px; padding: 18px 20px; display: flex; align-items: flex-start; gap: 16px; transition: border-color 0.15s; }
-        .chapter-card:hover { border-color: ${accent}50; }
+        .chapters-wrap { border: 1px solid #1F2333; border-radius: 16px; overflow: hidden; }
+        .chapters-head { padding: 12px 18px; border-bottom: 1px solid #1F2333; display: flex; align-items: center; justify-content: space-between; font-size: 0.68rem; font-weight: 700; color: ${accent}; letter-spacing: 0.1em; text-transform: uppercase; background: #0D0E17; }
+        .chapters-grid { display: grid; gap: 0; }
+        .chapter-card { background: #0F1117; border-bottom: 1px solid #1F2333; padding: 16px 20px; display: flex; align-items: flex-start; gap: 16px; transition: border-color 0.15s; }
+        .chapter-card:last-child { border-bottom: none; }
+        .chapter-card:hover { background: #111420; }
         .chapter-badge { background: ${accentDim}; color: ${accent}; border: 1px solid ${accentBdr}; border-radius: 8px; padding: 4px 10px; font-size: 0.7rem; font-weight: ${isBJ ? "400" : "700"}; white-space: nowrap; flex-shrink: 0; margin-top: 2px; font-style: ${isBJ ? "italic" : "normal"}; }
         .chapter-title { font-size: 0.9rem; font-weight: ${isBJ ? "500" : "700"}; color: #E2E8F0; margin-bottom: 5px; line-height: 1.4; }
         .chapter-desc { font-size: 0.82rem; color: #64748B; line-height: 1.6; font-style: ${isBJ ? "italic" : "normal"}; }
+        /* Locked chapters */
+        .chapters-locked { position: relative; }
+        .chapters-locked-fade { position: absolute; top: 0; left: 0; right: 0; height: 36px; background: linear-gradient(to bottom, #0F1117, transparent); pointer-events: none; z-index: 1; }
+        .chapter-card--locked { opacity: 0.32; user-select: none; }
+        .chapter-card--locked .chapter-title { filter: blur(4px); }
+        .chapter-card--locked .chapter-desc { display: none; }
+        .chapters-lock { padding: 12px 18px; border-top: 1px solid #1F2333; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 0.75rem; font-weight: 600; color: ${accent}; background: #0D0E17; opacity: 0.8; }
 
         /* SOCIAL PROOF (implied) */
         .social-proof-box { background: #0F1117; border: 1px solid #1F2333; border-radius: 14px; padding: 24px 26px; }
@@ -356,16 +366,40 @@ export default async function SellPage({ params }: Props) {
         {sd?.whatsInside && sd.whatsInside.length > 0 && (
           <div className="sp-section">
             <div className="section-label">{insideTitle}</div>
-            <div className="chapters-grid">
-              {sd.whatsInside.map((ch, i) => (
-                <div key={i} className="chapter-card">
-                  <span className="chapter-badge">{ch.chapter}</span>
-                  <div>
-                    <div className="chapter-title">{ch.title}</div>
-                    <div className="chapter-desc">{ch.description}</div>
+            <div className="chapters-wrap">
+              <div className="chapters-head">
+                <span>What&apos;s inside</span>
+                <span>{sd.whatsInside.length} chapters</span>
+              </div>
+              <div className="chapters-grid">
+                {/* Visible chapters — first 3 fully revealed */}
+                {sd.whatsInside.slice(0, 3).map((ch, i) => (
+                  <div key={i} className="chapter-card">
+                    <span className="chapter-badge">{ch.chapter}</span>
+                    <div>
+                      <div className="chapter-title">{ch.title}</div>
+                      <div className="chapter-desc">{ch.description}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+                {/* Locked chapters — blurred to create open loop */}
+                {sd.whatsInside.length > 3 && (
+                  <div className="chapters-locked">
+                    <div className="chapters-locked-fade" />
+                    {sd.whatsInside.slice(3).map((ch, i) => (
+                      <div key={i} className="chapter-card chapter-card--locked">
+                        <span className="chapter-badge">{ch.chapter}</span>
+                        <div>
+                          <div className="chapter-title">{ch.title}</div>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="chapters-lock">
+                      🔒 {sd.whatsInside.length - 3} more chapters — unlocked with your guide
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
