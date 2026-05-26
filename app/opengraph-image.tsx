@@ -23,58 +23,53 @@ export default function OgImage() {
       {/* Logo mark */}
       <div
         style={{
-          width: 96,
-          height: 96,
-          borderRadius: 24,
+          width: 80,
+          height: 80,
+          borderRadius: 20,
           background: "linear-gradient(135deg, #7C3AED, #4F46E5)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 52,
-          marginBottom: 20,
-          boxShadow: "0 16px 48px rgba(124,58,237,0.25)",
+          fontSize: 44,
+          marginBottom: 52,
+          boxShadow: "0 12px 40px rgba(124,58,237,0.22)",
         }}
       >
         🌱
       </div>
 
-      {/* Brand name */}
+      {/* Three beats */}
       <div
         style={{
-          fontSize: 28,
-          fontWeight: 800,
-          color: "#1A1008",
-          letterSpacing: "-0.02em",
-          marginBottom: 48,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 0,
+          marginBottom: 56,
         }}
       >
-        PDF Seeds
-      </div>
-
-      {/* Headline */}
-      <div
-        style={{
-          fontSize: 80,
-          fontWeight: 900,
-          color: "#1A1008",
-          lineHeight: 1.08,
-          letterSpacing: "-0.04em",
-          marginBottom: 12,
-        }}
-      >
-        Stop Googling.
-      </div>
-      <div
-        style={{
-          fontSize: 80,
-          fontWeight: 900,
-          color: "#7C3AED",
-          lineHeight: 1.08,
-          letterSpacing: "-0.04em",
-          marginBottom: 48,
-        }}
-      >
-        Describe your situation.
+        <div
+          style={{
+            fontSize: 96,
+            fontWeight: 900,
+            color: "#1A1008",
+            lineHeight: 1.05,
+            letterSpacing: "-0.04em",
+          }}
+        >
+          10 tabs. 3 hours.
+        </div>
+        <div
+          style={{
+            fontSize: 96,
+            fontWeight: 900,
+            color: "#7C3AED",
+            lineHeight: 1.05,
+            letterSpacing: "-0.04em",
+          }}
+        >
+          0 guides.
+        </div>
       </div>
 
       {/* URL */}
@@ -83,7 +78,7 @@ export default function OgImage() {
           fontSize: 22,
           color: "#B0A89A",
           fontWeight: 500,
-          letterSpacing: "0.02em",
+          letterSpacing: "0.04em",
         }}
       >
         pdfseeds.com
