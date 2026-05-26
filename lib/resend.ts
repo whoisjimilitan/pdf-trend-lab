@@ -141,7 +141,8 @@ export function purchaseConfirmEmail(title: string, guideUrl: string) {
     ${p(`Open it here: <a href="${guideUrl}" style="color:#7C3AED;font-weight:600;word-break:break-all;">${guideUrl}</a>`)}
     ${p("You can read it on any device and save it as a PDF. Bookmark the link above so you can come back to it any time.")}
     ${muted("Questions about your guide? Reply to this email. If it doesn't help, we'll refund you in full — just reply within 30 days.")}
+    ${muted("If this email landed in Promotions, drag it to your Primary inbox — that tells Gmail to put future receipts there.")}
   `);
-  const text = `Your guide is ready.\n\nThank you for your purchase. Your guide — ${title} — is ready:\n\n${guideUrl}\n\nBookmark that link. You can read it on any device and save it as a PDF.\n\nQuestions? Just reply to this email. 30-day refund if it doesn't help.\n\n— PDF Seeds`;
+  const text = `Your guide is ready.\n\nThank you for your purchase. Your guide — ${title} — is ready:\n\n${guideUrl}\n\nBookmark that link. You can read it on any device and save it as a PDF.\n\nQuestions? Just reply to this email. 30-day refund if it doesn't help.\n\nIf this landed in Promotions, drag it to your Primary inbox.\n\n— PDF Seeds`;
   return { subject, html, text };
 }
