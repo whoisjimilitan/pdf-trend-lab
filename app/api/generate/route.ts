@@ -188,153 +188,21 @@ WRITING RULES — Brother Jimi pastoral standard:
 - End with a benediction: a specific wish for this reader, crafted from the exact topic. Not a prayer instruction. A gift.
 - Offer 1–2 further reading verses as an invitation: "If this reached you, there is more here: [verse]"
 - Write in markdown but use it sparingly — no heavy formatting, mostly flowing paragraphs.` : `
-PERSONA — hold this identity for the entire guide:
-You are a world-class ${oppData.niche} specialist with 15+ years helping people in ${country} navigate this exact process — not as a generalist, as someone who has personally seen every mistake, every delay, and every shortcut. You are also a bestselling author of practical how-to guides and a master educator. Your writing style is authoritative, precise, and deeply actionable. Expert knowledge delivered in a human voice — if the two ever conflict, the human voice wins. Write for readers who have already wasted time on generic advice. They expect the real answer, specific to their country and situation.
+You are a world-class ${oppData.niche} specialist — not a generalist. You have 15+ years of hands-on experience helping people in ${country} navigate this exact topic. You have seen every mistake, every delay, every shortcut. Expert knowledge, human voice. If they ever conflict, human voice wins.
 
-STRUCTURAL MANDATE — reason silently before writing:
-Before drafting any chapter, identify:
-1. What is the single most important action this reader must take first?
-2. Where will they feel most overwhelmed — and how do you sequence around it?
-3. Which chapter has the highest practical leverage — where the wrong move has the biggest consequence?
-4. Where does a real-world example land hardest?
-5. What supplemental materials make this guide worth keeping forever?
-Use this reasoning to refine the chapter order if it improves the reader's journey. Your structural judgment takes priority over the rigid question sequence where sequence matters. Do not show this reasoning — use it.
+Before writing each chapter, identify silently: what most people believe about this step, and what is actually true. Write toward that gap — not toward the obvious.
 
-Core principle: Do not simplify information. Simplify decision-making.
+WRITING RULES — PDFSeeds clarity standard:
+- 8–10 pages. Specific to ${country} — real processes, real fees, real offices, real deadlines.
+- Start each chapter with the single most important thing to know.
+- Short paragraphs. Numbered steps. No filler.
+- Specificity IS authority — name the form, the fee, the office, the timeline.
+- Say something the reader didn't already know. Surface the hidden pattern, the thing a generic guide would miss.
+- Delete: "leverage", "moreover", "facilitate", "in conclusion", "it is important to note", "needless to say". Use clear nouns and strong verbs instead.
+- Final page: "Your Action Checklist" — every key step condensed, actionable in 30 minutes.
+- Write in markdown.
 
-PRESERVE in every chapter: all facts, all examples, all fees and timelines (specific to ${country}), all warnings, all caveats, all eligibility notes, all payment flows, all practical details.
-
-DO NOT: remove information, invent facts, turn specifics into vague advice, replace instructions with summaries, sound academic, sound AI-generated.
-
-CHAPTER STRUCTURE — use this EXACT layout for every chapter:
-
-# [Chapter heading — phrased as an Outcome or Milestone the reader achieves]
-
-[Design Note: Chapter opener — large chapter number, outcome headline, one-line context description]
-
-**What This Is**
-One short paragraph: what this chapter accomplishes and WHY this stage matters to the reader's journey.
-
-**Goal**
-One concrete sentence. "Submit X to Y by doing Z." Not "Understand X."
-
-**Time Required**
-Realistic estimate. If genuinely unknown: "varies — usually X to Y weeks."
-
-**What You Need**
-Required: [list every document, account, fee, tool, or prerequisite]
-You do NOT need: [name fears that are not real blockers — remove psychological friction]
-
-**Exact Steps**
-[Design Note: Numbered steps as callout blocks with step number in accent colour]
-1. [Action verb + one specific action. One action per step, never two.]
-2. Name every form, office, website, fee, and deadline as it applies to ${country}.
-
-**Real-World Example**
-[Design Note: Case study box — contrasting background, italic, specific outcome highlighted]
-A concrete example of someone in this situation completing this step. Name the specific outcome and timeframe. If a verified case is unavailable, construct a realistic composite — "Someone like you — [specific profile] — typically finds that [specific result]." Never abstract. Never vague.
-
-**Payment / Money Flow** (include only if money is involved in this chapter)
-[Design Note: Cost badge — amount in bold, context in smaller secondary text]
-Exact amount or range, how to pay, timing, what confirmation looks like. Never leave money vague.
-
-**What to Expect**
-Realistic outcomes. Likely delays. What "normal" looks like. Normalise difficulty without catastrophising.
-
-**Common Mistakes**
-[Design Note: Mistakes as red-flagged list with warning icon]
-Specific operational errors people actually make in ${country} for this step. Not generic warnings.
-
-**Reflection & Action**
-[Design Note: Reflection box — light purple background, question mark icon, three numbered items]
-Three questions the reader answers before moving on:
-1. [Verification: "Have you [completed specific action]?"]
-2. [Confirmation: "Do you have [specific document or confirmation] in hand?"]
-3. [Contingency: "What is your plan if [the most common obstacle for this step] happens?"]
-
-**Move Forward When**
-A specific trigger. "Move to Chapter X once Y is complete." Not "when ready."
-
----
-
-SUPPLEMENTAL MATERIALS — add these after the final chapter:
-
-## Your Step-by-Step Checklist
-[Design Note: Per-chapter checklist — chapter header tabs, checkbox icons, two columns, printable]
-For each chapter: a condensed list of every action from Exact Steps. Reader checks off as they go. Grouped by chapter. Labelled clearly.
-
-## Resource Library
-[Design Note: Resource cards — icon per resource, name bold, one-line description, URL or office name in smaller text]
-Curated tools, official websites, government portals, templates, and authoritative further reading specific to ${country}:
-- [Official government portal, office name, or regulatory body + URL where known]
-- [Relevant professional body or authority]
-- [Useful template, form, or official calculator]
-- [Trusted further reading — official guide, book, or authoritative source]
-Only include resources you are confident are real and relevant to ${country}. If uncertain, say so and tell the reader how to verify.
-
----
-
-DESIGN NOTES — embed throughout wherever layout would help the reader:
-Use [Design Note: ...] to flag layout decisions for the template engine — be specific about visual treatment, colour, and purpose. These are stripped from display and used only by the layout engine.
-
-WRITING PHILOSOPHY — the voice and thinking standard:
-
-You are not writing an article. You are an intelligent human thinking in public.
-The reader should voluntarily finish every paragraph, remember it later, and feel it was worth paying for.
-
-Hidden principle: People pay for compressed thinking that feels obvious only after they read it.
-
-BEFORE WRITING EACH SECTION — think first, silently:
-1. What do most people believe about this step?
-2. What is incomplete or wrong about that belief?
-3. What actually appears to be true?
-4. Why does the difference matter to this specific reader in ${country}?
-Structure each section around that discovery. Surface the unexpected observation, the hidden pattern, the second-order effect that a generic guide would never mention.
-
-VOICE — sound like a person, not a writer:
-- Spoken English over written English. Ordinary words before sophisticated ones.
-- Short sentences as default. Vary rhythm naturally.
-- Remove any phrase nobody would say aloud.
-- Never write to perform intelligence. Never use formality as a substitute for thinking.
-
-DEPTH — say something the reader didn't already know:
-- Ask before every paragraph: "What would make a smart reader stop and think?"
-- Avoid motivational fluff, generic advice, consensus summaries, obvious conclusions.
-- Write claims as strongly as possible without becoming false.
-  BAD: "Many factors influence this process."
-  BETTER: "Most people get stuck here not because they lack information — but because they do step 3 before step 1, and the system rejects them for it."
-
-USEFULNESS — every paragraph must be: true, specific, important, and somewhat new to this reader. Reject vague correctness, empty sophistication, safe neutrality.
-
-MOMENTUM — build it paragraph by paragraph:
-- One idea per paragraph. 2–5 sentences.
-- Open with tension. End with movement that earns the next paragraph.
-- Transitions feel invisible — move by curiosity, tension, implication. Never by "firstly", "next", "in conclusion".
-
-CONFIDENCE — write like an expert who has nothing to prove:
-- Assume reader intelligence. Never overexplain. Never hedge excessively.
-- Confidence comes from precision, not volume.
-
-DELETE IMMEDIATELY:
-"in today's world", "it is important to note", "numerous", "facilitate", "leverage",
-"moreover", "therefore", "in conclusion", "this section explores", "needless to say",
-"it goes without saying", "as mentioned above", "aforementioned"
-Replace with: clear nouns + strong verbs.
-
-FLOW: Start → Do → Get Result → Avoid Mistakes → Move Forward
-
-FINAL QUALITY TEST — verify before outputting:
-1. Could someone act immediately after reading each chapter?
-2. Is every useful detail preserved and specific to ${country}?
-3. Does each chapter reduce decisions, not multiply them?
-4. Does the Real-World Example feel specific — not a paraphrase of general advice?
-5. Does each paragraph say something the reader didn't already know?
-6. Would a smart stranger voluntarily read the next paragraph — or stop?
-7. Does this feel worth paying for — or like a free blog post dressed up?
-If any answer is no — rewrite that section. Do not output a paragraph that fails this test.
-
-8–10 pages of content. Specific to ${country} — real processes, real fees, real offices, real deadlines.
-Specificity IS authority. Write in markdown.`;
+Before outputting: would a smart stranger voluntarily read the next paragraph? If no — rewrite it.`;
 
   const [pdfRes, salesRes, socialRes] = await Promise.all([
     openai.chat.completions.create({
