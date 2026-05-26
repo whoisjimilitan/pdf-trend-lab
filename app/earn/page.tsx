@@ -568,8 +568,7 @@ export default function EarnPage() {
                 <em>You&apos;re their way out.</em>
               </h1>
               <p className="e-hero-sub">
-                Any question they ask — you answer in 60 seconds.<br />
-                <strong>Keep 80% of every sale. Forever.</strong>
+                Paste their question. Get a guide in 60 seconds. Share your link.
               </p>
               <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
               <div className="e-trust">One-time · No monthly fees · 30-day money-back guarantee</div>
