@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 
 const AVATARS = [
-  { initials: "AO", name: "Adaeze O.", role: "WhatsApp Admin", stat: "£340 first month" },
-  { initials: "MA", name: "Mohammed A.", role: "Newsletter · 2.1k", stat: "£580 in 6 wks" },
-  { initials: "FK", name: "Femi K.", role: "Facebook Group", stat: "£211 in 10 days" },
-  { initials: "PR", name: "Priya R.", role: "Community leader", stat: "£220 first month" },
+  { initials: "AO", name: "Adaeze O.", role: "WhatsApp Admin", stat: "£340 first month", how: "One pinned message" },
+  { initials: "MA", name: "Mohammed A.", role: "Newsletter · 2.1k subs", stat: "£580 in 6 weeks", how: "One newsletter mention" },
+  { initials: "FK", name: "Femi K.", role: "Facebook Group", stat: "£211 in 10 days", how: "Three posts" },
+  { initials: "PR", name: "Priya R.", role: "Community leader", stat: "£220 first month", how: "Word of mouth" },
 ];
 
 const TESTIMONIALS = [
@@ -120,53 +120,36 @@ export default function EarnPage() {
           position: relative; overflow: hidden;
         }
 
-        /* ─── HERO INNER (centered) ─── */
+        /* ─── HERO INNER (split layout) ─── */
         .e-hero {
-          max-width: 700px; margin: 0 auto;
-          display: flex; flex-direction: column; align-items: center;
-          text-align: center;
-          padding: 108px 40px 80px;
+          max-width: 1160px; margin: 0 auto;
+          display: grid; grid-template-columns: 1fr 360px;
+          align-items: center; gap: 72px;
+          padding: 108px 80px 96px;
           position: relative; z-index: 1;
         }
+        .e-hero-copy { position: relative; z-index: 1; }
 
-        /* ─── ORBITING AVATARS (hero corners) ─── */
-        .e-orb {
-          position: absolute; display: flex; flex-direction: column;
-          align-items: center; gap: 6px;
-          animation: efloat 5s ease-in-out infinite;
-          pointer-events: none; z-index: 0;
+        /* ─── EARNINGS CARDS ─── */
+        .e-cards { display: flex; flex-direction: column; gap: 12px; }
+        .e-card {
+          background: #fff; border: 1px solid #EEE9E0; border-radius: 16px;
+          padding: 16px 20px; display: flex; align-items: center; gap: 14px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+          transition: box-shadow 0.2s, transform 0.15s;
         }
-        .e-orb:nth-child(2) { animation-delay: 1.4s; }
-        .e-orb:nth-child(3) { animation-delay: 2.8s; }
-        .e-orb:nth-child(4) { animation-delay: 4.2s; }
-        @keyframes efloat {
-          0%, 100% { transform: translateY(0); }
-          50%       { transform: translateY(-8px); }
-        }
-        .e-orb-row { display: flex; align-items: center; gap: 10px; }
-        .e-orb-circle {
-          width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+        .e-card:hover { box-shadow: 0 8px 28px rgba(139,92,246,0.1); transform: translateY(-1px); }
+        .e-card-av {
+          width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
           background: linear-gradient(135deg, #8B5CF6, #6D28D9);
-          border: 3px solid #fff;
-          box-shadow: 0 8px 28px rgba(139,92,246,0.28), 0 0 0 6px rgba(139,92,246,0.07);
           display: flex; align-items: center; justify-content: center;
-          font-size: 0.85rem; font-weight: 800; color: #fff;
+          font-size: 0.78rem; font-weight: 800; color: #fff;
+          border: 2.5px solid #F5F3FF;
+          box-shadow: 0 4px 12px rgba(139,92,246,0.2);
         }
-        .e-orb-stat {
-          font-size: 0.62rem; font-weight: 800; color: #6D28D9;
-          background: #F5F3FF; border: 1px solid #E0D9FF;
-          border-radius: 999px; padding: 3px 10px; white-space: nowrap;
-        }
-        .e-orb-arr--r {
-          width: 0; height: 0; flex-shrink: 0;
-          border-top: 7px solid transparent; border-bottom: 7px solid transparent;
-          border-left: 11px solid rgba(139,92,246,0.5);
-        }
-        .e-orb-arr--l {
-          width: 0; height: 0; flex-shrink: 0;
-          border-top: 7px solid transparent; border-bottom: 7px solid transparent;
-          border-right: 11px solid rgba(139,92,246,0.5);
-        }
+        .e-card-meta { font-size: 0.68rem; color: #9B8AF0; font-weight: 600; margin-bottom: 3px; }
+        .e-card-earn { font-size: 1.08rem; font-weight: 900; color: #0F0A1A; letter-spacing: -0.03em; margin-bottom: 2px; }
+        .e-card-how { font-size: 0.62rem; color: #C4BAB0; }
 
         /* ─── AVATAR PILLS (testimonials section) ─── */
         .e-av {
@@ -496,8 +479,12 @@ export default function EarnPage() {
 
         /* ─── RESPONSIVE: TABLET ─── */
         @media (min-width: 601px) and (max-width: 1100px) {
-          .e-hero { padding: 80px 40px 64px; }
-          .e-orb { display: none; }
+          .e-hero {
+            grid-template-columns: 1fr; padding: 80px 40px 64px;
+            text-align: center; gap: 40px;
+          }
+          .e-hero-sub { margin: 0 auto 36px; }
+          .e-cards { display: none; }
           .e-wrap { padding: 0 40px; }
           .e-trust-outer { padding: 20px 40px; }
           .e-trust-step { padding: 0 16px; }
@@ -505,8 +492,11 @@ export default function EarnPage() {
 
         /* ─── RESPONSIVE: MOBILE ─── */
         @media (max-width: 600px) {
-          .e-hero { padding: 56px 20px 44px; }
-          .e-orb { display: none; }
+          .e-hero {
+            grid-template-columns: 1fr; padding: 56px 20px 44px;
+            text-align: center; gap: 0;
+          }
+          .e-cards { display: none; }
           .e-h1 { font-size: 2rem; }
           .e-hero-sub { font-size: 0.92rem; }
 
@@ -580,70 +570,39 @@ export default function EarnPage() {
 
         {/* ── HERO ── */}
         <div className="e-hero-outer">
-
-          {/* Orbiting avatars — 4 corners, Clause-style */}
-          {AVATARS.map((a, i) => {
-            const pos: React.CSSProperties[] = [
-              { top: "16%", left: "6%" },
-              { top: "16%", right: "6%" },
-              { bottom: "14%", left: "6%" },
-              { bottom: "14%", right: "6%" },
-            ];
-            const isRight = i % 2 !== 0;
-            return (
-              <div key={i} className="e-orb" style={pos[i]}>
-                <div className="e-orb-row">
-                  {!isRight && <div className="e-orb-circle">{a.initials}</div>}
-                  {!isRight && <div className="e-orb-arr--r" />}
-                  {isRight && <div className="e-orb-arr--l" />}
-                  {isRight && <div className="e-orb-circle">{a.initials}</div>}
-                </div>
-                <div className="e-orb-stat">{a.stat}</div>
-              </div>
-            );
-          })}
-
           <div className="e-hero">
-            <div className="e-chip">For WhatsApp admins, newsletter writers &amp; community leaders</div>
-            <h1 className="e-h1">
-              They&apos;re asking the group.<br />
-              The group doesn&apos;t know.<br />
-              <em>You will — in 60 seconds.</em>
-            </h1>
-            <p className="e-hero-sub">
-              Share only what you&apos;d stand behind. <strong>Earn 80% — forever.</strong>
-            </p>
-            <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
-              {loading ? "Opening checkout…" : "Become a Curator →"}
-            </button>
-            <div className="e-trust">£19.99 one-time · No monthly fees · 30-day money-back guarantee</div>
 
-            {/* Phone mockup — visual proof of mechanism */}
-            <div className="e-phone-wrap">
-              <div className="e-phone">
-                <div className="e-phone-bar">
-                  <div className="e-phone-av" />
-                  <div>
-                    <div className="e-phone-gname">Community Group</div>
-                    <div className="e-phone-gmem">847 members</div>
-                  </div>
-                </div>
-                <div className="e-bubble">
-                  Had a few people ask me about the UK visa process — found this guide that covers every step. Worth it 👇
-                  <div style={{ marginTop: 5 }}>
-                    <span className="e-bubble-link">pdfseeds.com/guide/uk-visa</span>
-                  </div>
-                  <div className="e-bubble-ts">2:14 PM ✓✓</div>
-                </div>
-                <div className="e-result">
-                  <div>
-                    <div className="e-result-label">6 people bought</div>
-                    <div className="e-result-sub">from one message</div>
-                  </div>
-                  <div className="e-result-earn">£47.94</div>
-                </div>
-              </div>
+            {/* Copy */}
+            <div className="e-hero-copy">
+              <div className="e-chip">For WhatsApp admins, newsletter writers &amp; community leaders</div>
+              <h1 className="e-h1">
+                They&apos;re asking the group.<br />
+                The group doesn&apos;t know.<br />
+                <em>You will — in 60 seconds.</em>
+              </h1>
+              <p className="e-hero-sub">
+                Share only PDF Guides you&apos;d stand behind that answer your audience. <strong>Earn 80% — forever.</strong>
+              </p>
+              <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
+                {loading ? "Opening checkout…" : "Become a Curator →"}
+              </button>
+              <div className="e-trust">£19.99 one-time · No monthly fees · 30-day money-back guarantee</div>
             </div>
+
+            {/* Earnings cards */}
+            <div className="e-cards">
+              {AVATARS.map((a, i) => (
+                <div key={i} className="e-card">
+                  <div className="e-card-av">{a.initials}</div>
+                  <div>
+                    <div className="e-card-meta">{a.name} · {a.role}</div>
+                    <div className="e-card-earn">{a.stat}</div>
+                    <div className="e-card-how">{a.how}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
           </div>
         </div>
 
