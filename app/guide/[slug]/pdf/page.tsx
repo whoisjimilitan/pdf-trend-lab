@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ session_id?: string }>;
+};
 
 function renderMarkdown(md: string): string {
   return md
@@ -20,24 +23,16 @@ function renderMarkdown(md: string): string {
     .replace(/<p><\/p>/g, "");
 }
 
-export default async function PdfPage({ params }: Props) {
+export default async function PdfPage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const sp = await searchParams;
+  const justPurchased = !!sp?.session_id;
+
   const product = await prisma.product.findFirst({
     where: { slug },
     include: { opportunity: true },
   });
   if (!product) notFound();
-
-  const { opportunity } = product;
-  const price = opportunity ? opportunity.minPrice.toFixed(2) : "9.99";
-  const currency = opportunity?.country === "GH" ? "₵"
-    : opportunity?.country === "NG" ? "₦"
-    : opportunity?.country === "KE" ? "KSh"
-    : opportunity?.country === "ZA" ? "R"
-    : opportunity?.country === "GB" ? "£"
-    : opportunity?.country === "CA" ? "CA$"
-    : opportunity?.country === "AU" ? "A$"
-    : "$";
 
   const contentHtml = renderMarkdown(product.pdfContent);
   const year = new Date().getFullYear();
@@ -46,94 +41,237 @@ export default async function PdfPage({ params }: Props) {
     <>
       <style>{`
         body > aside { display: none !important; }
-        body { display: block !important; overflow-y: auto !important; height: auto !important; }
+        body { display: block !important; overflow-y: auto !important; height: auto !important; margin: 0; }
         body > main { overflow: visible !important; height: auto !important; }
+        * { box-sizing: border-box; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Georgia, 'Times New Roman', serif; background: #fff; color: #1a1a2e; }
+        body {
+          font-family: Georgia, 'Times New Roman', serif;
+          background: #F8F7F4;
+          color: #1a1a2e;
+        }
 
-        .pdf-wrap { max-width: 680px; margin: 0 auto; padding: 60px 48px; }
+        .delivery-bar {
+          background: #F0FDF4;
+          border-bottom: 1px solid #BBF7D0;
+          padding: 14px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+        .delivery-bar-msg {
+          font-family: system-ui, -apple-system, sans-serif;
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: #15803D;
+        }
+        .delivery-bar-sub {
+          font-family: system-ui, -apple-system, sans-serif;
+          font-size: 0.78rem;
+          color: #16A34A;
+          margin-top: 2px;
+        }
+        .save-btn {
+          font-family: system-ui, -apple-system, sans-serif;
+          background: #15803D;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 8px;
+          font-size: 0.85rem;
+          font-weight: 700;
+          cursor: pointer;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .save-btn:hover { background: #166534; }
 
-        /* Cover page */
-        .cover { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-bottom: 3px solid #6366F1; padding: 80px 40px; page-break-after: always; }
-        .cover .logo { font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; color: #6366F1; margin-bottom: 48px; }
-        .cover h1 { font-size: 2.4rem; font-weight: 900; line-height: 1.2; color: #1a1a2e; margin-bottom: 20px; }
-        .cover .subtitle { font-size: 1.1rem; color: #475569; margin-bottom: 48px; font-style: italic; }
-        .cover .price-badge { background: #6366F1; color: #fff; padding: 12px 32px; border-radius: 40px; font-size: 1.2rem; font-weight: 700; display: inline-block; margin-bottom: 32px; }
-        .cover .footer-note { font-size: 0.75rem; color: #94a3b8; margin-top: auto; }
+        .top-bar {
+          background: #fff;
+          border-bottom: 1px solid #E2E8F0;
+          padding: 12px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+        }
+        .top-bar-logo {
+          font-family: system-ui, -apple-system, sans-serif;
+          font-size: 0.9rem;
+          font-weight: 800;
+          color: #1A1008;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          text-decoration: none;
+        }
+        .top-bar-logo span {
+          width: 28px; height: 28px;
+          background: linear-gradient(135deg, #7C3AED, #4F46E5);
+          border-radius: 7px;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 0.85rem;
+        }
+        .save-btn-top {
+          font-family: system-ui, -apple-system, sans-serif;
+          background: linear-gradient(135deg, #7C3AED, #5B21B6);
+          color: #fff;
+          border: none;
+          padding: 8px 18px;
+          border-radius: 8px;
+          font-size: 0.82rem;
+          font-weight: 700;
+          cursor: pointer;
+          white-space: nowrap;
+        }
+        .save-btn-top:hover { opacity: 0.9; }
 
-        /* Content */
-        .content { padding: 48px 0; }
-        .content h1 { font-size: 1.8rem; font-weight: 900; color: #1a1a2e; margin: 48px 0 16px; border-bottom: 2px solid #6366F1; padding-bottom: 12px; page-break-before: always; }
-        .content h2 { font-size: 1.3rem; font-weight: 700; color: #1e293b; margin: 36px 0 12px; }
-        .content h3 { font-size: 1.05rem; font-weight: 700; color: #334155; margin: 24px 0 8px; }
-        .content p { font-size: 1rem; line-height: 1.8; color: #334155; margin: 0 0 16px; }
-        .content ul { padding-left: 24px; margin: 0 0 16px; }
-        .content li { font-size: 1rem; line-height: 1.8; color: #334155; margin-bottom: 6px; }
+        .pdf-wrap {
+          max-width: 720px;
+          margin: 0 auto;
+          padding: 48px 32px 80px;
+        }
+
+        .guide-title {
+          font-size: 1.9rem;
+          font-weight: 900;
+          line-height: 1.2;
+          color: #1a1a2e;
+          margin: 0 0 10px;
+          font-family: Georgia, serif;
+        }
+        .guide-meta {
+          font-family: system-ui, -apple-system, sans-serif;
+          font-size: 0.78rem;
+          color: #94A3B8;
+          margin-bottom: 40px;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+        .guide-divider {
+          border: none;
+          border-top: 2px solid #6366F1;
+          margin: 0 0 40px;
+          width: 48px;
+        }
+
+        .content h1 { font-size: 1.5rem; font-weight: 900; color: #1a1a2e; margin: 48px 0 14px; padding-bottom: 10px; border-bottom: 1px solid #E2E8F0; }
+        .content h2 { font-size: 1.15rem; font-weight: 700; color: #1e293b; margin: 32px 0 10px; }
+        .content h3 { font-size: 1rem; font-weight: 700; color: #334155; margin: 22px 0 8px; }
+        .content p { font-size: 1rem; line-height: 1.85; color: #334155; margin: 0 0 16px; }
+        .content ul { padding-left: 22px; margin: 0 0 16px; }
+        .content li { font-size: 1rem; line-height: 1.8; color: #334155; margin-bottom: 5px; }
         .content li.check { list-style: none; padding-left: 4px; font-weight: 500; }
         .content strong { color: #1a1a2e; }
 
-        /* Back cover */
-        .back-cover { page-break-before: always; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 40px; border-top: 3px solid #6366F1; margin-top: 60px; }
-        .back-cover h2 { font-size: 1.6rem; font-weight: 900; margin-bottom: 12px; }
-        .back-cover p { color: #475569; margin-bottom: 24px; }
-        .back-cover .price { font-size: 2.5rem; font-weight: 900; color: #6366F1; margin-bottom: 16px; }
-        .back-cover .guarantee { font-size: 0.8rem; color: #94a3b8; }
-
-        /* Print styles */
-        @media print {
-          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-          .no-print { display: none !important; }
-          .cover { page-break-after: always; }
-          .back-cover { page-break-before: always; }
+        .save-footer {
+          margin-top: 56px;
+          padding-top: 32px;
+          border-top: 1px solid #E2E8F0;
+          text-align: center;
+          font-family: system-ui, -apple-system, sans-serif;
+        }
+        .save-footer p {
+          font-size: 0.85rem;
+          color: #94A3B8;
+          margin: 0 0 16px;
+        }
+        .save-footer-btn {
+          background: linear-gradient(135deg, #7C3AED, #5B21B6);
+          color: #fff;
+          border: none;
+          padding: 14px 32px;
+          border-radius: 10px;
+          font-size: 0.95rem;
+          font-weight: 700;
+          cursor: pointer;
+          font-family: inherit;
+          box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+        }
+        .save-footer-btn:hover { opacity: 0.9; }
+        .save-footer-note {
+          font-size: 0.75rem;
+          color: #CBD5E1;
+          margin-top: 12px;
+        }
+        .copyright {
+          text-align: center;
+          padding: 24px;
+          font-family: system-ui, -apple-system, sans-serif;
+          font-size: 0.72rem;
+          color: #CBD5E1;
+          border-top: 1px solid #E2E8F0;
+          margin-top: 0;
         }
 
-        /* Print button */
-        .print-bar { position: fixed; bottom: 24px; right: 24px; z-index: 100; display: flex; gap: 10px; }
-        .print-btn { background: #6366F1; color: #fff; border: none; padding: 14px 28px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px #6366F140; }
-        .print-btn:hover { background: #4F46E5; }
-        .back-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 14px 20px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+        @media (max-width: 600px) {
+          .pdf-wrap { padding: 32px 18px 60px; }
+          .guide-title { font-size: 1.45rem; }
+          .delivery-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+          .save-btn { width: 100%; text-align: center; }
+        }
+
+        @media print {
+          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; }
+          .delivery-bar, .top-bar, .save-footer, .copyright { display: none !important; }
+          .pdf-wrap { padding: 0; }
+        }
       `}</style>
 
       <script dangerouslySetInnerHTML={{ __html: `
-        window.addEventListener('load', function() {
-          setTimeout(function() { window.print(); }, 800);
-          var btn = document.getElementById('pdf-print-btn');
-          if (btn) btn.addEventListener('click', function() { window.print(); });
-        });
+        function savePdf() { window.print(); }
       ` }} />
 
-      {/* Print/back bar */}
-      <div className="print-bar no-print">
-        <a href={`/guide/${slug}`} className="back-btn">← Back to Guide</a>
-        <button id="pdf-print-btn" className="print-btn">
-          🖨️ Save as PDF
-        </button>
+      {/* Purchase confirmation banner — only shown after payment redirect */}
+      {justPurchased && (
+        <div className="delivery-bar">
+          <div>
+            <div className="delivery-bar-msg">✓ Payment confirmed — your guide is below</div>
+            <div className="delivery-bar-sub">Bookmark this page or save it as a PDF to keep it forever. A receipt is on its way to your email.</div>
+          </div>
+          <button className="save-btn" onClick={() => {}} id="save-btn-banner">
+            🖨 Save as PDF
+          </button>
+        </div>
+      )}
+
+      {/* Top bar */}
+      <div className="top-bar">
+        <a href="/" className="top-bar-logo">
+          <span>🌱</span>
+          PDF Seeds
+        </a>
+        <button className="save-btn-top" id="save-btn-top">🖨 Save as PDF</button>
       </div>
 
       <div className="pdf-wrap">
-        {/* Cover */}
-        <div className="cover">
-          <div className="logo">PDF Seeds — Digital Guide</div>
-          <h1>{product.title}</h1>
-          <div className="subtitle">Your Complete Step-by-Step Guide</div>
-          <div className="price-badge">{currency}{price} — Instant Download</div>
-          <div className="footer-note">
-            © {year} PDF Seeds &nbsp;|&nbsp; Instant Download &nbsp;|&nbsp; 30-Day Money-Back Guarantee
-          </div>
-        </div>
+        <div className="guide-meta">PDF Seeds · Digital Guide · {year}</div>
+        <h1 className="guide-title">{product.title}</h1>
+        <hr className="guide-divider" />
 
-        {/* Main content */}
         <div className="content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
 
-        {/* Back cover CTA */}
-        <div className="back-cover">
-          <h2>Enjoyed This Guide?</h2>
-          <p>Share it with someone who needs it, or grab the full collection.</p>
-          <div className="price">{currency}{price}</div>
-          <div className="guarantee">✅ 30-day money-back guarantee &nbsp;|&nbsp; No questions asked</div>
+        <div className="save-footer">
+          <p>Save this guide so you can come back to it any time.</p>
+          <button className="save-footer-btn" id="save-btn-footer">🖨 Save as PDF</button>
+          <div className="save-footer-note">
+            When the print dialog opens, set the destination to &ldquo;Save as PDF&rdquo;
+          </div>
         </div>
       </div>
+
+      <div className="copyright">
+        © {year} PDF Seeds &nbsp;·&nbsp; Questions? <a href="mailto:hello@pdfseeds.com" style={{ color: "#CBD5E1" }}>hello@pdfseeds.com</a>
+      </div>
+
+      <script dangerouslySetInnerHTML={{ __html: `
+        ['save-btn-banner','save-btn-top','save-btn-footer'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) el.addEventListener('click', function() { window.print(); });
+        });
+      ` }} />
     </>
   );
 }
