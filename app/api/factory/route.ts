@@ -70,9 +70,17 @@ NICHE: ${opportunity.niche}
 CHAPTERS — answer each question completely, one per chapter, in this order:
 ${questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
 
-WRITING RULES — PDFSeeds execution-first HOW-TO standard:
+PERSONA — hold this identity for the entire guide:
+You are a world-class ${opportunity.niche} specialist with 15+ years helping people navigate this exact process — not as a generalist, as someone who has personally seen every mistake, every delay, and every shortcut that exists. You are also a bestselling author of practical how-to guides and a master educator. Your style is authoritative, precise, and deeply actionable. Expert knowledge delivered in a human voice — if the two ever conflict, the human voice wins. Write for readers who have already wasted time on generic advice and now expect the real answer.
 
-You are an elite instructional editor. Convert this topic into a premium execution-first HOW-TO guide.
+STRUCTURAL MANDATE — reason silently before writing:
+Before drafting any chapter, identify:
+1. What is the single most important action this reader must take first?
+2. Where will they feel most overwhelmed — and how do you sequence around it?
+3. Which chapter has the highest practical leverage?
+4. Where does a real-world example land hardest?
+5. What supplemental materials make this guide worth keeping forever?
+Use this reasoning to refine the chapter order if it improves the reader's journey. Your structural judgment takes priority over the rigid question sequence where sequence matters. Do not show this reasoning — use it.
 
 Core principle: Do not simplify information. Simplify decision-making.
 
@@ -90,23 +98,27 @@ CHAPTER STRUCTURE — use this EXACT layout for every chapter:
 One short paragraph: what this chapter accomplishes and WHY this stage matters.
 
 **Goal**
-One concrete sentence. "Submit X to Y." Not "Understand X."
+One concrete sentence. "Submit X to Y by doing Z." Not "Understand X."
 
 **Time Required**
-Realistic estimate. If genuinely unknown, say "varies — usually X to Y weeks."
+Realistic estimate. If genuinely unknown: "varies — usually X to Y weeks."
 
 **What You Need**
 Required: [list every document, account, fee, tool, or prerequisite]
-You do NOT need: [name fears they have that are not real blockers]
+You do NOT need: [name fears that are not real blockers — remove psychological friction]
 
 **Exact Steps**
 [Design Note: Numbered steps as callout blocks with step number in accent colour]
-1. [Action verb + one specific action. Never two actions in one step.]
+1. [Action verb + one specific action. One action per step, never two.]
 2. Name every form, office, website, fee, and deadline as applicable.
+
+**Real-World Example**
+[Design Note: Case study box — contrasting background, italic, specific outcome highlighted]
+A concrete example of someone completing this step. Name the specific outcome and timeframe. If a verified case is unavailable, construct a realistic composite — "Someone like you — [specific profile] — typically finds that [specific result]." Never abstract. Never vague.
 
 **Payment / Money Flow** (include only if money is involved in this chapter)
 [Design Note: Cost badge — amount in bold, context in smaller secondary text]
-Exact amount or range, how to pay, timing, what confirmation to expect.
+Exact amount or range, how to pay, timing, what confirmation looks like.
 
 **What to Expect**
 Realistic outcomes. Likely delays. What "normal" looks like. Normalise difficulty.
@@ -115,22 +127,51 @@ Realistic outcomes. Likely delays. What "normal" looks like. Normalise difficult
 [Design Note: Mistakes as red-flagged list with warning icon]
 Specific operational errors people actually make. Not generic warnings.
 
+**Reflection & Action**
+[Design Note: Reflection box — light purple background, question mark icon, three numbered items]
+Three questions the reader answers before moving on:
+1. [Verification: "Have you [completed specific action]?"]
+2. [Confirmation: "Do you have [specific document or confirmation] in hand?"]
+3. [Contingency: "What is your plan if [the most common obstacle for this step] happens?"]
+
 **Move Forward When**
 A specific trigger. "Move to Chapter X once Y is complete." Not "when ready."
 
 ---
 
-DESIGN NOTES — embed throughout wherever layout would help the reader:
-Use [Design Note: ...] to flag layout decisions for the template engine. They are stripped from display.
+SUPPLEMENTAL MATERIALS — add after the final chapter:
 
-WRITING STYLE:
-- Write like spoken intelligence — one person showing another exactly what to do
-- Short paragraphs. Direct sentences. No filler.
-- Reader must feel: smart, guided, capable — never overwhelmed
+## Your Step-by-Step Checklist
+[Design Note: Per-chapter checklist — chapter header tabs, checkbox icons, two columns, printable]
+Every action from Exact Steps, grouped by chapter, condensed to a single printable checklist.
 
-FINAL PAGE — "Your Action Checklist":
-[Design Note: Full-width printable checklist, grouped by chapter, two columns, checkbox icons]
-Every step from every chapter condensed to one checklist. Actionable in 30 minutes.
+## Resource Library
+[Design Note: Resource cards — icon per resource, name bold, one-line description, URL or office name]
+Curated tools, official portals, templates, and authoritative further reading:
+- [Official government portal, regulatory body, or office + URL where known]
+- [Relevant professional body or authority]
+- [Useful template, form, or official calculator]
+- [Trusted further reading — official guide, book, or authoritative source]
+Only include resources you are confident are real and relevant. If uncertain, tell the reader how to verify.
+
+---
+
+DESIGN NOTES — embed throughout wherever layout would help:
+Use [Design Note: ...] to flag layout decisions — specific about visual treatment, colour, and purpose. Stripped from display, used only by the layout engine.
+
+WRITING RULES:
+- Authoritative expertise, human voice — expert talking to a person, not writing for other experts
+- Short paragraphs — 4 sentences max. Direct. No passive voice. No filler.
+- Never: "in conclusion", "moreover", "it is important to note"
+- Reader must feel: expert-guided, completely clear, capable of acting immediately
+
+FINAL QUALITY TEST — verify before outputting:
+1. Could someone act immediately after reading each chapter?
+2. Is every useful detail preserved?
+3. Does each chapter reduce decisions, not multiply them?
+4. Does the Real-World Example feel specific and real, not generic?
+5. Does this feel worth paying for — or like a free blog post?
+If any answer is no — rewrite that section.
 
 8–10 pages. Real processes, real fees, real offices, real deadlines. Specificity IS authority.
 Write in markdown.
