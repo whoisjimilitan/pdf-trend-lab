@@ -121,13 +121,13 @@ export default async function PartnerDashboard({ params }: { params: Promise<{ c
             <div className="pd-logo-mark">🌱</div>
             <span className="pd-logo-name">PDF Seeds</span>
           </a>
-          <div className="pd-welcome">Your Affiliate Dashboard</div>
+          <div className="pd-welcome">Your Curator Dashboard</div>
           <p className="pd-sub">Everything you need to start earning. Bookmark this page.</p>
         </div>
 
         {/* Your unique link */}
         <div className="pd-code-block">
-          <div className="pd-code-label">Your unique affiliate link</div>
+          <div className="pd-code-label">Your curator link</div>
           <div className="pd-code-row">
             <div className="pd-code-link">{myLink}</div>
             <div className="pd-code-badge">{partner.code}</div>

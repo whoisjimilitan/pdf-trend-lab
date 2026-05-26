@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
       update: {},
     });
 
-    const dashboardUrl = `${SITE}/affiliate/${code}`;
+    const dashboardUrl = `${SITE}/curator/${code}`;
     const { subject, html } = partnerWelcomeEmail(code, dashboardUrl);
 
     try {

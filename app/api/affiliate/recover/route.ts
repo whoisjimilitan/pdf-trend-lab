@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
   if (!partner) return NextResponse.json({ found: false });
 
-  const dashboardUrl = `${SITE}/affiliate/${partner.code}`;
+  const dashboardUrl = `${SITE}/curator/${partner.code}`;
   const { subject, html } = partnerWelcomeEmail(partner.code, dashboardUrl);
   await resend.emails.send({ from: FROM, to: partner.email, subject, html }).catch(() => {});
 

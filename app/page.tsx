@@ -800,7 +800,7 @@ export default function HomePage() {
         <footer className="pg-footer">
           © {new Date().getFullYear()}{" "}PDF Seeds
           &nbsp;&nbsp;·&nbsp;&nbsp;
-          <a href="/earn" style={{ color: "#C4BAB0", textDecoration: "none" }}>Affiliates →</a>
+          <a href="/earn" style={{ color: "#C4BAB0", textDecoration: "none" }}>Curators →</a>
           &nbsp;&nbsp;·&nbsp;&nbsp;
           <a href="/signin" style={{ color: "#C4BAB0", textDecoration: "none" }}>Login</a>
         </footer>

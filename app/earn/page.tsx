@@ -32,12 +32,12 @@ const TESTIMONIALS = [
 
 const FAQS = [
   {
-    q: "Do I need a big audience?",
-    a: "No. 200 followers who trust you will outperform 20,000 who don't. If people come to you for answers, they'll buy from you.",
+    q: "Do I handle delivery, support, or refunds?",
+    a: "Nothing. You share the link. We handle everything — delivery, customer support, and any refunds come entirely from our side. Your name stays clean.",
   },
   {
-    q: "Do I handle delivery, support, or refunds?",
-    a: "Nothing. You share the link. We handle everything — delivery, customer support, and any refunds come entirely from our side.",
+    q: "Do I need a big audience?",
+    a: "No. 200 followers who trust you will outperform 20,000 who don't. If people come to you for answers, they'll buy from you.",
   },
   {
     q: "Is there a monthly fee?",
@@ -92,7 +92,7 @@ export default function EarnPage() {
     setRecoveryStatus(data.found ? "done" : "notfound");
   }
 
-  const btnLabel = loading ? "Opening checkout…" : "Join as an Affiliate — £19.99";
+  const btnLabel = loading ? "Opening checkout…" : "Become a Curator — £19.99";
 
   return (
     <>
@@ -153,6 +153,30 @@ export default function EarnPage() {
           border-radius: 50px; padding: 7px 14px 7px 7px;
           box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
+
+        /* ─── TRUST BLOCK ─── */
+        .e-trust-outer {
+          background: #fff; border-top: 1px solid #EEE9E0; border-bottom: 1px solid #EEE9E0;
+          padding: 24px 40px;
+        }
+        .e-trust-block {
+          max-width: 1160px; margin: 0 auto;
+          display: flex; align-items: flex-start; gap: 0;
+        }
+        .e-trust-step {
+          display: flex; align-items: flex-start; gap: 12px; flex: 1; padding: 0 24px;
+        }
+        .e-trust-step:first-child { padding-left: 0; }
+        .e-trust-step:last-child { padding-right: 0; }
+        .e-trust-icon {
+          width: 36px; height: 36px; border-radius: 9px;
+          background: #F5F3FF; border: 1px solid #E0D9FF;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 0.9rem; flex-shrink: 0;
+        }
+        .e-trust-label { font-size: 0.83rem; font-weight: 800; color: #0F0A1A; margin-bottom: 2px; }
+        .e-trust-desc { font-size: 0.72rem; color: #6B5E52; line-height: 1.55; }
+        .e-trust-arrow { align-self: center; color: #DDD6FE; font-size: 1.4rem; flex-shrink: 0; }
 
         /* ─── HERO COPY ─── */
         .e-hero-copy { position: relative; z-index: 1; }
@@ -445,6 +469,8 @@ export default function EarnPage() {
           .e-hero-sub { margin: 0 auto 36px; }
           .e-phone-wrap { display: none; }
           .e-wrap { padding: 0 40px; }
+          .e-trust-outer { padding: 20px 40px; }
+          .e-trust-step { padding: 0 16px; }
         }
 
         /* ─── RESPONSIVE: MOBILE ─── */
@@ -477,6 +503,11 @@ export default function EarnPage() {
 
           .e-contact { padding: 0 20px 52px; }
           .e-final { padding: 56px 20px; }
+
+          .e-trust-outer { padding: 20px 20px; }
+          .e-trust-block { flex-direction: column; gap: 16px; }
+          .e-trust-step { padding: 0; }
+          .e-trust-arrow { display: none; }
 
           /* Fixed mobile CTA bar */
           .e-mobile {
@@ -511,7 +542,7 @@ export default function EarnPage() {
         {justJoined && (
           <div className="e-joined">
             <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#15803D", marginBottom: 3 }}>
-              ✓ You&apos;re in. Welcome to the Affiliate Programme.
+              ✓ You&apos;re in. Welcome to the Curator Programme.
             </div>
             <div style={{ fontSize: "0.78rem", color: "#16A34A" }}>
               Check your email — your dashboard link and WhatsApp templates are on their way.
@@ -532,10 +563,10 @@ export default function EarnPage() {
                 <em>You will — in 60 seconds.</em>
               </h1>
               <p className="e-hero-sub">
-                Paste their question. Get a step-by-step guide. Share your link. <strong>Earn 80% of every sale.</strong>
+                Paste their question. Get a detailed guide. Read it. Share only what you&apos;d recommend yourself. <strong>Earn 80% — forever.</strong>
               </p>
               <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
-                {loading ? "Opening checkout…" : "Become an Affiliate →"}
+                {loading ? "Opening checkout…" : "Become a Curator →"}
               </button>
               <div className="e-trust">£19.99 one-time · No monthly fees · 30-day money-back guarantee</div>
             </div>
@@ -569,6 +600,35 @@ export default function EarnPage() {
           </div>
         </div>
 
+        {/* ── TRUST BLOCK ── */}
+        <div className="e-trust-outer">
+          <div className="e-trust-block">
+            <div className="e-trust-step">
+              <div className="e-trust-icon">🔍</div>
+              <div>
+                <div className="e-trust-label">Read it first</div>
+                <div className="e-trust-desc">Every guide comes to you before your community sees it</div>
+              </div>
+            </div>
+            <div className="e-trust-arrow">→</div>
+            <div className="e-trust-step">
+              <div className="e-trust-icon">✓</div>
+              <div>
+                <div className="e-trust-label">Only share what you&apos;d stand behind</div>
+                <div className="e-trust-desc">Your reputation stays yours — you&apos;re the filter</div>
+              </div>
+            </div>
+            <div className="e-trust-arrow">→</div>
+            <div className="e-trust-step">
+              <div className="e-trust-icon">💷</div>
+              <div>
+                <div className="e-trust-label">Earn 80% — forever</div>
+                <div className="e-trust-desc">Every time someone buys through your link</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* ── PROOF STRIP ── */}
         <div className="e-proof">
           <div className="e-proof-item">
@@ -579,12 +639,12 @@ export default function EarnPage() {
           <div className="e-proof-sep" />
           <div className="e-proof-item">
             <span className="e-proof-val">67</span>
-            <span className="e-proof-lbl">affiliates earning</span>
+            <span className="e-proof-lbl">curators earning</span>
           </div>
           <div className="e-proof-sep" />
           <div className="e-proof-item">
             <span className="e-proof-val">£7.99</span>
-            <span className="e-proof-lbl">per sale, yours</span>
+            <span className="e-proof-lbl">per recommendation</span>
           </div>
           <div className="e-proof-sep" />
           <div className="e-proof-item">
@@ -596,7 +656,7 @@ export default function EarnPage() {
         {/* ── 3 TESTIMONIALS ── */}
         <section className="e-section">
           <div className="e-wrap">
-            <div className="e-tag">What affiliates say</div>
+            <div className="e-tag">What curators say</div>
             <div className="e-av-row">
               {AVATARS.map((a, i) => (
                 <div key={i} className="e-av-pill">
@@ -634,7 +694,7 @@ export default function EarnPage() {
             <h2 className="e-h2">What one post can return.</h2>
             <div className="e-math">
               <div className="e-math-head">
-                Guide price <strong>£9.99</strong> × your <strong>80%</strong> = <strong>£7.99 per sale</strong>
+                Guide price <strong>£9.99</strong> × your <strong>80%</strong> = <strong>£7.99 per recommendation</strong>
               </div>
               <div className="e-math-rows">
                 {[
@@ -665,10 +725,10 @@ export default function EarnPage() {
             <h2 className="e-h2">Everything for £19.99 — once.</h2>
             <div className="e-get">
               {[
-                { icon: "💷", title: "80% commission on every sale — for life", desc: "Paid automatically every month. Nothing to chase, nothing to invoice." },
-                { icon: "🔗", title: "Your affiliate link for every guide in the library", desc: "Share any of the 1000+ guides across every niche. Each one has your unique link." },
+                { icon: "💷", title: "80% commission — for life", desc: "Paid automatically every month. Nothing to chase, nothing to invoice." },
+                { icon: "🔗", title: "Your curator link for every guide in the library", desc: "Share any of the 1000+ guides across every niche. Each one has your unique link." },
                 { icon: "📱", title: "Ready-made posts, captions and WhatsApp templates", desc: "Copy, paste, send. You're live within minutes of joining." },
-                { icon: "📊", title: "Real-time dashboard — every sale, every penny", desc: "See exactly what's earning and what isn't. Live, not delayed." },
+                { icon: "📊", title: "Real-time dashboard — every buyer, every penny", desc: "See exactly what's earning and what isn't. Live, not delayed." },
                 { icon: "📚", title: "Every new guide added — at no extra cost", desc: "The library keeps growing. Your earning potential grows with it." },
               ].map((b, i) => (
                 <div key={i} className="e-get-item">
@@ -708,7 +768,7 @@ export default function EarnPage() {
                   ))}
                 </div>
                 <div style={{ fontSize: "0.7rem", color: "#B0A89A", marginTop: 12, textAlign: "right", fontStyle: "italic" }}>
-                  Every search is a potential sale for any affiliate with a relevant audience.
+                  Every search is someone in a community like yours looking for exactly this — your link earns when they find it.
                 </div>
               </div>
             </section>
@@ -719,14 +779,14 @@ export default function EarnPage() {
         <div className="e-price-bg">
           <div className="e-wrap">
             <div className="e-price-card">
-              <span className="e-price-eyebrow">Affiliate Programme Access</span>
+              <span className="e-price-eyebrow">Curator Programme Access</span>
               <div className="e-price-num">£19.99</div>
               <div className="e-price-sub">One-time. No subscriptions. No monthly fees.</div>
-              <div className="e-price-recover">3 sales covers the £19.99. Every sale after that is yours.</div>
+              <div className="e-price-recover">3 recommendations cover the £19.99. Every one after that is yours.</div>
               <div className="e-price-list">
                 {[
-                  "80% commission on every sale — for life",
-                  "Your affiliate link for every guide in the library",
+                  "80% commission — for life",
+                  "Your curator link for every guide in the library",
                   "Ready-made captions, posts and WhatsApp templates",
                   "Real-time earnings dashboard",
                   "Every new guide added, at no extra cost",
@@ -739,7 +799,7 @@ export default function EarnPage() {
                 ))}
               </div>
               <button className="e-btn-white" onClick={handleGetAccess} disabled={loading}>
-                {loading ? "Opening checkout…" : "Become an Affiliate →"}
+                {loading ? "Opening checkout…" : "Become a Curator →"}
               </button>
               <div className="e-price-guarantee">
                 80% commission · For life · 30-day money-back guarantee · No questions asked
@@ -773,7 +833,7 @@ export default function EarnPage() {
             Now you have the answer every time — and 80% of what they pay for it.
           </h2>
           <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
-            {loading ? "Opening checkout…" : "Join as an Affiliate — £19.99 →"}
+            {loading ? "Opening checkout…" : "Become a Curator — £19.99 →"}
           </button>
           <div style={{ fontSize: "0.68rem", color: "#B0A89A", marginTop: 14 }}>
             One-time payment · 30-day money-back guarantee
@@ -792,7 +852,7 @@ export default function EarnPage() {
               onClick={() => setRecovery(true)}
               style={{ background: "none", border: "none", color: "#C4BAB0", fontSize: "0.75rem", cursor: "pointer", textDecoration: "underline", textDecorationColor: "#E8E4DE" }}
             >
-              Already an affiliate? Resend my dashboard link →
+              Already a curator? Resend my dashboard link →
             </button>
           ) : (
             <div style={{ background: "#fff", border: "1.5px solid #EAE6E0", borderRadius: 14, padding: "26px 28px", maxWidth: 440, margin: "0 auto" }}>
