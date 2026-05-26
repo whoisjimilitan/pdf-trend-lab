@@ -47,7 +47,14 @@ const FAQS = [
 
 export default function EarnPage() {
   const [loading, setLoading] = useState(false);
-  const [liveSearches, setLiveSearches] = useState<string[]>([]);
+  const SEED_SEARCHES = [
+    "How do I register a business in the UK?",
+    "What documents do I need for a Skilled Worker visa?",
+    "How do I file my self-assessment tax return for the first time?",
+    "How to start a business with limited capital in Nigeria",
+    "Can my spouse join me in the UK on a family visa?",
+  ];
+  const [liveSearches, setLiveSearches] = useState<string[]>(SEED_SEARCHES);
   const [justJoined, setJustJoined] = useState(false);
   const [recovery, setRecovery] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState("");
@@ -64,7 +71,7 @@ export default function EarnPage() {
     fetch("/api/search-log")
       .then(r => r.json())
       .then((data: { query: string }[]) => {
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           setLiveSearches([...new Set(data.map(d => d.query))].slice(0, 5));
         }
       })
@@ -195,6 +202,7 @@ export default function EarnPage() {
         .e-trust-label { font-size: 0.83rem; font-weight: 800; color: #0F0A1A; margin-bottom: 2px; }
         .e-trust-desc { font-size: 0.72rem; color: #6B5E52; line-height: 1.55; }
         .e-trust-arrow { align-self: center; color: #DDD6FE; font-size: 1.4rem; flex-shrink: 0; }
+        .e-icon-grey { filter: grayscale(1) opacity(0.45); }
 
         /* ─── HERO COPY ─── */
         .e-chip {
@@ -341,7 +349,7 @@ export default function EarnPage() {
           background: #fff; border: 1px solid #E0D9FF;
           border-radius: 12px; padding: 13px 17px;
         }
-        .e-math-icon { font-size: 1rem; width: 22px; text-align: center; flex-shrink: 0; }
+        .e-math-icon { font-size: 1rem; width: 22px; text-align: center; flex-shrink: 0; filter: grayscale(1) opacity(0.45); }
         .e-math-lbl { flex: 1; font-size: 0.84rem; color: #6B5E52; }
         .e-math-earn { font-size: 0.98rem; font-weight: 900; color: #6D28D9; }
         .e-math-note { font-size: 0.72rem; color: #A78BFA; line-height: 1.65; }
@@ -443,23 +451,25 @@ export default function EarnPage() {
         .e-faq-a { font-size: 0.83rem; color: #6B5E52; line-height: 1.78; }
 
         /* ─── FINAL CTA ─── */
-        .e-final { text-align: center; padding: 80px 32px; max-width: 520px; margin: 0 auto; }
+        .e-final-outer {
+          background-color: #FAFAF9;
+          background-image:
+            linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px);
+          background-size: 72px 72px;
+          border-top: 1px solid #EEE9E0;
+        }
+        .e-final { text-align: center; padding: 96px 32px 80px; max-width: 580px; margin: 0 auto; }
         .e-final-h {
           font-size: clamp(1.3rem, 3vw, 1.8rem);
           font-weight: 900; color: #0F0A1A;
-          letter-spacing: -0.035em; line-height: 1.2; margin-bottom: 28px;
+          letter-spacing: -0.035em; line-height: 1.25; margin-bottom: 32px;
         }
-
-        /* ─── CONTACT / FOOTER ─── */
-        .e-contact { text-align: center; padding: 0 32px 64px; }
-        .e-contact a {
-          display: inline-flex; align-items: center; gap: 7px;
-          font-size: 0.82rem; font-weight: 700; color: #8B5CF6;
-          text-decoration: none; padding: 12px 20px;
-          background: #F5F3FF; border-radius: 11px;
-          border: 1.5px solid #E0D9FF; transition: opacity 0.15s;
+        .e-final-contact { margin-top: 28px; }
+        .e-final-contact a {
+          font-size: 0.78rem; color: #B0A89A; text-decoration: none; transition: color 0.15s;
         }
-        .e-contact a:hover { opacity: 0.8; }
+        .e-final-contact a:hover { color: #8B5CF6; }
         .e-footer {
           text-align: center; padding: 20px;
           font-size: 0.68rem; color: #C4BAB0;
@@ -519,8 +529,7 @@ export default function EarnPage() {
           .e-btn-white { width: 100%; display: block; padding: 17px; }
           .e-price-num { font-size: 3.5rem; }
 
-          .e-contact { padding: 0 20px 52px; }
-          .e-final { padding: 56px 20px; }
+          .e-final { padding: 64px 20px 56px; }
 
           .e-trust-outer { padding: 20px 20px; }
           .e-trust-block { flex-direction: column; gap: 16px; }
@@ -610,15 +619,15 @@ export default function EarnPage() {
         <div className="e-trust-outer">
           <div className="e-trust-block">
             <div className="e-trust-step">
-              <div className="e-trust-icon">🔍</div>
+              <div className="e-trust-icon"><span className="e-icon-grey">🔍</span></div>
               <div>
                 <div className="e-trust-label">Read it first</div>
-                <div className="e-trust-desc">Every guide comes to you before your community sees it</div>
+                <div className="e-trust-desc">You see it first. Always.</div>
               </div>
             </div>
             <div className="e-trust-arrow">→</div>
             <div className="e-trust-step">
-              <div className="e-trust-icon">✓</div>
+              <div className="e-trust-icon"><span className="e-icon-grey">✓</span></div>
               <div>
                 <div className="e-trust-label">Only share what you&apos;d stand behind</div>
                 <div className="e-trust-desc">Your reputation stays yours — you&apos;re the filter</div>
@@ -626,7 +635,7 @@ export default function EarnPage() {
             </div>
             <div className="e-trust-arrow">→</div>
             <div className="e-trust-step">
-              <div className="e-trust-icon">💷</div>
+              <div className="e-trust-icon"><span className="e-icon-grey">💷</span></div>
               <div>
                 <div className="e-trust-label">Earn 80% — forever</div>
                 <div className="e-trust-desc">Every time someone buys through your link</div>
@@ -738,7 +747,7 @@ export default function EarnPage() {
                 { icon: "📚", title: "Every new guide added — at no extra cost", desc: "The library keeps growing. Your earning potential grows with it." },
               ].map((b, i) => (
                 <div key={i} className="e-get-item">
-                  <div className="e-get-icon">{b.icon}</div>
+                  <div className="e-get-icon"><span className="e-icon-grey">{b.icon}</span></div>
                   <div>
                     <div className="e-get-title">{b.title}</div>
                     <div className="e-get-desc">{b.desc}</div>
@@ -830,25 +839,23 @@ export default function EarnPage() {
           </div>
         </section>
 
-        <hr className="e-divider" />
-
         {/* ── FINAL CTA ── */}
-        <div className="e-final">
-          <h2 className="e-final-h">
-            Your community already comes to you.<br />
-            Now you have the answer every time — and 80% of what they pay for it.
-          </h2>
-          <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
-            {loading ? "Opening checkout…" : "Become a Curator — £19.99 →"}
-          </button>
-          <div style={{ fontSize: "0.68rem", color: "#B0A89A", marginTop: 14 }}>
-            One-time payment · 30-day money-back guarantee
+        <div className="e-final-outer">
+          <div className="e-final">
+            <h2 className="e-final-h">
+              Your community already looks to you for answers.<br />
+              Now you have the answer every time — and 80% of what they pay for it.
+            </h2>
+            <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
+              {loading ? "Opening checkout…" : "Become a Curator — £19.99 →"}
+            </button>
+            <div style={{ fontSize: "0.68rem", color: "#B0A89A", marginTop: 14 }}>
+              One-time payment · 30-day money-back guarantee
+            </div>
+            <div className="e-final-contact">
+              <a href="mailto:hello@pdfseeds.com">Questions? hello@pdfseeds.com</a>
+            </div>
           </div>
-        </div>
-
-        {/* ── CONTACT ── */}
-        <div className="e-contact">
-          <a href="mailto:hello@pdfseeds.com">✉ Questions? Email hello@pdfseeds.com</a>
         </div>
 
         {/* ── AFFILIATE RECOVERY ── */}
