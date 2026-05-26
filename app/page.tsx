@@ -644,7 +644,7 @@ export default function HomePage() {
               <span className="pg-hero-eyebrow">Specific to your country. Specific to your situation.</span>
               <h1 className="pg-hero-h1">Stop Googling. Describe your situation.</h1>
               <p className="pg-hero-sub">
-                Tell us what you&apos;re trying to figure out. You get a step-by-step guide — not ten links and a rabbit hole.
+                What are you trying to figure out? You get a step-by-step guide — not ten links and a rabbit hole.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>

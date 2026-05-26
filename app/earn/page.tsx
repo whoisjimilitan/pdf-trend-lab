@@ -129,41 +129,29 @@ export default function EarnPage() {
           position: relative; z-index: 1;
         }
 
-        /* ─── FLOATING AVATARS ─── */
-        .e-float {
-          position: absolute;
-          display: flex; align-items: center; gap: 10px;
-          animation: efloat 5s ease-in-out infinite;
-          pointer-events: none; z-index: 0;
-        }
-        .e-float:nth-child(2) { animation-delay: 1.2s; }
-        .e-float:nth-child(3) { animation-delay: 2.4s; }
-        .e-float:nth-child(4) { animation-delay: 3.6s; }
-        @keyframes efloat {
-          0%, 100% { transform: translateY(0); }
-          50%       { transform: translateY(-7px); }
-        }
+        /* ─── AVATARS ─── */
         .e-av {
-          width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
+          width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
           background: linear-gradient(135deg, #8B5CF6, #6D28D9);
-          border: 3px solid #fff;
-          box-shadow: 0 4px 18px rgba(139,92,246,0.22), 0 0 0 5px rgba(139,92,246,0.07);
+          border: 2px solid #fff;
+          box-shadow: 0 3px 12px rgba(139,92,246,0.22);
           display: flex; align-items: center; justify-content: center;
-          font-size: 0.75rem; font-weight: 800; color: #fff;
+          font-size: 0.72rem; font-weight: 800; color: #fff;
         }
         .e-av-info { line-height: 1.35; }
         .e-av-name { font-size: 0.68rem; font-weight: 700; color: #0F0A1A; }
         .e-av-role { font-size: 0.58rem; color: #9B8AF0; }
         .e-av-stat { font-size: 0.63rem; font-weight: 800; color: #6D28D9; }
-        .e-arr-r {
-          width: 0; height: 0; flex-shrink: 0;
-          border-top: 5px solid transparent; border-bottom: 5px solid transparent;
-          border-left: 8px solid #8B5CF6;
+
+        /* ─── AVATAR ROW (testimonials) ─── */
+        .e-av-row {
+          display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;
         }
-        .e-arr-l {
-          width: 0; height: 0; flex-shrink: 0;
-          border-top: 5px solid transparent; border-bottom: 5px solid transparent;
-          border-right: 8px solid #8B5CF6;
+        .e-av-pill {
+          display: flex; align-items: center; gap: 10px;
+          background: #fff; border: 1px solid #EEE9E0;
+          border-radius: 50px; padding: 7px 14px 7px 7px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         /* ─── HERO COPY ─── */
@@ -455,7 +443,6 @@ export default function EarnPage() {
             text-align: center; gap: 40px;
           }
           .e-hero-sub { margin: 0 auto 36px; }
-          .e-float { display: none; }
           .e-phone-wrap { display: none; }
           .e-wrap { padding: 0 40px; }
         }
@@ -466,7 +453,6 @@ export default function EarnPage() {
             grid-template-columns: 1fr; padding: 64px 20px 44px;
             text-align: center; gap: 36px;
           }
-          .e-float { display: none; }
           .e-h1 { font-size: 2rem; }
           .e-hero-sub { font-size: 0.92rem; margin: 0 auto 0; }
 
@@ -535,37 +521,15 @@ export default function EarnPage() {
 
         {/* ── HERO ── */}
         <div className="e-hero-outer">
-          {/* Floating avatars */}
-          {AVATARS.map((a, i) => {
-            const pos: React.CSSProperties[] = [
-              { top: "16%", left: "3%" },
-              { top: "13%", right: "3%" },
-              { top: "64%", left: "2%" },
-              { top: "61%", right: "2%" },
-            ];
-            const isRight = i % 2 !== 0;
-            return (
-              <div key={i} className="e-float" style={pos[i]}>
-                {!isRight && <div className="e-av">{a.initials}</div>}
-                <div className="e-av-info" style={isRight ? { textAlign: "right" } : {}}>
-                  <div className="e-av-name">{a.name}</div>
-                  <div className="e-av-role">{a.role}</div>
-                  <div className="e-av-stat">{a.stat}</div>
-                </div>
-                {isRight ? <div className="e-arr-l" /> : <div className="e-arr-r" />}
-                {isRight && <div className="e-av">{a.initials}</div>}
-              </div>
-            );
-          })}
 
           <div className="e-hero">
             {/* Copy */}
             <div className="e-hero-copy">
               <div className="e-chip">⚡ Affiliate Programme · 67 affiliates earning</div>
               <h1 className="e-h1">
-                Your community is lost<br />
-                in a rabbit hole.<br />
-                <em>You&apos;re their way out.</em>
+                They&apos;re asking the group.<br />
+                The group doesn&apos;t know.<br />
+                <em>You do.</em>
               </h1>
               <p className="e-hero-sub">
                 Paste their question. Get a guide in 60 seconds. Share your link.
@@ -622,7 +586,7 @@ export default function EarnPage() {
           </div>
           <div className="e-proof-sep" />
           <div className="e-proof-item">
-            <span className="e-proof-val">40+</span>
+            <span className="e-proof-val">1000+</span>
             <span className="e-proof-lbl">guides live</span>
           </div>
         </div>
@@ -631,6 +595,18 @@ export default function EarnPage() {
         <section className="e-section">
           <div className="e-wrap">
             <div className="e-tag">What affiliates say</div>
+            <div className="e-av-row">
+              {AVATARS.map((a, i) => (
+                <div key={i} className="e-av-pill">
+                  <div className="e-av">{a.initials}</div>
+                  <div className="e-av-info">
+                    <div className="e-av-name">{a.name}</div>
+                    <div className="e-av-role">{a.role}</div>
+                    <div className="e-av-stat">{a.stat}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
             <div className="e-tgrid">
               {TESTIMONIALS.map((t, i) => (
                 <div key={i} className="e-tcard">
@@ -643,9 +619,6 @@ export default function EarnPage() {
                   </div>
                 </div>
               ))}
-            </div>
-            <div className="e-section-cta">
-              <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
             </div>
           </div>
         </section>
@@ -691,7 +664,7 @@ export default function EarnPage() {
             <div className="e-get">
               {[
                 { icon: "💷", title: "80% commission on every sale — for life", desc: "Paid automatically every month. Nothing to chase, nothing to invoice." },
-                { icon: "🔗", title: "Your affiliate link for every guide in the library", desc: "Share any of the 40+ guides across every niche. Each one has your unique link." },
+                { icon: "🔗", title: "Your affiliate link for every guide in the library", desc: "Share any of the 1000+ guides across every niche. Each one has your unique link." },
                 { icon: "📱", title: "Ready-made posts, captions and WhatsApp templates", desc: "Copy, paste, send. You're live within minutes of joining." },
                 { icon: "📊", title: "Real-time dashboard — every sale, every penny", desc: "See exactly what's earning and what isn't. Live, not delayed." },
                 { icon: "📚", title: "Every new guide added — at no extra cost", desc: "The library keeps growing. Your earning potential grows with it." },
