@@ -49,13 +49,13 @@ const FAQS = [
 export default function EarnPage() {
   const [loading, setLoading] = useState(false);
   const SEED_SEARCHES = [
-    "How do I register a business in the UK?",
-    "What documents do I need for a Skilled Worker visa?",
-    "How do I file my self-assessment tax return for the first time?",
-    "How to start a business with limited capital in Nigeria",
-    "Can my spouse join me in the UK on a family visa?",
+    "How do I apply for ILR after 5 years on a Skilled Worker visa?",
+    "Can I register a UK business while on a student visa?",
+    "What documents do I need to bring my spouse to the UK?",
+    "How do I file my first self-assessment tax return as a sole trader?",
+    "How do I register a CAC business in Nigeria from abroad?",
   ];
-  const [liveSearches, setLiveSearches] = useState<string[]>(SEED_SEARCHES);
+  const [liveSearches] = useState<string[]>(SEED_SEARCHES);
   const [justJoined, setJustJoined] = useState(false);
   const [recovery, setRecovery] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState("");
@@ -66,17 +66,6 @@ export default function EarnPage() {
       setJustJoined(true);
       window.history.replaceState({}, "", "/earn");
     }
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/search-log")
-      .then(r => r.json())
-      .then((data: { query: string }[]) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setLiveSearches([...new Set(data.map(d => d.query))].slice(0, 5));
-        }
-      })
-      .catch(() => {});
   }, []);
 
   async function handleGetAccess() {
