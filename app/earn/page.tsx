@@ -525,17 +525,19 @@ export default function EarnPage() {
           <div className="e-hero">
             {/* Copy */}
             <div className="e-hero-copy">
-              <div className="e-chip">⚡ Affiliate Programme · 67 affiliates earning</div>
+              <div className="e-chip">For WhatsApp admins, newsletter writers &amp; community leaders</div>
               <h1 className="e-h1">
                 They&apos;re asking the group.<br />
                 The group doesn&apos;t know.<br />
                 <em>You do.</em>
               </h1>
               <p className="e-hero-sub">
-                Paste their question. Get a guide in 60 seconds. Share your link.
+                Paste their question. Get a step-by-step guide in 60 seconds. Share your link. <strong>Earn 80% of every sale.</strong>
               </p>
-              <button className="e-btn" onClick={handleGetAccess} disabled={loading}>{btnLabel}</button>
-              <div className="e-trust">One-time · No monthly fees · 30-day money-back guarantee</div>
+              <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
+                {loading ? "Opening checkout…" : "Become an Affiliate →"}
+              </button>
+              <div className="e-trust">£19.99 one-time · No monthly fees · 30-day money-back guarantee</div>
             </div>
 
             {/* Phone */}
