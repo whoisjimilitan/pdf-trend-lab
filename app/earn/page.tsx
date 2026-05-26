@@ -529,10 +529,10 @@ export default function EarnPage() {
               <h1 className="e-h1">
                 They&apos;re asking the group.<br />
                 The group doesn&apos;t know.<br />
-                <em>You do.</em>
+                <em>You will — in 60 seconds.</em>
               </h1>
               <p className="e-hero-sub">
-                Paste their question. Get a step-by-step guide in 60 seconds. Share your link. <strong>Earn 80% of every sale.</strong>
+                Paste their question. Get a step-by-step guide. Share your link. <strong>Earn 80% of every sale.</strong>
               </p>
               <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
                 {loading ? "Opening checkout…" : "Become an Affiliate →"}
