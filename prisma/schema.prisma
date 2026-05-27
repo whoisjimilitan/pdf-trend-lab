@@ -112,15 +112,20 @@ model SearchQuery {
 }
 
 model Partner {
-  id          String        @id @default(cuid())
-  email       String        @unique
-  code        String        @unique
-  name        String?
-  referredBy  String?
-  totalEarned Float         @default(0)
-  salesCount  Int           @default(0)
-  createdAt   DateTime      @default(now())
-  sales       PartnerSale[]
+  id                String        @id @default(cuid())
+  email             String        @unique
+  code              String        @unique
+  name              String?
+  referredBy        String?
+  totalEarned       Float         @default(0)
+  salesCount        Int           @default(0)
+  communityCountry  String?
+  platform          String?
+  communityTopics   String        @default("[]")
+  onboarded         Boolean       @default(false)
+  curatedGuides     String        @default("[]")
+  createdAt         DateTime      @default(now())
+  sales             PartnerSale[]
 }
 
 model PartnerSale {
