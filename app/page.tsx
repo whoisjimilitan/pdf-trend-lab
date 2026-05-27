@@ -849,7 +849,7 @@ export default function HomePage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="e.g. How do I transfer my pension to Ghana?"
+                        placeholder="e.g. How do I buy land in Ghana from the UK?"
                         autoFocus
                         required
                       />
@@ -1024,16 +1024,18 @@ export default function HomePage() {
               ) : (
                 <div className="pg-form" style={{ marginBottom: 0 }}>
                   <form onSubmit={submitWaitlist}>
-                    <div className="pg-input-wrap">
-                      <input
-                        className="pg-input"
-                        type="email"
-                        value={waitlistEmail}
-                        onChange={e => setWaitlistEmail(e.target.value)}
-                        placeholder="Your email address"
-                        required
-                        autoFocus
-                      />
+                    <div className="pg-form-inner">
+                      <div className="pg-input-wrap">
+                        <input
+                          className="pg-input"
+                          type="email"
+                          value={waitlistEmail}
+                          onChange={e => setWaitlistEmail(e.target.value)}
+                          placeholder="Your email address"
+                          required
+                          autoFocus
+                        />
+                      </div>
                       <button type="submit" className="pg-btn" disabled={waitlistStatus === "sending"}>
                         {waitlistStatus === "sending" ? "Sending…" : "Notify Me →"}
                       </button>
