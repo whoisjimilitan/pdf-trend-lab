@@ -4,29 +4,29 @@ import { useState, useEffect } from "react";
 import { Search, ShieldCheck, PoundSterling, Banknote, Link2, MessageSquare, BarChart3, BookOpen, MessageCircle, Pin, Mail } from "lucide-react";
 
 const AVATARS = [
-  { initials: "AO", name: "Adaeze O.", role: "WhatsApp Admin", stat: "£340 first month", how: "One pinned message" },
-  { initials: "MA", name: "Mohammed A.", role: "Newsletter · 2.1k subs", stat: "£580 in 6 weeks", how: "One newsletter mention" },
-  { initials: "FK", name: "Femi K.", role: "Facebook Group", stat: "£211 in 10 days", how: "Three posts" },
-  { initials: "PR", name: "Priya R.", role: "Community leader", stat: "£220 first month", how: "Word of mouth" },
+  { initials: "AO", name: "Adaeze O.", role: "Nigerian WhatsApp Admin · London", stat: "£340 first month", how: "One pinned message" },
+  { initials: "MA", name: "Mohammed A.", role: "Diaspora newsletter · 2.1k subs", stat: "£580 in 6 weeks", how: "One newsletter mention" },
+  { initials: "FK", name: "Femi K.", role: "UK-Ghana Facebook Group", stat: "£211 in 10 days", how: "Three posts" },
+  { initials: "PR", name: "Priya R.", role: "Diaspora community leader", stat: "£220 first month", how: "Word of mouth" },
 ];
 
 const TESTIMONIALS = [
   {
     quote: "One pinned message. £47.90 in two days. The guide sold itself.",
     name: "Adaeze O.",
-    role: "WhatsApp Group Admin · London",
+    role: "Nigerian WhatsApp Group Admin · London",
     stat: "£340 first month",
   },
   {
     quote: "Mentioned it once in my newsletter. 23 sales. Didn't have to explain a thing.",
     name: "Mohammed A.",
-    role: "Newsletter writer · 2.1k subscribers",
+    role: "African diaspora newsletter · 2.1k subscribers",
     stat: "£580 in 6 weeks",
   },
   {
     quote: "18 sales — mostly word of mouth after the first share. Nothing to chase.",
     name: "Fatima R.",
-    role: "Community coordinator · Manchester",
+    role: "Ghanaian community coordinator · Manchester",
     stat: "£143.82 earned",
   },
 ];
@@ -49,11 +49,11 @@ const FAQS = [
 export default function EarnPage() {
   const [loading, setLoading] = useState(false);
   const SEED_SEARCHES = [
-    "How do I apply for ILR after 5 years on a Skilled Worker visa?",
-    "Can I register a UK business while on a student visa?",
-    "What documents do I need to bring my spouse to the UK?",
-    "How do I file my first self-assessment tax return as a sole trader?",
-    "How do I register a CAC business in Nigeria from abroad?",
+    "How do I register a business in Ghana from the UK?",
+    "Can I renew my Nigerian passport from Canada?",
+    "How do I inherit land in Kenya as a non-resident?",
+    "What documents do I need to buy property in Ghana from abroad?",
+    "How do I register a CAC business in Nigeria from the US?",
   ];
   const [liveSearches] = useState<string[]>(SEED_SEARCHES);
   const [justJoined, setJustJoined] = useState(false);
@@ -470,10 +470,10 @@ export default function EarnPage() {
         .e-final-link-btn:hover { color: #8B5CF6; }
         .e-footer {
           text-align: center; padding: 20px;
-          font-size: 0.68rem; color: #C4BAB0;
-          border-top: 1px solid #EEE9E0;
+          font-size: 0.68rem; color: #1A1008;
+          border-top: 1px solid #E2DDD8;
         }
-        .e-footer a { color: #A09590; text-decoration: none; }
+        .e-footer a { color: #1A1008; text-decoration: none; font-weight: 600; }
         .e-footer a:hover { color: #8B5CF6; }
 
         /* ─── JOINED BANNER ─── */
@@ -585,14 +585,14 @@ export default function EarnPage() {
 
             {/* Copy */}
             <div className="e-hero-copy">
-              <div className="e-chip">For WhatsApp admins, newsletter writers &amp; community leaders</div>
+              <div className="e-chip">For the people diaspora communities already turn to for answers</div>
               <h1 className="e-h1">
-                They keep asking.<br />
-                But even group leaders don&apos;t know everything.<br />
-                <em>You will — in 60 seconds.</em>
+                Your community keeps asking about home.<br />
+                Now you always have the answer.<br />
+                <em>And earn 80% every time you share it.</em>
               </h1>
               <p className="e-hero-sub">
-                Only share what you&apos;d stand behind. <strong>Earn 80% — forever.</strong>
+                You&apos;re already the go-to. <strong>Earn 80% every time you are.</strong>
               </p>
               <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
                 {loading ? "Opening checkout…" : "Become a Curator →"}
@@ -771,7 +771,7 @@ export default function EarnPage() {
             <section className="e-section">
               <div className="e-wrap">
                 <div className="e-tag">Live on pdfseeds.com</div>
-                <h2 className="e-h2">What your audience is searching for right now.</h2>
+                <h2 className="e-h2">What your community is asking about home right now.</h2>
                 <div className="e-demand">
                   <div className="e-demand-top">
                     <div className="e-demand-title">Real searches — real demand</div>
@@ -785,7 +785,7 @@ export default function EarnPage() {
                   ))}
                 </div>
                 <div style={{ fontSize: "0.7rem", color: "#B0A89A", marginTop: 12, textAlign: "right", fontStyle: "italic" }}>
-                  Every search is someone in a community like yours looking for exactly this — your link earns when they find it.
+                  Every search is someone in a diaspora community like yours — your link earns when they find the answer.
                 </div>
               </div>
             </section>
@@ -845,8 +845,8 @@ export default function EarnPage() {
         <div className="e-final-outer">
           <div className="e-final">
             <h2 className="e-final-h">
-              They keep asking.<br />
-              You could be earning every time.
+              Your community keeps asking about home.<br />
+              You could be earning every time they do.
             </h2>
             <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
               {loading ? "Opening checkout…" : "Become a Curator — £19.99 →"}
