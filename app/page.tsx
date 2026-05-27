@@ -757,7 +757,7 @@ export default function HomePage() {
                         required
                       />
                     </div>
-                    <button type="submit" className="pg-btn">Get My Guide →</button>
+                    <button type="submit" className="pg-btn">Find My Guide →</button>
                   </div>
                 </form>
                 <div className="pg-hint-pills">
@@ -790,7 +790,7 @@ export default function HomePage() {
                         required
                       />
                     </div>
-                    <button type="submit" className="pg-btn pg-btn--deep">Find My Guide →</button>
+                    <button type="submit" className="pg-btn pg-btn--deep">Build My Guide →</button>
                   </div>
                 </form>
                 {error && <div className="pg-error">{error}</div>}
@@ -874,7 +874,7 @@ export default function HomePage() {
               )}
 
               <button className="pg-result-cta" onClick={handleBuy}>
-                {isFirstBuy ? "Get My Guide — £1.00 →" : `Get My Guide — ${guide.price} →`}
+                {isFirstBuy ? "Unlock My Guide — £1.00 →" : `Unlock My Guide — ${guide.price} →`}
               </button>
 
               <div className="pg-result-trust">
