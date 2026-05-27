@@ -231,9 +231,17 @@ export default function HomePage() {
           margin: 0 0 14px;
           max-width: 680px;
         }
+        .pg-hero-use-cases {
+          font-size: clamp(0.98rem, 2.5vw, 1.05rem);
+          font-weight: 700;
+          color: #1A1008;
+          margin: 0 0 6px;
+          max-width: 420px;
+          letter-spacing: -0.01em;
+        }
         .pg-hero-sub {
           font-size: clamp(0.95rem, 2.5vw, 1.05rem);
-          color: #8C7D6E;
+          color: #6B5E52;
           line-height: 1.7;
           margin: 0 0 40px;
           max-width: 400px;
@@ -602,6 +610,7 @@ export default function HomePage() {
           .pg-main { padding: 72px 40px 128px; }
           .pg-hero-eyebrow { font-size: 0.75rem; margin-bottom: 32px; }
           .pg-hero-h1 { font-size: clamp(3rem, 4.5vw, 4rem); max-width: 780px; margin-bottom: 20px; }
+          .pg-hero-use-cases { font-size: 1.1rem; max-width: 480px; }
           .pg-hero-sub { font-size: 1.1rem; max-width: 480px; margin-bottom: 48px; }
           .pg-form { max-width: 560px; }
           .pg-input-wrap { padding: 8px 8px 8px 24px; border-radius: 18px; }
@@ -658,6 +667,7 @@ export default function HomePage() {
           .pg-main { padding: 40px 20px 80px; justify-content: flex-start; }
           .pg-hero-eyebrow { margin-bottom: 14px; font-size: 0.68rem; }
           .pg-hero-h1 { font-size: 1.9rem; letter-spacing: -0.03em; max-width: 100%; margin-bottom: 14px; }
+          .pg-hero-use-cases { font-size: 0.9rem; max-width: 100%; margin-bottom: 4px; }
           .pg-hero-sub { font-size: 0.92rem; max-width: 100%; margin-bottom: 28px; line-height: 1.65; }
           .pg-form { max-width: 100%; }
           .pg-input-wrap { border-radius: 14px; padding: 6px 6px 6px 16px; gap: 6px; }
@@ -732,9 +742,8 @@ export default function HomePage() {
             <>
               <span className="pg-hero-eyebrow">For the diaspora — wherever home is</span>
               <h1 className="pg-hero-h1">Navigate home. From anywhere.</h1>
-              <p className="pg-hero-sub">
-                Land. Inheritance. Business. Visa. Your home country, step by step. No agent. No guesswork.
-              </p>
+              <p className="pg-hero-use-cases">Passports. Visas. Business. Land.</p>
+              <p className="pg-hero-sub">Your home country, step by step. No agent. No guesswork.</p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
                   <div className="pg-form-inner">

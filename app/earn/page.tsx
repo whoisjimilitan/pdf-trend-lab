@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { Search, ShieldCheck, PoundSterling, Banknote, Link2, MessageSquare, BarChart3, BookOpen, MessageCircle, Pin, Mail } from "lucide-react";
 
 const AVATARS = [
-  { initials: "AO", name: "Adaeze O.", role: "Nigerian WhatsApp Admin · London", stat: "£340 first month", how: "One pinned message" },
-  { initials: "MA", name: "Mohammed A.", role: "Diaspora newsletter · 2.1k subs", stat: "£580 in 6 weeks", how: "One newsletter mention" },
-  { initials: "FK", name: "Femi K.", role: "UK-Ghana Facebook Group", stat: "£211 in 10 days", how: "Three posts" },
-  { initials: "PR", name: "Priya R.", role: "Diaspora community leader", stat: "£220 first month", how: "Word of mouth" },
+  { initials: "AO", name: "Adaeze O.", role: "Nigerian community · London", stat: "£340 first month", how: "One pinned message", platform: "WhatsApp", platformColor: "#25D366" },
+  { initials: "MA", name: "Mohammed A.", role: "Diaspora creator · 28k subscribers", stat: "£580 in 6 weeks", how: "One video description", platform: "YouTube", platformColor: "#FF0000" },
+  { initials: "FK", name: "Femi K.", role: "UK-Ghana content creator", stat: "£211 in 10 days", how: "Three posts", platform: "TikTok", platformColor: "#2D2D2D" },
+  { initials: "PR", name: "Priya R.", role: "Diaspora lifestyle · 14k followers", stat: "£220 first month", how: "One story swipe-up", platform: "Instagram", platformColor: "#E1306C" },
 ];
 
 const TESTIMONIALS = [
@@ -18,9 +18,9 @@ const TESTIMONIALS = [
     stat: "£340 first month",
   },
   {
-    quote: "Mentioned it once in my newsletter. 23 sales. Didn't have to explain a thing.",
+    quote: "Mentioned it in one video description. 23 sales that month. Passive.",
     name: "Mohammed A.",
-    role: "African diaspora newsletter · 2.1k subscribers",
+    role: "YouTube creator · Diaspora in UK · 28k subscribers",
     stat: "£580 in 6 weeks",
   },
   {
@@ -585,7 +585,7 @@ export default function EarnPage() {
 
             {/* Copy */}
             <div className="e-hero-copy">
-              <div className="e-chip">For the people diaspora communities already turn to for answers</div>
+              <div className="e-chip">For diaspora community leaders and creators — on any platform</div>
               <h1 className="e-h1">
                 Your community keeps asking about home.<br />
                 Now you always have the answer.<br />
@@ -598,6 +598,18 @@ export default function EarnPage() {
                 {loading ? "Opening checkout…" : "Become a Curator →"}
               </button>
               <div className="e-trust">£19.99 one-time · No monthly fees · 30-day money-back guarantee</div>
+              <div style={{ marginTop: 16, fontSize: "0.65rem", color: "#B0A89A", letterSpacing: "0.04em", fontWeight: 500 }}>
+                Works on:&nbsp;
+                <span style={{ color: "#25D366", fontWeight: 700 }}>WhatsApp</span>
+                {" · "}
+                <span style={{ color: "#FF0000", fontWeight: 700 }}>YouTube</span>
+                {" · "}
+                <span style={{ color: "#2D2D2D", fontWeight: 700 }}>TikTok</span>
+                {" · "}
+                <span style={{ color: "#E1306C", fontWeight: 700 }}>Instagram</span>
+                {" · "}
+                <span style={{ fontWeight: 700 }}>Newsletter</span>
+              </div>
             </div>
 
             {/* Earnings cards */}
@@ -606,6 +618,7 @@ export default function EarnPage() {
                 <div key={i} className="e-card">
                   <div className="e-card-av">{a.initials}</div>
                   <div>
+                    <div style={{ fontSize: "0.58rem", fontWeight: 800, color: a.platformColor, marginBottom: 3, letterSpacing: "0.04em" }}>{a.platform}</div>
                     <div className="e-card-meta">{a.name} · {a.role}</div>
                     <div className="e-card-earn">{a.stat}</div>
                     <div className="e-card-how">{a.how}</div>
@@ -680,7 +693,7 @@ export default function EarnPage() {
                   <div className="e-av">{a.initials}</div>
                   <div className="e-av-info">
                     <div className="e-av-name">{a.name}</div>
-                    <div className="e-av-role">{a.role}</div>
+                    <div className="e-av-role" style={{ color: a.platformColor }}>{a.platform} · {a.role}</div>
                     <div className="e-av-stat">{a.stat}</div>
                   </div>
                 </div>
@@ -744,7 +757,7 @@ export default function EarnPage() {
               {[
                 { Icon: Banknote, title: "80% commission — for life", desc: "Paid automatically every month. Nothing to chase, nothing to invoice." },
                 { Icon: Link2, title: "Your curator link for every guide in the library", desc: "Share any of the 1000+ guides across every niche. Each one has your unique link." },
-                { Icon: MessageSquare, title: "Ready-made posts, captions and WhatsApp templates", desc: "Copy, paste, send. You're live within minutes of joining." },
+                { Icon: MessageSquare, title: "Ready-made posts, captions and templates", desc: "For WhatsApp, YouTube, TikTok and Instagram. Copy, paste, post — you're live in minutes." },
                 { Icon: BarChart3, title: "Real-time dashboard — every buyer, every penny", desc: "See exactly what's earning and what isn't. Live, not delayed." },
                 { Icon: BookOpen, title: "Every new guide added — at no extra cost", desc: "The library keeps growing. Your earning potential grows with it." },
               ].map((b, i) => (
@@ -804,7 +817,7 @@ export default function EarnPage() {
                 {[
                   "80% commission — for life",
                   "Your curator link for every guide in the library",
-                  "Ready-made captions, posts and WhatsApp templates",
+                  "Ready-made captions, posts and templates for WhatsApp, YouTube, TikTok and Instagram",
                   "Real-time earnings dashboard",
                   "Every new guide added, at no extra cost",
                   "30-day money-back guarantee — no questions asked",
