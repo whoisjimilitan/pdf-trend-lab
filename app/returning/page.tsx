@@ -617,7 +617,7 @@ export default function ReturningPage() {
             <>
               <span className="pg-hero-eyebrow">For diaspora going home for good</span>
               <h1 className="pg-hero-h1">Home. For good.</h1>
-              <p className="pg-hero-use-cases">Pension. Property. Banking. Healthcare.</p>
+              <p className="pg-hero-use-cases">Pension. Property. Logistics. Healthcare.</p>
               <p className="pg-hero-sub">Know what you&apos;re going back to. No guesswork.</p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
