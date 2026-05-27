@@ -617,7 +617,7 @@ export default function ExpatPage() {
               <span className="pg-hero-eyebrow">For expats living and working abroad</span>
               <h1 className="pg-hero-h1">You moved here. Now navigate here.</h1>
               <p className="pg-hero-use-cases">Business. Residency. Banking. Property.</p>
-              <p className="pg-hero-sub">Guides for foreigners, not locals. No agent. No guesswork.</p>
+              <p className="pg-hero-sub">Guides for foreigners. No agent. No guesswork.</p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
                   <div className="pg-form-inner">
