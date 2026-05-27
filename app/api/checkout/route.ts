@@ -15,7 +15,8 @@ export async function POST(req: Request) {
   if (!product) return NextResponse.json({ error: "Guide not found" }, { status: 404 });
 
   const opp = product.opportunity;
-  const unitAmount = tripwire ? 100 : Math.round((opp?.minPrice ?? 9.99) * 100);
+  const tripwireAmount = opp?.isReturning ? 799 : opp?.isExpat ? 499 : 299;
+  const unitAmount = tripwire ? tripwireAmount : Math.round((opp?.minPrice ?? 9.99) * 100);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pdfseeds.com";
 
   const session = await stripe.checkout.sessions.create({

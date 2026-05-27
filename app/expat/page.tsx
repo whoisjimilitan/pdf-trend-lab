@@ -428,6 +428,53 @@ export default function ExpatPage() {
           margin-bottom: 22px; text-align: center; line-height: 1.5;
         }
 
+        /* ── BOOK COVER ── */
+        .pg-book-wrap {
+          display: flex; justify-content: center;
+          margin: 0 0 20px;
+        }
+        .pg-book {
+          width: 158px; min-height: 210px;
+          position: relative; border-radius: 3px 10px 10px 3px;
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: space-between;
+          padding: 20px 16px 16px;
+          transform: perspective(500px) rotateY(-12deg);
+          overflow: hidden;
+          animation: book-appear 0.5s ease both;
+        }
+        @keyframes book-appear {
+          from { opacity: 0; transform: perspective(500px) rotateY(-12deg) translateY(10px); }
+          to   { opacity: 1; transform: perspective(500px) rotateY(-12deg) translateY(0); }
+        }
+        .pg-book::before {
+          content: ""; position: absolute;
+          left: 0; top: 0; bottom: 0; width: 13px;
+          background: linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.04) 100%);
+        }
+        .pg-book-brand {
+          font-size: 0.58rem; font-weight: 800;
+          color: rgba(255,255,255,0.65); letter-spacing: 0.1em;
+          text-transform: uppercase; text-align: center;
+          position: relative; z-index: 1;
+        }
+        .pg-book-cover-title {
+          flex: 1;
+          font-size: 0.66rem; font-weight: 800;
+          color: rgba(255,255,255,0.93);
+          text-align: center; line-height: 1.45;
+          padding: 10px 4px;
+          position: relative; z-index: 1;
+          display: flex; align-items: center; justify-content: center;
+          overflow: hidden; max-height: 108px;
+        }
+        .pg-book-type {
+          font-size: 0.52rem; font-weight: 700;
+          color: rgba(255,255,255,0.4); letter-spacing: 0.14em;
+          text-transform: uppercase; text-align: center;
+          position: relative; z-index: 1;
+        }
+
         /* Chapter preview card */
         .pg-chapters {
           width: 100%; background: #fff;
@@ -693,7 +740,7 @@ export default function ExpatPage() {
           {/* ── GENERATING ── */}
           {step === "generating" && (
             <div className="pg-gen">
-              <div className="pg-gen-orb">🌍</div>
+              <div className="pg-gen-orb">🌱</div>
               <div className="pg-gen-msg">{MESSAGES[msgIndex]}</div>
               <div className="pg-track">
                 <div className="pg-bar" style={{ width: `${progress}%` }} />
@@ -714,6 +761,18 @@ export default function ExpatPage() {
           {step === "result" && guide && (
             <div className="pg-result">
               <div className="pg-result-badge">✓ Expat guide ready</div>
+              <div className="pg-book-wrap">
+                <div className="pg-book" style={{
+                  background: "linear-gradient(150deg,#0EA5E9 0%,#0284C7 55%,#075985 100%)",
+                  boxShadow: "-6px 2px 10px rgba(0,0,0,0.28), 8px 16px 38px rgba(14,165,233,0.42)",
+                }}>
+                  <span className="pg-book-brand">🌱 PDF Seeds</span>
+                  <div className="pg-book-cover-title">
+                    {guide.title.length > 80 ? guide.title.slice(0, 77) + "…" : guide.title}
+                  </div>
+                  <span className="pg-book-type">Expat Guide</span>
+                </div>
+              </div>
               <div className="pg-result-title">{guide.title}</div>
               {situation && (
                 <div className="pg-result-echo">&ldquo;{situation}&rdquo;</div>
@@ -722,7 +781,7 @@ export default function ExpatPage() {
               {guide.chapters && guide.chapters.length > 0 && (
                 <div className="pg-chapters">
                   <div className="pg-chapters-head">
-                    <span>What&apos;s inside</span>
+                    <span>Contents</span>
                     <span>{guide.chapters.length} chapters</span>
                   </div>
 
@@ -755,13 +814,13 @@ export default function ExpatPage() {
               {isFirstBuy && (
                 <div className="pg-result-offer">
                   <span className="pg-result-offer-old">{guide.price}</span>
-                  <span className="pg-result-offer-new">£1.00</span>
+                  <span className="pg-result-offer-new">£4.99</span>
                   <span className="pg-result-offer-label">· First guide — intro price</span>
                 </div>
               )}
 
               <button className="pg-result-cta" onClick={handleBuy}>
-                {isFirstBuy ? "Unlock My Guide — £1.00 →" : `Unlock My Guide — ${guide.price} →`}
+                {isFirstBuy ? "Unlock My Guide — £4.99 →" : `Unlock My Guide — ${guide.price} →`}
               </button>
 
               <div className="pg-result-trust">
