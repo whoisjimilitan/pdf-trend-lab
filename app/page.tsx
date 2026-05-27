@@ -761,9 +761,7 @@ export default function HomePage() {
                   </div>
                 </form>
                 <div className="pg-hint-pills">
-                  <span className="pg-hint-pill">Diasporans</span>
-                  <span className="pg-hint-pill">Expats</span>
-                  <span className="pg-hint-pill">Global citizens</span>
+                  <a href="/expat" className="pg-hint-pill" style={{ textDecoration: "none" }}>Expat? Your page →</a>
                 </div>
               </div>
             </>
