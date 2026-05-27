@@ -723,7 +723,7 @@ export default function ExpatPage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="e.g. Can foreigners own property in Nigeria?"
+                        placeholder="e.g. Can foreigners own property in Ghana?"
                         autoFocus
                         required
                       />

@@ -724,7 +724,7 @@ export default function ReturningPage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="e.g. How do I move home to Nigeria?"
+                        placeholder="e.g. How do I settle back in Ghana?"
                         autoFocus
                         required
                       />
