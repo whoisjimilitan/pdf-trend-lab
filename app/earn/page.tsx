@@ -728,7 +728,7 @@ export default function EarnPage() {
               Your earnings.
             </h1>
             <p className="e-hero-sub">
-              Find a guide your community needs. Read it. <strong>If you&apos;d put your name on it — share your link and earn 80% of every sale.</strong>
+              We&apos;ll send you a guide we think your community will love. Read it. <strong>If you&apos;d put your name on it — share your link and earn 80% of every sale.</strong>
             </p>
 
             {/* 3-step mechanism */}
@@ -737,7 +737,7 @@ export default function EarnPage() {
                 <div className="e-step-num">01</div>
                 <div className="e-step-title">Read</div>
                 <div className="e-step-desc">
-                  Browse 1,000+ guides. Pick one for your niche. Read it before you share anything.
+                  We match guides to your niche and community. You read what we send.
                 </div>
               </div>
               <div className="e-step">
@@ -887,7 +887,7 @@ export default function EarnPage() {
                 { Icon: Link2,         title: "One link. Every guide.",              desc: "1,000+ guides across every niche and country. Share any — they all earn." },
                 { Icon: MessageSquare, title: "Copy, paste, earn.",                  desc: "WhatsApp, YouTube, TikTok, Instagram — all pre-written. Live in two minutes." },
                 { Icon: BarChart3,     title: "Live earnings dashboard.",            desc: "Every sale, every penny. Live — not delayed." },
-                { Icon: BookOpen,      title: "Every new guide — at no extra cost.", desc: "The library grows. Your potential grows with it." },
+                { Icon: BookOpen,      title: "We keep finding new guides for your community.", desc: "As the library grows, we match new relevant guides to your niche — so your earning potential keeps growing without you lifting a finger." },
               ].map((b, i) => (
                 <div key={i} className="e-get-item">
                   <div className="e-get-icon"><b.Icon size={16} strokeWidth={1.75} color="#7C3AED" /></div>
@@ -962,7 +962,7 @@ export default function EarnPage() {
               <div className="e-price-list">
                 {[
                   "£7.99 per sale — for life (80% of every guide)",
-                  "Read every guide in the library before you share it",
+                  "We match guides to your niche — you read, you decide",
                   "Your curator link for every guide — 1,000+ topics",
                   "Ready-made captions for WhatsApp, YouTube, TikTok and Instagram",
                   "Real-time earnings dashboard",
