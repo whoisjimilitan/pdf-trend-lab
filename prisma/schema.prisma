@@ -38,6 +38,7 @@ model Opportunity {
   isQuickWin       Boolean   @default(false)
   isDiaspora       Boolean   @default(false)
   isExpat          Boolean   @default(false)
+  isReturning      Boolean   @default(false)
   clusterId        String?
   cluster          Cluster?  @relation(fields: [clusterId], references: [id])
   products         Product[]

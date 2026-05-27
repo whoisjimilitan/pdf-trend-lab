@@ -30,6 +30,8 @@ export async function POST(req: Request) {
   const socialCtx   = buildSocialCaptionContext(brand);
   const brandCfg    = BRAND_CONFIG[brand];
   const isBJ        = brand === "brotherjimi";
+  const isExpat     = opportunity.isExpat;
+  const isReturning = opportunity.isReturning;
 
   const questions: string[] = (() => {
     try { return JSON.parse(opportunity.exactQuestions); }
@@ -70,7 +72,7 @@ NICHE: ${opportunity.niche}
 CHAPTERS — answer each question completely, one per chapter, in this order:
 ${questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
 
-You are a world-class ${opportunity.niche} specialist — not a generalist. You have 15+ years of hands-on experience helping people navigate this exact topic. You have seen every mistake, every delay, every shortcut. Expert knowledge, human voice. If they ever conflict, human voice wins.
+You are a world-class ${opportunity.niche} specialist — not a generalist. You have 15+ years of hands-on experience helping ${isReturning ? `diaspora members plan and execute their return to ${opportunity.country} after years abroad` : isExpat ? `foreign nationals and expats navigate ${opportunity.country}` : `people navigate this exact topic`}. You have seen every mistake, every delay, every shortcut. Expert knowledge, human voice. If they ever conflict, human voice wins.${isReturning ? ` You know exactly what catches returning diaspora off guard — the things that changed while they were away, the financial traps of leaving a Western system, the emotional and practical reality of arriving back. Write directly to that.` : isExpat ? ` You know exactly where the system treats foreigners differently — the extra steps, the extra fees, the hidden restrictions — and you write directly to that.` : ""}
 
 Before writing each chapter, identify silently: what most people believe about this step, and what is actually true. Write toward that gap — not toward the obvious.
 
@@ -139,6 +141,7 @@ Generate conversion page copy for this PDF guide as valid JSON.
 
 PDF title: "${opportunity.pdfTitle || opportunity.keyword}"
 Price: £${opportunity.minPrice.toFixed(2)}. Niche: ${opportunity.niche}.
+Audience: ${isReturning ? "Diaspora members planning to permanently return home after years abroad — irreversible life decision, high emotional stakes" : isExpat ? "Foreign nationals (expats) living in this country, not local citizens — need foreigner-specific guidance, vulnerable to being misled" : "Diaspora members navigating their home country's systems from abroad"}
 Core pain this guide solves: "${painPoint}"
 Exact search questions (one chapter per question, in this order):
 ${questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}

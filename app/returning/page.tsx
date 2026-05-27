@@ -16,12 +16,12 @@ type Guide = {
 type WaitlistStatus = "idle" | "sending" | "done";
 
 const MESSAGES = [
-  "Researching local rules for foreigners…",
-  "Building your expat guide…",
+  "Researching what's changed since you left…",
+  "Building your return guide…",
   "Almost ready…",
 ];
 
-export default function ExpatPage() {
+export default function ReturningPage() {
   const [step, setStep] = useState<Step>("idle");
   const [situation, setSituation] = useState("");
   const [country, setCountry] = useState("");
@@ -71,7 +71,7 @@ export default function ExpatPage() {
     fetch("/api/search-log", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: situation.trim(), source: "expat" }),
+      body: JSON.stringify({ query: situation.trim(), source: "returning" }),
     }).catch(() => {});
     setStep("country");
   }
@@ -84,7 +84,7 @@ export default function ExpatPage() {
     fetch("/api/search-log", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: situation.trim(), country: country.trim(), source: "expat-with-country" }),
+      body: JSON.stringify({ query: situation.trim(), country: country.trim(), source: "returning-with-country" }),
     }).catch(() => {});
     abortRef.current = new AbortController();
     const timeoutId = setTimeout(() => abortRef.current?.abort(), 90_000);
@@ -92,7 +92,7 @@ export default function ExpatPage() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ situation, country, forExpat: true }),
+        body: JSON.stringify({ situation, country, forReturning: true }),
         signal: abortRef.current.signal,
       });
       clearTimeout(timeoutId);
@@ -180,11 +180,11 @@ export default function ExpatPage() {
         }
         .pg-logo-mark {
           width: 34px; height: 34px;
-          background: linear-gradient(135deg, #0EA5E9, #0284C7);
+          background: linear-gradient(135deg, #D97706, #B45309);
           border-radius: 9px;
           display: flex; align-items: center; justify-content: center;
           font-size: 1rem;
-          box-shadow: 0 4px 12px rgba(14,165,233,0.2);
+          box-shadow: 0 4px 12px rgba(217,119,6,0.22);
         }
         .pg-logo-name {
           font-size: 1rem; font-weight: 800;
@@ -192,7 +192,7 @@ export default function ExpatPage() {
         }
         .pg-logo-tag {
           font-size: 0.68rem; font-weight: 600;
-          color: #0EA5E9; letter-spacing: 0.06em;
+          color: #D97706; letter-spacing: 0.06em;
           text-transform: uppercase; margin-left: 2px;
         }
 
@@ -211,12 +211,12 @@ export default function ExpatPage() {
         /* ── IDLE ── */
         .pg-hero-eyebrow {
           display: inline-flex; align-items: center;
-          background: #E0F2FE;
-          border: 1px solid #7DD3FC;
+          background: #FFFBEB;
+          border: 1px solid #FDE68A;
           border-radius: 999px;
           padding: 5px 16px;
           font-size: 0.7rem; font-weight: 700;
-          color: #0284C7; letter-spacing: 0.1em;
+          color: #92400E; letter-spacing: 0.1em;
           text-transform: uppercase; margin-bottom: 28px;
         }
         .pg-hero-h1 {
@@ -230,7 +230,7 @@ export default function ExpatPage() {
         }
         .pg-hero-sub {
           font-size: clamp(0.95rem, 2.5vw, 1.05rem);
-          color: #8C7D6E;
+          color: #6B5E52;
           line-height: 1.7;
           margin: 0 0 40px;
           max-width: 400px;
@@ -256,8 +256,8 @@ export default function ExpatPage() {
           transition: border-color 0.2s, box-shadow 0.2s;
         }
         .pg-input-wrap:focus-within {
-          border-color: #7DD3FC;
-          box-shadow: 0 4px 24px rgba(14,165,233,0.1);
+          border-color: #FCD34D;
+          box-shadow: 0 4px 24px rgba(217,119,6,0.1);
         }
         .pg-input {
           flex: 1; border: none; outline: none;
@@ -268,11 +268,11 @@ export default function ExpatPage() {
         }
         .pg-input::placeholder { color: #C4BAB0; }
         .pg-btn {
-          background: linear-gradient(135deg, #0EA5E9, #0284C7);
+          background: linear-gradient(135deg, #D97706, #B45309);
           color: #fff; font-weight: 700; font-size: 0.9rem;
           padding: 12px 22px; border: none; border-radius: 12px;
           cursor: pointer; white-space: nowrap;
-          box-shadow: 0 4px 14px rgba(14,165,233,0.3);
+          box-shadow: 0 4px 14px rgba(217,119,6,0.3);
           transition: opacity 0.15s, transform 0.1s;
           flex-shrink: 0;
         }
@@ -281,19 +281,6 @@ export default function ExpatPage() {
         .pg-hint {
           font-size: 0.78rem; color: #C4BAB0;
           margin-top: 14px; line-height: 1.6;
-        }
-        .pg-hint-pills {
-          display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
-          margin-top: 16px;
-        }
-        .pg-hint-pill {
-          font-size: 0.72rem; font-weight: 600;
-          color: #0284C7;
-          background: #F0F9FF;
-          border: 1px solid #BAE6FD;
-          border-radius: 999px;
-          padding: 3px 12px;
-          letter-spacing: 0.02em;
         }
 
         /* ── COUNTRY STEP ── */
@@ -308,35 +295,35 @@ export default function ExpatPage() {
         }
         .pg-country-label {
           font-size: 0.88rem; font-weight: 600;
-          color: #0284C7; letter-spacing: 0.01em;
+          color: #B45309; letter-spacing: 0.01em;
           margin: 0 0 12px; text-align: center;
         }
 
         .pg-input-wrap--deep {
-          border-color: #7DD3FC;
+          border-color: #FCD34D;
         }
         .pg-input-wrap--deep:focus-within {
-          border-color: #0284C7;
-          box-shadow: 0 4px 24px rgba(2,132,199,0.15);
+          border-color: #D97706;
+          box-shadow: 0 4px 24px rgba(217,119,6,0.15);
         }
         .pg-btn--deep {
-          background: linear-gradient(135deg, #0284C7, #075985);
-          box-shadow: 0 4px 14px rgba(2,132,199,0.4);
+          background: linear-gradient(135deg, #B45309, #92400E);
+          box-shadow: 0 4px 14px rgba(180,83,9,0.4);
         }
 
         /* ── LOCKED PILL ── */
         .pg-locked {
           display: flex; align-items: center; gap: 10px;
-          background: #E0F2FE; border: 1.5px solid #7DD3FC;
+          background: #FFFBEB; border: 1.5px solid #FCD34D;
           border-radius: 999px; padding: 10px 16px;
           margin-bottom: 14px; cursor: pointer;
           max-width: 520px; width: 100%;
           transition: background 0.15s;
         }
-        .pg-locked:hover { background: #BAE6FD; }
-        .pg-locked-dot { width: 7px; height: 7px; border-radius: 50%; background: #0284C7; flex-shrink: 0; }
-        .pg-locked-text { font-size: 0.88rem; color: #0C4A6E; font-weight: 600; flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .pg-locked-x { font-size: 0.75rem; color: #0EA5E9; flex-shrink: 0; }
+        .pg-locked:hover { background: #FEF3C7; }
+        .pg-locked-dot { width: 7px; height: 7px; border-radius: 50%; background: #D97706; flex-shrink: 0; }
+        .pg-locked-text { font-size: 0.88rem; color: #78350F; font-weight: 600; flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pg-locked-x { font-size: 0.75rem; color: #D97706; flex-shrink: 0; }
 
         /* ── ERROR ── */
         .pg-error {
@@ -354,16 +341,16 @@ export default function ExpatPage() {
         }
         .pg-gen-orb {
           width: 80px; height: 80px;
-          background: linear-gradient(135deg, #0EA5E9, #0284C7);
+          background: linear-gradient(135deg, #D97706, #B45309);
           border-radius: 24px;
           display: flex; align-items: center; justify-content: center;
           font-size: 2.2rem; margin-bottom: 32px;
           animation: orb-breathe 2.4s ease-in-out infinite;
-          box-shadow: 0 8px 32px rgba(14,165,233,0.3);
+          box-shadow: 0 8px 32px rgba(217,119,6,0.3);
         }
         @keyframes orb-breathe {
-          0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(14,165,233,0.3); }
-          50%       { transform: scale(1.06); box-shadow: 0 12px 48px rgba(14,165,233,0.45); }
+          0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(217,119,6,0.3); }
+          50%       { transform: scale(1.06); box-shadow: 0 12px 48px rgba(217,119,6,0.45); }
         }
         .pg-gen-msg {
           font-size: 1.05rem; font-weight: 600; color: #1A1008;
@@ -375,12 +362,12 @@ export default function ExpatPage() {
         }
         .pg-gen-pct {
           font-size: 0.75rem; font-weight: 700;
-          color: #0EA5E9; letter-spacing: 0.05em;
+          color: #D97706; letter-spacing: 0.05em;
           text-align: right; width: 100%; margin-bottom: 28px;
         }
         .pg-bar {
           height: 100%;
-          background: linear-gradient(90deg, #0EA5E9, #7DD3FC);
+          background: linear-gradient(90deg, #D97706, #FCD34D);
           border-radius: 999px;
           transition: width 0.4s ease;
         }
@@ -390,10 +377,10 @@ export default function ExpatPage() {
         }
         .pg-step { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: #D4CEC8; transition: color 0.4s; }
         .pg-step.done { color: #8C7D6E; }
-        .pg-step.active { color: #0EA5E9; font-weight: 600; }
+        .pg-step.active { color: #D97706; font-weight: 600; }
         .pg-step-dot { width: 6px; height: 6px; border-radius: 50%; background: #E8E4DE; flex-shrink: 0; transition: background 0.4s; }
         .pg-step.done .pg-step-dot { background: #10B981; }
-        .pg-step.active .pg-step-dot { background: #0EA5E9; animation: step-pulse 1.2s infinite; }
+        .pg-step.active .pg-step-dot { background: #D97706; animation: step-pulse 1.2s infinite; }
         @keyframes step-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         /* ── RESULT ── */
@@ -403,9 +390,9 @@ export default function ExpatPage() {
         }
         .pg-result-badge {
           display: inline-flex; align-items: center; gap: 6px;
-          background: #F0F9FF; border: 1px solid #BAE6FD;
+          background: #FFFBEB; border: 1px solid #FDE68A;
           border-radius: 999px; padding: 5px 14px;
-          font-size: 0.72rem; font-weight: 700; color: #0284C7;
+          font-size: 0.72rem; font-weight: 700; color: #92400E;
           margin-bottom: 20px; letter-spacing: 0.04em;
           text-transform: uppercase;
         }
@@ -430,7 +417,7 @@ export default function ExpatPage() {
         .pg-chapters-head {
           padding: 12px 18px; border-bottom: 1px solid #EAE6E0;
           display: flex; align-items: center; justify-content: space-between;
-          font-size: 0.68rem; font-weight: 700; color: #0EA5E9;
+          font-size: 0.68rem; font-weight: 700; color: #D97706;
           letter-spacing: 0.1em; text-transform: uppercase;
         }
         .pg-chapter {
@@ -460,8 +447,8 @@ export default function ExpatPage() {
         .pg-chapters-lock {
           padding: 12px 18px; border-top: 1px solid #EAE6E0;
           display: flex; align-items: center; justify-content: center; gap: 6px;
-          font-size: 0.75rem; font-weight: 600; color: #0EA5E9;
-          background: #F0F9FF;
+          font-size: 0.75rem; font-weight: 600; color: #D97706;
+          background: #FFFBEB;
         }
 
         /* Offer pill */
@@ -471,7 +458,7 @@ export default function ExpatPage() {
           border-radius: 12px; padding: 10px 18px; margin-bottom: 12px;
         }
         .pg-result-offer-old {
-          font-size: 0.88rem; color: #0EA5E9;
+          font-size: 0.88rem; color: #D97706;
           text-decoration: line-through; font-weight: 500;
         }
         .pg-result-offer-new {
@@ -484,11 +471,11 @@ export default function ExpatPage() {
 
         .pg-result-cta {
           display: block; width: 100%;
-          background: linear-gradient(135deg, #0EA5E9, #0284C7);
+          background: linear-gradient(135deg, #D97706, #B45309);
           color: #fff; font-weight: 800; font-size: 1.1rem;
           padding: 20px; border-radius: 16px;
           border: none; cursor: pointer;
-          box-shadow: 0 8px 28px rgba(14,165,233,0.35);
+          box-shadow: 0 8px 28px rgba(217,119,6,0.35);
           transition: opacity 0.15s, transform 0.1s;
           margin-bottom: 14px; letter-spacing: -0.01em;
         }
@@ -505,7 +492,7 @@ export default function ExpatPage() {
           padding: 0; text-decoration: underline;
           text-decoration-color: #E8E4DE; transition: color 0.15s;
         }
-        .pg-result-again:hover { color: #0EA5E9; }
+        .pg-result-again:hover { color: #D97706; }
 
         /* ── WAITLIST ── */
         .pg-waitlist { max-width: 440px; width: 100%; text-align: center; }
@@ -513,8 +500,8 @@ export default function ExpatPage() {
         .pg-waitlist-title { font-size: 1.4rem; font-weight: 800; color: #1A1008; margin-bottom: 10px; letter-spacing: -0.02em; }
         .pg-waitlist-sub { font-size: 0.9rem; color: #8C7D6E; line-height: 1.7; margin-bottom: 24px; max-width: 360px; margin-left: auto; margin-right: auto; }
         .pg-waitlist-query {
-          display: inline-block; background: #E0F2FE; border-radius: 999px;
-          padding: 6px 16px; font-size: 0.83rem; font-weight: 600; color: #0284C7;
+          display: inline-block; background: #FFFBEB; border-radius: 999px;
+          padding: 6px 16px; font-size: 0.83rem; font-weight: 600; color: #B45309;
           margin-bottom: 24px;
         }
         .pg-waitlist-done {
@@ -534,8 +521,8 @@ export default function ExpatPage() {
         @media (min-width: 1025px) {
           .pg {
             background-image:
-              linear-gradient(rgba(14,165,233,0.03) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(14,165,233,0.03) 1px, transparent 1px);
+              linear-gradient(rgba(217,119,6,0.04) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(217,119,6,0.04) 1px, transparent 1px);
             background-size: 64px 64px;
           }
           .pg-header { padding: 28px 56px; }
@@ -595,7 +582,7 @@ export default function ExpatPage() {
           <a href="/" className="pg-logo">
             <div className="pg-logo-mark">🌱</div>
             <span className="pg-logo-name">PDF Seeds</span>
-            <span className="pg-logo-tag">Expat</span>
+            <span className="pg-logo-tag">Returning</span>
           </a>
         </header>
 
@@ -604,10 +591,10 @@ export default function ExpatPage() {
           {/* ── IDLE ── */}
           {step === "idle" && (
             <>
-              <span className="pg-hero-eyebrow">For expats living and working abroad</span>
-              <h1 className="pg-hero-h1">You moved here. Now navigate here.</h1>
+              <span className="pg-hero-eyebrow">For diaspora going home for good</span>
+              <h1 className="pg-hero-h1">Home. For good.</h1>
               <p className="pg-hero-sub">
-                Business. Residency. Banking. Property. The guide written for foreigners, not locals. No agent. No guesswork.
+                Know what you&apos;re walking into before you go.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
@@ -617,7 +604,7 @@ export default function ExpatPage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="What do you need to sort out where you live?"
+                        placeholder="What do you need to sort before you go back?"
                         autoFocus
                         required
                       />
@@ -625,11 +612,6 @@ export default function ExpatPage() {
                     <button type="submit" className="pg-btn">Get My Guide →</button>
                   </div>
                 </form>
-                <div className="pg-hint-pills">
-                  <span className="pg-hint-pill">Expats in Africa</span>
-                  <span className="pg-hint-pill">Expats in Asia</span>
-                  <span className="pg-hint-pill">Expats everywhere</span>
-                </div>
               </div>
             </>
           )}
@@ -642,7 +624,7 @@ export default function ExpatPage() {
                 <div className="pg-locked-text">{situation}</div>
                 <div className="pg-locked-x">change ×</div>
               </div>
-              <p className="pg-country-label">Which country are you living in?</p>
+              <p className="pg-country-label">Which country are you returning to?</p>
               <div className="pg-form">
                 <form onSubmit={handleGenerate}>
                   <div className="pg-form-inner">
@@ -660,7 +642,7 @@ export default function ExpatPage() {
                   </div>
                 </form>
                 {error && <div className="pg-error">{error}</div>}
-                <div className="pg-hint">Ghana · Kenya · Nigeria · South Africa · Portugal · Thailand</div>
+                <div className="pg-hint">Ghana · Nigeria · Kenya · Jamaica · India · Philippines</div>
               </div>
             </div>
           )}
@@ -668,7 +650,7 @@ export default function ExpatPage() {
           {/* ── GENERATING ── */}
           {step === "generating" && (
             <div className="pg-gen">
-              <div className="pg-gen-orb">🌍</div>
+              <div className="pg-gen-orb">🌱</div>
               <div className="pg-gen-msg">{MESSAGES[msgIndex]}</div>
               <div className="pg-track">
                 <div className="pg-bar" style={{ width: `${progress}%` }} />
@@ -688,7 +670,7 @@ export default function ExpatPage() {
           {/* ── RESULT ── */}
           {step === "result" && guide && (
             <div className="pg-result">
-              <div className="pg-result-badge">✓ Expat guide ready</div>
+              <div className="pg-result-badge">✓ Return guide ready</div>
               <div className="pg-result-title">{guide.title}</div>
               {situation && (
                 <div className="pg-result-echo">&ldquo;{situation}&rdquo;</div>
@@ -744,7 +726,7 @@ export default function ExpatPage() {
                 <span className="pg-result-trust-sep">·</span>
                 <span>30-day money-back</span>
                 <span className="pg-result-trust-sep">·</span>
-                <span>Foreign national specific</span>
+                <span>Built for returnees</span>
               </div>
 
               <button className="pg-result-again" onClick={reset}>Search for a different guide</button>
@@ -765,7 +747,7 @@ export default function ExpatPage() {
               <div className="pg-waitlist-icon">📬</div>
               <div className="pg-waitlist-title">We&apos;ll build it for you</div>
               <p className="pg-waitlist-sub">
-                Leave your email. We&apos;ll research the rules for foreign nationals in your country and build a guide for your exact situation — usually within 24 hours.
+                Leave your email. We&apos;ll research everything you need for your return and build a guide for your exact situation — usually within 24 hours.
               </p>
               {situation && (
                 <div className="pg-waitlist-query">&ldquo;{situation}&rdquo;</div>
@@ -811,7 +793,7 @@ export default function ExpatPage() {
           &nbsp;&nbsp;·&nbsp;&nbsp;
           <a href="/" style={{ color: "#1A1008", textDecoration: "none", fontWeight: 600 }}>Diaspora →</a>
           &nbsp;&nbsp;·&nbsp;&nbsp;
-          <a href="/returning" style={{ color: "#1A1008", textDecoration: "none", fontWeight: 600 }}>Returning →</a>
+          <a href="/expat" style={{ color: "#1A1008", textDecoration: "none", fontWeight: 600 }}>Expats →</a>
           &nbsp;&nbsp;·&nbsp;&nbsp;
           <a href="/earn" style={{ color: "#1A1008", textDecoration: "none", fontWeight: 600 }}>Curators →</a>
           &nbsp;&nbsp;·&nbsp;&nbsp;

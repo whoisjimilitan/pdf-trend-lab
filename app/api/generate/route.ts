@@ -58,12 +58,13 @@ function chaptersFromSalesCopy(salesPageCopy: string) {
 }
 
 export async function POST(req: Request) {
-  const { situation, country, brand: brandParam, forExpat } = await req.json();
+  const { situation, country, brand: brandParam, forExpat, forReturning } = await req.json();
   if (!situation?.trim() || !country?.trim()) {
     return NextResponse.json({ error: "Missing situation or country" }, { status: 400 });
   }
 
   const isExpat = !!forExpat;
+  const isReturning = !!forReturning;
   const brand: Brand = brandParam === "brotherjimi" ? "brotherjimi" : "pdfseeds";
   const brandContext = buildBrandSystemContext(brand);
   const brandCfg = BRAND_CONFIG[brand];
@@ -129,6 +130,8 @@ export async function POST(req: Request) {
 Brand: ${brand}
 ${brand === "brotherjimi"
   ? `This is a PASTORAL/DEVOTIONAL product for Brother Jimi. The "niche" should reflect spiritual/emotional pain. The "painPoint" should name what they are CARRYING, not what they need to DO. The "questions" should reflect the 6-stage pastoral arc: emotional insight, reflection, spiritual perspective, practical wisdom, faith encouragement, life-pattern.`
+  : isReturning
+  ? `This is a practical clarity product for PDFSeeds. The user is a DIASPORA MEMBER who has been living abroad (UK, US, Canada, Australia, or similar) and is planning to physically relocate back to ${country} permanently. The "pdfTitle" must address the specific challenge of returning home after years abroad — name the country and the return. The "painPoint" should name the real fear: making an irreversible life decision without knowing what has changed, what the financial implications are, or whether they can actually make it work. The "questions" must cover the FULL RETURN JOURNEY in this order: (1) what has legally and practically changed in ${country} since they left — laws, costs, processes; (2) their citizenship and residency status on return — dual nationality, re-entry rights, paperwork required; (3) tax and financial exit from the country they are leaving — pension transfer, NI contributions, savings and investment transfer, exit tax; (4) banking and financial setup in ${country} on arrival — accounts, transfers, exchange rates; (5) housing and property in ${country} — realistic costs now, renting vs buying on return, the market as it actually is; (6) healthcare — transitioning off NHS or foreign insurance, private options in ${country}; (7) qualifications and work — getting foreign credentials recognised, job market, starting a business with foreign savings and experience; (8) a complete return timeline checklist — what to do 12 months out, 6 months out, 1 month out, and arrival day.`
   : isExpat
   ? `This is a practical clarity product for PDFSeeds. The user is a FOREIGN NATIONAL (expat) living in ${country} — NOT a local citizen. The "pdfTitle" must explicitly address foreigners/expats and name the country. The "painPoint" should name the exact frustration of navigating ${country} as an outsider — the opacity, the different rules, the vulnerability to being misled. The "questions" must cover the FULL EXPAT JOURNEY specific to foreign nationals: what foreigners can and cannot legally do in this area (ownership limits, restrictions), the exact process for non-citizens vs citizens, required documentation that only foreigners need, relevant government body or department for foreigners (investment boards, immigration authorities, foreign national registration), timelines, the most common and costly mistakes expats make that locals never would, what to do when things go wrong as a foreigner (who to contact, what leverage you have), and a final action checklist for a foreign national starting from scratch.`
   : `This is a practical clarity product for PDFSeeds. The user is likely in the diaspora — living abroad and navigating their home country's systems remotely. The "pdfTitle" should follow the PDFSeeds title formula system. The "questions" must cover the FULL JOURNEY: requirements and eligibility, exact steps and costs, timelines, common mistakes and how to avoid them, what happens after submission (status tracking, support contacts, delays), and what to do if something goes wrong — plus a final action checklist.`
@@ -142,7 +145,7 @@ Return ONLY valid JSON — no markdown, no explanation:
   "painPoint": "One sentence — ${brand === "brotherjimi" ? "the exact thing they are carrying right now. What they woke up with this morning that they haven't been able to say out loud." : "the exact frustration they are living. Personal, specific, named precisely."}",
   "price": ${brandCfg.pricing.min},
   "questions": [
-    "7 to 8 specific questions this guide must fully answer, each 8–15 words, ordered by ${brand === "brotherjimi" ? "emotional depth — from naming the feeling to practical movement to life-pattern" : isExpat ? "the expat journey — foreign national eligibility and restrictions first, then exact process for non-citizens, then required foreigner-specific documentation, then timelines, then post-submission tracking and support for foreigners, then what goes wrong for expats specifically, then checklist" : "the journey — eligibility/requirements first, then steps and costs, then timelines, then post-submission (status tracking, delays, support), then problems and recovery, then checklist"}"
+    "7 to 8 specific questions this guide must fully answer, each 8–15 words, ordered by ${brand === "brotherjimi" ? "emotional depth — from naming the feeling to practical movement to life-pattern" : isReturning ? "the return journey — what changed first, then citizenship/status, then financial exit from abroad, then banking setup, then housing, then healthcare, then qualifications/work, then complete timeline checklist" : isExpat ? "the expat journey — foreign national eligibility and restrictions first, then exact process for non-citizens, then required foreigner-specific documentation, then timelines, then post-submission tracking and support for foreigners, then what goes wrong for expats specifically, then checklist" : "the journey — eligibility/requirements first, then steps and costs, then timelines, then post-submission (status tracking, delays, support), then problems and recovery, then checklist"}"
   ]
 }`,
       },
@@ -174,8 +177,9 @@ Return ONLY valid JSON — no markdown, no explanation:
       emotionalIntent: "problem-solving",
       exactQuestions: JSON.stringify(oppData.questions),
       painPoint: oppData.painPoint,
-      isDiaspora: !isExpat,
+      isDiaspora: !isExpat && !isReturning,
       isExpat,
+      isReturning,
       platformOfOrigin: "user-generated",
     },
   });
@@ -192,7 +196,7 @@ WRITING RULES — Brother Jimi pastoral standard:
 - End with a benediction: a specific wish for this reader, crafted from the exact topic. Not a prayer instruction. A gift.
 - Offer 1–2 further reading verses as an invitation: "If this reached you, there is more here: [verse]"
 - Write in markdown but use it sparingly — no heavy formatting, mostly flowing paragraphs.` : `
-You are a world-class ${oppData.niche} specialist — not a generalist. You have 15+ years of hands-on experience helping ${isExpat ? `foreign nationals and expats navigate ${country}` : `people in ${country} navigate this exact topic`}. You have seen every mistake, every delay, every shortcut. Expert knowledge, human voice. If they ever conflict, human voice wins.${isExpat ? ` You know exactly where the system treats foreigners differently — the extra steps, the extra fees, the hidden restrictions — and you write directly to that.` : ""}
+You are a world-class ${oppData.niche} specialist — not a generalist. You have 15+ years of hands-on experience helping ${isReturning ? `diaspora members plan and execute their return to ${country} after years abroad` : isExpat ? `foreign nationals and expats navigate ${country}` : `people in ${country} navigate this exact topic`}. You have seen every mistake, every delay, every shortcut. Expert knowledge, human voice. If they ever conflict, human voice wins.${isReturning ? ` You know exactly what catches returning diaspora off guard — the things that changed while they were away, the financial traps of leaving a Western system, the emotional and practical reality of arriving back. You write directly to that.` : isExpat ? ` You know exactly where the system treats foreigners differently — the extra steps, the extra fees, the hidden restrictions — and you write directly to that.` : ""}
 
 Before writing each chapter, identify silently: what most people believe about this step, and what is actually true. Write toward that gap — not toward the obvious.
 

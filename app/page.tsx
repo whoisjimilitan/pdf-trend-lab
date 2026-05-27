@@ -761,7 +761,8 @@ export default function HomePage() {
                   </div>
                 </form>
                 <div className="pg-hint-pills">
-                  <a href="/expat" className="pg-hint-pill" style={{ textDecoration: "none" }}>Expat? Your page →</a>
+                  <a href="/expat" className="pg-hint-pill" style={{ textDecoration: "none" }}>Expat →</a>
+                  <a href="/returning" className="pg-hint-pill" style={{ textDecoration: "none", background: "#FFFBEB", border: "1px solid #FDE68A", color: "#B45309" }}>Going home →</a>
                 </div>
               </div>
             </>

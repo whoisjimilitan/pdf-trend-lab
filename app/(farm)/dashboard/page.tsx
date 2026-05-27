@@ -23,7 +23,7 @@ const DAILY: Record<number, { icon: string; action: string; tip: string; est: st
 };
 
 export default async function DashboardPage() {
-  const [totalSeeds, liveSeeds, salesData, featuredSeed, recentGuides, diasporaSearches, expatSearches] = await Promise.all([
+  const [totalSeeds, liveSeeds, salesData, featuredSeed, recentGuides, diasporaSearches, expatSearches, returningSearches] = await Promise.all([
     prisma.product.count(),
     prisma.product.count({ where: { published: true } }),
     prisma.product.aggregate({ _sum: { revenue: true } }),
@@ -46,6 +46,13 @@ export default async function DashboardPage() {
     prisma.searchQuery.groupBy({
       by: ["query"],
       where: { source: { in: ["expat", "expat-with-country"] } },
+      _count: { query: true },
+      orderBy: { _count: { query: "desc" } },
+      take: 4,
+    }),
+    prisma.searchQuery.groupBy({
+      by: ["query"],
+      where: { source: { in: ["returning", "returning-with-country"] } },
       _count: { query: true },
       orderBy: { _count: { query: "desc" } },
       take: 4,
@@ -193,8 +200,8 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Search Intelligence — diaspora + expat demand split */}
-      {(diasporaSearches.length > 0 || expatSearches.length > 0) && (
+      {/* Search Intelligence — diaspora + expat + returning demand split */}
+      {(diasporaSearches.length > 0 || expatSearches.length > 0 || returningSearches.length > 0) && (
         <div style={{ marginTop: 32 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
             <div>
@@ -242,7 +249,7 @@ export default async function DashboardPage() {
 
           {/* Expat searches */}
           {expatSearches.length > 0 && (
-            <div>
+            <div style={{ marginBottom: 16 }}>
               <div style={{ fontSize: "0.62rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "#0284C7", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
                 <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#0284C7" }} />
                 Expats — pdfseeds.com/expat
@@ -261,6 +268,36 @@ export default async function DashboardPage() {
                       <span style={{ fontSize: "0.72rem", color: "var(--muted)", fontWeight: 600 }}>{s._count.query}×</span>
                       <Link href={`/engine?keyword=${encodeURIComponent(s.query)}`}
                         style={{ fontSize: "0.72rem", color: "#0284C7", textDecoration: "none", fontWeight: 700, background: "#E0F2FE", padding: "3px 10px", borderRadius: 6, border: "1px solid #BAE6FD" }}>
+                        Build →
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Returning searches */}
+          {returningSearches.length > 0 && (
+            <div>
+              <div style={{ fontSize: "0.62rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "#B45309", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#D97706" }} />
+                Returning — pdfseeds.com/returning
+              </div>
+              <div style={{ background: "var(--surface)", border: "1px solid #FDE68A", borderRadius: 16, overflow: "hidden" }}>
+                {returningSearches.map((s, i) => (
+                  <div key={s.query} style={{
+                    padding: "11px 18px",
+                    borderBottom: i < returningSearches.length - 1 ? "1px solid var(--border)" : "none",
+                    display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
+                  }}>
+                    <div style={{ flex: 1, minWidth: 0, fontSize: "0.84rem", color: "var(--text)", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      &ldquo;{s.query}&rdquo;
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                      <span style={{ fontSize: "0.72rem", color: "var(--muted)", fontWeight: 600 }}>{s._count.query}×</span>
+                      <Link href={`/engine?keyword=${encodeURIComponent(s.query)}`}
+                        style={{ fontSize: "0.72rem", color: "#B45309", textDecoration: "none", fontWeight: 700, background: "#FFFBEB", padding: "3px 10px", borderRadius: 6, border: "1px solid #FDE68A" }}>
                         Build →
                       </Link>
                     </div>
