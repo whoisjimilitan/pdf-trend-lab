@@ -429,13 +429,13 @@ export default function ReturningPage() {
           margin-bottom: 22px; text-align: center; line-height: 1.5;
         }
 
-        /* ── BOOK PAGE (open book interior) ── */
+        /* ── BOOK PAGE ── */
         .pg-book-page {
           width: 100%;
           background: #FDFBF6;
           border: 1.5px solid #DDD6C8;
           border-radius: 2px 6px 6px 2px;
-          padding: 32px 28px 24px;
+          padding: 36px 28px 28px;
           margin-bottom: 24px;
           position: relative;
           box-shadow: -5px 0 14px rgba(0,0,0,0.07), 0 4px 28px rgba(0,0,0,0.07);
@@ -453,70 +453,57 @@ export default function ReturningPage() {
           to   { opacity: 1; transform: translateY(0); }
         }
         .pg-book-page-brand {
-          font-size: 0.56rem; font-weight: 700;
-          color: #C4BAB0; letter-spacing: 0.16em;
+          font-size: 0.54rem; font-weight: 700;
+          color: #C4BAB0; letter-spacing: 0.22em;
           text-transform: uppercase; text-align: center;
-          margin-bottom: 22px;
-        }
-        .pg-book-page-title {
-          font-size: clamp(1.05rem, 3vw, 1.3rem);
-          font-weight: 800; color: #1A1008;
-          text-align: center; line-height: 1.4;
-          letter-spacing: -0.02em; margin-bottom: 6px;
-        }
-        .pg-book-page-sub {
-          font-size: 0.77rem; color: #8C7D6E; font-style: italic;
-          text-align: center; margin-bottom: 22px; line-height: 1.5;
-        }
-        .pg-book-page-rule {
-          height: 1px; background: linear-gradient(90deg, transparent, #DDD6C8 20%, #DDD6C8 80%, transparent);
           margin-bottom: 18px;
         }
+        .pg-book-page-title {
+          font-size: clamp(1.2rem, 3.2vw, 1.55rem);
+          font-weight: 900; color: #1A1008;
+          text-align: center; line-height: 1.22;
+          letter-spacing: -0.02em; margin-bottom: 24px;
+        }
+        .pg-book-page-rule {
+          height: 1px;
+          background: linear-gradient(90deg, transparent, #DDD6C8 20%, #DDD6C8 80%, transparent);
+          margin-bottom: 20px;
+        }
         .pg-toc-heading {
-          font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em;
-          text-transform: uppercase; color: #C4BAB0; margin-bottom: 14px;
+          font-size: 0.54rem; font-weight: 700; letter-spacing: 0.22em;
+          text-transform: uppercase; color: #C4BAB0;
+          text-align: center; margin-bottom: 16px;
         }
         .pg-toc { width: 100%; }
-        .pg-toc-row { padding: 7px 0; border-bottom: 1px solid #F0EDE8; }
+        .pg-toc-row { padding: 9px 0; border-bottom: 1px solid #F0EDE8; }
         .pg-toc-row:last-child { border-bottom: none; }
-        .pg-toc-item {
-          display: flex; align-items: baseline; gap: 10px;
-        }
+        .pg-toc-item { display: flex; align-items: baseline; gap: 10px; }
         .pg-toc-num {
-          font-size: 0.58rem; font-weight: 800; color: #C4BAB0;
-          min-width: 18px; flex-shrink: 0; letter-spacing: 0.06em;
-          padding-top: 2px;
+          font-size: 0.6rem; font-weight: 700; color: #C4BAB0;
+          min-width: 20px; flex-shrink: 0; text-align: right;
+          padding-top: 1px; letter-spacing: 0.04em;
         }
         .pg-toc-title {
-          flex: 1; font-size: 0.9rem; font-weight: 700;
-          color: #1A1008; line-height: 1.35;
+          flex: 1; font-size: 0.92rem; font-weight: 700;
+          color: #1A1008; line-height: 1.3;
         }
-        .pg-toc-desc {
-          font-size: 0.73rem; color: #8C7D6E; line-height: 1.55;
-          padding: 3px 0 2px 28px;
+        .pg-toc-sub {
+          font-size: 0.71rem; color: #8C7D6E; font-style: italic;
+          padding: 3px 0 2px 30px; display: block;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .pg-toc-row--locked { opacity: 0.3; user-select: none; }
-        .pg-toc-row--locked .pg-toc-title { filter: blur(3.5px); }
-        .pg-toc-locked-block { margin-top: 2px; }
-        .pg-toc-lock-row {
-          display: flex; align-items: center; justify-content: center; gap: 6px;
-          padding: 10px 0 4px;
-          font-size: 0.72rem; font-weight: 600; color: #B0A89A;
-        }
-        .pg-toc-pg {
-          font-size: 0.58rem; font-weight: 500; color: #C4BAB0;
-          flex-shrink: 0; letter-spacing: 0.02em;
-        }
-        .pg-toc-continues {
-          text-align: center; font-size: 0.62rem; color: #DDD6C8;
-          padding: 8px 0 10px; letter-spacing: 0.22em;
+        .pg-toc-row--locked { opacity: 0.28; user-select: none; }
+        .pg-toc-row--locked .pg-toc-title { filter: blur(4px); }
+        .pg-toc-locked-block { margin-top: 4px; }
+        .pg-toc-lock-icon {
+          display: flex; align-items: center; justify-content: center;
+          padding: 14px 0 2px; color: #C4BAB0;
         }
         .pg-book-page-footer {
-          text-align: center; margin-top: 18px; padding-top: 14px;
+          text-align: center; margin-top: 20px; padding-top: 14px;
           font-size: 0.56rem; color: #DDD6C8; letter-spacing: 0.14em;
           border-top: 1px solid #F0EDE8;
         }
-        .pg-book-title-wave { display: block; margin: 0 auto 14px; opacity: 0.65; }
 
         /* Chapter preview card */
         .pg-chapters {
@@ -806,14 +793,8 @@ export default function ReturningPage() {
 
               {/* Open book page */}
               <div className="pg-book-page">
-                <div className="pg-book-page-brand">🌱 PDF Seeds · Return Guide</div>
+                <div className="pg-book-page-brand">PDF Seeds</div>
                 <div className="pg-book-page-title">{guide.title}</div>
-                <svg className="pg-book-title-wave" width="120" height="6" viewBox="0 0 120 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2 3 C17 1,32 5,47 3 C62 1,77 5,92 3 C107 1,115 4,118 3" stroke="#DDD6C8" strokeWidth="1.2" strokeLinecap="round"/>
-                </svg>
-                {situation && (
-                  <div className="pg-book-page-sub">&ldquo;{situation}&rdquo;</div>
-                )}
                 <div className="pg-book-page-rule" />
                 <div className="pg-toc-heading">Contents</div>
                 {guide.chapters && guide.chapters.length > 0 && (
@@ -823,29 +804,24 @@ export default function ReturningPage() {
                         <div className="pg-toc-item">
                           <span className="pg-toc-num">{ch.chapter}</span>
                           <span className="pg-toc-title">{ch.title}</span>
-                          <span className="pg-toc-pg">{(parseInt(ch.chapter) - 1) * 14 + 1}</span>
                         </div>
-                        <div className="pg-toc-desc">{ch.description}</div>
+                        {ch.description && (
+                          <div className="pg-toc-sub">{ch.description}</div>
+                        )}
                       </div>
                     ))}
                     {guide.chapters.length > 3 && (
                       <div className="pg-toc-locked-block">
-                        <div className="pg-toc-continues">· · · · ·</div>
                         {guide.chapters.slice(3, 6).map((ch, i) => (
                           <div key={i} className="pg-toc-row pg-toc-row--locked">
                             <div className="pg-toc-item">
                               <span className="pg-toc-num">{ch.chapter}</span>
                               <span className="pg-toc-title">{ch.title}</span>
-                              <span className="pg-toc-pg">{(parseInt(ch.chapter) - 1) * 14 + 1}</span>
                             </div>
                           </div>
                         ))}
-                        <div className="pg-toc-lock-row">
-                          <Lock size={11} strokeWidth={2} />
-                          {guide.chapters.length - 3 === 1
-                            ? `Chapter ${guide.chapters[3].chapter} is waiting for you.`
-                            : `Chapters ${guide.chapters[3].chapter}–${guide.chapters[guide.chapters.length - 1].chapter} are waiting for you.`
-                          }
+                        <div className="pg-toc-lock-icon">
+                          <Lock size={13} strokeWidth={1.5} />
                         </div>
                       </div>
                     )}
