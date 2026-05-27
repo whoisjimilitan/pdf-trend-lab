@@ -626,7 +626,7 @@ export default function ExpatPage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="What do you need where you now live?"
+                        placeholder="What do you need where you live?"
                         autoFocus
                         required
                       />

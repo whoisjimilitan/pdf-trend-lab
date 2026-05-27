@@ -228,6 +228,14 @@ export default function ReturningPage() {
           margin: 0 0 14px;
           max-width: 680px;
         }
+        .pg-hero-use-cases {
+          font-size: clamp(0.98rem, 2.5vw, 1.05rem);
+          font-weight: 700;
+          color: #1A1008;
+          margin: 0 0 6px;
+          max-width: 420px;
+          letter-spacing: -0.01em;
+        }
         .pg-hero-sub {
           font-size: clamp(0.95rem, 2.5vw, 1.05rem);
           color: #6B5E52;
@@ -543,6 +551,7 @@ export default function ReturningPage() {
           .pg-main { padding: 72px 40px 128px; }
           .pg-hero-eyebrow { font-size: 0.75rem; margin-bottom: 32px; }
           .pg-hero-h1 { font-size: clamp(3rem, 4.5vw, 4rem); max-width: 780px; margin-bottom: 20px; }
+          .pg-hero-use-cases { font-size: 1.1rem; max-width: 480px; }
           .pg-hero-sub { font-size: 1.1rem; max-width: 480px; margin-bottom: 48px; }
           .pg-form { max-width: 560px; }
           .pg-input-wrap { padding: 8px 8px 8px 24px; border-radius: 18px; }
@@ -560,6 +569,7 @@ export default function ReturningPage() {
           .pg-main { padding: 40px 20px 80px; justify-content: flex-start; }
           .pg-hero-eyebrow { margin-bottom: 14px; font-size: 0.68rem; }
           .pg-hero-h1 { font-size: 1.9rem; letter-spacing: -0.03em; max-width: 100%; margin-bottom: 14px; }
+          .pg-hero-use-cases { font-size: 0.9rem; max-width: 100%; margin-bottom: 4px; }
           .pg-hero-sub { font-size: 0.92rem; max-width: 100%; margin-bottom: 28px; line-height: 1.65; }
           .pg-form { max-width: 100%; }
           .pg-input-wrap { border-radius: 14px; padding: 6px 6px 6px 16px; }
@@ -607,9 +617,8 @@ export default function ReturningPage() {
             <>
               <span className="pg-hero-eyebrow">For diaspora going home for good</span>
               <h1 className="pg-hero-h1">Home. For good.</h1>
-              <p className="pg-hero-sub">
-                Know what you&apos;re walking into before you go.
-              </p>
+              <p className="pg-hero-use-cases">Pension. Property. Banking. Healthcare.</p>
+              <p className="pg-hero-sub">Know what you&apos;re going back to. No guesswork.</p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
                   <div className="pg-form-inner">
