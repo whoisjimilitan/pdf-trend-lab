@@ -604,7 +604,7 @@ export default function ReturningPage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="What do you need to sort before you go back?"
+                        placeholder="What needs sorting before you leave?"
                         autoFocus
                         required
                       />

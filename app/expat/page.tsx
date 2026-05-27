@@ -626,9 +626,25 @@ export default function ExpatPage() {
                   </div>
                 </form>
                 <div className="pg-hint-pills">
-                  <span className="pg-hint-pill">Expats in Africa</span>
-                  <span className="pg-hint-pill">Expats in Asia</span>
-                  <span className="pg-hint-pill">Expats everywhere</span>
+                  {[
+                    "Bank accounts for foreigners",
+                    "Property as a non-citizen",
+                    "Starting a business as an expat",
+                  ].map((prompt) => (
+                    <button
+                      key={prompt}
+                      type="button"
+                      className="pg-hint-pill"
+                      style={{ cursor: "pointer", background: "none", border: "1px solid #BAE6FD", fontFamily: "inherit" }}
+                      onClick={() => {
+                        setSituation(prompt);
+                        fetch("/api/search-log", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query: prompt, source: "expat" }) }).catch(() => {});
+                        setStep("country");
+                      }}
+                    >
+                      {prompt} →
+                    </button>
+                  ))}
                 </div>
               </div>
             </>
