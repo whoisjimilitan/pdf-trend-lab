@@ -696,7 +696,7 @@ export default function ExpatPage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="e.g. How do I open a bank account as a foreigner in Thailand?"
+                        placeholder="e.g. How do I bank as a foreigner in Thailand?"
                         autoFocus
                         required
                       />

@@ -822,7 +822,7 @@ export default function HomePage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="e.g. How do I transfer my UK pension back to Ghana?"
+                        placeholder="e.g. How do I transfer my pension to Ghana?"
                         autoFocus
                         required
                       />
