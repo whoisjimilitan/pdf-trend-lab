@@ -431,64 +431,58 @@ export default function ExpatPage() {
         /* ── BOOK PAGE ── */
         .pg-book-page {
           width: 100%;
-          background: #FDFBF6;
-          border: 1.5px solid #DDD6C8;
-          border-radius: 2px 6px 6px 2px;
-          padding: 36px 28px 28px;
+          background: #FEFCF8;
+          border-radius: 3px;
+          padding: 40px 32px 32px;
           margin-bottom: 24px;
-          position: relative;
-          box-shadow: -5px 0 14px rgba(0,0,0,0.07), 0 4px 28px rgba(0,0,0,0.07);
-          animation: page-appear 0.4s ease both;
-        }
-        .pg-book-page::before {
-          content: "";
-          position: absolute;
-          left: 0; top: 0; bottom: 0; width: 5px;
-          background: linear-gradient(90deg, rgba(0,0,0,0.13) 0%, transparent 100%);
-          border-radius: 2px 0 0 2px;
+          box-shadow:
+            0 2px 4px rgba(0,0,0,0.04),
+            0 8px 28px rgba(0,0,0,0.1),
+            0 28px 64px rgba(0,0,0,0.09);
+          animation: page-appear 0.45s ease both;
         }
         @keyframes page-appear {
-          from { opacity: 0; transform: translateY(6px); }
+          from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }
         }
         .pg-book-page-brand {
-          font-size: 0.54rem; font-weight: 700;
-          color: #C4BAB0; letter-spacing: 0.22em;
+          font-size: 0.52rem; font-weight: 700;
+          color: #C4BAB0; letter-spacing: 0.26em;
           text-transform: uppercase; text-align: center;
-          margin-bottom: 18px;
+          margin-bottom: 36px;
         }
         .pg-book-page-title {
-          font-size: clamp(1.2rem, 3.2vw, 1.55rem);
+          font-size: clamp(1.45rem, 4vw, 2rem);
           font-weight: 900; color: #1A1008;
-          text-align: center; line-height: 1.22;
-          letter-spacing: -0.02em; margin-bottom: 24px;
+          text-align: center; line-height: 1.18;
+          letter-spacing: -0.025em; margin-bottom: 36px;
         }
         .pg-book-page-rule {
           height: 1px;
           background: linear-gradient(90deg, transparent, #DDD6C8 20%, #DDD6C8 80%, transparent);
-          margin-bottom: 20px;
+          margin-bottom: 24px;
         }
         .pg-toc-heading {
           font-size: 0.54rem; font-weight: 700; letter-spacing: 0.22em;
           text-transform: uppercase; color: #C4BAB0;
-          text-align: center; margin-bottom: 16px;
+          text-align: center; margin-bottom: 18px;
         }
         .pg-toc { width: 100%; }
-        .pg-toc-row { padding: 9px 0; border-bottom: 1px solid #F0EDE8; }
+        .pg-toc-row { padding: 10px 0; border-bottom: 1px solid #EDE9E2; }
         .pg-toc-row:last-child { border-bottom: none; }
-        .pg-toc-item { display: flex; align-items: baseline; gap: 10px; }
+        .pg-toc-item { display: flex; align-items: baseline; gap: 12px; }
         .pg-toc-num {
           font-size: 0.6rem; font-weight: 700; color: #C4BAB0;
           min-width: 20px; flex-shrink: 0; text-align: right;
           padding-top: 1px; letter-spacing: 0.04em;
         }
         .pg-toc-title {
-          flex: 1; font-size: 0.92rem; font-weight: 700;
+          flex: 1; font-size: 0.95rem; font-weight: 700;
           color: #1A1008; line-height: 1.3;
         }
         .pg-toc-sub {
-          font-size: 0.71rem; color: #8C7D6E; font-style: italic;
-          padding: 3px 0 2px 30px; display: block;
+          font-size: 0.72rem; color: #8C7D6E; font-style: italic;
+          padding: 3px 0 2px 32px; display: block;
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .pg-toc-row--locked { opacity: 0.28; user-select: none; }
@@ -496,12 +490,12 @@ export default function ExpatPage() {
         .pg-toc-locked-block { margin-top: 4px; }
         .pg-toc-lock-icon {
           display: flex; align-items: center; justify-content: center;
-          padding: 14px 0 2px; color: #C4BAB0;
+          padding: 16px 0 4px; color: #C4BAB0;
         }
         .pg-book-page-footer {
-          text-align: center; margin-top: 20px; padding-top: 14px;
+          text-align: center; margin-top: 22px; padding-top: 16px;
           font-size: 0.56rem; color: #DDD6C8; letter-spacing: 0.14em;
-          border-top: 1px solid #F0EDE8;
+          border-top: 1px solid #EDE9E2;
         }
 
         /* Chapter preview card */
