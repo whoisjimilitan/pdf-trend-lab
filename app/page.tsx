@@ -849,7 +849,7 @@ export default function HomePage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="e.g. How do I buy land in Ghana?"
+                        placeholder="e.g. How do I find affordable land in Ghana?"
                         autoFocus
                         required
                       />
