@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 type Brand = "pdfseeds" | "brotherjimi";
@@ -57,13 +58,19 @@ const BRANDS: Record<Brand, {
 
 const nav = [
   { href: "/dashboard", label: "Welcome", icon: "🏡", sub: "Overview"          },
-  { href: "/engine",   label: "Engine",  icon: "🔍", sub: "Discover gaps"      },
+  { href: "/engine",   label: "Search",  icon: "🔍", sub: "Discover gaps"      },
   { href: "/factory",  label: "PDFs",    icon: "📄", sub: "Your planted seeds" },
   { href: "/harvests", label: "Revenue", icon: "💰", sub: "Earnings"           },
 ];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [brand, setBrand] = useState<Brand>("pdfseeds");
+
+  async function handleLogout() {
+    await fetch("/api/signin", { method: "DELETE" });
+    router.push("/");
+  }
 
   useEffect(() => {
     const saved = (localStorage.getItem("engine-brand") ?? "pdfseeds") as Brand;
@@ -185,9 +192,32 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             letterSpacing: "0.02em",
             transition: "color 0.4s",
             fontStyle: isBJ ? "italic" : "normal",
+            marginBottom: 10,
           }}>
             {b.footerText}
           </div>
+          <button
+            onClick={handleLogout}
+            style={{
+              display: "flex", alignItems: "center", gap: 6,
+              background: "none", border: `1px solid ${b.sidebarBorder}`,
+              borderRadius: 8, padding: "6px 12px",
+              fontSize: "0.72rem", fontWeight: 600,
+              color: isBJ ? "#7A5010" : "var(--muted)",
+              cursor: "pointer", width: "100%",
+              transition: "background 0.15s, color 0.15s",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLButtonElement).style.background = b.hoverBg;
+              (e.currentTarget as HTMLButtonElement).style.color = b.hoverColor;
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLButtonElement).style.background = "";
+              (e.currentTarget as HTMLButtonElement).style.color = isBJ ? "#7A5010" : "var(--muted)";
+            }}
+          >
+            <span style={{ fontSize: "0.85rem" }}>←</span> Log out
+          </button>
         </div>
       </aside>
 
