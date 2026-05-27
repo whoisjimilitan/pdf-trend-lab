@@ -678,7 +678,7 @@ export default function EarnPage() {
               Your earnings.
             </h1>
             <p className="e-hero-sub">
-              We&apos;ll match you with a guide your community will love. Read it. <strong>If you&apos;d recommend it — set your price, share your link, and earn 80% of every sale.</strong>
+              We&apos;ll match you with a guide we think you and your community will love. Read it. <strong>If you&apos;d recommend it — post your unique link and earn 80% from each sale.</strong>
             </p>
 
             {/* Flow indicator — minimal, no descriptions */}
@@ -686,7 +686,7 @@ export default function EarnPage() {
               {[
                 { n: "01", label: "Match" },
                 { n: "02", label: "Read" },
-                { n: "03", label: "Set your price" },
+                { n: "03", label: "Recommend" },
                 { n: "04", label: "Earn 80%" },
               ].map((s, i) => (
                 <React.Fragment key={s.n}>
