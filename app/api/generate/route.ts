@@ -128,7 +128,7 @@ export async function POST(req: Request) {
 Brand: ${brand}
 ${brand === "brotherjimi"
   ? `This is a PASTORAL/DEVOTIONAL product for Brother Jimi. The "niche" should reflect spiritual/emotional pain. The "painPoint" should name what they are CARRYING, not what they need to DO. The "questions" should reflect the 6-stage pastoral arc: emotional insight, reflection, spiritual perspective, practical wisdom, faith encouragement, life-pattern.`
-  : `This is a practical clarity product for PDFSeeds. The "pdfTitle" should follow the PDFSeeds title formula system. The "questions" should cover: requirements, steps, costs, timelines, common mistakes, checklist.`
+  : `This is a practical clarity product for PDFSeeds. The "pdfTitle" should follow the PDFSeeds title formula system. The "questions" must cover the FULL JOURNEY: requirements and eligibility, exact steps and costs, timelines, common mistakes and how to avoid them, what happens after submission (status tracking, support contacts, delays), and what to do if something goes wrong — plus a final action checklist.`
 }
 
 Return ONLY valid JSON — no markdown, no explanation:
@@ -139,7 +139,7 @@ Return ONLY valid JSON — no markdown, no explanation:
   "painPoint": "One sentence — ${brand === "brotherjimi" ? "the exact thing they are carrying right now. What they woke up with this morning that they haven't been able to say out loud." : "the exact frustration they are living. Personal, specific, named precisely."}",
   "price": ${brandCfg.pricing.min},
   "questions": [
-    "7 to 8 specific questions this guide must fully answer, each 8–15 words, ordered by ${brand === "brotherjimi" ? "emotional depth — from naming the feeling to practical movement to life-pattern" : "urgency — most pressing first"}"
+    "7 to 8 specific questions this guide must fully answer, each 8–15 words, ordered by ${brand === "brotherjimi" ? "emotional depth — from naming the feeling to practical movement to life-pattern" : "the journey — eligibility/requirements first, then steps and costs, then timelines, then post-submission (status tracking, delays, support), then problems and recovery, then checklist"}"
   ]
 }`,
       },

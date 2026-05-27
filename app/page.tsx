@@ -713,10 +713,10 @@ export default function HomePage() {
           {/* ── IDLE ── */}
           {step === "idle" && (
             <>
-              <span className="pg-hero-eyebrow">Specific to your country. Specific to your situation.</span>
-              <h1 className="pg-hero-h1">Stop Googling. Describe your situation.</h1>
+              <span className="pg-hero-eyebrow">For the diaspora — wherever home is</span>
+              <h1 className="pg-hero-h1">Navigate home. From anywhere.</h1>
               <p className="pg-hero-sub">
-                You get a step-by-step guide for your exact country and situation — not ten links written for someone else&apos;s.
+                Land. Inheritance. Business. Passport. Describe what you need to sort back home — we build a step-by-step guide for your exact country and situation. No agent. No guesswork.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
@@ -726,7 +726,7 @@ export default function HomePage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="What are you trying to figure out?"
+                        placeholder="What do you need to sort out back home?"
                         autoFocus
                         required
                       />
@@ -735,7 +735,7 @@ export default function HomePage() {
                   </div>
                 </form>
                 <div className="pg-hint">
-                  e.g. How do I register a business in Ghana?
+                  e.g. Inherit land in Nigeria · Register a business in Ghana · Renew my passport from the UK
                 </div>
               </div>
             </>
@@ -749,7 +749,7 @@ export default function HomePage() {
                 <div className="pg-locked-text">{situation}</div>
                 <div className="pg-locked-x">change ×</div>
               </div>
-              <p className="pg-country-label">Which country are you in?</p>
+              <p className="pg-country-label">Which country is this guide for?</p>
               <div className="pg-form">
                 <form onSubmit={handleGenerate}>
                   <div className="pg-form-inner">
@@ -767,7 +767,7 @@ export default function HomePage() {
                   </div>
                 </form>
                 {error && <div className="pg-error">{error}</div>}
-                <div className="pg-hint">Nigeria · United Kingdom · Ghana · Kenya · United States · Canada</div>
+                <div className="pg-hint">Ghana · Nigeria · Kenya · Jamaica · India · Philippines</div>
               </div>
             </div>
           )}
@@ -876,7 +876,7 @@ export default function HomePage() {
               <div className="pg-waitlist-icon">📬</div>
               <div className="pg-waitlist-title">We&apos;ll build it for you</div>
               <p className="pg-waitlist-sub">
-                Leave your email and we&apos;ll create a guide specifically for your situation — usually within 24 hours.
+                Leave your email. We&apos;ll research the rules for your home country and build a guide for your exact situation — usually within 24 hours.
               </p>
               {situation && (
                 <div className="pg-waitlist-query">&ldquo;{situation}&rdquo;</div>
