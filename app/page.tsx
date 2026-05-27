@@ -743,7 +743,7 @@ export default function HomePage() {
               <span className="pg-hero-eyebrow">For the diaspora — wherever home is</span>
               <h1 className="pg-hero-h1">Navigate home. From anywhere.</h1>
               <p className="pg-hero-use-cases">Passports. Land. Business. Banking. Healthcare.</p>
-              <p className="pg-hero-sub">Your home country. Every step covered. No agent. No guesswork.</p>
+              <p className="pg-hero-sub">Every step covered. No agent. No guesswork.</p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
                   <div className="pg-form-inner">
