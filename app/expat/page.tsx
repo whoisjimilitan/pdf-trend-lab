@@ -16,13 +16,12 @@ type Guide = {
 type WaitlistStatus = "idle" | "sending" | "done";
 
 const MESSAGES = [
-  "Searching for guide…",
-  "Found your guide…",
-  "Getting your guide…",
+  "Researching local rules for foreigners…",
+  "Building your expat guide…",
+  "Almost ready…",
 ];
 
-
-export default function HomePage() {
+export default function ExpatPage() {
   const [step, setStep] = useState<Step>("idle");
   const [situation, setSituation] = useState("");
   const [country, setCountry] = useState("");
@@ -69,11 +68,10 @@ export default function HomePage() {
   function handleSituation(e: { preventDefault: () => void }) {
     e.preventDefault();
     if (!situation.trim()) return;
-    // Fire-and-forget — log the search query for demand intelligence
     fetch("/api/search-log", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: situation.trim(), source: "homepage" }),
+      body: JSON.stringify({ query: situation.trim(), source: "expat" }),
     }).catch(() => {});
     setStep("country");
   }
@@ -83,11 +81,10 @@ export default function HomePage() {
     if (!country.trim()) return;
     setError("");
     setStep("generating");
-    // Update the log with the country now that we have it
     fetch("/api/search-log", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: situation.trim(), country: country.trim(), source: "homepage-with-country" }),
+      body: JSON.stringify({ query: situation.trim(), country: country.trim(), source: "expat-with-country" }),
     }).catch(() => {});
     abortRef.current = new AbortController();
     const timeoutId = setTimeout(() => abortRef.current?.abort(), 90_000);
@@ -95,7 +92,7 @@ export default function HomePage() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ situation, country }),
+        body: JSON.stringify({ situation, country, forExpat: true }),
         signal: abortRef.current.signal,
       });
       clearTimeout(timeoutId);
@@ -183,21 +180,21 @@ export default function HomePage() {
         }
         .pg-logo-mark {
           width: 34px; height: 34px;
-          background: linear-gradient(135deg, #7C3AED, #4F46E5);
+          background: linear-gradient(135deg, #0EA5E9, #0284C7);
           border-radius: 9px;
           display: flex; align-items: center; justify-content: center;
           font-size: 1rem;
-          box-shadow: 0 4px 12px rgba(124,58,237,0.2);
+          box-shadow: 0 4px 12px rgba(14,165,233,0.2);
         }
         .pg-logo-name {
           font-size: 1rem; font-weight: 800;
           color: #1A1008; letter-spacing: -0.02em;
         }
-        .pg-farm-link {
-          font-size: 0.78rem; color: #B0A89A; font-weight: 500;
-          text-decoration: none; transition: color 0.15s;
+        .pg-logo-tag {
+          font-size: 0.68rem; font-weight: 600;
+          color: #0EA5E9; letter-spacing: 0.06em;
+          text-transform: uppercase; margin-left: 2px;
         }
-        .pg-farm-link:hover { color: #7C3AED; }
 
         /* ── MAIN ── */
         .pg-main {
@@ -215,7 +212,7 @@ export default function HomePage() {
         .pg-hero-eyebrow {
           display: inline-block;
           font-size: 0.72rem; font-weight: 700;
-          color: #9B8AF0; letter-spacing: 0.12em;
+          color: #0EA5E9; letter-spacing: 0.12em;
           text-transform: uppercase; margin-bottom: 28px;
         }
         .pg-hero-h1 {
@@ -255,8 +252,8 @@ export default function HomePage() {
           transition: border-color 0.2s, box-shadow 0.2s;
         }
         .pg-input-wrap:focus-within {
-          border-color: #C4B5FD;
-          box-shadow: 0 4px 24px rgba(124,58,237,0.1);
+          border-color: #7DD3FC;
+          box-shadow: 0 4px 24px rgba(14,165,233,0.1);
         }
         .pg-input {
           flex: 1; border: none; outline: none;
@@ -267,11 +264,11 @@ export default function HomePage() {
         }
         .pg-input::placeholder { color: #C4BAB0; }
         .pg-btn {
-          background: linear-gradient(135deg, #7C3AED, #5B21B6);
+          background: linear-gradient(135deg, #0EA5E9, #0284C7);
           color: #fff; font-weight: 700; font-size: 0.9rem;
           padding: 12px 22px; border: none; border-radius: 12px;
           cursor: pointer; white-space: nowrap;
-          box-shadow: 0 4px 14px rgba(124,58,237,0.3);
+          box-shadow: 0 4px 14px rgba(14,165,233,0.3);
           transition: opacity 0.15s, transform 0.1s;
           flex-shrink: 0;
         }
@@ -294,36 +291,35 @@ export default function HomePage() {
         }
         .pg-country-label {
           font-size: 0.88rem; font-weight: 600;
-          color: #5B21B6; letter-spacing: 0.01em;
+          color: #0284C7; letter-spacing: 0.01em;
           margin: 0 0 12px; text-align: center;
         }
 
-        /* ── DEEP PURPLE INPUT (country step) ── */
         .pg-input-wrap--deep {
-          border-color: #A78BFA;
+          border-color: #7DD3FC;
         }
         .pg-input-wrap--deep:focus-within {
-          border-color: #6D28D9;
-          box-shadow: 0 4px 24px rgba(109,40,217,0.15);
+          border-color: #0284C7;
+          box-shadow: 0 4px 24px rgba(2,132,199,0.15);
         }
         .pg-btn--deep {
-          background: linear-gradient(135deg, #5B21B6, #4C1D95);
-          box-shadow: 0 4px 14px rgba(91,33,182,0.4);
+          background: linear-gradient(135deg, #0284C7, #075985);
+          box-shadow: 0 4px 14px rgba(2,132,199,0.4);
         }
 
         /* ── LOCKED PILL ── */
         .pg-locked {
           display: flex; align-items: center; gap: 10px;
-          background: #EDE9FE; border: 1.5px solid #A78BFA;
+          background: #E0F2FE; border: 1.5px solid #7DD3FC;
           border-radius: 999px; padding: 10px 16px;
           margin-bottom: 14px; cursor: pointer;
           max-width: 520px; width: 100%;
           transition: background 0.15s;
         }
-        .pg-locked:hover { background: #E5DEFF; }
-        .pg-locked-dot { width: 7px; height: 7px; border-radius: 50%; background: #5B21B6; flex-shrink: 0; }
-        .pg-locked-text { font-size: 0.88rem; color: #3B0764; font-weight: 600; flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .pg-locked-x { font-size: 0.75rem; color: #7C3AED; flex-shrink: 0; }
+        .pg-locked:hover { background: #BAE6FD; }
+        .pg-locked-dot { width: 7px; height: 7px; border-radius: 50%; background: #0284C7; flex-shrink: 0; }
+        .pg-locked-text { font-size: 0.88rem; color: #0C4A6E; font-weight: 600; flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pg-locked-x { font-size: 0.75rem; color: #0EA5E9; flex-shrink: 0; }
 
         /* ── ERROR ── */
         .pg-error {
@@ -341,16 +337,16 @@ export default function HomePage() {
         }
         .pg-gen-orb {
           width: 80px; height: 80px;
-          background: linear-gradient(135deg, #7C3AED, #4F46E5);
+          background: linear-gradient(135deg, #0EA5E9, #0284C7);
           border-radius: 24px;
           display: flex; align-items: center; justify-content: center;
           font-size: 2.2rem; margin-bottom: 32px;
           animation: orb-breathe 2.4s ease-in-out infinite;
-          box-shadow: 0 8px 32px rgba(124,58,237,0.3);
+          box-shadow: 0 8px 32px rgba(14,165,233,0.3);
         }
         @keyframes orb-breathe {
-          0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(124,58,237,0.3); }
-          50%       { transform: scale(1.06); box-shadow: 0 12px 48px rgba(124,58,237,0.45); }
+          0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(14,165,233,0.3); }
+          50%       { transform: scale(1.06); box-shadow: 0 12px 48px rgba(14,165,233,0.45); }
         }
         .pg-gen-msg {
           font-size: 1.05rem; font-weight: 600; color: #1A1008;
@@ -362,12 +358,12 @@ export default function HomePage() {
         }
         .pg-gen-pct {
           font-size: 0.75rem; font-weight: 700;
-          color: #7C3AED; letter-spacing: 0.05em;
+          color: #0EA5E9; letter-spacing: 0.05em;
           text-align: right; width: 100%; margin-bottom: 28px;
         }
         .pg-bar {
           height: 100%;
-          background: linear-gradient(90deg, #7C3AED, #A78BFA);
+          background: linear-gradient(90deg, #0EA5E9, #7DD3FC);
           border-radius: 999px;
           transition: width 0.4s ease;
         }
@@ -377,10 +373,10 @@ export default function HomePage() {
         }
         .pg-step { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: #D4CEC8; transition: color 0.4s; }
         .pg-step.done { color: #8C7D6E; }
-        .pg-step.active { color: #7C3AED; font-weight: 600; }
+        .pg-step.active { color: #0EA5E9; font-weight: 600; }
         .pg-step-dot { width: 6px; height: 6px; border-radius: 50%; background: #E8E4DE; flex-shrink: 0; transition: background 0.4s; }
         .pg-step.done .pg-step-dot { background: #10B981; }
-        .pg-step.active .pg-step-dot { background: #7C3AED; animation: step-pulse 1.2s infinite; }
+        .pg-step.active .pg-step-dot { background: #0EA5E9; animation: step-pulse 1.2s infinite; }
         @keyframes step-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         /* ── RESULT ── */
@@ -390,9 +386,9 @@ export default function HomePage() {
         }
         .pg-result-badge {
           display: inline-flex; align-items: center; gap: 6px;
-          background: #F0FDF4; border: 1px solid #BBF7D0;
+          background: #F0F9FF; border: 1px solid #BAE6FD;
           border-radius: 999px; padding: 5px 14px;
-          font-size: 0.72rem; font-weight: 700; color: #15803D;
+          font-size: 0.72rem; font-weight: 700; color: #0284C7;
           margin-bottom: 20px; letter-spacing: 0.04em;
           text-transform: uppercase;
         }
@@ -417,7 +413,7 @@ export default function HomePage() {
         .pg-chapters-head {
           padding: 12px 18px; border-bottom: 1px solid #EAE6E0;
           display: flex; align-items: center; justify-content: space-between;
-          font-size: 0.68rem; font-weight: 700; color: #9B8AF0;
+          font-size: 0.68rem; font-weight: 700; color: #0EA5E9;
           letter-spacing: 0.1em; text-transform: uppercase;
         }
         .pg-chapter {
@@ -436,7 +432,6 @@ export default function HomePage() {
           font-size: 0.77rem; color: #6B5E52; line-height: 1.6;
         }
 
-        /* Locked chapters */
         .pg-chapters-locked { position: relative; }
         .pg-chapters-locked-fade {
           position: absolute; top: 0; left: 0; right: 0; height: 32px;
@@ -448,8 +443,8 @@ export default function HomePage() {
         .pg-chapters-lock {
           padding: 12px 18px; border-top: 1px solid #EAE6E0;
           display: flex; align-items: center; justify-content: center; gap: 6px;
-          font-size: 0.75rem; font-weight: 600; color: #9B8AF0;
-          background: #F9F7FF;
+          font-size: 0.75rem; font-weight: 600; color: #0EA5E9;
+          background: #F0F9FF;
         }
 
         /* Offer pill */
@@ -459,7 +454,7 @@ export default function HomePage() {
           border-radius: 12px; padding: 10px 18px; margin-bottom: 12px;
         }
         .pg-result-offer-old {
-          font-size: 0.88rem; color: #9B8AF0;
+          font-size: 0.88rem; color: #0EA5E9;
           text-decoration: line-through; font-weight: 500;
         }
         .pg-result-offer-new {
@@ -472,11 +467,11 @@ export default function HomePage() {
 
         .pg-result-cta {
           display: block; width: 100%;
-          background: linear-gradient(135deg, #7C3AED, #5B21B6);
+          background: linear-gradient(135deg, #0EA5E9, #0284C7);
           color: #fff; font-weight: 800; font-size: 1.1rem;
           padding: 20px; border-radius: 16px;
           border: none; cursor: pointer;
-          box-shadow: 0 8px 28px rgba(124,58,237,0.35);
+          box-shadow: 0 8px 28px rgba(14,165,233,0.35);
           transition: opacity 0.15s, transform 0.1s;
           margin-bottom: 14px; letter-spacing: -0.01em;
         }
@@ -493,62 +488,7 @@ export default function HomePage() {
           padding: 0; text-decoration: underline;
           text-decoration-color: #E8E4DE; transition: color 0.15s;
         }
-        .pg-result-again:hover { color: #7C3AED; }
-
-        /* ── CHECKOUT ── */
-        .pg-checkout { max-width: 520px; width: 100%; }
-        .pg-checkout-stripe {
-          background: #ffffff;
-          border-radius: 16px;
-          overflow: hidden;
-          color-scheme: light;
-        }
-        .pg-checkout-back {
-          display: inline-flex; align-items: center; gap: 6px;
-          font-size: 0.82rem; color: #B0A89A;
-          background: none; border: none; cursor: pointer;
-          padding: 0; margin-bottom: 20px;
-          transition: color 0.15s;
-        }
-        .pg-checkout-back:hover { color: #7C3AED; }
-
-        /* ── PAID ── */
-        .pg-paid { max-width: 420px; width: 100%; text-align: center; }
-        .pg-paid-orb {
-          width: 72px; height: 72px; border-radius: 20px;
-          background: linear-gradient(135deg, #10B981, #059669);
-          display: flex; align-items: center; justify-content: center;
-          font-size: 2rem; margin: 0 auto 24px;
-          box-shadow: 0 8px 28px rgba(16,185,129,0.3);
-        }
-        .pg-paid-title { font-size: 1.5rem; font-weight: 800; color: #1A1008; margin-bottom: 10px; letter-spacing: -0.03em; }
-        .pg-paid-sub { font-size: 0.92rem; color: #8C7D6E; line-height: 1.7; margin-bottom: 28px; }
-        .pg-paid-btn {
-          display: inline-block;
-          background: linear-gradient(135deg, #7C3AED, #5B21B6);
-          color: #fff; font-weight: 700; font-size: 0.95rem;
-          padding: 14px 32px; border-radius: 999px;
-          text-decoration: none;
-          box-shadow: 0 4px 16px rgba(124,58,237,0.3);
-        }
-
-        /* ── UPSELL (post-purchase related guides) ── */
-        .pg-upsell { max-width: 420px; width: 100%; margin-top: 36px; }
-        .pg-upsell-heading {
-          font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
-          letter-spacing: 0.1em; color: #B0A89A; margin-bottom: 14px;
-        }
-        .pg-upsell-grid { display: flex; flex-direction: column; gap: 10px; }
-        .pg-upsell-card {
-          background: #FFFFFF; border: 1.5px solid #EAE6E0;
-          border-radius: 14px; padding: 14px 16px;
-          display: flex; align-items: center; justify-content: space-between;
-          gap: 12px; text-decoration: none;
-          transition: border-color 0.15s, box-shadow 0.15s;
-        }
-        .pg-upsell-card:hover { border-color: #C4B5FD; box-shadow: 0 4px 16px rgba(124,58,237,0.1); }
-        .pg-upsell-card-title { font-size: 0.88rem; font-weight: 600; color: #1A1008; line-height: 1.35; text-align: left; }
-        .pg-upsell-card-price { font-size: 0.82rem; font-weight: 700; color: #7C3AED; flex-shrink: 0; white-space: nowrap; }
+        .pg-result-again:hover { color: #0EA5E9; }
 
         /* ── WAITLIST ── */
         .pg-waitlist { max-width: 440px; width: 100%; text-align: center; }
@@ -556,8 +496,8 @@ export default function HomePage() {
         .pg-waitlist-title { font-size: 1.4rem; font-weight: 800; color: #1A1008; margin-bottom: 10px; letter-spacing: -0.02em; }
         .pg-waitlist-sub { font-size: 0.9rem; color: #8C7D6E; line-height: 1.7; margin-bottom: 24px; max-width: 360px; margin-left: auto; margin-right: auto; }
         .pg-waitlist-query {
-          display: inline-block; background: #EDE9FE; border-radius: 999px;
-          padding: 6px 16px; font-size: 0.83rem; font-weight: 600; color: #5B21B6;
+          display: inline-block; background: #E0F2FE; border-radius: 999px;
+          padding: 6px 16px; font-size: 0.83rem; font-weight: 600; color: #0284C7;
           margin-bottom: 24px;
         }
         .pg-waitlist-done {
@@ -573,12 +513,12 @@ export default function HomePage() {
           border-top: 1px solid #EEE9E2;
         }
 
-        /* ── DESKTOP (> 1024px) ── */
+        /* ── DESKTOP ── */
         @media (min-width: 1025px) {
           .pg {
             background-image:
-              linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
+              linear-gradient(rgba(14,165,233,0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(14,165,233,0.03) 1px, transparent 1px);
             background-size: 64px 64px;
           }
           .pg-header { padding: 28px 56px; }
@@ -591,50 +531,11 @@ export default function HomePage() {
           .pg-input { font-size: 1.05rem; padding: 12px 0; }
           .pg-btn { padding: 14px 28px; font-size: 0.95rem; border-radius: 14px; }
           .pg-hint { font-size: 0.82rem; margin-top: 18px; }
-          .pg-gen { max-width: 400px; }
           .pg-result { max-width: 520px; }
           .pg-result-cta { padding: 22px; font-size: 1.15rem; }
-          .pg-checkout { max-width: 600px; }
-          .pg-paid { max-width: 500px; }
-          .pg-upsell { max-width: 500px; }
-          .pg-waitlist { max-width: 500px; }
         }
 
-        /* ── TABLET LANDSCAPE (769–1024px) ── */
-        @media (min-width: 769px) and (max-width: 1024px) {
-          .pg-header { padding: 24px 44px; }
-          .pg-main { padding: 60px 48px 108px; }
-          .pg-hero-h1 { font-size: clamp(2.2rem, 4vw, 3rem); max-width: 640px; }
-          .pg-hero-sub { font-size: 1rem; max-width: 500px; }
-          .pg-form { max-width: 560px; }
-          .pg-btn { padding: 13px 24px; font-size: 0.92rem; }
-          .pg-gen { max-width: 460px; }
-          .pg-result { max-width: 540px; }
-          .pg-result-cta { padding: 22px; font-size: 1.15rem; }
-          .pg-checkout { max-width: 580px; }
-          .pg-paid { max-width: 500px; }
-          .pg-upsell { max-width: 500px; }
-          .pg-waitlist { max-width: 520px; }
-        }
-
-        /* ── TABLET PORTRAIT (601–768px) ── */
-        @media (min-width: 601px) and (max-width: 768px) {
-          .pg-header { padding: 20px 36px; }
-          .pg-main { padding: 52px 36px 96px; }
-          .pg-hero-h1 { font-size: clamp(2rem, 5vw, 2.6rem); max-width: 560px; }
-          .pg-hero-sub { font-size: 0.98rem; max-width: 440px; margin-bottom: 36px; }
-          .pg-form { max-width: 100%; }
-          .pg-btn { padding: 13px 20px; font-size: 0.9rem; }
-          .pg-gen { max-width: 420px; }
-          .pg-result { max-width: 480px; }
-          .pg-result-cta { padding: 20px; font-size: 1.08rem; }
-          .pg-checkout { max-width: 520px; }
-          .pg-paid { max-width: 460px; }
-          .pg-upsell { max-width: 460px; }
-          .pg-waitlist { max-width: 480px; }
-        }
-
-        /* ── MOBILE (≤ 600px) ── */
+        /* ── MOBILE ── */
         @media (max-width: 600px) {
           .pg-header { padding: 16px 20px; }
           .pg-logo-name { font-size: 0.9rem; }
@@ -643,58 +544,30 @@ export default function HomePage() {
           .pg-hero-h1 { font-size: 1.9rem; letter-spacing: -0.03em; max-width: 100%; margin-bottom: 14px; }
           .pg-hero-sub { font-size: 0.92rem; max-width: 100%; margin-bottom: 28px; line-height: 1.65; }
           .pg-form { max-width: 100%; }
-          .pg-input-wrap { border-radius: 14px; padding: 6px 6px 6px 16px; gap: 6px; }
+          .pg-input-wrap { border-radius: 14px; padding: 6px 6px 6px 16px; }
           .pg-input { font-size: 0.95rem; padding: 10px 0; }
           .pg-btn { padding: 13px 14px; font-size: 0.82rem; min-height: 48px; border-radius: 10px; }
           .pg-hint { font-size: 0.74rem; margin-top: 12px; }
           .pg-locked { max-width: 100%; border-radius: 14px; }
-          .pg-locked-text { font-size: 0.84rem; }
           .pg-gen { max-width: 100%; }
           .pg-gen-orb { width: 64px; height: 64px; border-radius: 18px; font-size: 1.7rem; margin-bottom: 24px; }
           .pg-gen-msg { font-size: 0.95rem; margin-bottom: 24px; }
-          .pg-track { margin-bottom: 24px; }
-          .pg-gen-steps { gap: 8px; }
-          .pg-step { font-size: 0.8rem; }
           .pg-result { max-width: 100%; }
           .pg-result-badge { font-size: 0.68rem; margin-bottom: 16px; }
           .pg-result-title { font-size: 1.2rem; margin-bottom: 22px; }
           .pg-result-cta { padding: 18px; font-size: 1rem; min-height: 58px; border-radius: 14px; }
           .pg-result-trust { gap: 10px; font-size: 0.74rem; margin-bottom: 20px; }
-          .pg-checkout { max-width: 100%; }
-          .pg-checkout-back { min-height: 44px; }
-          .pg-paid { max-width: 100%; }
-          .pg-paid-orb { width: 60px; height: 60px; font-size: 1.6rem; border-radius: 16px; }
-          .pg-paid-title { font-size: 1.25rem; }
-          .pg-paid-sub { font-size: 0.88rem; }
-          .pg-paid-btn { display: block; text-align: center; padding: 16px 24px; font-size: 0.95rem; }
-          .pg-upsell { max-width: 100%; }
-          .pg-upsell-card-title { font-size: 0.83rem; }
           .pg-waitlist { max-width: 100%; }
           .pg-waitlist-title { font-size: 1.2rem; }
           .pg-waitlist-sub { font-size: 0.86rem; }
           .pg-footer { padding: 14px 20px; font-size: 0.7rem; }
         }
 
-        /* ── SMALL MOBILE (≤ 480px) — stack button below input ── */
         @media (max-width: 480px) {
-          .pg-form-inner {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 10px;
-          }
+          .pg-form-inner { flex-direction: column; align-items: stretch; gap: 10px; }
           .pg-input-wrap { padding: 6px 6px 6px 16px; }
           .pg-input { padding: 10px 0; font-size: 1rem; }
           .pg-btn { width: 100%; padding: 15px 20px; font-size: 0.92rem; border-radius: 12px; }
-        }
-
-        /* ── EXTRA SMALL (≤ 375px) ── */
-        @media (max-width: 375px) {
-          .pg-header { padding: 14px 16px; }
-          .pg-main { padding: 32px 16px 72px; }
-          .pg-hero-h1 { font-size: 1.65rem; }
-          .pg-hero-sub { font-size: 0.88rem; }
-          .pg-result-trust { flex-direction: column; align-items: center; gap: 8px; }
-          .pg-result-cta { font-size: 0.95rem; }
         }
       `}</style>
 
@@ -703,8 +576,9 @@ export default function HomePage() {
         {/* HEADER */}
         <header className="pg-header">
           <a href="/" className="pg-logo">
-            <div className="pg-logo-mark">🌱</div>
+            <div className="pg-logo-mark">🌍</div>
             <span className="pg-logo-name">PDF Seeds</span>
+            <span className="pg-logo-tag">Expat</span>
           </a>
         </header>
 
@@ -713,10 +587,10 @@ export default function HomePage() {
           {/* ── IDLE ── */}
           {step === "idle" && (
             <>
-              <span className="pg-hero-eyebrow">For the diaspora — wherever home is</span>
-              <h1 className="pg-hero-h1">Navigate home. From anywhere.</h1>
+              <span className="pg-hero-eyebrow">For expats living and working abroad</span>
+              <h1 className="pg-hero-h1">You moved here. Now navigate here.</h1>
               <p className="pg-hero-sub">
-                Land. Inheritance. Business. Passport. Your home country, step by step. No agent. No guesswork.
+                Business. Residency. Banking. Property. Your step-by-step guide for foreign nationals — specific to your country. No agent. No guesswork.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
@@ -726,7 +600,7 @@ export default function HomePage() {
                         className="pg-input"
                         value={situation}
                         onChange={e => setSituation(e.target.value)}
-                        placeholder="What do you need to sort out back home?"
+                        placeholder="What do you need to sort out where you live?"
                         autoFocus
                         required
                       />
@@ -735,7 +609,7 @@ export default function HomePage() {
                   </div>
                 </form>
                 <div className="pg-hint">
-                  Nigerians in the UK · Ghanaians in Canada · Kenyans in the US · Expats in Ghana
+                  Brits in Ghana · Americans in Kenya · Europeans in Nigeria · Expats across Africa
                 </div>
               </div>
             </>
@@ -749,7 +623,7 @@ export default function HomePage() {
                 <div className="pg-locked-text">{situation}</div>
                 <div className="pg-locked-x">change ×</div>
               </div>
-              <p className="pg-country-label">Which country is this guide for?</p>
+              <p className="pg-country-label">Which country are you living in?</p>
               <div className="pg-form">
                 <form onSubmit={handleGenerate}>
                   <div className="pg-form-inner">
@@ -767,7 +641,7 @@ export default function HomePage() {
                   </div>
                 </form>
                 {error && <div className="pg-error">{error}</div>}
-                <div className="pg-hint">Ghana · Nigeria · Kenya · Jamaica · India · Philippines</div>
+                <div className="pg-hint">Ghana · Kenya · Nigeria · South Africa · Portugal · Thailand</div>
               </div>
             </div>
           )}
@@ -775,7 +649,7 @@ export default function HomePage() {
           {/* ── GENERATING ── */}
           {step === "generating" && (
             <div className="pg-gen">
-              <div className="pg-gen-orb">🌱</div>
+              <div className="pg-gen-orb">🌍</div>
               <div className="pg-gen-msg">{MESSAGES[msgIndex]}</div>
               <div className="pg-track">
                 <div className="pg-bar" style={{ width: `${progress}%` }} />
@@ -795,13 +669,12 @@ export default function HomePage() {
           {/* ── RESULT ── */}
           {step === "result" && guide && (
             <div className="pg-result">
-              <div className="pg-result-badge">✓ Guide found</div>
+              <div className="pg-result-badge">✓ Expat guide ready</div>
               <div className="pg-result-title">{guide.title}</div>
               {situation && (
                 <div className="pg-result-echo">&ldquo;{situation}&rdquo;</div>
               )}
 
-              {/* Chapter preview */}
               {guide.chapters && guide.chapters.length > 0 && (
                 <div className="pg-chapters">
                   <div className="pg-chapters-head">
@@ -809,7 +682,6 @@ export default function HomePage() {
                     <span>{guide.chapters.length} chapters</span>
                   </div>
 
-                  {/* Visible chapters */}
                   {guide.chapters.slice(0, 3).map((ch, i) => (
                     <div key={i} className="pg-chapter">
                       <div className="pg-chapter-label">Chapter {ch.chapter}</div>
@@ -818,7 +690,6 @@ export default function HomePage() {
                     </div>
                   ))}
 
-                  {/* Locked chapters */}
                   {guide.chapters.length > 3 && (
                     <div className="pg-chapters-locked">
                       <div className="pg-chapters-locked-fade" />
@@ -837,7 +708,6 @@ export default function HomePage() {
                 </div>
               )}
 
-              {/* Offer */}
               {isFirstBuy && (
                 <div className="pg-result-offer">
                   <span className="pg-result-offer-old">{guide.price}</span>
@@ -855,7 +725,7 @@ export default function HomePage() {
                 <span className="pg-result-trust-sep">·</span>
                 <span>30-day money-back</span>
                 <span className="pg-result-trust-sep">·</span>
-                <span>Any device</span>
+                <span>Foreign national specific</span>
               </div>
 
               <button className="pg-result-again" onClick={reset}>Search for a different guide</button>
@@ -876,7 +746,7 @@ export default function HomePage() {
               <div className="pg-waitlist-icon">📬</div>
               <div className="pg-waitlist-title">We&apos;ll build it for you</div>
               <p className="pg-waitlist-sub">
-                Leave your email. We&apos;ll research the rules for your home country and build a guide for your exact situation — usually within 24 hours.
+                Leave your email. We&apos;ll research the rules for foreign nationals in your country and build a guide for your exact situation — usually within 24 hours.
               </p>
               {situation && (
                 <div className="pg-waitlist-query">&ldquo;{situation}&rdquo;</div>
@@ -920,7 +790,7 @@ export default function HomePage() {
         <footer className="pg-footer">
           © {new Date().getFullYear()}{" "}PDF Seeds
           &nbsp;&nbsp;·&nbsp;&nbsp;
-          <a href="/expat" style={{ color: "#C4BAB0", textDecoration: "none" }}>Expats →</a>
+          <a href="/" style={{ color: "#C4BAB0", textDecoration: "none" }}>Diaspora →</a>
           &nbsp;&nbsp;·&nbsp;&nbsp;
           <a href="/earn" style={{ color: "#C4BAB0", textDecoration: "none" }}>Curators →</a>
           &nbsp;&nbsp;·&nbsp;&nbsp;

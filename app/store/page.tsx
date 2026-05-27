@@ -201,7 +201,7 @@ export default async function StorePage() {
                           <div className="seeds-title">{p.title}</div>
                           <div className="seeds-meta">
                             <span className="seeds-country-tag">
-                              {flag} {p.opportunity?.isDiaspora ? "Diaspora guide" : countryCode}
+                              {flag} {p.opportunity?.isExpat ? "Expat guide" : p.opportunity?.isDiaspora ? "Diaspora guide" : countryCode}
                             </span>
                           </div>
                           <div className="seeds-footer">
