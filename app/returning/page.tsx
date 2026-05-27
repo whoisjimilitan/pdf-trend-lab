@@ -410,14 +410,6 @@ export default function ReturningPage() {
           max-width: 480px; width: 100%;
           display: flex; flex-direction: column; align-items: center;
         }
-        .pg-result-badge {
-          display: inline-flex; align-items: center; gap: 6px;
-          background: #FFFBEB; border: 1px solid #FDE68A;
-          border-radius: 999px; padding: 5px 14px;
-          font-size: 0.72rem; font-weight: 700; color: #92400E;
-          margin-bottom: 20px; letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
         .pg-result-title {
           font-size: clamp(1.2rem, 3.5vw, 1.55rem);
           font-weight: 800; color: #1A1008;
@@ -432,48 +424,51 @@ export default function ReturningPage() {
         /* ── BOOK PAGE ── */
         .pg-book-page {
           width: 100%;
-          background: #FEFCF8;
-          border-radius: 3px;
-          padding: 40px 32px 32px;
+          border-radius: 4px;
           margin-bottom: 24px;
+          overflow: hidden;
           box-shadow:
-            0 2px 4px rgba(0,0,0,0.04),
-            0 8px 28px rgba(0,0,0,0.1),
-            0 28px 64px rgba(0,0,0,0.09);
+            0 2px 4px rgba(0,0,0,0.06),
+            0 8px 28px rgba(0,0,0,0.13),
+            0 28px 64px rgba(0,0,0,0.10);
           animation: page-appear 0.45s ease both;
         }
         @keyframes page-appear {
           from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        .pg-book-page-brand {
-          font-size: 0.52rem; font-weight: 700;
-          color: #C4BAB0; letter-spacing: 0.26em;
+        .pg-book-cover {
+          background: #78350F;
+          padding: 32px 32px 28px;
+        }
+        .pg-book-cover-brand {
+          font-size: 0.48rem; font-weight: 700;
+          color: rgba(255,255,255,0.42); letter-spacing: 0.34em;
           text-transform: uppercase; text-align: center;
-          margin-bottom: 36px;
+          margin-bottom: 22px;
         }
-        .pg-book-page-title {
-          font-size: clamp(1.45rem, 4vw, 2rem);
-          font-weight: 900; color: #1A1008;
-          text-align: center; line-height: 1.18;
-          letter-spacing: -0.025em; margin-bottom: 36px;
+        .pg-book-cover-title {
+          font-size: clamp(0.88rem, 2.6vw, 1.18rem);
+          font-weight: 900; color: #fff;
+          text-align: center; line-height: 1.28;
+          letter-spacing: 0.07em;
+          text-transform: uppercase;
         }
-        .pg-book-page-rule {
-          height: 1px;
-          background: linear-gradient(90deg, transparent, #DDD6C8 20%, #DDD6C8 80%, transparent);
-          margin-bottom: 24px;
+        .pg-book-interior {
+          background: #FEFCF8;
+          padding: 22px 32px 28px;
         }
         .pg-toc-heading {
-          font-size: 0.54rem; font-weight: 700; letter-spacing: 0.22em;
+          font-size: 0.52rem; font-weight: 700; letter-spacing: 0.22em;
           text-transform: uppercase; color: #C4BAB0;
-          text-align: center; margin-bottom: 18px;
+          text-align: center; margin-bottom: 16px;
         }
         .pg-toc { width: 100%; }
         .pg-toc-row { padding: 10px 0; border-bottom: 1px solid #EDE9E2; }
         .pg-toc-row:last-child { border-bottom: none; }
         .pg-toc-item { display: flex; align-items: baseline; gap: 12px; }
         .pg-toc-num {
-          font-size: 0.6rem; font-weight: 700; color: #C4BAB0;
+          font-size: 0.6rem; font-weight: 700; color: #D97706;
           min-width: 20px; flex-shrink: 0; text-align: right;
           padding-top: 1px; letter-spacing: 0.04em;
         }
@@ -494,7 +489,7 @@ export default function ReturningPage() {
           padding: 16px 0 4px; color: #C4BAB0;
         }
         .pg-book-page-footer {
-          text-align: center; margin-top: 22px; padding-top: 16px;
+          text-align: center; margin-top: 18px; padding-top: 14px;
           font-size: 0.56rem; color: #DDD6C8; letter-spacing: 0.14em;
           border-top: 1px solid #EDE9E2;
         }
@@ -651,7 +646,6 @@ export default function ReturningPage() {
           .pg-gen-orb { width: 64px; height: 64px; border-radius: 18px; font-size: 1.7rem; margin-bottom: 24px; }
           .pg-gen-msg { font-size: 0.95rem; margin-bottom: 24px; }
           .pg-result { max-width: 100%; }
-          .pg-result-badge { font-size: 0.68rem; margin-bottom: 16px; }
           .pg-result-title { font-size: 1.2rem; margin-bottom: 22px; }
           .pg-result-cta { padding: 18px; font-size: 1rem; min-height: 58px; border-radius: 14px; }
           .pg-result-trust { gap: 10px; font-size: 0.74rem; margin-bottom: 20px; }
@@ -783,13 +777,14 @@ export default function ReturningPage() {
           {/* ── RESULT ── */}
           {step === "result" && guide && (
             <div className="pg-result">
-              <div className="pg-result-badge">✓ Return guide ready</div>
 
               {/* Open book page */}
               <div className="pg-book-page">
-                <div className="pg-book-page-brand">PDF Seeds</div>
-                <div className="pg-book-page-title">{guide.title}</div>
-                <div className="pg-book-page-rule" />
+                <div className="pg-book-cover">
+                  <div className="pg-book-cover-brand">PDF Seeds</div>
+                  <div className="pg-book-cover-title">{guide.title}</div>
+                </div>
+                <div className="pg-book-interior">
                 <div className="pg-toc-heading">Contents</div>
                 {guide.chapters && guide.chapters.length > 0 && (
                   <div className="pg-toc">
@@ -822,7 +817,8 @@ export default function ReturningPage() {
                   </div>
                 )}
                 <div className="pg-book-page-footer">— i —</div>
-              </div>
+                </div>{/* pg-book-interior */}
+              </div>{/* pg-book-page */}
 
               {isFirstBuy && (
                 <div className="pg-result-offer">
