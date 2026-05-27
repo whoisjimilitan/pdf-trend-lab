@@ -716,7 +716,7 @@ export default function HomePage() {
               <span className="pg-hero-eyebrow">For the diaspora — wherever home is</span>
               <h1 className="pg-hero-h1">Navigate home. From anywhere.</h1>
               <p className="pg-hero-sub">
-                Land. Inheritance. Business. Passport. Describe what you need to sort back home — we build a step-by-step guide for your exact country and situation. No agent. No guesswork.
+                Land. Inheritance. Business. Passport. Your home country, step by step. No agent. No guesswork.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
@@ -735,7 +735,7 @@ export default function HomePage() {
                   </div>
                 </form>
                 <div className="pg-hint">
-                  e.g. Inherit land in Nigeria · Register a business in Ghana · Renew my passport from the UK
+                  Nigerians in the UK · Ghanaians in Canada · Kenyans in the US · Expats in Ghana
                 </div>
               </div>
             </>
