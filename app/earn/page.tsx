@@ -1,19 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Banknote, Link2, MessageSquare, BarChart3, BookOpen, MessageCircle, PlayCircle, Music2, Camera, Mail } from "lucide-react";
+import { Banknote, Link2, MessageSquare, BarChart3, BookOpen, MessageCircle, PlayCircle, Music2 } from "lucide-react";
 
 const AVATARS = [
-  { initials: "AO", name: "Adaeze O.", role: "Nigerian community · London", stat: "£340 first month", how: "One pinned message", platform: "WhatsApp", platformColor: "#25D366" },
-  { initials: "MA", name: "Mohammed A.", role: "Diaspora creator · 28k subscribers", stat: "£580 in 6 weeks", how: "One video description", platform: "YouTube", platformColor: "#FF0000" },
-  { initials: "FK", name: "Femi K.", role: "UK-Ghana content creator", stat: "£211 in 10 days", how: "Three posts", platform: "TikTok", platformColor: "#2D2D2D" },
-  { initials: "PR", name: "Priya R.", role: "Diaspora lifestyle · 14k followers", stat: "£220 first month", how: "One story swipe-up", platform: "Instagram", platformColor: "#E1306C" },
+  { initials: "AO", name: "Adaeze O.", role: "WhatsApp · London", stat: "£340 first month", platformColor: "#25D366" },
+  { initials: "MA", name: "Mohammed A.", role: "YouTube · 28k subscribers", stat: "£580 in 6 weeks", platformColor: "#FF0000" },
+  { initials: "FK", name: "Femi K.", role: "TikTok · UK-Ghana", stat: "£211 in 10 days", platformColor: "#2D2D2D" },
+  { initials: "PR", name: "Priya R.", role: "Instagram · 14k followers", stat: "£220 first month", platformColor: "#E1306C" },
 ];
 
 const TESTIMONIALS = [
-  { quote: "One pinned message. £47.90 in two days. The guide sold itself.", name: "Adaeze O.", role: "Nigerian WhatsApp Group Admin · London", stat: "£340 first month" },
-  { quote: "Mentioned it in one video description. 23 sales that month. Passive.", name: "Mohammed A.", role: "YouTube creator · Diaspora in UK · 28k subscribers", stat: "£580 in 6 weeks" },
-  { quote: "18 sales — mostly word of mouth after the first share. Nothing to chase.", name: "Fatima R.", role: "Ghanaian community coordinator · Manchester", stat: "£143.82 earned" },
+  { quote: "One pinned message. £47.90 in two days. The guide sold itself.", name: "Adaeze O.", role: "WhatsApp Group Admin · London", stat: "£340 first month" },
+  { quote: "Mentioned it in one video description. 23 sales that month. Passive.", name: "Mohammed A.", role: "YouTube · Diaspora UK · 28k subs", stat: "£580 in 6 weeks" },
+  { quote: "18 sales — mostly word of mouth after the first share. Nothing to chase.", name: "Fatima R.", role: "Community coordinator · Manchester", stat: "£143.82 earned" },
 ];
 
 const SEED_SEARCHES = [
@@ -140,10 +140,7 @@ export default function EarnPage() {
         .e-btn:hover { background: #6D28D9; box-shadow: 0 8px 30px rgba(109,40,217,0.35); transform: translateY(-1px); }
         .e-btn:active { transform: scale(0.99); }
         .e-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .e-trust { font-size: 0.67rem; color: #9B8899; letter-spacing: 0.03em; margin-bottom: 22px; }
-
-        /* ─── PLATFORM PILLS ─── */
-        .e-platforms { display: flex; gap: 6px; flex-wrap: wrap; }
+        .e-trust { font-size: 0.67rem; color: #9B8899; letter-spacing: 0.03em; }
 
         /* ─── PHONE WRAP ─── */
         .e-phone-wrap {
@@ -175,34 +172,61 @@ export default function EarnPage() {
         .e-notif-amt { font-size: 0.82rem; font-weight: 900; color: #15803D; }
         .e-notif-sub { font-size: 0.58rem; color: #9B8899; margin-top: 1px; }
 
-        /* ─── PHONE ─── */
+        /* ─── iPHONE MOCKUP ─── */
         .e-phone {
           width: 252px;
-          background: #18192B;
-          border-radius: 40px;
-          padding: 14px 11px 18px;
+          background: linear-gradient(170deg, #54545A 0%, #1C1C1E 45%, #2C2C2E 100%);
+          border-radius: 50px;
+          padding: 14px 10px 22px;
+          position: relative;
           box-shadow:
-            0 48px 96px rgba(0,0,0,0.24),
-            0 0 0 1px rgba(255,255,255,0.07),
-            inset 0 0 0 1px rgba(255,255,255,0.05);
+            0 60px 100px rgba(0,0,0,0.45),
+            0 20px 40px rgba(0,0,0,0.2),
+            0 0 0 1px rgba(255,255,255,0.13),
+            inset 0 1px 0 rgba(255,255,255,0.18),
+            inset 0 -1px 0 rgba(0,0,0,0.5);
         }
-        .e-phone-island {
-          width: 88px; height: 28px;
-          background: #18192B;
-          border-radius: 20px;
-          margin: 0 auto 10px;
-          border: 1.5px solid rgba(255,255,255,0.09);
+        /* Volume / mute buttons — left side */
+        .e-phone::before {
+          content: '';
+          position: absolute;
+          left: -4px; top: 80px;
+          width: 4px; height: 20px;
+          background: linear-gradient(180deg, #4A4A4C, #38383A);
+          border-radius: 2px 0 0 2px;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.08),
+            0 38px 0 0 #38383A,
+            0 76px 0 0 #38383A;
+        }
+        /* Power button — right side */
+        .e-phone::after {
+          content: '';
+          position: absolute;
+          right: -4px; top: 110px;
+          width: 4px; height: 68px;
+          background: linear-gradient(180deg, #4A4A4C, #38383A);
+          border-radius: 0 2px 2px 0;
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
         }
         .e-phone-screen {
           background: #fff;
-          border-radius: 30px;
+          border-radius: 38px;
           overflow: hidden;
+        }
+
+        /* Dynamic Island */
+        .e-phone-di {
+          width: 82px; height: 26px;
+          background: #000;
+          border-radius: 18px;
+          margin: 10px auto 8px;
         }
 
         /* Screen: header */
         .e-ps-head {
           background: #7C3AED;
-          padding: 16px 18px 14px;
+          padding: 10px 18px 14px;
         }
         .e-ps-app {
           font-size: 0.58rem; font-weight: 700;
@@ -543,7 +567,7 @@ export default function EarnPage() {
         {/* ── HERO ── */}
         <div className="e-hero-outer">
 
-          {/* Left — earnings dashboard */}
+          {/* Left — iPhone earnings dashboard */}
           <div className="e-hero-left">
             <div className="e-phone-wrap">
 
@@ -558,10 +582,10 @@ export default function EarnPage() {
                 </div>
               </div>
 
-              {/* Phone — earnings dashboard */}
+              {/* iPhone mockup */}
               <div className="e-phone">
-                <div className="e-phone-island" />
                 <div className="e-phone-screen">
+                  <div className="e-phone-di" />
                   <div className="e-ps-head">
                     <div className="e-ps-app">PDF Seeds</div>
                     <div className="e-ps-title">Earnings</div>
@@ -599,26 +623,12 @@ export default function EarnPage() {
               Your earnings.
             </h1>
             <p className="e-hero-sub">
-              Share the guide that answers their question — earn £7.99 every time someone buys it. <strong>Three sales and your £19.99 membership is paid for. Everything after that is yours.</strong>
+              Your community already asks you. <strong>Earn £7.99 every time they find the answer.</strong>
             </p>
             <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
               {loading ? "Opening checkout…" : "Become a Curator →"}
             </button>
-            <div className="e-trust">£19.99 one-time · 3 sales covers it · 30-day money-back guarantee</div>
-            <div className="e-platforms">
-              {([
-                { Icon: MessageCircle, name: "WhatsApp",   bg: "#F0FFF4", border: "#D1FAE5", color: "#22C55E" },
-                { Icon: PlayCircle,    name: "YouTube",    bg: "#FFF1F1", border: "#FECACA", color: "#EF4444" },
-                { Icon: Music2,        name: "TikTok",     bg: "#F5F5F5", border: "#E5E5E5", color: "#374151" },
-                { Icon: Camera,        name: "Instagram",  bg: "#FFF0F7", border: "#FBCFE8", color: "#EC4899" },
-                { Icon: Mail,          name: "Newsletter", bg: "#F5F3FF", border: "#DDD6FE", color: "#7C3AED" },
-              ] as { Icon: React.ElementType; name: string; bg: string; border: string; color: string }[]).map(({ Icon, name, bg, border, color }) => (
-                <span key={name} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: bg, border: `1px solid ${border}`, borderRadius: 999, padding: "4px 10px", fontSize: "0.63rem", fontWeight: 700, color }}>
-                  <Icon size={11} strokeWidth={2.5} />
-                  {name}
-                </span>
-              ))}
-            </div>
+            <div className="e-trust">30-day money-back · 3 sales covers your £19.99</div>
           </div>
         </div>
 
@@ -656,7 +666,7 @@ export default function EarnPage() {
                   <div className="e-av">{a.initials}</div>
                   <div>
                     <div className="e-av-name">{a.name}</div>
-                    <div className="e-av-role" style={{ color: a.platformColor }}>{a.platform} · {a.role}</div>
+                    <div className="e-av-role" style={{ color: a.platformColor }}>{a.role}</div>
                     <div className="e-av-stat">{a.stat}</div>
                   </div>
                 </div>
@@ -708,9 +718,9 @@ export default function EarnPage() {
               </div>
               <div className="e-math-rows">
                 {[
-                  { Icon: MessageCircle, text: "One WhatsApp message to your group · 10 buyers", earn: "£79.90"  },
-                  { Icon: PlayCircle,    text: "YouTube description link · 30 buyers/month",     earn: "£239.70" },
-                  { Icon: Music2,        text: "TikTok caption + link in bio · 20 buyers",       earn: "£159.80" },
+                  { Icon: MessageCircle, text: "WhatsApp group · 10 buyers", earn: "£79.90"  },
+                  { Icon: PlayCircle,    text: "YouTube description · 30 buyers", earn: "£239.70" },
+                  { Icon: Music2,        text: "TikTok caption · 20 buyers",  earn: "£159.80" },
                 ].map((r, i) => (
                   <div key={i} className="e-math-row">
                     <span className="e-math-icon"><r.Icon size={16} strokeWidth={1.75} color="#6B5E52" /></span>
@@ -720,7 +730,7 @@ export default function EarnPage() {
                 ))}
               </div>
               <div className="e-math-note">
-                Three buyers from a WhatsApp group that trusts you is a quiet Tuesday. Most curators are in profit within the first week.
+                Three sales from one WhatsApp group. Most curators are in profit within their first week.
               </div>
             </div>
           </div>
@@ -735,11 +745,11 @@ export default function EarnPage() {
             <h2 className="e-h2">Everything for £19.99 — once.</h2>
             <div className="e-get">
               {[
-                { Icon: Banknote,      title: "£7.99 per sale — for life",                    desc: "80% of every guide, paid automatically every month. Nothing to chase, nothing to invoice." },
-                { Icon: Link2,         title: "One link. Every guide. Every niche.",           desc: "Your unique curator link works across all 1000+ guides. Share any of them — they all earn." },
-                { Icon: MessageSquare, title: "Copy, paste, earn — everything pre-written.",   desc: "WhatsApp messages, YouTube descriptions, TikTok captions, Instagram stories. Pick one, paste it, post. Live in two minutes." },
-                { Icon: BarChart3,     title: "Real-time dashboard — every buyer, every penny", desc: "See exactly what's earning and what isn't. Live, not delayed." },
-                { Icon: BookOpen,      title: "Every new guide added — at no extra cost",      desc: "The library keeps growing. Your earning potential grows with it." },
+                { Icon: Banknote,      title: "£7.99 per sale — for life",          desc: "80% of every guide. Paid monthly. Nothing to chase." },
+                { Icon: Link2,         title: "One link. Every guide.",              desc: "1,000+ guides across every niche and country. Share any — they all earn." },
+                { Icon: MessageSquare, title: "Copy, paste, earn.",                  desc: "WhatsApp, YouTube, TikTok, Instagram — all pre-written. Live in two minutes." },
+                { Icon: BarChart3,     title: "Live earnings dashboard.",            desc: "Every sale, every penny. Live — not delayed." },
+                { Icon: BookOpen,      title: "Every new guide — at no extra cost.", desc: "The library grows. Your potential grows with it." },
               ].map((b, i) => (
                 <div key={i} className="e-get-item">
                   <div className="e-get-icon"><b.Icon size={16} strokeWidth={1.75} color="#7C3AED" /></div>
@@ -764,7 +774,7 @@ export default function EarnPage() {
             <section className="e-section">
               <div className="e-wrap">
                 <div className="e-tag">Live on pdfseeds.com</div>
-                <h2 className="e-h2">What your community is asking about home right now.</h2>
+                <h2 className="e-h2">What your community is searching right now.</h2>
                 <div className="e-demand">
                   <div className="e-demand-top">
                     <div className="e-demand-title">Real searches — real demand</div>
@@ -776,9 +786,6 @@ export default function EarnPage() {
                       <div className="e-demand-sig">guide exists ↗</div>
                     </div>
                   ))}
-                </div>
-                <div style={{ fontSize: "0.7rem", color: "#B0A89A", marginTop: 12, textAlign: "right", fontStyle: "italic" }}>
-                  Every search is someone in a diaspora community like yours — your link earns when they find the answer.
                 </div>
               </div>
             </section>
@@ -793,9 +800,9 @@ export default function EarnPage() {
             <h2 className="e-h2">Three things people wonder.</h2>
             <div className="e-faqs">
               {[
-                { q: "Do I need a big following?", a: "No. Most top earners use WhatsApp. A group of 50 people who actually trust you will convert better than 5,000 followers who scroll past. Community beats audience every time." },
-                { q: "When does the money arrive?", a: "Every month, automatically. You don't invoice anyone. You don't chase anyone. It lands in your account." },
-                { q: "What if nobody buys?", a: "You have 30 days to try it, completely risk-free. If you want your money back, you get it — no questions, no conditions." },
+                { q: "Do I need a big following?", a: "No. A WhatsApp group of 50 who trust you will outperform 5,000 followers who scroll past. Community beats audience." },
+                { q: "When does the money arrive?", a: "Every month, automatically. Nothing to invoice. Nothing to chase." },
+                { q: "What if nobody buys?", a: "30 days, completely risk-free. Full refund, no questions, no conditions." },
               ].map((f, i) => (
                 <div key={i} className="e-faq">
                   <div className="e-faq-q">{f.q}</div>
@@ -818,7 +825,7 @@ export default function EarnPage() {
                 {[
                   "£7.99 per sale — for life (80% of every guide)",
                   "Your curator link for every guide in the library",
-                  "Ready-made captions, posts and templates for WhatsApp, YouTube, TikTok and Instagram",
+                  "Ready-made captions for WhatsApp, YouTube, TikTok and Instagram",
                   "Real-time earnings dashboard",
                   "Every new guide added, at no extra cost",
                   "30-day money-back guarantee — no questions asked",
