@@ -497,14 +497,26 @@ export default function ReturningPage() {
         }
         .pg-toc-row--locked { opacity: 0.3; user-select: none; }
         .pg-toc-row--locked .pg-toc-title { filter: blur(3.5px); }
-        .pg-toc-locked-block {
-          border-top: 1px solid #F0EDE8; margin-top: 2px; padding-top: 4px;
-        }
+        .pg-toc-locked-block { margin-top: 2px; }
         .pg-toc-lock-row {
           display: flex; align-items: center; justify-content: center; gap: 6px;
-          padding: 12px 0 4px;
+          padding: 10px 0 4px;
           font-size: 0.72rem; font-weight: 600; color: #B0A89A;
         }
+        .pg-toc-pg {
+          font-size: 0.58rem; font-weight: 500; color: #C4BAB0;
+          flex-shrink: 0; letter-spacing: 0.02em;
+        }
+        .pg-toc-continues {
+          text-align: center; font-size: 0.62rem; color: #DDD6C8;
+          padding: 8px 0 10px; letter-spacing: 0.22em;
+        }
+        .pg-book-page-footer {
+          text-align: center; margin-top: 18px; padding-top: 14px;
+          font-size: 0.56rem; color: #DDD6C8; letter-spacing: 0.14em;
+          border-top: 1px solid #F0EDE8;
+        }
+        .pg-book-title-wave { display: block; margin: 0 auto 14px; opacity: 0.65; }
 
         /* Chapter preview card */
         .pg-chapters {
@@ -796,6 +808,9 @@ export default function ReturningPage() {
               <div className="pg-book-page">
                 <div className="pg-book-page-brand">🌱 PDF Seeds · Return Guide</div>
                 <div className="pg-book-page-title">{guide.title}</div>
+                <svg className="pg-book-title-wave" width="120" height="6" viewBox="0 0 120 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2 3 C17 1,32 5,47 3 C62 1,77 5,92 3 C107 1,115 4,118 3" stroke="#DDD6C8" strokeWidth="1.2" strokeLinecap="round"/>
+                </svg>
                 {situation && (
                   <div className="pg-book-page-sub">&ldquo;{situation}&rdquo;</div>
                 )}
@@ -808,28 +823,35 @@ export default function ReturningPage() {
                         <div className="pg-toc-item">
                           <span className="pg-toc-num">{ch.chapter}</span>
                           <span className="pg-toc-title">{ch.title}</span>
+                          <span className="pg-toc-pg">{(parseInt(ch.chapter) - 1) * 14 + 1}</span>
                         </div>
                         <div className="pg-toc-desc">{ch.description}</div>
                       </div>
                     ))}
                     {guide.chapters.length > 3 && (
                       <div className="pg-toc-locked-block">
+                        <div className="pg-toc-continues">· · · · ·</div>
                         {guide.chapters.slice(3, 6).map((ch, i) => (
                           <div key={i} className="pg-toc-row pg-toc-row--locked">
                             <div className="pg-toc-item">
                               <span className="pg-toc-num">{ch.chapter}</span>
                               <span className="pg-toc-title">{ch.title}</span>
+                              <span className="pg-toc-pg">{(parseInt(ch.chapter) - 1) * 14 + 1}</span>
                             </div>
                           </div>
                         ))}
                         <div className="pg-toc-lock-row">
                           <Lock size={11} strokeWidth={2} />
-                          {guide.chapters.length - 3} more chapters — unlock below
+                          {guide.chapters.length - 3 === 1
+                            ? `Chapter ${guide.chapters[3].chapter} is waiting for you.`
+                            : `Chapters ${guide.chapters[3].chapter}–${guide.chapters[guide.chapters.length - 1].chapter} are waiting for you.`
+                          }
                         </div>
                       </div>
                     )}
                   </div>
                 )}
+                <div className="pg-book-page-footer">— i —</div>
               </div>
 
               {isFirstBuy && (
