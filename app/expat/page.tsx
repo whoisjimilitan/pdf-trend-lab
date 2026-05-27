@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Lock } from "lucide-react";
+import { getCountryFlag, getCountryFacts } from "@/lib/country-data";
 
 type Step = "idle" | "country" | "generating" | "result" | "waitlist";
 
@@ -33,6 +34,7 @@ export default function ExpatPage() {
   const [waitlistStatus, setWaitlistStatus] = useState<WaitlistStatus>("idle");
   const [partnerRef, setPartnerRef] = useState("");
   const [isFirstBuy, setIsFirstBuy] = useState(true);
+  const [factIndex, setFactIndex] = useState(0);
   const countryRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -51,6 +53,7 @@ export default function ExpatPage() {
     if (step !== "generating") return;
     setMsgIndex(0);
     setProgress(0);
+    setFactIndex(0);
     const msgTimer = setInterval(() => setMsgIndex(i => Math.min(i + 1, MESSAGES.length - 1)), 5000);
     const progTimer = setInterval(() => {
       setProgress(p => {
@@ -62,7 +65,8 @@ export default function ExpatPage() {
         return p + r * 0.5;
       });
     }, 250);
-    return () => { clearInterval(msgTimer); clearInterval(progTimer); };
+    const factTimer = setInterval(() => setFactIndex(i => i + 1), 8000);
+    return () => { clearInterval(msgTimer); clearInterval(progTimer); clearInterval(factTimer); };
   }, [step]);
 
   function handleSituation(e: { preventDefault: () => void }) {
@@ -87,7 +91,7 @@ export default function ExpatPage() {
       body: JSON.stringify({ query: situation.trim(), country: country.trim(), source: "expat-with-country" }),
     }).catch(() => {});
     abortRef.current = new AbortController();
-    const timeoutId = setTimeout(() => abortRef.current?.abort(), 90_000);
+    const timeoutId = setTimeout(() => abortRef.current?.abort(), 180_000);
     try {
       const res = await fetch("/api/generate", {
         method: "POST",
@@ -403,6 +407,35 @@ export default function ExpatPage() {
         .pg-step.done .pg-step-dot { background: #10B981; }
         .pg-step.active .pg-step-dot { background: #0EA5E9; animation: step-pulse 1.2s infinite; }
         @keyframes step-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* ── FACT CARD ── */
+        .pg-gen-time {
+          font-size: 0.75rem; color: #B0A89A;
+          text-align: center; margin: -16px 0 28px;
+          line-height: 1.5;
+        }
+        .pg-fact-card {
+          width: 100%;
+          background: #FEFCF8;
+          border: 1px solid #EDE9E2;
+          border-radius: 12px;
+          padding: 18px 22px 16px;
+          margin: 24px 0 0;
+          animation: fact-in 0.6s cubic-bezier(.22,.68,0,1.2) both;
+        }
+        @keyframes fact-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .pg-fact-eyebrow {
+          font-size: 0.48rem; font-weight: 700;
+          letter-spacing: 0.26em; text-transform: uppercase;
+          color: #0EA5E9; margin-bottom: 10px;
+        }
+        .pg-fact-text {
+          font-size: 0.86rem; color: #374151;
+          line-height: 1.7; font-style: italic;
+        }
 
         /* ── RESULT ── */
         .pg-result {
@@ -755,10 +788,16 @@ export default function ExpatPage() {
           )}
 
           {/* ── GENERATING ── */}
-          {step === "generating" && (
+          {step === "generating" && (() => {
+            const flag = getCountryFlag(country);
+            const facts = getCountryFacts(country);
+            const fact = facts[factIndex % facts.length];
+            const countryLabel = country.trim() || "your country";
+            return (
             <div className="pg-gen">
-              <div className="pg-gen-orb">🌱</div>
+              <div className="pg-gen-orb">{flag || "🌱"}</div>
               <div className="pg-gen-msg">{MESSAGES[msgIndex]}</div>
+              <div className="pg-gen-time">Researching {countryLabel} — this takes about 90 seconds</div>
               <div className="pg-track">
                 <div className="pg-bar" style={{ width: `${progress}%` }} />
               </div>
@@ -771,8 +810,13 @@ export default function ExpatPage() {
                   </div>
                 ))}
               </div>
+              <div key={factIndex} className="pg-fact-card">
+                <div className="pg-fact-eyebrow">About {countryLabel}</div>
+                <div className="pg-fact-text">{fact}</div>
+              </div>
             </div>
-          )}
+            );
+          })()}
 
           {/* ── RESULT ── */}
           {step === "result" && guide && (

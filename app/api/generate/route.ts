@@ -5,6 +5,18 @@ import { type Brand, buildBrandSystemContext, buildSocialCaptionContext, BRAND_C
 
 export const maxDuration = 300;
 
+async function withRetry<T>(fn: () => Promise<T>, attempts = 3): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try { return await fn(); }
+    catch (err) {
+      lastErr = err;
+      if (i < attempts - 1) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+    }
+  }
+  throw lastErr;
+}
+
 const COUNTRY_MAP: Record<string, { code: string; currency: string; isDiaspora: boolean }> = {
   ghana: { code: "GH", currency: "₵", isDiaspora: false },
   gh: { code: "GH", currency: "₵", isDiaspora: false },
@@ -79,13 +91,13 @@ export async function POST(req: Request) {
   });
 
   // ── Step 0: Quick keyword extraction for deduplication check ──────────────
-  const kwRes = await openai.chat.completions.create({
+  const kwRes = await withRetry(() => openai.chat.completions.create({
     model: "gemini-2.5-flash",
     messages: [{
       role: "user",
       content: `Extract the core search keyword (4–7 words) from this situation: "${situation}". Return ONLY valid JSON: {"keyword": "..."}`,
     }],
-  });
+  }));
   const quickKeyword: string = (() => {
     try {
       const raw = kwRes.choices[0].message.content ?? "{}";
@@ -121,7 +133,7 @@ export async function POST(req: Request) {
   }
 
   // Step 1: Parse the user's situation into structured opportunity data
-  const parseRes = await openai.chat.completions.create({
+  const parseRes = await withRetry(() => openai.chat.completions.create({
     model: "gemini-2.5-flash",
     messages: [
       {
@@ -155,7 +167,7 @@ Return ONLY valid JSON — no markdown, no explanation:
 }`,
       },
     ],
-  });
+  }));
 
   let oppData: OppData;
   try {
@@ -235,7 +247,7 @@ EXPERT NOTES. Throughout the guide, mark 3–5 insights that only someone with r
 Before outputting: would a smart stranger voluntarily read the next paragraph? If no — rewrite it.`;
 
   const [pdfRes, salesRes, socialRes] = await Promise.all([
-    openai.chat.completions.create({
+    withRetry(() => openai.chat.completions.create({
       model: "gemini-2.5-flash",
       messages: [
         { role: "system", content: brandContext },
@@ -252,9 +264,9 @@ ${oppData.questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
 ${pdfWritingRules}`,
         },
       ],
-    }),
+    })),
 
-    openai.chat.completions.create({
+    withRetry(() => openai.chat.completions.create({
       model: "gemini-2.5-flash",
       messages: [
         { role: "system", content: brandContext },
@@ -332,9 +344,9 @@ Chapters 4–7 descriptions: DESIRE copy. The reader thinks "I hadn't thought ab
 }`,
         },
       ],
-    }),
+    })),
 
-    openai.chat.completions.create({
+    withRetry(() => openai.chat.completions.create({
       model: "gemini-2.5-flash",
       messages: [
         { role: "system", content: buildSocialCaptionContext(brand) },
@@ -353,7 +365,7 @@ Return ONLY valid JSON:
 }`,
         },
       ],
-    }),
+    })),
   ]);
 
   const rawPdfContent = pdfRes.choices[0].message.content ?? "";
