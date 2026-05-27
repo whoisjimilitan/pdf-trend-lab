@@ -24,13 +24,6 @@ const SEED_SEARCHES = [
   "How do I register a CAC business in Nigeria from the US?",
 ];
 
-const PLATFORMS = [
-  { name: "WhatsApp",   color: "#25D366", bg: "#25D36614", border: "#25D36628" },
-  { name: "YouTube",    color: "#FF0000", bg: "#FF000014", border: "#FF000028" },
-  { name: "TikTok",     color: "#374151", bg: "#37415114", border: "#37415128" },
-  { name: "Instagram",  color: "#E1306C", bg: "#E1306C14", border: "#E1306C28" },
-  { name: "Newsletter", color: "#7C3AED", bg: "#7C3AED14", border: "#7C3AED28" },
-];
 
 export default function EarnPage() {
   const [loading, setLoading] = useState(false);
@@ -134,48 +127,24 @@ export default function EarnPage() {
         }
         .e-hero-sub strong { color: #0F0A1A; font-weight: 700; }
 
-        /* ─── 3-STEP MECHANISM ─── */
-        .e-steps {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 0;
-          margin-bottom: 28px;
-          position: relative;
+        /* ─── FLOW INDICATOR ─── */
+        .e-flow {
+          display: flex; align-items: center; gap: 10px;
+          margin-bottom: 32px;
         }
-        .e-steps::before {
-          content: '';
-          position: absolute;
-          top: 13px;
-          left: 20px;
-          right: 20px;
-          height: 1px;
-          background: rgba(124,58,237,0.15);
+        .e-flow-step {
+          display: flex; align-items: center; gap: 5px;
         }
-        .e-step { position: relative; z-index: 1; padding-right: 10px; }
-        .e-step-num {
-          display: inline-flex; align-items: center; justify-content: center;
-          width: 26px; height: 26px;
-          border-radius: 7px;
-          background: rgba(124,58,237,0.09);
-          border: 1px solid rgba(124,58,237,0.2);
-          font-size: 0.58rem; font-weight: 900; color: #7C3AED;
-          letter-spacing: 0.04em;
-          margin-bottom: 9px;
+        .e-flow-n {
+          font-size: 0.55rem; font-weight: 900; color: #A78BFA;
+          letter-spacing: 0.06em;
         }
-        .e-step-title {
-          font-size: 0.86rem; font-weight: 800; color: #0F0A1A;
-          margin-bottom: 4px; letter-spacing: -0.01em;
+        .e-flow-label {
+          font-size: 0.78rem; font-weight: 700; color: #0F0A1A;
         }
-        .e-step-desc {
-          font-size: 0.67rem; color: #6B5E52; line-height: 1.6;
-        }
-        .e-step-platforms {
-          display: flex; flex-wrap: wrap; gap: 3px; margin-top: 6px;
-        }
-        .e-plat {
-          font-size: 0.55rem; font-weight: 700;
-          padding: 2px 7px; border-radius: 999px;
-          border: 1px solid; white-space: nowrap;
+        .e-flow-arrow {
+          font-size: 0.7rem; color: rgba(124,58,237,0.28);
+          flex-shrink: 0;
         }
 
         /* ─── CTA BUTTON ─── */
@@ -224,60 +193,46 @@ export default function EarnPage() {
         .e-notif-amt { font-size: 0.8rem; font-weight: 900; color: #15803D; }
         .e-notif-sub { font-size: 0.57rem; color: #9B8899; margin-top: 1px; }
 
-        /* ─── iPHONE 16 PRO MOCKUP ─── */
+        /* ─── iPHONE MOCKUP (matte black, as reference) ─── */
         .e-phone {
           width: 244px;
-          background: linear-gradient(
-            165deg,
-            #6E6E72 0%,
-            #4A4A4C 12%,
-            #2A2A2C 35%,
-            #1C1C1E 55%,
-            #262628 75%,
-            #323234 90%,
-            #3E3E40 100%
-          );
+          background: #1A1A1C;
           border-radius: 54px;
-          padding: 12px 9px 20px;
+          padding: 12px 9px 22px;
           position: relative;
           box-shadow:
-            0 90px 140px rgba(0,0,0,0.6),
-            0 45px 70px rgba(0,0,0,0.32),
-            0 18px 32px rgba(0,0,0,0.18),
-            0 6px 10px rgba(0,0,0,0.12),
-            0 0 0 1px rgba(255,255,255,0.16),
-            inset 0 2px 0 rgba(255,255,255,0.24),
-            inset 0 -3px 0 rgba(0,0,0,0.65),
-            inset 2px 0 0 rgba(255,255,255,0.07),
-            inset -2px 0 0 rgba(255,255,255,0.03);
+            0 0 0 1px rgba(255,255,255,0.14),
+            0 0 0 2px rgba(0,0,0,0.9),
+            0 60px 100px rgba(0,0,0,0.55),
+            0 28px 48px rgba(0,0,0,0.28),
+            0 10px 20px rgba(0,0,0,0.14),
+            inset 0 1.5px 0 rgba(255,255,255,0.2),
+            inset 0 -2px 0 rgba(0,0,0,0.55);
         }
 
-        /* Left side: action button + vol up + vol down */
+        /* Left: action + vol up + vol down */
         .e-phone::before {
           content: '';
           position: absolute;
-          left: -5px; top: 84px;
-          width: 5px; height: 22px;
-          background: linear-gradient(90deg, #505052, #3C3C3E);
+          left: -4px; top: 86px;
+          width: 4px; height: 22px;
+          background: #2A2A2C;
           border-radius: 3px 0 0 3px;
           box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.16),
-            inset 0 -1px 0 rgba(0,0,0,0.45),
-            0 40px 0 0 #3C3C3E,
-            0 77px 0 0 #3C3C3E;
+            inset 0 1px 0 rgba(255,255,255,0.1),
+            0 40px 0 0 #2A2A2C,
+            0 78px 0 0 #2A2A2C;
         }
 
-        /* Right side: power button */
+        /* Right: power button */
         .e-phone::after {
           content: '';
           position: absolute;
-          right: -5px; top: 106px;
-          width: 5px; height: 70px;
-          background: linear-gradient(90deg, #3C3C3E, #505052);
+          right: -4px; top: 108px;
+          width: 4px; height: 68px;
+          background: #2A2A2C;
           border-radius: 0 3px 3px 0;
-          box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.16),
-            inset 0 -1px 0 rgba(0,0,0,0.45);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         .e-phone-screen {
@@ -604,11 +559,6 @@ export default function EarnPage() {
           .e-av-row { display: none; }
         }
 
-        @media (max-width: 700px) {
-          .e-steps { grid-template-columns: 1fr; gap: 16px; }
-          .e-steps::before { display: none; }
-        }
-
         @media (max-width: 600px) {
           .e-hero-left { display: none; }
           .e-hero-right { padding: 56px 22px 44px; }
@@ -731,36 +681,22 @@ export default function EarnPage() {
               We&apos;ll send you a guide we think your community will love. Read it. <strong>If you&apos;d put your name on it — share your link and earn 80% of every sale.</strong>
             </p>
 
-            {/* 3-step mechanism */}
-            <div className="e-steps">
-              <div className="e-step">
-                <div className="e-step-num">01</div>
-                <div className="e-step-title">Read</div>
-                <div className="e-step-desc">
-                  We match guides to your niche and community. You read what we send.
-                </div>
-              </div>
-              <div className="e-step">
-                <div className="e-step-num">02</div>
-                <div className="e-step-title">Share</div>
-                <div className="e-step-desc">
-                  If you&apos;d put your name on it — send your link.
-                </div>
-                <div className="e-step-platforms">
-                  {PLATFORMS.map((p) => (
-                    <span key={p.name} className="e-plat" style={{ color: p.color, background: p.bg, borderColor: p.border }}>
-                      {p.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="e-step">
-                <div className="e-step-num">03</div>
-                <div className="e-step-title">Earn</div>
-                <div className="e-step-desc">
-                  80% of every sale. £7.99 a time. For life.
-                </div>
-              </div>
+            {/* Flow indicator — minimal, no descriptions */}
+            <div className="e-flow">
+              {[
+                { n: "01", label: "Match" },
+                { n: "02", label: "Read" },
+                { n: "03", label: "Share" },
+                { n: "04", label: "Earn 80%" },
+              ].map((s, i) => (
+                <React.Fragment key={s.n}>
+                  <div className="e-flow-step">
+                    <span className="e-flow-n">{s.n}</span>
+                    <span className="e-flow-label">{s.label}</span>
+                  </div>
+                  {i < 3 && <span className="e-flow-arrow">→</span>}
+                </React.Fragment>
+              ))}
             </div>
 
             <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
