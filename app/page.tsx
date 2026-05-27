@@ -213,9 +213,13 @@ export default function HomePage() {
 
         /* ── IDLE ── */
         .pg-hero-eyebrow {
-          display: inline-block;
-          font-size: 0.72rem; font-weight: 700;
-          color: #9B8AF0; letter-spacing: 0.12em;
+          display: inline-flex; align-items: center;
+          background: #EDE9FE;
+          border: 1px solid #C4B5FD;
+          border-radius: 999px;
+          padding: 5px 16px;
+          font-size: 0.7rem; font-weight: 700;
+          color: #6D28D9; letter-spacing: 0.1em;
           text-transform: uppercase; margin-bottom: 28px;
         }
         .pg-hero-h1 {
@@ -569,8 +573,8 @@ export default function HomePage() {
         /* ── FOOTER ── */
         .pg-footer {
           text-align: center; padding: 16px 24px;
-          font-size: 0.72rem; color: #D4CEC8;
-          border-top: 1px solid #EEE9E2;
+          font-size: 0.72rem; color: #1A1008;
+          border-top: 1px solid #E2DDD8;
         }
 
         /* ── DESKTOP (> 1024px) ── */
@@ -735,7 +739,7 @@ export default function HomePage() {
                   </div>
                 </form>
                 <div className="pg-hint">
-                  Nigerians in the UK · Ghanaians in Canada · Kenyans in the US · Expats in Ghana
+                  Diaspora · Expats · Global citizens
                 </div>
               </div>
             </>

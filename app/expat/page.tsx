@@ -210,9 +210,13 @@ export default function ExpatPage() {
 
         /* ── IDLE ── */
         .pg-hero-eyebrow {
-          display: inline-block;
-          font-size: 0.72rem; font-weight: 700;
-          color: #0EA5E9; letter-spacing: 0.12em;
+          display: inline-flex; align-items: center;
+          background: #E0F2FE;
+          border: 1px solid #7DD3FC;
+          border-radius: 999px;
+          padding: 5px 16px;
+          font-size: 0.7rem; font-weight: 700;
+          color: #0284C7; letter-spacing: 0.1em;
           text-transform: uppercase; margin-bottom: 28px;
         }
         .pg-hero-h1 {
@@ -509,8 +513,8 @@ export default function ExpatPage() {
         /* ── FOOTER ── */
         .pg-footer {
           text-align: center; padding: 16px 24px;
-          font-size: 0.72rem; color: #D4CEC8;
-          border-top: 1px solid #EEE9E2;
+          font-size: 0.72rem; color: #1A1008;
+          border-top: 1px solid #E2DDD8;
         }
 
         /* ── DESKTOP ── */
@@ -590,7 +594,7 @@ export default function ExpatPage() {
               <span className="pg-hero-eyebrow">For expats living and working abroad</span>
               <h1 className="pg-hero-h1">You moved here. Now navigate here.</h1>
               <p className="pg-hero-sub">
-                Business. Residency. Banking. Property. Your step-by-step guide for foreign nationals — specific to your country. No agent. No guesswork.
+                Business. Residency. Banking. Property. The guide written for foreigners, not locals. No agent. No guesswork.
               </p>
               <div className="pg-form">
                 <form onSubmit={handleSituation}>
