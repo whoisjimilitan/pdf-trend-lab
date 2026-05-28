@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Banknote, Link2, MessageSquare, BarChart3, BookOpen, MessageCircle, PlayCircle, Music2 } from "lucide-react";
 
 const AVATARS = [
@@ -126,26 +126,6 @@ export default function EarnPage() {
           line-height: 1.65; margin-bottom: 28px; max-width: 420px;
         }
         .e-hero-sub strong { color: #0F0A1A; font-weight: 700; }
-
-        /* ─── FLOW INDICATOR ─── */
-        .e-flow {
-          display: flex; align-items: center; gap: 10px;
-          margin-bottom: 32px;
-        }
-        .e-flow-step {
-          display: flex; align-items: center; gap: 5px;
-        }
-        .e-flow-n {
-          font-size: 0.55rem; font-weight: 900; color: #A78BFA;
-          letter-spacing: 0.06em;
-        }
-        .e-flow-label {
-          font-size: 0.78rem; font-weight: 700; color: #0F0A1A;
-        }
-        .e-flow-arrow {
-          font-size: 0.7rem; color: rgba(124,58,237,0.28);
-          flex-shrink: 0;
-        }
 
         /* ─── CTA BUTTON ─── */
         .e-btn {
@@ -789,24 +769,6 @@ export default function EarnPage() {
               You&apos;re already the one they ask. We make sure you have the answer. <strong>A guide worth putting your name on.</strong> Share your link. It earns forever.
             </p>
 
-            {/* Flow indicator — minimal, no descriptions */}
-            <div className="e-flow">
-              {[
-                { n: "01", label: "Match" },
-                { n: "02", label: "Read" },
-                { n: "03", label: "Recommend" },
-                { n: "04", label: "Earn 80%" },
-              ].map((s, i) => (
-                <React.Fragment key={s.n}>
-                  <div className="e-flow-step">
-                    <span className="e-flow-n">{s.n}</span>
-                    <span className="e-flow-label">{s.label}</span>
-                  </div>
-                  {i < 3 && <span className="e-flow-arrow">→</span>}
-                </React.Fragment>
-              ))}
-            </div>
-
             <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
               {loading ? "Opening checkout…" : "Become a Curator →"}
             </button>
@@ -931,7 +893,7 @@ export default function EarnPage() {
                 { Icon: Link2,         title: "One link. Every guide.",              desc: "1,000+ guides across every niche and country. Share any — they all earn." },
                 { Icon: MessageSquare, title: "Copy, paste, earn.",                  desc: "WhatsApp, YouTube, TikTok, Instagram — all pre-written. Live in two minutes." },
                 { Icon: BarChart3,     title: "Live earnings dashboard.",            desc: "Every sale, every penny. Live — not delayed." },
-                { Icon: BookOpen,      title: "We keep finding new guides for your community.", desc: "As the library grows, we match new relevant guides to your niche — so your earning potential keeps growing without you lifting a finger." },
+                { Icon: BookOpen,      title: "Always growing.",                             desc: "New guides matched to your community automatically. Your earning potential grows as the library does." },
               ].map((b, i) => (
                 <div key={i} className="e-get-item">
                   <div className="e-get-icon"><b.Icon size={16} strokeWidth={1.75} color="#7C3AED" /></div>
@@ -956,7 +918,7 @@ export default function EarnPage() {
             <section className="e-section">
               <div className="e-wrap">
                 <div className="e-tag">Live on pdfseeds.com</div>
-                <h2 className="e-h2">What your community is searching right now.</h2>
+                <h2 className="e-h2">What they&apos;re already searching.</h2>
                 <div className="e-demand">
                   <div className="e-demand-top">
                     <div className="e-demand-title">Real searches — real demand</div>
@@ -965,7 +927,7 @@ export default function EarnPage() {
                   {SEED_SEARCHES.map((q, i) => (
                     <div key={i} className="e-demand-row">
                       <div className="e-demand-q">&ldquo;{q}&rdquo;</div>
-                      <div className="e-demand-sig">guide exists ↗</div>
+                      <div className="e-demand-sig">answer ready ↗</div>
                     </div>
                   ))}
                 </div>
@@ -1006,7 +968,7 @@ export default function EarnPage() {
               <div className="e-price-list">
                 {[
                   "£7.99 per sale — for life (80% of every guide)",
-                  "We match guides to your niche — you read, you decide",
+                  "Matched to your community — you read, you decide",
                   "Your curator link for every guide — 1,000+ topics",
                   "Ready-made captions for WhatsApp, YouTube, TikTok and Instagram",
                   "Real-time earnings dashboard",
