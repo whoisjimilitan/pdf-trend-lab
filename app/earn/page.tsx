@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Banknote, Link2, MessageSquare, BarChart3, BookOpen, MessageCircle, PlayCircle, Music2 } from "lucide-react";
 
 const AVATARS = [
-  { initials: "AO", name: "Adaeze O.", role: "WhatsApp · London", stat: "£340 first month", platformColor: "#25D366" },
-  { initials: "MA", name: "Mohammed A.", role: "YouTube · 28k subscribers", stat: "£580 in 6 weeks", platformColor: "#FF0000" },
-  { initials: "FK", name: "Femi K.", role: "TikTok · UK-Ghana", stat: "£211 in 10 days", platformColor: "#2D2D2D" },
-  { initials: "PR", name: "Priya R.", role: "Instagram · 14k followers", stat: "£220 first month", platformColor: "#E1306C" },
+  { initials: "AO", name: "Adaeze O.", location: "London", stat: "£340 first month", platformIcon: "💬" },
+  { initials: "MA", name: "Mohammed A.", location: "28k subscribers", stat: "£580 in 6 weeks", platformIcon: "▶" },
+  { initials: "FK", name: "Femi K.", location: "UK–Ghana", stat: "£211 in 10 days", platformIcon: "♪" },
+  { initials: "PR", name: "Priya R.", location: "14k followers", stat: "£220 first month", platformIcon: "📸" },
 ];
 
 const TESTIMONIALS = [
@@ -427,20 +427,25 @@ export default function EarnPage() {
         .e-av-pill {
           display: flex; align-items: center; gap: 10px;
           background: #fff; border: 1px solid #EDE8E0;
-          border-radius: 50px; padding: 7px 14px 7px 7px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+          border-radius: 50px; padding: 6px 14px 6px 6px;
+          box-shadow: 0 1px 6px rgba(0,0,0,0.04);
         }
         .e-av {
-          width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+          width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
           background: linear-gradient(135deg, #8B5CF6, #6D28D9);
-          border: 2px solid #fff;
-          box-shadow: 0 3px 12px rgba(139,92,246,0.22);
           display: flex; align-items: center; justify-content: center;
-          font-size: 0.72rem; font-weight: 800; color: #fff;
+          font-size: 0.7rem; font-weight: 800; color: #fff;
         }
-        .e-av-name { font-size: 0.68rem; font-weight: 700; color: #0F0A1A; }
-        .e-av-role { font-size: 0.58rem; margin-top: 1px; }
-        .e-av-stat { font-size: 0.63rem; font-weight: 800; color: #6D28D9; }
+        .e-av-platform {
+          width: 18px; height: 18px; border-radius: 50%;
+          background: #F4F4F5; border: 1px solid #E4E4E7;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 0.6rem; margin-left: -8px; flex-shrink: 0;
+          position: relative; z-index: 1;
+        }
+        .e-av-name { font-size: 0.7rem; font-weight: 700; color: #0F0A1A; }
+        .e-av-location { font-size: 0.6rem; color: #9B8AF0; margin-top: 1px; }
+        .e-av-stat { font-size: 0.62rem; font-weight: 800; color: #6D28D9; }
         .e-tgrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
         .e-tcard {
           background: #fff; border: 1px solid #EDE8E0;
@@ -581,35 +586,64 @@ export default function EarnPage() {
         .e-mobile { display: none; }
 
         /* ─── RESPONSIVE ─── */
-        @media (max-width: 1100px) {
+
+        /* Tablet: stack hero, keep phone visible above copy */
+        @media (max-width: 1024px) {
           .e-hero-outer { grid-template-columns: 1fr; min-height: auto; }
-          .e-hero-left { padding: 60px 40px; }
-          .e-hero-right { padding: 56px 40px; }
-          .e-tgrid { grid-template-columns: 1fr; gap: 12px; }
-          .e-av-row { display: none; }
+          .e-hero-left { padding: 56px 40px 40px; order: 1; }
+          .e-hero-right { padding: 48px 40px 56px; order: 2; }
+          .e-tgrid { grid-template-columns: 1fr 1fr; gap: 12px; }
+          .e-av-row { flex-wrap: wrap; }
+          .e-math { padding: 28px 28px; }
         }
 
+        /* Tablet narrow: single column testimonials */
+        @media (max-width: 768px) {
+          .e-tgrid { grid-template-columns: 1fr; gap: 12px; }
+          .e-av-row { display: none; }
+          .e-hero-left { padding: 48px 32px 32px; }
+          .e-hero-right { padding: 40px 32px 48px; }
+          .e-wrap { padding: 0 24px; }
+          .e-section { padding: 72px 0; }
+          .e-milestones { gap: 10px; }
+        }
+
+        /* Mobile: hide phone panel, full-width copy */
         @media (max-width: 600px) {
           .e-hero-left { display: none; }
-          .e-hero-right { padding: 56px 22px 44px; }
-          .e-h1 { font-size: 2.6rem; }
+          .e-hero-right { padding: 52px 20px 40px; }
+          .e-h1 { font-size: 2.5rem; }
           .e-hero-sub { font-size: 0.95rem; max-width: 100%; }
-          .e-btn { max-width: 100%; }
+          .e-flow { flex-wrap: wrap; gap: 8px; }
+          .e-btn { max-width: 100%; font-size: 0.97rem; padding: 16px 28px; }
 
-          .e-proof { padding: 14px 20px; gap: 14px; }
+          .e-proof { padding: 14px 20px; gap: 12px; flex-wrap: wrap; justify-content: flex-start; }
           .e-proof-sep { display: none; }
           .e-wrap { padding: 0 20px; }
-          .e-section { padding: 60px 0; }
-          .e-math { padding: 24px 18px; }
+          .e-section { padding: 56px 0; }
+          .e-h2 { font-size: 1.55rem; margin-bottom: 28px; }
+          .e-math { padding: 22px 18px; }
+          .e-math-head { font-size: 0.83rem; }
           .e-milestones { gap: 8px; }
-          .e-ms { padding: 14px 8px; }
+          .e-ms { padding: 14px 10px; }
           .e-ms-earn { font-size: 1.2rem; }
+          .e-ms-label { font-size: 0.65rem; }
+          .e-get-item { padding: 16px 16px; }
+          .e-demand-q { font-size: 0.76rem; }
+          .e-faq { padding: 18px 20px; }
+          .e-faq-q { font-size: 0.88rem; }
+          .e-faq-a { font-size: 0.8rem; }
 
-          .e-price-bg { padding: 60px 0; }
-          .e-price-card { padding: 36px 22px; }
-          .e-btn-white { width: 100%; display: block; padding: 17px; }
-          .e-price-num { font-size: 3.5rem; }
-          .e-final { padding: 68px 20px 80px; }
+          .e-price-bg { padding: 56px 0; }
+          .e-price-card { padding: 32px 20px; border-radius: 20px; }
+          .e-btn-white { width: 100%; display: block; padding: 17px; font-size: 0.95rem; }
+          .e-price-num { font-size: 3.2rem; }
+          .e-price-recover { font-size: 0.8rem; margin-bottom: 28px; }
+          .e-price-list { gap: 10px; margin-bottom: 32px; }
+          .e-price-item { font-size: 0.82rem; }
+
+          .e-final { padding: 64px 20px 76px; }
+          .e-final-h { font-size: 1.4rem; margin-bottom: 26px; }
           .e-section-cta { display: none; }
 
           .e-mobile {
@@ -632,7 +666,12 @@ export default function EarnPage() {
           .e { padding-bottom: 74px; }
         }
 
-        @media (max-width: 380px) { .e-h1 { font-size: 2.2rem; } }
+        @media (max-width: 380px) {
+          .e-h1 { font-size: 2.1rem; }
+          .e-hero-right { padding: 44px 16px 36px; }
+          .e-wrap { padding: 0 16px; }
+          .e-milestones { grid-template-columns: 1fr; }
+        }
       `}</style>
 
       <div className="e">
@@ -747,7 +786,7 @@ export default function EarnPage() {
               Your earnings.
             </h1>
             <p className="e-hero-sub">
-              We&apos;ll match you with a guide we think you and your community will love. Read it. <strong>If you&apos;d recommend it — post your unique link and earn 80% from each sale.</strong>
+              We&apos;ll match you with the first guide we think you and your community will love. Read it. <strong>If you&apos;d recommend it — share your unique link and earn 80% from its sale.</strong>
             </p>
 
             {/* Flow indicator — minimal, no descriptions */}
@@ -807,9 +846,10 @@ export default function EarnPage() {
               {AVATARS.map((a, i) => (
                 <div key={i} className="e-av-pill">
                   <div className="e-av">{a.initials}</div>
+                  <div className="e-av-platform">{a.platformIcon}</div>
                   <div>
                     <div className="e-av-name">{a.name}</div>
-                    <div className="e-av-role" style={{ color: a.platformColor }}>{a.role}</div>
+                    <div className="e-av-location">{a.location}</div>
                     <div className="e-av-stat">{a.stat}</div>
                   </div>
                 </div>
@@ -994,8 +1034,8 @@ export default function EarnPage() {
         <div className="e-final-outer">
           <div className="e-final">
             <h2 className="e-final-h">
-              Every question your community asks about home<br />
-              is money you could already be earning.
+              Your community is already asking.<br />
+              Start earning the answers.
             </h2>
             <button className="e-btn" style={{ maxWidth: "none" }} onClick={handleGetAccess} disabled={loading}>
               {loading ? "Opening checkout…" : "Become a Curator — £19.99 →"}
