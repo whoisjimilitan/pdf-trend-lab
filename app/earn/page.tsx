@@ -1022,9 +1022,6 @@ export default function EarnPage() {
               <button className="e-btn-white" onClick={handleGetAccess} disabled={loading}>
                 {loading ? "Opening checkout…" : "Become a Curator →"}
               </button>
-              <div className="e-price-guarantee">
-                £7.99 per sale · For life · 30-day money-back · No questions asked
-              </div>
             </div>
           </div>
         </div>
