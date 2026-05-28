@@ -786,7 +786,7 @@ export default function EarnPage() {
               Your earnings.
             </h1>
             <p className="e-hero-sub">
-              We&apos;ll match you with the first guide we think you and your community will love. Read it. <strong>If you&apos;d recommend it — share your unique link and earn 80% from its sale.</strong>
+              You&apos;re already the one they ask. We make sure you have the answer — <strong>a guide worth putting your name on. Share your link. Earn 80%.</strong>
             </p>
 
             {/* Flow indicator — minimal, no descriptions */}
@@ -1034,8 +1034,8 @@ export default function EarnPage() {
         <div className="e-final-outer">
           <div className="e-final">
             <h2 className="e-final-h">
-              Your community is already asking.<br />
-              Start earning the answers.
+              Your community is already asking you.<br />
+              Now earn every time you answer.
             </h2>
             <button className="e-btn" style={{ maxWidth: "none" }} onClick={handleGetAccess} disabled={loading}>
               {loading ? "Opening checkout…" : "Become a Curator — £19.99 →"}
