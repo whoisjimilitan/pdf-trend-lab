@@ -766,7 +766,7 @@ export default function EarnPage() {
               Your earnings.
             </h1>
             <p className="e-hero-sub">
-              You&apos;re already the one they ask. We make sure you have the answer. <strong>The answer worth putting your name on.</strong> Share your link. It earns forever.
+              You&apos;re already the one they ask. We make sure you always have the answer. <strong>The answer worth putting your name on.</strong> Share your link. It earns forever.
             </p>
 
             <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
