@@ -169,110 +169,126 @@ export default function EarnPage() {
           position: relative; z-index: 1;
         }
 
-        /* ─── NOTIFICATION ─── */
+        /* ─── iOS TEXT NOTIFICATION ─── */
         .e-notif {
-          background: #fff; border-radius: 16px;
-          padding: 10px 14px;
-          display: flex; align-items: center; gap: 10px;
-          box-shadow: 0 8px 36px rgba(0,0,0,0.13);
-          margin-bottom: 14px; width: 244px;
-          animation: notif-in 0.5s ease 0.4s both;
+          background: rgba(255,255,255,0.92);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-radius: 18px;
+          padding: 11px 13px;
+          display: flex; align-items: flex-start; gap: 10px;
+          box-shadow:
+            0 2px 24px rgba(0,0,0,0.12),
+            0 1px 4px rgba(0,0,0,0.06),
+            inset 0 0.5px 0 rgba(255,255,255,0.9);
+          margin-bottom: 14px; width: 252px;
+          animation: notif-in 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.4s both;
         }
         @keyframes notif-in {
-          from { opacity: 0; transform: translateY(-10px); }
-          to   { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translateY(-14px) scale(0.96); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
         .e-notif-icon {
-          width: 34px; height: 34px; border-radius: 8px;
-          background: #25D366;
+          width: 36px; height: 36px; border-radius: 9px;
+          background: linear-gradient(155deg, #3DD668, #2ABD58);
           display: flex; align-items: center; justify-content: center;
-          font-size: 1rem; flex-shrink: 0;
+          font-size: 1.1rem; flex-shrink: 0;
+          box-shadow: 0 2px 8px rgba(42,189,88,0.35);
         }
-        .e-notif-app { font-size: 0.57rem; font-weight: 800; color: #9B8899; text-transform: uppercase; letter-spacing: 0.07em; }
-        .e-notif-title { font-size: 0.71rem; font-weight: 800; color: #0F0A1A; margin-top: 1px; }
-        .e-notif-amt { font-size: 0.8rem; font-weight: 900; color: #15803D; }
-        .e-notif-sub { font-size: 0.57rem; color: #9B8899; margin-top: 1px; }
+        .e-notif-header {
+          display: flex; align-items: center; justify-content: space-between;
+          margin-bottom: 2px;
+        }
+        .e-notif-app { font-size: 0.62rem; font-weight: 700; color: #3C3C43; opacity: 0.6; letter-spacing: -0.01em; }
+        .e-notif-time { font-size: 0.6rem; color: #3C3C43; opacity: 0.45; font-weight: 500; }
+        .e-notif-sender { font-size: 0.73rem; font-weight: 700; color: #000; letter-spacing: -0.01em; margin-bottom: 1px; }
+        .e-notif-msg { font-size: 0.7rem; color: #3C3C43; line-height: 1.4; letter-spacing: -0.005em; }
+        .e-notif-body { flex: 1; min-width: 0; }
 
-        /* ─── iPHONE MOCKUP (matte black, as reference) ─── */
+        /* ─── iPHONE 17 MOCKUP ─── */
         .e-phone {
-          width: 244px;
-          background: #1A1A1C;
-          border-radius: 54px;
-          padding: 12px 9px 22px;
+          width: 252px;
+          background: #161618;
+          border-radius: 52px;
+          padding: 11px 8px 20px;
           position: relative;
           box-shadow:
-            0 0 0 1px rgba(255,255,255,0.14),
-            0 0 0 2px rgba(0,0,0,0.9),
-            0 60px 100px rgba(0,0,0,0.55),
-            0 28px 48px rgba(0,0,0,0.28),
-            0 10px 20px rgba(0,0,0,0.14),
-            inset 0 1.5px 0 rgba(255,255,255,0.2),
-            inset 0 -2px 0 rgba(0,0,0,0.55);
+            0 0 0 1px rgba(255,255,255,0.16),
+            0 0 0 1.5px rgba(0,0,0,0.95),
+            0 70px 120px rgba(0,0,0,0.6),
+            0 32px 56px rgba(0,0,0,0.3),
+            0 12px 24px rgba(0,0,0,0.16),
+            inset 0 1px 0 rgba(255,255,255,0.18),
+            inset 0 -1.5px 0 rgba(0,0,0,0.6);
         }
 
-        /* Left: action + vol up + vol down */
+        /* Left: Action button + Vol up + Vol down */
         .e-phone::before {
           content: '';
           position: absolute;
-          left: -4px; top: 86px;
-          width: 4px; height: 22px;
-          background: #2A2A2C;
-          border-radius: 3px 0 0 3px;
+          left: -3.5px; top: 80px;
+          width: 3.5px; height: 18px;
+          background: #2C2C2E;
+          border-radius: 2.5px 0 0 2.5px;
           box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.1),
-            0 40px 0 0 #2A2A2C,
-            0 78px 0 0 #2A2A2C;
+            inset 0 0.5px 0 rgba(255,255,255,0.12),
+            0 38px 0 0 #2C2C2E,
+            0 72px 0 0 #2C2C2E;
         }
 
-        /* Right: power button */
+        /* Right: Power + Camera Control */
         .e-phone::after {
           content: '';
           position: absolute;
-          right: -4px; top: 108px;
-          width: 4px; height: 68px;
-          background: #2A2A2C;
-          border-radius: 0 3px 3px 0;
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+          right: -3.5px; top: 100px;
+          width: 3.5px; height: 60px;
+          background: #2C2C2E;
+          border-radius: 0 2.5px 2.5px 0;
+          box-shadow:
+            inset 0 0.5px 0 rgba(255,255,255,0.12),
+            0 80px 0 0 #2C2C2E,
+            0 80px 0 1.5px #2C2C2E;
         }
 
         .e-phone-screen {
           background: #fff;
-          border-radius: 44px;
+          border-radius: 43px;
           overflow: hidden;
           position: relative;
         }
 
-        /* Glass reflection on screen */
+        /* Subtle glass sheen on screen edge */
         .e-phone-screen::after {
           content: '';
           position: absolute;
           top: 0; left: 0; right: 0;
-          height: 70px;
+          height: 60px;
           background: linear-gradient(
             175deg,
-            rgba(255,255,255,0.09) 0%,
-            rgba(255,255,255,0.03) 55%,
+            rgba(255,255,255,0.07) 0%,
             transparent 100%
           );
           pointer-events: none;
           z-index: 10;
-          border-radius: 44px 44px 0 0;
+          border-radius: 43px 43px 0 0;
         }
 
         /* Dynamic Island */
         .e-phone-di {
-          width: 90px; height: 30px;
+          width: 88px; height: 29px;
           background: #000;
-          border-radius: 20px;
+          border-radius: 18px;
           margin: 10px auto 8px;
           position: relative; z-index: 2;
-          box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+          box-shadow:
+            0 0 0 0.5px rgba(255,255,255,0.06),
+            inset 0 0 6px rgba(0,0,0,0.8);
         }
 
-        /* Home indicator */
+        /* Home indicator bar */
         .e-phone-home {
-          width: 108px; height: 4px;
-          background: rgba(0,0,0,0.2);
+          width: 112px; height: 4px;
+          background: rgba(0,0,0,0.18);
           border-radius: 3px;
           margin: 8px auto 0;
         }
@@ -625,18 +641,20 @@ export default function EarnPage() {
           <div className="e-hero-left">
             <div className="e-phone-wrap">
 
-              {/* Floating WhatsApp sale notification */}
+              {/* iOS iMessage notification */}
               <div className="e-notif">
                 <div className="e-notif-icon">💬</div>
-                <div>
-                  <div className="e-notif-app">WhatsApp · PDF Seeds</div>
-                  <div className="e-notif-title">New sale via your link</div>
-                  <div className="e-notif-amt">£7.99 earned</div>
-                  <div className="e-notif-sub">just now</div>
+                <div className="e-notif-body">
+                  <div className="e-notif-header">
+                    <span className="e-notif-app">Messages</span>
+                    <span className="e-notif-time">now</span>
+                  </div>
+                  <div className="e-notif-sender">Amara K.</div>
+                  <div className="e-notif-msg">That guide link you shared... just bought it 🙌 thank you!</div>
                 </div>
               </div>
 
-              {/* iPhone 16 Pro mockup */}
+              {/* iPhone 17 mockup */}
               <div className="e-phone">
                 <div className="e-phone-screen">
                   <div className="e-phone-di" />
