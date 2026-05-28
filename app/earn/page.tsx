@@ -810,7 +810,6 @@ export default function EarnPage() {
             <button className="e-btn" onClick={handleGetAccess} disabled={loading}>
               {loading ? "Opening checkout…" : "Become a Curator →"}
             </button>
-            <div className="e-trust">30-day money-back · 3 sales covers your £19.99</div>
           </div>
         </div>
 
@@ -1034,20 +1033,18 @@ export default function EarnPage() {
         <div className="e-final-outer">
           <div className="e-final">
             <h2 className="e-final-h">
-              Your community is already asking you.<br />
+              Your community is already asking.<br />
               Now earn every time you answer.
             </h2>
             <button className="e-btn" style={{ maxWidth: "none" }} onClick={handleGetAccess} disabled={loading}>
               {loading ? "Opening checkout…" : "Become a Curator — £19.99 →"}
             </button>
-            <div className="e-final-meta">
-              <a href="mailto:hello@pdfseeds.com" className="e-final-link">Questions? hello@pdfseeds.com</a>
-            </div>
           </div>
         </div>
 
         {/* ── RECOVERY ── */}
-        <div style={{ borderTop: "1px solid #EDE8E0", background: "#fff", padding: "32px 24px", textAlign: "center" }}>
+        <div style={{ borderTop: "1px solid #EDE8E0", background: "#fff", padding: "22px 24px", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", gap: 24, flexWrap: "wrap" }}>
+          <a href="mailto:hello@pdfseeds.com" className="e-final-link">Questions? hello@pdfseeds.com</a>
           {!recovery ? (
             <button className="e-final-link-btn" onClick={() => setRecovery(true)} style={{ fontSize: "0.72rem", color: "#B0A89A" }}>
               Already a curator? Get my dashboard link →
