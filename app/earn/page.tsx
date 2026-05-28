@@ -786,7 +786,7 @@ export default function EarnPage() {
               Your earnings.
             </h1>
             <p className="e-hero-sub">
-              You&apos;re already the one they ask. We make sure you have the answer. <strong>A guide worth putting your name on.</strong> Share your link. Earn forever.
+              You&apos;re already the one they ask. We make sure you have the answer. <strong>A guide worth putting your name on.</strong> Share your link. It earns forever.
             </p>
 
             {/* Flow indicator — minimal, no descriptions */}
@@ -822,7 +822,7 @@ export default function EarnPage() {
           </div>
           <div className="e-proof-sep" />
           <div className="e-proof-item">
-            <span className="e-proof-val">67</span>
+            <span className="e-proof-val">367</span>
             <span className="e-proof-lbl">curators earning</span>
           </div>
           <div className="e-proof-sep" />
@@ -833,7 +833,7 @@ export default function EarnPage() {
           <div className="e-proof-sep" />
           <div className="e-proof-item">
             <span className="e-proof-val">1K+</span>
-            <span className="e-proof-lbl">guides to share</span>
+            <span className="e-proof-lbl">niches covered</span>
           </div>
         </div>
 
@@ -1047,7 +1047,7 @@ export default function EarnPage() {
           <a href="mailto:hello@pdfseeds.com" className="e-final-link">Questions? hello@pdfseeds.com</a>
           {!recovery ? (
             <button className="e-final-link-btn" onClick={() => setRecovery(true)} style={{ fontSize: "0.72rem", color: "#B0A89A" }}>
-              Already a curator? Get my dashboard link →
+              Already a curator? Resend my link →
             </button>
           ) : (
             <div style={{ maxWidth: 400, margin: "0 auto", textAlign: "left" }}>
