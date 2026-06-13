@@ -66,6 +66,52 @@ git checkout v1-engagement-instrumentation-stable
 
 ---
 
+## phase2-architecture-frozen
+
+**Tag**: `phase2-architecture-frozen`  
+**Commit**: `b2be34a` (phase2-architecture-finalized)  
+**Date**: 2026-06-13
+
+### Status
+- ✅ Architecture FROZEN
+- ❌ Implementation NOT STARTED
+- ❌ Schema NOT DEPLOYED
+- ❌ No code written
+
+### Contains
+- ApprovalStatus enum (NEW, ACTIVE, PROMOTED, ARCHIVED)
+- ApprovedInsight model (7 fields, metadata-only, no duplication)
+- ApprovalPromotion model (7 fields, immutable audit trail)
+- FK constraints (both onDelete: Restrict)
+- Lifecycle timestamp derivation pattern documented
+- All 8 indexes documented
+- Enum consistency verified
+- All design documentation updated
+
+### Restore
+```bash
+# Restore entire state
+git checkout phase2-architecture-frozen
+
+# Restore just schema
+git checkout phase2-architecture-frozen -- prisma/schema.prisma
+
+# View schema at this point
+git show phase2-architecture-frozen:prisma/schema.prisma
+```
+
+### When to Use
+- Before Phase 2 implementation begins (reference point)
+- If Phase 2 implementation needs to restart (safe baseline)
+- To verify what was locked before code changes
+- As source-of-truth for frozen architecture
+
+### When NOT to Use
+- During normal Phase 2 implementation (keep moving forward)
+- After Phase 2 is complete (move to next restore point)
+
+---
+
 ## Restore Strategy
 
 If current work breaks:
@@ -77,10 +123,10 @@ If current work breaks:
 
 Example:
 ```bash
-git checkout v1-renderer-foundation-stable
-git checkout -b fix/engagement-tracking
+git checkout phase2-architecture-frozen
+git checkout -b fix/approval-service
 ```
 
 ---
 
-**STATUS**: LOCKED. All baselines safe to restore.
+**STATUS**: LOCKED. All baselines safe to restore. Phase 2 architecture frozen at b2be34a.
