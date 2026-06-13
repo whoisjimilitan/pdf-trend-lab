@@ -1,6 +1,17 @@
 # Phase 2: Insight Approval Workflow
 
-**Status**: DESIGN PHASE  
+⚠️ **STATUS: SUPERSEDED**
+
+**Replaced by**: PHASE_2_REVISED_DESIGN.md  
+**Reason**: Over-engineered. Contained duplicate data storage, premature optimization, and Phase 3 logic. See PHASE_2_ARCHITECTURE_REVIEW.md for details.
+
+**DO NOT IMPLEMENT THIS DESIGN. Use PHASE_2_REVISED_DESIGN.md instead.**
+
+---
+
+# Original Design (Archived)
+
+**Status**: DESIGN PHASE (SUPERSEDED)  
 **Date**: 2026-06-13  
 **Objective**: Create promotion pipeline between validated insights (ValidationLog) and approved insights (production ready)
 
