@@ -150,3 +150,67 @@ model DailyLoop {
   notes     String?
   createdAt DateTime @default(now())
 }
+
+// Phase A: Instrumentation
+// Shadow logging for Evidence Validation Engine
+// Zero behavior change. Current system runs unchanged.
+// Logs accumulate for statistical analysis.
+model ValidationLog {
+  id                    String    @id @default(cuid())
+  validationId          String    @unique // Links to InsightObject.validationId
+  prospectId            String
+
+  // Decision reasoning (learning)
+  selectedInsightType   String
+  selectedBecause       String    @db.Text
+  rejectedInsightsJson  String    @db.Text // JSON: rejected insights and why
+
+  // Validation details
+  confidenceScore       Float     // 0.0–1.0 continuous
+  confidenceBand        String    // Presentation: PROVEN, HIGH_CONFIDENCE, etc.
+  status                String    // APPROVED, PENDING_MORE_EVIDENCE, REJECTED_FOR_NOW
+
+  // Evidence provenance
+  evidenceSourcesJson   String    @db.Text // JSON: array of evidence sources
+  evidenceSourceCount   Int
+
+  // Contradictions
+  contradictionsJson    String    @db.Text // JSON: contradiction details
+  contradictionsCount   Int       @default(0)
+
+  // Outcomes (populated later)
+  emailSent             Boolean   @default(false)
+  emailSentAt           DateTime?
+  emailOpenRate         Float?
+  pageVisited           Boolean   @default(false)
+  pageVisitedAt         DateTime?
+  pageDwellTime         Int?      // Seconds
+  pageScrollDepth       Float?    // 0.0-1.0
+  ctaClicked            Boolean   @default(false)
+  ctaClickedAt          DateTime?
+  replyReceived         Boolean   @default(false)
+  replyReceivedAt       DateTime?
+  conversionStatus      String?   // converted, not_converted, pending
+
+  // KPI tracking (learning signals)
+  kpiInsightAccuracy    Boolean?  // Did prospect confirm this insight?
+  kpiEngagementDepth    String?   // none, open, click, page_visit, cta_click, reply
+  kpiConversationStarts Int       @default(0)
+  kpiConversion         Boolean   @default(false)
+
+  // Metadata
+  leadCategory          String
+  leadLocations         Int
+  enrichmentLevel       String    // full, partial, minimal
+
+  // Timing
+  validatedAt           DateTime  @default(now())
+  outcomeEvaluatedAt    DateTime?
+  updatedAt             DateTime  @updatedAt
+
+  @@index([prospectId])
+  @@index([status])
+  @@index([selectedInsightType])
+  @@index([kpiInsightAccuracy])
+  @@index([conversionStatus])
+}
