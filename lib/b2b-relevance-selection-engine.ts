@@ -11,19 +11,18 @@
  * 2. Confidence score (high confidence > low confidence)
  * 3. Specificity (specific signals > general patterns)
  *
- * Output: Single selected InsightObject + rejection reasons for alternatives
+ * Output: Single selected Insight + rejection reasons for alternatives
  */
 
-import { InsightObject } from "./b2b-insight-object"
+import { type Insight } from "./b2b-insight-object"
 
 export interface SelectionResult {
-  selectedInsight: InsightObject
+  selectedInsight: Insight
   selectedBecause: string
   rejectedAlternatives: Array<{
     insightId: string
     insightType: string
     confidence: number
-    readiness: string
     rejectionReason: string
   }>
   divergenceFromCurrentSystem?: {
@@ -43,15 +42,11 @@ export interface SelectionResult {
  *
  * Result: 0.0–3.0 relevance score
  */
-function scoreRelevance(insight: InsightObject): number {
-  let readinessMultiplier = 1.0
-  if (insight.readiness === "ready_now") readinessMultiplier = 3.0
-  else if (insight.readiness === "ready_later") readinessMultiplier = 1.5
-
+function scoreRelevance(insight: Insight): number {
   const confidenceScore = insight.confidence // 0.0–1.0
   const engagementBoost = Math.min(insight.evidenceSources.length / 5, 0.2) // Cap at +0.2
 
-  const relevanceScore = readinessMultiplier * (confidenceScore + engagementBoost)
+  const relevanceScore = confidenceScore + engagementBoost
 
   return relevanceScore
 }
@@ -66,7 +61,7 @@ function scoreRelevance(insight: InsightObject): number {
  * (PENDING or REJECTED candidates should be filtered before this function)
  */
 export function selectMostRelevant(
-  insights: InsightObject[],
+  insights: Insight[],
   currentSystemSelected?: string
 ): SelectionResult {
   if (insights.length === 0) {
@@ -94,7 +89,6 @@ export function selectMostRelevant(
     insightId: item.insight.insightId,
     insightType: item.insight.insightType,
     confidence: item.insight.confidence,
-    readiness: item.insight.readiness,
     rejectionReason: generateRejectionReason(item.insight, selectedInsight, item.score, selectedScore)
   }))
 
@@ -104,13 +98,7 @@ export function selectMostRelevant(
     divergence = {
       currentSystemSelected,
       observerEngineSelected: selectedInsight.insightType,
-      reason: `Selection score: ${selectedScore.toFixed(2)}. Primary decision factor: ${
-        selectedInsight.readiness === "ready_now"
-          ? "immediate readiness"
-          : selectedInsight.readiness === "ready_later"
-            ? "future readiness"
-            : "awareness opportunity"
-      }`
+      reason: `Selection score: ${selectedScore.toFixed(2)}. Primary decision factor: confidence and evidence`
     }
   }
 
@@ -125,14 +113,7 @@ export function selectMostRelevant(
 /**
  * Generate human-readable selection reason
  */
-function generateSelectionReason(insight: InsightObject, score: number): string {
-  const readinessPhrase =
-    insight.readiness === "ready_now"
-      ? "prospect is ready for an immediate solution"
-      : insight.readiness === "ready_later"
-        ? "prospect will likely need this solution soon"
-        : "prospect should be aware of this solution for future"
-
+function generateSelectionReason(insight: Insight, score: number): string {
   const confidencePhrase =
     insight.confidence >= 0.85
       ? `high confidence (${(insight.confidence * 100).toFixed(0)}%)`
@@ -140,15 +121,15 @@ function generateSelectionReason(insight: InsightObject, score: number): string 
         ? `good confidence (${(insight.confidence * 100).toFixed(0)}%)`
         : `moderate confidence (${(insight.confidence * 100).toFixed(0)}%)`
 
-  return `Selected because ${readinessPhrase} and we have ${confidencePhrase} based on ${insight.evidenceSources.length} evidence sources`
+  return `Selected with ${confidencePhrase} based on ${insight.evidenceSources.length} evidence sources (score: ${score.toFixed(2)})`
 }
 
 /**
  * Generate human-readable rejection reason
  */
 function generateRejectionReason(
-  rejectedInsight: InsightObject,
-  selectedInsight: InsightObject,
+  rejectedInsight: Insight,
+  selectedInsight: Insight,
   rejectedScore: number,
   selectedScore: number
 ): string {
@@ -157,9 +138,7 @@ function generateRejectionReason(
   // Determine what made the difference
   let reason = ""
 
-  if (selectedInsight.readiness === "ready_now" && rejectedInsight.readiness !== "ready_now") {
-    reason = "Selected insight addresses immediate need, this one is future-focused"
-  } else if (selectedInsight.confidence > rejectedInsight.confidence + 0.1) {
+  if (selectedInsight.confidence > rejectedInsight.confidence + 0.1) {
     reason = `Selected insight has higher confidence (${(selectedInsight.confidence * 100).toFixed(0)}% vs ${(rejectedInsight.confidence * 100).toFixed(0)}%)`
   } else if (selectedInsight.evidenceSources.length > rejectedInsight.evidenceSources.length) {
     reason = `Selected insight has more supporting evidence (${selectedInsight.evidenceSources.length} vs ${rejectedInsight.evidenceSources.length} sources)`
@@ -175,7 +154,7 @@ function generateRejectionReason(
  * then selects the most relevant
  */
 export function filterAndSelect(
-  insights: InsightObject[],
+  insights: Insight[],
   currentSystemSelected?: string
 ): SelectionResult | null {
   // Filter to approved insights only

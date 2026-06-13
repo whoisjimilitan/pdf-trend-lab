@@ -14,11 +14,11 @@
  */
 
 import {
-  InsightObject,
-  EvidenceSource,
-  Contradiction,
-  createInsightObject
+  type Insight,
+  type EvidenceSource,
+  type Contradiction
 } from "./b2b-insight-object"
+import { buildInsight } from "./b2b-insight-builder"
 import { isEvidenceValidationShadowMode } from "./evidence-validation-flags"
 import { logValidationDecision } from "./b2b-validation-logger"
 import { v4 as uuidv4 } from "uuid"
@@ -43,7 +43,7 @@ export interface CandidateInsight {
  * Output from validation engine
  */
 export interface ValidationResult {
-  insightObject: InsightObject | null
+  insightObject: Insight | null
   confidence: number
   confidenceBand: "PROVEN" | "HIGH_CONFIDENCE" | "MODERATE" | "LOW" | "SPECULATION"
   status: "APPROVED" | "PENDING_MORE_EVIDENCE" | "REJECTED_FOR_NOW"
@@ -94,7 +94,7 @@ function calculateConfidenceScore(
   let totalPenalty = 0
 
   contradictions.forEach((contradiction) => {
-    const penalty = Math.abs(contradiction.confidencePenalty)
+    const penalty = Math.abs(contradiction.impact)
     totalPenalty += penalty
   })
 
@@ -125,7 +125,7 @@ function determineStatus(
   contradictions: Contradiction[]
 ): { status: "APPROVED" | "PENDING_MORE_EVIDENCE" | "REJECTED_FOR_NOW"; reason: string } {
   // Check for fatal contradictions
-  const fatalContradictions = contradictions.filter((c) => c.level === "FATAL")
+  const fatalContradictions = contradictions.filter((c) => c.type === "FATAL")
   if (fatalContradictions.length > 0) {
     return {
       status: "REJECTED_FOR_NOW",
@@ -136,7 +136,7 @@ function determineStatus(
   // Check confidence thresholds
   if (confidence >= 0.55) {
     // Check for moderate contradictions
-    const moderateContradictions = contradictions.filter((c) => c.level === "MODERATE")
+    const moderateContradictions = contradictions.filter((c) => c.type === "MODERATE")
     if (moderateContradictions.length > 2) {
       return {
         status: "PENDING_MORE_EVIDENCE",
@@ -239,53 +239,26 @@ export async function validateInsight(
   // Step 4: Count contradictions by level
   const contradictionsSummary = {
     total: candidateInsight.contradictions.length,
-    weak: candidateInsight.contradictions.filter((c) => c.level === "WEAK").length,
-    moderate: candidateInsight.contradictions.filter((c) => c.level === "MODERATE").length,
-    fatal: candidateInsight.contradictions.filter((c) => c.level === "FATAL").length
+    weak: candidateInsight.contradictions.filter((c) => c.type === "WEAK").length,
+    moderate: candidateInsight.contradictions.filter((c) => c.type === "MODERATE").length,
+    fatal: candidateInsight.contradictions.filter((c) => c.type === "FATAL").length
   }
 
-  // Step 5: Create InsightObject if approved, otherwise null
-  let insightObject: InsightObject | null = null
+  // Step 5: Create Insight if approved, otherwise null
+  let insightObject: Insight | null = null
 
   if (status === "APPROVED") {
-    const insightId = uuidv4()
     const validationId = uuidv4()
 
-    insightObject = createInsightObject({
-      insightId,
+    insightObject = buildInsight({
       insightType: candidateInsight.insightType,
-      leadId: prospectId,
-      businessName,
-      insight: {
-        statement: candidateInsight.statement,
-        painPoint: candidateInsight.painPoint,
-        opportunity: candidateInsight.opportunity
-      },
+      statement: candidateInsight.statement,
+      painPoint: candidateInsight.painPoint,
+      opportunity: candidateInsight.opportunity,
       confidence,
       evidenceSources: candidateInsight.evidenceSources,
       contradictions: candidateInsight.contradictions,
-      status,
-      statusReason,
-      framingLevel,
-      framingGuidance: {
-        tone: framingLevel === "assertive" ? "direct" : framingLevel === "gentle" ? "empathetic" : "cautious",
-        specificity: framingLevel === "assertive" ? "specific" : "generalized",
-        presupposition: `The prospect ${framingLevel === "assertive" ? "actively faces" : framingLevel === "gentle" ? "likely experiences" : "may encounter"} this challenge`
-      },
-      validatedAt: new Date(),
-      validationId,
-      validationMetadata: {
-        leadCategory,
-        leadLocations,
-        enrichmentLevel,
-        discoveryMethod: "evidence_validation_engine"
-      },
-      readiness: "ready_now", // Will be overridden by Readiness Detection Engine
-      readinessStrategy: {
-        positioning: "immediate_solution",
-        urgency: "high",
-        callToAction: "solve_now"
-      }
+      validationId
     })
 
     // Log the validation decision
@@ -301,7 +274,12 @@ export async function validateInsight(
         status,
         evidenceSources: candidateInsight.evidenceSources,
         evidenceSourceCount: candidateInsight.evidenceSources.length,
-        contradictions: candidateInsight.contradictions,
+        contradictions: candidateInsight.contradictions.map((c, idx) => ({
+          id: `contradiction_${idx}`,
+          level: c.type,
+          evidence: c.description,
+          reason: `Impact: ${c.impact}`
+        })),
         contradictionsCount: contradictionsSummary.total,
         leadCategory,
         leadLocations,

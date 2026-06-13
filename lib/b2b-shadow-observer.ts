@@ -84,9 +84,10 @@ export async function buildShadowInsight(params: {
     recordValidationObservation({
       prospectId: params.prospectId,
       insightType: insight.insightType,
-      existingDecision: null,
+      existingDecision: "shadow_observation",
       shadowDecision: insight.insightType,
       confidenceDiff: 0,
+      evidenceDiff: 0,
       timestamp: new Date(),
       mode: "SHADOW_ONLY",
       diverged: false

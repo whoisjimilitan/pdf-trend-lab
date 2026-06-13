@@ -9,7 +9,7 @@
  * Flow:
  * Input: Enrichment data + candidate insights
  * Process: Validate → Detect Readiness → Select Most Relevant
- * Output: Single InsightObject (the winner) OR null if no approved insights
+ * Output: Single Insight (the winner) OR null if no approved insights
  *
  * Runs entirely in OBSERVER mode:
  * - Logs everything
@@ -18,7 +18,7 @@
  * - Zero behavioral change
  */
 
-import { InsightObject } from "./b2b-insight-object"
+import { type Insight } from "./b2b-insight-object"
 import { CandidateInsight, validateInsight } from "./b2b-evidence-validation-engine"
 import { detectReadiness, applyReadinessToInsight, ReadinessSignals } from "./b2b-readiness-detection-engine"
 import { filterAndSelect } from "./b2b-relevance-selection-engine"
@@ -64,7 +64,7 @@ export interface ObserverEngineInput {
 }
 
 export interface ObserverEngineOutput {
-  selectedInsight: InsightObject | null
+  selectedInsight: Insight | null
   status: "success" | "no_approved_insights" | "error"
   reason: string
 
@@ -110,8 +110,19 @@ export async function runObserverEngine(
             statement: candidate.statement,
             painPoint: candidate.painPoint,
             opportunity: candidate.opportunity,
-            evidenceSources: candidate.evidence,
-            contradictions: candidate.contradictions
+            evidenceSources: candidate.evidence.map(e => ({
+              sourceId: e.sourceId,
+              sourceName: e.sourceName,
+              strength: e.strength,
+              foundAt: e.foundAt ? new Date(e.foundAt) : new Date(),
+              rawData: e.rawData || "",
+              weight: e.weight
+            })),
+            contradictions: candidate.contradictions.map(c => ({
+              type: c.level as "WEAK" | "MODERATE" | "FATAL",
+              impact: c.confidencePenalty || 0,
+              description: c.evidence
+            }))
           },
           input.leadCategory,
           input.leadLocations,
@@ -122,7 +133,7 @@ export async function runObserverEngine(
     )
 
     // STEP 2: Detect readiness for each approved insight
-    const insightsWithReadiness: InsightObject[] = []
+    const insightsWithReadiness: Insight[] = []
 
     for (const validationResult of validationResults) {
       if (validationResult.insightObject) {

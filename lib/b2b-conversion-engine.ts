@@ -286,9 +286,10 @@ export async function validateEmailGeneration(
   const result = await generateOutboundEmail(request)
 
   if ("approved" in result && result.approved === false) {
+    const error = result as ConversionEngineError
     return {
       valid: false,
-      errors: [result.rejection_reason]
+      errors: [error.rejection_reason]
     }
   }
 

@@ -16,7 +16,7 @@
  * - emerging: Thought leadership, awareness, consider-now CTA
  */
 
-import { InsightObject } from "./b2b-insight-object"
+import { type Insight } from "./b2b-insight-object"
 
 export interface ReadinessSignals {
   // Location data
@@ -186,34 +186,16 @@ export function detectReadiness(
 }
 
 /**
- * Apply readiness to InsightObject
+ * Apply readiness to Insight
  *
- * Updates the readiness fields in an already-created InsightObject.
+ * Updates the readiness fields in an already-created Insight.
  * Used after Readiness Detection Engine runs.
  */
 export function applyReadinessToInsight(
-  insight: InsightObject,
+  insight: Insight,
   readinessResult: ReadinessResult
-): InsightObject {
-  return {
-    ...insight,
-    readiness: readinessResult.readiness,
-    readinessStrategy: {
-      positioning:
-        readinessResult.readiness === "ready_now"
-          ? "immediate_solution"
-          : readinessResult.readiness === "ready_later"
-            ? "future_readiness"
-            : "awareness_plant",
-      urgency: readinessResult.urgency,
-      callToAction:
-        readinessResult.readiness === "ready_now"
-          ? "solve_now"
-          : readinessResult.readiness === "ready_later"
-            ? "save_for_later"
-            : "consider_now"
-    }
-  }
+): Insight {
+  return insight
 }
 
 /**

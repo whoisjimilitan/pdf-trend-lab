@@ -272,6 +272,7 @@ export async function recordValidationObservation(observation: {
         prospectId: observation.prospectId,
         selectedInsightType: observation.insightType,
         selectedBecause: `Shadow observation: existing=${observation.existingDecision}, shadow=${observation.shadowDecision}`,
+        rejectedInsightsJson: JSON.stringify([]),
         confidenceScore: observation.confidenceDiff,
         confidenceBand: observation.diverged ? "DIVERGENT" : "ALIGNED",
         status: observation.diverged ? "OBSERVATION_DIVERGENT" : "OBSERVATION_ALIGNED",

@@ -214,3 +214,26 @@ model ValidationLog {
   @@index([kpiInsightAccuracy])
   @@index([conversionStatus])
 }
+
+model PageEngagementLog {
+  id                  String    @id @default(cuid())
+  prospectId          String
+  insightId           String
+  validationId        String
+  pageViewed          Boolean   @default(false)
+  viewedAt            DateTime?
+  dwellTimeSeconds    Int?
+  scrollDepthPercent  Float?
+  ctaClicks           Int       @default(0)
+  ctaClickedAt        DateTime?
+  returnVisits        Int       @default(0)
+  lastVisitAt         DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@unique([prospectId, insightId])
+  @@index([prospectId])
+  @@index([insightId])
+  @@index([validationId])
+  @@index([createdAt])
+}
