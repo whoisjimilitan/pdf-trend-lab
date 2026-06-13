@@ -55,8 +55,8 @@ model ApprovedInsight {
   )
   
   // LIFECYCLE METADATA ONLY
-  approvalStatus    String    @default("new")
-  // States: new → active → promoted → archived
+  approvalStatus    ApprovalStatus  @default(NEW)
+  // States: NEW → ACTIVE → PROMOTED → ARCHIVED
   
   // APPROVAL TIMESTAMP (ONLY)
   approvedAt        DateTime  @default(now())
@@ -80,13 +80,14 @@ model ApprovalPromotion {
   approvedInsightId String
   approvedInsight   ApprovedInsight @relation(
     fields: [approvedInsightId],
-    references: [id]
+    references: [id],
+    onDelete: Restrict  // Audit trail is immutable
   )
   
-  fromStatus        String
-  toStatus          String
-  promotionReason   String    @db.Text
-  decidedAt         DateTime  @default(now())
+  fromStatus        ApprovalStatus
+  toStatus          ApprovalStatus
+  promotionReason   String          @db.Text
+  decidedAt         DateTime        @default(now())
   decidedBy         String?
   
   @@index([approvedInsightId])
@@ -103,19 +104,25 @@ model ApprovalPromotion {
 - ✅ ValidationLog is immutable source of insight data
 - ✅ ApprovalPromotion is authoritative audit trail
 - ✅ All state transitions logged with full history
-- ✅ onDelete: Restrict prevents orphaned records
+- ✅ onDelete: Restrict on both FK relationships (prevents orphaned records and cascade deletion)
 - ✅ Lifecycle timestamps derived when needed (activatedAt, promotedAt, archivedAt)
+
+**Phase 2 Final Architecture Patch Applied** (2026-06-13):
+- ✅ PATCH 1: Lifecycle timestamp duplication removed (activatedAt, promotedAt, archivedAt NOT in ApprovedInsight)
+- ✅ PATCH 2: Explicit `onDelete: Restrict` added to ApprovalPromotion → ApprovedInsight FK
+- ✅ PATCH 3: All 8 query optimization indexes documented (3 for ApprovedInsight, 4 for ApprovalPromotion)
+- ✅ PATCH 4: Single source of truth enforced (zero duplication across tables)
 
 **Lifecycle Timestamp Derivation**:
 ```typescript
-// activatedAt = first ApprovalPromotion where toStatus="active"
-const activated = promotionHistory.find(p => p.toStatus === "active")?.decidedAt
+// activatedAt = first ApprovalPromotion where toStatus=ACTIVE
+const activated = promotionHistory.find(p => p.toStatus === "ACTIVE")?.decidedAt
 
-// promotedAt = first ApprovalPromotion where toStatus="promoted"
-const promoted = promotionHistory.find(p => p.toStatus === "promoted")?.decidedAt
+// promotedAt = first ApprovalPromotion where toStatus=PROMOTED
+const promoted = promotionHistory.find(p => p.toStatus === "PROMOTED")?.decidedAt
 
-// archivedAt = first ApprovalPromotion where toStatus="archived"
-const archived = promotionHistory.find(p => p.toStatus === "archived")?.decidedAt
+// archivedAt = first ApprovalPromotion where toStatus=ARCHIVED
+const archived = promotionHistory.find(p => p.toStatus === "ARCHIVED")?.decidedAt
 ```
 
 ---
@@ -239,19 +246,19 @@ export async function approveValidationLog(
   criteria: ApprovalCriteria
 ): Promise<ApprovedInsight | null>
 // Evaluates ValidationLog against criteria
-// If approved: creates ApprovedInsight (status: "new")
+// If approved: creates ApprovedInsight (status: NEW)
 // If rejected: returns null
 // Does NOT duplicate insight data (references only)
 
 export async function promoteInsight(
   approvedInsightId: string,
-  toStatus: "active" | "promoted" | "archived",
+  toStatus: ApprovalStatus,
   reason: string
 ): Promise<ApprovalPromotion>
 // Records status transition in ApprovalPromotion
 // Updates approvalStatus in ApprovedInsight
 // No engagement data needed
-// Valid transitions: new → active → promoted → archived
+// Valid transitions: NEW → ACTIVE → PROMOTED → ARCHIVED
 
 export async function getApprovedInsights(
   filters?: {
@@ -379,20 +386,20 @@ ValidationLog (shadow pipeline output)
      ↓
 DECISION: APPROVED or REJECTED
      ↓
-ApprovedInsight created (status: "new")
+ApprovedInsight created (status: NEW)
   └─→ validationId (reference only, immutable)
-  └─→ approvalStatus: "new"
+  └─→ approvalStatus: NEW
   └─→ approvedAt: now()
      ↓
 [Manual Activation]
 User manually approves
      ↓
 promoteInsight()
-  Status: new → active
+  Status: NEW → ACTIVE
   Reason: "Approved for active use"
   ApprovalPromotion logged
      ↓
-ApprovedInsight (status: "active")
+ApprovedInsight (status: ACTIVE)
   └─→ activatedAt: now()
      ↓
 Query: "Get all active insights"
@@ -412,14 +419,14 @@ Ready for Phase 3
 ### Get Approved Insight WITH Data
 
 ```typescript
-const approved = await getApprovedInsights({ status: "active" })
+const approved = await getApprovedInsights({ status: ApprovalStatus.ACTIVE })
 
 // Result includes:
 // - approved.id
 // - approved.validationId
-// - approved.approvalStatus ("active")
+// - approved.approvalStatus (ACTIVE)
 // - approved.approvedAt
-// - approved.activatedAt
+// - approved.activatedAt (derived)
 // - validationLog (joined): {
 //   - selectedInsightType
 //   - confidenceScore
@@ -436,9 +443,9 @@ const approved = await getApprovedInsights({ status: "active" })
 const history = await getApprovalHistory(approvedInsightId)
 
 // Result: ApprovalPromotion[]
-// - new → active (approved)
-// - active → promoted (future, Phase 3)
-// - promoted → archived (future, Phase 3)
+// - NEW → ACTIVE (approved)
+// - ACTIVE → PROMOTED (future, Phase 3)
+// - PROMOTED → ARCHIVED (future, Phase 3)
 ```
 
 ---
@@ -574,7 +581,7 @@ const history = await getApprovalHistory(approvedInsightId)
 Phase 3 will add engagement-based promotion:
 
 ```
-ApprovedInsight + PageEngagementLog
+ApprovedInsight (status=ACTIVE) + PageEngagementLog
   ↓
 Engagement Analysis (join metrics)
   ↓
@@ -582,7 +589,7 @@ Promotion Rules (engagement thresholds)
   ↓
 Rank insights by performance
   ↓
-Automatic promotion/archival
+Automatic promotion (ACTIVE → PROMOTED) or archival (ACTIVE → ARCHIVED)
 ```
 
 Phase 2 does NOT implement this. Phase 3 will be clean addition on top.

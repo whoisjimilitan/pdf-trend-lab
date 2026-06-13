@@ -2,6 +2,8 @@
 
 **Status**: READY FOR IMPLEMENTATION  
 **Approved Design**: PHASE_2_REVISED_DESIGN.md  
+**Architecture Patch**: PHASE_2_FINAL_ARCHITECTURE_PATCH.md (Applied 2026-06-13)  
+**Enum Hardening**: ApprovalStatus enum added to schema (Applied 2026-06-13)  
 **Estimated Effort**: 13 hours (1 week)
 
 ---
@@ -84,12 +86,12 @@
   - [ ] Query ValidationLog by validationId
   - [ ] Call evaluateApproval()
   - [ ] If approved: create ApprovedInsight with reference only
-  - [ ] Store validationId (FK), approvalStatus, approvedAt
+  - [ ] Store validationId (FK), approvalStatus=NEW, approvedAt
   - [ ] Do NOT copy insight data
   - [ ] Return created ApprovedInsight
   - [ ] If rejected: return null
 - [ ] Implement promoteInsight():
-  - [ ] Validate status transition (new → active → promoted → archived)
+  - [ ] Validate status transition (NEW → ACTIVE → PROMOTED → ARCHIVED)
   - [ ] Update ApprovedInsight.approvalStatus
   - [ ] Set timestamp (activatedAt / promotedAt / archivedAt)
   - [ ] Create ApprovalPromotion record
@@ -183,15 +185,15 @@
 - [ ] Test 1: approveValidationLog() creates ApprovedInsight
 - [ ] Test 2: validationId is stored (reference only)
 - [ ] Test 3: No insight data is copied (just reference)
-- [ ] Test 4: approvalStatus set to "new"
+- [ ] Test 4: approvalStatus set to NEW
 - [ ] Test 5: approvedAt timestamp set
 - [ ] Test 6: Approved insight is queryable
 - [ ] Test 7: Rejected validation returns null
 - [ ] Test 8: promoteInsight() updates status
-- [ ] Test 9: Status transition new → active works
+- [ ] Test 9: Status transition NEW → ACTIVE works
 - [ ] Test 10: activatedAt timestamp set
 - [ ] Test 11: ApprovalPromotion record created
-- [ ] Test 12: Invalid transition rejected (e.g., new → archived)
+- [ ] Test 12: Invalid transition rejected (e.g., NEW → ARCHIVED)
 - [ ] Test 13: getApprovedInsights() filters by status
 - [ ] Test 14: getApprovedInsights() filters by date
 - [ ] Test 15: getApprovalHistory() returns all promotions
@@ -210,8 +212,8 @@
 **Test Cases**:
 - [ ] Test 1: ValidationLog → ApprovedInsight (full flow)
 - [ ] Test 2: Approval decision applied correctly
-- [ ] Test 3: ApprovedInsight status: "new"
-- [ ] Test 4: Status transition new → active
+- [ ] Test 3: ApprovedInsight status: NEW
+- [ ] Test 4: Status transition NEW → ACTIVE
 - [ ] Test 5: ApprovalPromotion audit trail complete
 - [ ] Test 6: Batch processing multiple ValidationLogs
 - [ ] Test 7: Batch idempotency (same input = same result)
@@ -237,25 +239,44 @@
 **File**: `prisma/schema.prisma`
 
 **Checklist**:
+- [ ] Add ApprovalStatus enum before models:
+  ```prisma
+  enum ApprovalStatus {
+    NEW
+    ACTIVE
+    PROMOTED
+    ARCHIVED
+  }
+  ```
 - [ ] Add ApprovedInsight model after ValidationLog
-- [ ] Define fields ONLY: id, validationId, approvalStatus, approvedAt
+- [ ] Define fields ONLY: id, validationId, approvalStatus (ApprovalStatus enum), approvedAt, createdAt, updatedAt, promotionHistory
 - [ ] ⚠️ DO NOT add: activatedAt, promotedAt, archivedAt (derive from ApprovalPromotion)
-- [ ] Add relationship to ValidationLog with onDelete: Restrict
+- [ ] Set approvalStatus default to NEW (not "new")
+- [ ] Add relationship to ValidationLog with `onDelete: Restrict`
 - [ ] Add @@unique([validationId])
 - [ ] Add indexes:
   - [ ] @@index([approvalStatus])
   - [ ] @@index([approvedAt])
-  - [ ] @@index([approvalStatus, approvedAt]) ← NEW
+  - [ ] @@index([approvalStatus, approvedAt])
 - [ ] Add ApprovalPromotion model
-- [ ] Define fields: id, approvedInsightId, fromStatus, toStatus, promotionReason, decidedAt, decidedBy
-- [ ] Add relationship to ApprovedInsight
+- [ ] Define fields: id, approvedInsightId, fromStatus (ApprovalStatus enum), toStatus (ApprovalStatus enum), promotionReason, decidedAt, decidedBy
+- [ ] Add relationship to ApprovedInsight with `onDelete: Restrict` ← CRITICAL
 - [ ] Add indexes:
   - [ ] @@index([approvedInsightId])
   - [ ] @@index([decidedAt])
-  - [ ] @@index([toStatus]) ← NEW
-  - [ ] @@index([approvedInsightId, decidedAt]) ← NEW
+  - [ ] @@index([toStatus])
+  - [ ] @@index([approvedInsightId, decidedAt])
 - [ ] Validate schema: `npx prisma validate`
 - [ ] Generate client: `npx prisma generate`
+
+**Foreign Key Constraints (FINAL)**:
+- [ ] ApprovedInsight → ValidationLog: `onDelete: Restrict` (prevents ValidationLog deletion)
+- [ ] ApprovalPromotion → ApprovedInsight: `onDelete: Restrict` (prevents audit trail cascade deletion)
+
+**Type Safety (NEW)**:
+- [ ] ApprovalStatus enum defined with: NEW, ACTIVE, PROMOTED, ARCHIVED
+- [ ] approvalStatus uses ApprovalStatus type (not String)
+- [ ] fromStatus/toStatus use ApprovalStatus type (not String)
 
 **Est. LOC**: 70  
 **Completed**: ☐

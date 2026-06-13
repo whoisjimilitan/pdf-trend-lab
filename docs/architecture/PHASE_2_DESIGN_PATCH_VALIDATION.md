@@ -116,8 +116,8 @@ model ApprovedInsight {
     onDelete: Restrict
   )
   
-  approvalStatus    String    @default("new")
-  approvedAt        DateTime  @default(now())
+  approvalStatus    ApprovalStatus  @default(NEW)
+  approvedAt        DateTime        @default(now())
   
   promotionHistory  ApprovalPromotion[]
   
@@ -146,10 +146,10 @@ model ApprovalPromotion {
   approvedInsightId String
   approvedInsight   ApprovedInsight @relation(fields: [approvedInsightId], references: [id])
   
-  fromStatus        String
-  toStatus          String
-  promotionReason   String    @db.Text
-  decidedAt         DateTime  @default(now())
+  fromStatus        ApprovalStatus
+  toStatus          ApprovalStatus
+  promotionReason   String          @db.Text
+  decidedAt         DateTime        @default(now())
   decidedBy         String?
   
   @@index([approvedInsightId])
@@ -197,13 +197,13 @@ Full lifecycle history reconstructable from ApprovalPromotion.
 
 **Verification**:
 ```
-Test: new → active → promoted → archived
-1. ApprovalPromotion(fromStatus="new", toStatus="active")
-2. ApprovalPromotion(fromStatus="active", toStatus="promoted")
-3. ApprovalPromotion(fromStatus="promoted", toStatus="archived")
+Test: NEW → ACTIVE → PROMOTED → ARCHIVED
+1. ApprovalPromotion(fromStatus=NEW, toStatus=ACTIVE)
+2. ApprovalPromotion(fromStatus=ACTIVE, toStatus=PROMOTED)
+3. ApprovalPromotion(fromStatus=PROMOTED, toStatus=ARCHIVED)
 
-Query current status: SELECT toStatus FROM ... ORDER BY decidedAt DESC LIMIT 1 → "archived" ✅
-Query activation date: SELECT decidedAt FROM ... WHERE toStatus="active" ✅
+Query current status: SELECT toStatus FROM ... ORDER BY decidedAt DESC LIMIT 1 → ARCHIVED ✅
+Query activation date: SELECT decidedAt FROM ... WHERE toStatus=ACTIVE ✅
 Query full timeline: SELECT decidedAt FROM ... ORDER BY decidedAt ✅
 Query who decided: SELECT decidedBy FROM ... ✅
 ```
@@ -250,9 +250,9 @@ All changes compatible with existing systems.
 
 ```typescript
 // When deriving lifecycle timestamps:
-const activation = insight.promotionHistory.find(p => p.toStatus === "active")?.decidedAt
-const promoted = insight.promotionHistory.find(p => p.toStatus === "promoted")?.decidedAt
-const archived = insight.promotionHistory.find(p => p.toStatus === "archived")?.decidedAt
+const activation = insight.promotionHistory.find(p => p.toStatus === "ACTIVE")?.decidedAt
+const promoted = insight.promotionHistory.find(p => p.toStatus === "PROMOTED")?.decidedAt
+const archived = insight.promotionHistory.find(p => p.toStatus === "ARCHIVED")?.decidedAt
 ```
 
 **Components affected**:
