@@ -7,21 +7,108 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Assumption {
+  id        String            @id
+  statement String            @unique
+  status    AssumptionStatus?
+}
+
+model Business {
+  id              String            @id
+  name            String
+  placeId         String?           @unique
+  createdAt       DateTime          @default(now())
+  address         String?
+  discoveredAt    DateTime?
+  location        String?
+  niche           String?
+  phone           String?
+  pipelineState   PipelineState     @default(DISCOVERED)
+  sourcePayload   Json?
+  sourceType      String?
+  website         String?
+  Conversation    Conversation[]
+  EvidencePattern EvidencePattern[]
+  Hypothesis      Hypothesis[]
+  Review          Review[]
+}
+
+model Conversation {
+  id         String   @id
+  businessId String
+  question   String
+  createdAt  DateTime @default(now())
+  status     String   @default("pending")
+  Business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  Outcome    Outcome?
+}
+
+model EvidencePattern {
+  id          String       @id
+  businessId  String
+  patternType String
+  occurrences Int
+  examples    Json
+  createdAt   DateTime     @default(now())
+  Business    Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  Hypothesis  Hypothesis[]
+}
+
+model Hypothesis {
+  id                String            @id
+  businessId        String
+  statement         String
+  status            HypothesisStatus?
+  evidenceCount     Int               @default(0)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime
+  evidencePatternId String?
+  Business          Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  EvidencePattern   EvidencePattern?  @relation(fields: [evidencePatternId], references: [id])
+}
+
+model ObservationEvent {
+  id         String            @id
+  sourceType ObservationSource
+  sourceId   String
+  text       String
+  createdAt  DateTime          @default(now())
+}
+
+model Outcome {
+  id                   String               @id
+  conversationId       String               @unique
+  signalType           OutcomeSignal
+  signalClassification SignalClassification
+  unexpectedLearning   String?
+  createdAt            DateTime             @default(now())
+  Conversation         Conversation         @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id         String   @id
+  businessId String
+  text       String
+  rating     Int?
+  author     String?
+  createdAt  DateTime @default(now())
+  Business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
 model Opportunity {
-  id               String    @id @default(cuid())
-  keyword          String
-  pdfTitle         String    @default("")
-  niche            String
-  country          String    @default("US")
-  searchVolume     Int
-  opportunityScore Int
-  competition      String
-  trend            String
-  easeToSell       String
-  minPrice         Float
-  maxPrice         Float
-  emotionalIntent  String
-  exactQuestions      String
+  id                  String    @id @default(cuid())
+  keyword             String
+  niche               String
+  country             String    @default("US")
+  searchVolume        Int
+  opportunityScore    Int
+  competition         String
+  trend               String
+  easeToSell          String
+  minPrice            Float
+  maxPrice            Float
+  emotionalIntent     String
+  exactQuestions      String    @default("")
   painPoint           String    @default("")
   hookPotential       String    @default("medium")
   hookAngle           String    @default("")
@@ -35,33 +122,33 @@ model Opportunity {
   platformOfOrigin    String    @default("autocomplete")
   distributionStrategy String   @default("")
   saved               Boolean   @default(false)
-  isQuickWin       Boolean   @default(false)
-  isDiaspora       Boolean   @default(false)
-  isExpat          Boolean   @default(false)
-  isReturning      Boolean   @default(false)
-  clusterId        String?
-  cluster          Cluster?  @relation(fields: [clusterId], references: [id])
-  products         Product[]
-  hooks            Hook[]
-  createdAt        DateTime  @default(now())
+  isQuickWin          Boolean   @default(false)
+  isDiaspora          Boolean   @default(false)
+  isExpat             Boolean   @default(false)
+  isReturning         Boolean   @default(false)
+  clusterId           String?
+  pdfTitle            String    @default("")
+  products            Product[]
+  hooks               Hook[]
+  createdAt           DateTime  @default(now())
 }
 
 model Product {
-  id             String      @id @default(cuid())
+  id             String    @id @default(cuid())
   opportunityId  String
   opportunity    Opportunity @relation(fields: [opportunityId], references: [id])
   title          String
-  slug           String      @default("")
+  slug           String    @default("")
   pdfContent     String
   salesPageCopy  String
   seoPageContent String
-  status         String      @default("draft")
-  published      Boolean     @default(false)
-  salesCount     Int         @default(0)
-  revenue        Float       @default(0)
+  status         String    @default("draft")
+  published      Boolean   @default(false)
+  salesCount     Int       @default(0)
+  revenue        Float     @default(0)
   shopifyId      String?
-  gumroadUrl     String      @default("")
-  createdAt      DateTime    @default(now())
+  gumroadUrl     String    @default("")
+  createdAt      DateTime  @default(now())
 }
 
 model Hook {
@@ -76,164 +163,724 @@ model Hook {
   createdAt     DateTime     @default(now())
 }
 
-model Cluster {
-  id            String        @id @default(cuid())
-  name          String
-  theme         String
-  emotionalCore String
-  opportunities Opportunity[]
-  createdAt     DateTime      @default(now())
+model b2b_email_events {
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  outreach_id           String?                 @db.Uuid
+  lead_id               String?                 @db.Uuid
+  event_type            String
+  timestamp             DateTime                @db.Timestamptz(6)
+  metadata              Json?
+  created_at            DateTime?               @default(now()) @db.Timestamptz(6)
+  b2b_leads             b2b_leads?              @relation(fields: [lead_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  b2b_outreach          b2b_outreach?           @relation(fields: [outreach_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  b2b_email_link_clicks b2b_email_link_clicks[]
+
+  @@index([lead_id], map: "idx_b2b_email_events_lead")
+  @@index([outreach_id], map: "idx_b2b_email_events_outreach")
+  @@index([timestamp(sort: Desc)], map: "idx_b2b_email_events_timestamp")
+  @@index([event_type], map: "idx_b2b_email_events_type")
 }
 
-model EmailSubscriber {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  productSlug String?
-  country     String?
-  source      String?
-  createdAt   DateTime @default(now())
+model b2b_email_link_clicks {
+  id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  event_id         String?           @db.Uuid
+  lead_id          String?           @db.Uuid
+  link_url         String?
+  link_text        String?
+  clicked_at       DateTime          @db.Timestamptz(6)
+  created_at       DateTime?         @default(now()) @db.Timestamptz(6)
+  b2b_email_events b2b_email_events? @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  b2b_leads        b2b_leads?        @relation(fields: [lead_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([lead_id], map: "idx_b2b_email_link_clicks_lead")
 }
 
-model PlantingLog {
-  id        String   @id @default(cuid())
-  productId String
-  platform  String
-  hookId    String?
-  postedAt  DateTime @default(now())
-  notes     String?
+model b2b_heat_score_history {
+  id                  String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id             String?    @db.Uuid
+  heat_score          Int
+  engagement_score    Int?
+  qualification_score Int?
+  intent_score        Int?
+  recorded_at         DateTime?  @default(now()) @db.Timestamptz(6)
+  created_at          DateTime?  @default(now()) @db.Timestamptz(6)
+  b2b_leads           b2b_leads? @relation(fields: [lead_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([lead_id], map: "idx_b2b_heat_score_history_lead")
+  @@index([recorded_at(sort: Desc)], map: "idx_b2b_heat_score_history_recorded")
 }
 
-model SearchQuery {
-  id        String   @id @default(cuid())
-  query     String
-  country   String?
-  source    String   @default("homepage")
-  createdAt DateTime @default(now())
-}
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model b2b_leads {
+  id                         String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_name              String
+  business_category          String?
+  contact_name               String?
+  email                      String?
+  phone                      String?
+  website                    String?
+  city                       String?
+  postcode                   String?
+  google_place_id            String?
+  pain_point                 String?
+  pain_point_review          String?
+  review_rating              Decimal?                  @db.Decimal(2, 1)
+  source                     String?                   @default("discovery")
+  status                     String?                   @default("new")
+  notes                      String?
+  niche                      String?
+  landing_page_url           String?
+  business_evidence          Json?
+  human_observations         Json?
+  business_timeline          Json?
+  created_at                 DateTime                  @default(now())
+  updated_at                 DateTime
+  lead_state                 String?                   @default("new")
+  transitioned_at            DateTime?                 @db.Timestamptz(6)
+  driver_id                  String?
+  latitude                   Decimal?                  @db.Decimal(10, 8)
+  longitude                  Decimal?                  @db.Decimal(11, 8)
+  email_sent_at              DateTime?                 @db.Timestamptz(6)
+  qualified_business_id      String?                   @unique(map: "uq_b2b_leads_qualified_business") @db.Uuid
+  discovered_business_id     String?                   @db.Uuid
+  promoted_from_qualified_at DateTime?                 @db.Timestamptz(6)
+  outreach_eligible          Boolean?                  @default(false)
+  engagement_score           Int?                      @default(0)
+  last_engagement_at         DateTime?                 @db.Timestamptz(6)
+  lead_tier                  String?
+  engaged_today              Boolean?                  @default(false)
+  last_engagement_type       String?
+  pipeline_stage             String?                   @default("NEW")
+  b2b_email_events           b2b_email_events[]
+  b2b_email_link_clicks      b2b_email_link_clicks[]
+  b2b_heat_score_history     b2b_heat_score_history[]
+  discovered_businesses      discovered_businesses?    @relation(fields: [discovered_business_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  drivers                    drivers?                  @relation(fields: [driver_id], references: [id], onUpdate: NoAction)
+  qualified_businesses       qualified_businesses?     @relation(fields: [qualified_business_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  b2b_learning_outcomes      b2b_learning_outcomes[]
+  b2b_outreach               b2b_outreach[]
+  b2b_prospect_brief_cache   b2b_prospect_brief_cache?
+  b2b_standing_orders        b2b_standing_orders[]
+  lead_promotions            lead_promotions[]
+  lead_state_transitions     lead_state_transitions[]
 
-model Partner {
-  id                String        @id @default(cuid())
-  email             String        @unique
-  code              String        @unique
-  name              String?
-  referredBy        String?
-  totalEarned       Float         @default(0)
-  salesCount        Int           @default(0)
-  communityCountry  String?
-  platform          String?
-  communityTopics   String        @default("[]")
-  onboarded         Boolean       @default(false)
-  curatedGuides     String        @default("[]")
-  createdAt         DateTime      @default(now())
-  sales             PartnerSale[]
-}
-
-model PartnerSale {
-  id          String   @id @default(cuid())
-  partnerId   String
-  partner     Partner  @relation(fields: [partnerId], references: [id])
-  productSlug String
-  saleAmount  Float
-  commission  Float
-  createdAt   DateTime @default(now())
-}
-
-model DailyLoop {
-  id        String   @id @default(cuid())
-  date      String
-  status    String   @default("pending")
-  niche     String
-  keyword   String
-  pdfDone   Boolean  @default(false)
-  hooksDone Boolean  @default(false)
-  published Boolean  @default(false)
-  notes     String?
-  createdAt DateTime @default(now())
-}
-
-// Phase A: Instrumentation
-// Shadow logging for Evidence Validation Engine
-// Zero behavior change. Current system runs unchanged.
-// Logs accumulate for statistical analysis.
-model ValidationLog {
-  id                    String    @id @default(cuid())
-  validationId          String    @unique // Links to InsightObject.validationId
-  prospectId            String
-
-  // Decision reasoning (learning)
-  selectedInsightType   String
-  selectedBecause       String    @db.Text
-  rejectedInsightsJson  String    @db.Text // JSON: rejected insights and why
-
-  // Validation details
-  confidenceScore       Float     // 0.0–1.0 continuous
-  confidenceBand        String    // Presentation: PROVEN, HIGH_CONFIDENCE, etc.
-  status                String    // APPROVED, PENDING_MORE_EVIDENCE, REJECTED_FOR_NOW
-
-  // Evidence provenance
-  evidenceSourcesJson   String    @db.Text // JSON: array of evidence sources
-  evidenceSourceCount   Int
-
-  // Contradictions
-  contradictionsJson    String    @db.Text // JSON: contradiction details
-  contradictionsCount   Int       @default(0)
-
-  // Outcomes (populated later)
-  emailSent             Boolean   @default(false)
-  emailSentAt           DateTime?
-  emailOpenRate         Float?
-  pageVisited           Boolean   @default(false)
-  pageVisitedAt         DateTime?
-  pageDwellTime         Int?      // Seconds
-  pageScrollDepth       Float?    // 0.0-1.0
-  ctaClicked            Boolean   @default(false)
-  ctaClickedAt          DateTime?
-  replyReceived         Boolean   @default(false)
-  replyReceivedAt       DateTime?
-  conversionStatus      String?   // converted, not_converted, pending
-
-  // KPI tracking (learning signals)
-  kpiInsightAccuracy    Boolean?  // Did prospect confirm this insight?
-  kpiEngagementDepth    String?   // none, open, click, page_visit, cta_click, reply
-  kpiConversationStarts Int       @default(0)
-  kpiConversion         Boolean   @default(false)
-
-  // Metadata
-  leadCategory          String
-  leadLocations         Int
-  enrichmentLevel       String    // full, partial, minimal
-
-  // Timing
-  validatedAt           DateTime  @default(now())
-  outcomeEvaluatedAt    DateTime?
-  updatedAt             DateTime  @updatedAt
-
-  @@index([prospectId])
+  @@index([created_at])
   @@index([status])
-  @@index([selectedInsightType])
-  @@index([kpiInsightAccuracy])
-  @@index([conversionStatus])
+  @@index([created_at(sort: Desc)], map: "idx_b2b_leads_created")
+  @@index([driver_id], map: "idx_b2b_leads_driver")
+  @@index([engaged_today], map: "idx_b2b_leads_engaged_today")
+  @@index([engagement_score(sort: Desc), last_engagement_at(sort: Desc)], map: "idx_b2b_leads_engagement")
+  @@index([lead_state], map: "idx_b2b_leads_lead_state")
+  @@index([pipeline_stage], map: "idx_b2b_leads_pipeline_stage")
+  @@index([qualified_business_id], map: "idx_b2b_leads_qualified_business")
+  @@index([status], map: "idx_b2b_leads_status")
+  @@index([lead_tier], map: "idx_b2b_leads_tier")
 }
 
-model PageEngagementLog {
-  id                  String    @id @default(cuid())
-  prospectId          String
-  insightId           String
-  validationId        String
-  pageViewed          Boolean   @default(false)
-  viewedAt            DateTime?
-  dwellTimeSeconds    Int?
-  scrollDepthPercent  Float?
-  ctaClicks           Int       @default(0)
-  ctaClickedAt        DateTime?
-  returnVisits        Int       @default(0)
-  lastVisitAt         DateTime?
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+model b2b_learning_outcomes {
+  id                           String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  qualified_business_id        String?               @db.Uuid
+  lead_id                      String?               @db.Uuid
+  outcome_type                 String
+  outcome_value                Int?                  @default(1)
+  business_category            String?
+  opportunity_score_at_outcome Decimal?              @db.Decimal(5, 2)
+  days_to_outcome              Int?
+  engagement_signals           Json?
+  created_at                   DateTime?             @default(now()) @db.Timestamptz(6)
+  b2b_leads                    b2b_leads?            @relation(fields: [lead_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  qualified_businesses         qualified_businesses? @relation(fields: [qualified_business_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
 
-  @@unique([prospectId, insightId])
-  @@index([prospectId])
-  @@index([insightId])
-  @@index([validationId])
-  @@index([createdAt])
+model b2b_orchestration_logs {
+  id                        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  run_id                    String
+  started_at                DateTime  @db.Timestamptz(6)
+  completed_at              DateTime  @db.Timestamptz(6)
+  discovery_count           Int?
+  businesses_found          Int?
+  leads_created             Int?
+  drivers_matched           Int?
+  emails_sent               Int?
+  standing_orders_processed Int?
+  jobs_created              Int?
+  failures                  String[]
+  status                    String
+  execution_details         Json?
+  created_at                DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model b2b_orchestration_runs {
+  id                        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  run_id                    String    @unique
+  started_at                DateTime  @db.Timestamptz(6)
+  completed_at              DateTime  @db.Timestamptz(6)
+  discovery_count           Int?      @default(0)
+  businesses_found          Int?      @default(0)
+  leads_created             Int?      @default(0)
+  drivers_matched           Int?      @default(0)
+  emails_sent               Int?      @default(0)
+  standing_orders_processed Int?      @default(0)
+  jobs_created              Int?      @default(0)
+  failures                  String[]  @default([])
+  status                    String
+  duration_ms               Int?
+  execution_details         Json?
+  created_at                DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([run_id], map: "idx_runs_run_id")
+  @@index([started_at(sort: Desc)], map: "idx_runs_started_at")
+  @@index([status], map: "idx_runs_status")
+}
+
+model b2b_outreach {
+  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id           String             @db.Uuid
+  subject           String?
+  body              String?
+  sent_at           DateTime?
+  follow_up_1_at    DateTime?
+  follow_up_2_at    DateTime?
+  replied           Boolean?           @default(false)
+  replied_at        DateTime?
+  email_type        String?            @default("initial")
+  resend_message_id String?
+  created_at        DateTime           @default(now())
+  b2b_email_events  b2b_email_events[]
+  b2b_leads         b2b_leads          @relation(fields: [lead_id], references: [id], onDelete: Cascade)
+
+  @@index([lead_id])
+  @@index([lead_id], map: "idx_b2b_outreach_lead")
+}
+
+model b2b_prospect_brief_cache {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id    String?    @unique @db.Uuid
+  brief_data Json
+  created_at DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at DateTime?  @default(now()) @db.Timestamptz(6)
+  b2b_leads  b2b_leads? @relation(fields: [lead_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model b2b_standing_orders {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id           String    @db.Uuid
+  business_name     String
+  contact_name      String?
+  contact_phone     String?
+  contact_email     String?
+  pickup_address    String?
+  pickup_postcode   String?
+  delivery_address  String?
+  delivery_postcode String?
+  service_type      String?
+  frequency         String?   @default("weekly")
+  day_of_week       Int?
+  preferred_time    String?
+  price             Decimal?  @db.Decimal(10, 2)
+  notes             String?
+  active            Boolean?  @default(true)
+  last_generated_at DateTime?
+  next_scheduled_at DateTime?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @default(now())
+  b2b_leads         b2b_leads @relation(fields: [lead_id], references: [id])
+}
+
+model discovered_businesses {
+  id                                                                                    String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  google_place_id                                                                       String?               @unique
+  business_name                                                                         String
+  address                                                                               String?
+  postcode                                                                              String?
+  category                                                                              String?
+  source                                                                                String?               @default("discovery")
+  discovered_at                                                                         DateTime?             @default(now()) @db.Timestamptz(6)
+  raw_data                                                                              Json?
+  b2b_leads                                                                             b2b_leads[]
+  enriched_businesses_enriched_businesses_discovered_business_idTodiscovered_businesses enriched_businesses[] @relation("enriched_businesses_discovered_business_idTodiscovered_businesses")
+  enriched_businesses_enriched_businesses_google_place_idTodiscovered_businesses        enriched_businesses[] @relation("enriched_businesses_google_place_idTodiscovered_businesses")
+  opportunity_signals                                                                   opportunity_signals[]
+  qualified_businesses                                                                  qualified_businesses?
+
+  @@index([discovered_at(sort: Desc)], map: "idx_discovered_businesses_created")
+  @@index([google_place_id], map: "idx_discovered_businesses_place_id")
+  @@index([postcode], map: "idx_discovered_businesses_postcode")
+}
+
+model discovery_config {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  mode       String
+  niche      String
+  locations  String[]
+  enabled    Boolean?  @default(true)
+  priority   Int?      @default(50)
+  min_score  Decimal?  @default(40) @db.Decimal(5, 2)
+  created_by String?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([niche], map: "idx_discovery_config_niche")
+}
+
+model discovery_sources {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  source_type String
+  source_name String?
+  description String?
+  enabled     Boolean?  @default(true)
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model driver_availability {
+  id             String   @id
+  driver_id      String
+  available_date DateTime @db.Date
+  notes          String?
+  created_at     DateTime @default(now())
+  drivers        drivers  @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+
+  @@unique([driver_id, available_date])
+}
+
+model driver_location_history {
+  id              String   @id
+  job_id          String?
+  driver_clerk_id String?
+  lat             Decimal?
+  lng             Decimal?
+  accuracy        Decimal?
+  eta_minutes     Int?
+  recorded_at     DateTime @default(now())
+  jobs            jobs?    @relation(fields: [job_id], references: [id])
+
+  @@index([job_id])
+  @@index([recorded_at])
+  @@index([job_id], map: "idx_dlh_job_id")
+  @@index([recorded_at], map: "idx_dlh_recorded_at")
+}
+
+model drivers {
+  id                     String                @id
+  clerk_user_id          String?               @unique
+  full_name              String?
+  email                  String?               @unique
+  phone                  String?
+  vehicle_type           String?
+  area                   String?
+  days_preference        String?
+  stripe_customer_id     String?
+  stripe_subscription_id String?
+  subscription_status    String?               @default("inactive")
+  rating_avg             Decimal?
+  rating_count           Int?                  @default(0)
+  profile_live           Boolean?              @default(false)
+  last_seen_at           DateTime?
+  created_at             DateTime              @default(now())
+  updated_at             DateTime              @default(now())
+  postcode               String?               @db.VarChar(20)
+  latitude               Decimal?              @db.Decimal(10, 8)
+  longitude              Decimal?              @db.Decimal(11, 8)
+  radius_miles           Int?                  @default(10)
+  available_days         String[]
+  b2b_opt_in             Boolean?              @default(false)
+  b2b_leads              b2b_leads[]
+  driver_availability    driver_availability[]
+  earnings               earnings[]
+  job_invoices           job_invoices[]
+  jobs                   jobs[]
+  ratings                ratings[]
+
+  @@index([last_seen_at])
+  @@index([profile_live])
+  @@index([postcode], map: "idx_drivers_postcode")
+}
+
+model earnings {
+  id         String    @id
+  driver_id  String?
+  job_id     String?
+  amount     Decimal?
+  status     String?   @default("pending")
+  paid_at    DateTime?
+  notes      String?
+  created_at DateTime  @default(now())
+  drivers    drivers?  @relation(fields: [driver_id], references: [id])
+  jobs       jobs?     @relation(fields: [job_id], references: [id])
+}
+
+model enriched_businesses {
+  id                                                                                      String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  discovered_business_id                                                                  String?                @db.Uuid
+  google_place_id                                                                         String?
+  website                                                                                 String?
+  phone                                                                                   String?
+  email                                                                                   String?
+  review_count                                                                            Int?
+  average_rating                                                                          Decimal?               @db.Decimal(3, 2)
+  review_summary                                                                          Json?
+  digital_signals                                                                         Json?
+  transport_signals                                                                       Json?
+  ai_observations                                                                         String?
+  enriched_at                                                                             DateTime?              @default(now()) @db.Timestamptz(6)
+  updated_at                                                                              DateTime?              @default(now()) @db.Timestamptz(6)
+  discovered_businesses_enriched_businesses_discovered_business_idTodiscovered_businesses discovered_businesses? @relation("enriched_businesses_discovered_business_idTodiscovered_businesses", fields: [discovered_business_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  discovered_businesses_enriched_businesses_google_place_idTodiscovered_businesses        discovered_businesses? @relation("enriched_businesses_google_place_idTodiscovered_businesses", fields: [google_place_id], references: [google_place_id], onDelete: NoAction, onUpdate: NoAction)
+  qualified_businesses                                                                    qualified_businesses[]
+
+  @@index([discovered_business_id], map: "idx_enriched_businesses_discovered")
+  @@index([google_place_id], map: "idx_enriched_businesses_google_place")
+}
+
+model job_events {
+  id         String       @id
+  job_id     String
+  event_type JobEventType
+  latitude   Decimal?
+  longitude  Decimal?
+  timestamp  DateTime     @default(now())
+  created_at DateTime     @default(now())
+  jobs       jobs         @relation(fields: [job_id], references: [id], onDelete: Cascade)
+  job_photos job_photos[]
+
+  @@index([job_id])
+  @@index([timestamp])
+}
+
+model job_invoices {
+  id             String           @id
+  job_id         String
+  driver_id      String
+  invoice_number String           @unique
+  amount         Decimal
+  status         JobInvoiceStatus @default(pending)
+  issued_at      DateTime         @default(now())
+  paid_at        DateTime?
+  created_at     DateTime         @default(now())
+  drivers        drivers          @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  jobs           jobs             @relation(fields: [job_id], references: [id], onDelete: Cascade)
+
+  @@index([driver_id])
+  @@index([job_id])
+  @@index([status])
+}
+
+model job_photos {
+  id           String       @id
+  job_id       String
+  job_event_id String?
+  photo_type   JobPhotoType
+  photo_url    String
+  latitude     Decimal?
+  longitude    Decimal?
+  uploaded_at  DateTime     @default(now())
+  created_at   DateTime     @default(now())
+  job_events   job_events?  @relation(fields: [job_event_id], references: [id])
+  jobs         jobs         @relation(fields: [job_id], references: [id], onDelete: Cascade)
+
+  @@index([job_event_id])
+  @@index([job_id])
+}
+
+model jobs {
+  id                      String                    @id
+  reference               String                    @unique
+  tracking_token          String                    @unique
+  customer_name           String?
+  customer_email          String?
+  customer_phone          String?
+  service_type            String?
+  postcode_from           String?
+  postcode_to             String?
+  distance_miles          Int?
+  large_items             Json?
+  timeframe               String?
+  help_loading            String?
+  duration                String?
+  driver_id               String?
+  status                  String?                   @default("new")
+  job_date                DateTime?                 @db.Date
+  price                   Decimal?
+  notes                   String?
+  lead_id                 String?
+  offered_at              DateTime?
+  confirmed_at            DateTime?
+  in_progress_at          DateTime?
+  completed_at            DateTime?
+  pickup_lat              Decimal?
+  pickup_lng              Decimal?
+  driver_lat              Decimal?
+  driver_lng              Decimal?
+  driver_eta_minutes      Int?
+  location_sharing_since  DateTime?
+  created_at              DateTime                  @default(now())
+  updated_at              DateTime
+  arrived_delivery_at     DateTime?
+  arrived_pickup_at       DateTime?
+  collected_at            DateTime?
+  collection_photo_url    String?
+  delivery_photo_url      String?
+  recipient_name          String?
+  requires_signature      Boolean                   @default(false)
+  address_from            String?
+  address_to              String?
+  driver_location_history driver_location_history[]
+  earnings                earnings[]
+  job_events              job_events[]
+  job_invoices            job_invoices[]
+  job_photos              job_photos[]
+  drivers                 drivers?                  @relation(fields: [driver_id], references: [id])
+  ratings                 ratings?
+
+  @@index([created_at])
+  @@index([customer_email])
+  @@index([driver_id, status])
+  @@index([status])
+  @@index([updated_at])
+}
+
+model lead_promotions {
+  id                    String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  qualified_business_id String?               @db.Uuid
+  lead_id               String?               @db.Uuid
+  promoted_at           DateTime?             @default(now()) @db.Timestamptz(6)
+  promotion_reason      String?
+  promoted_by           String?
+  b2b_leads             b2b_leads?            @relation(fields: [lead_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  qualified_businesses  qualified_businesses? @relation(fields: [qualified_business_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([qualified_business_id], map: "idx_lead_promotions_qualified")
+}
+
+model lead_state_transitions {
+  id            String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id       String?    @db.Uuid
+  from_state    String
+  to_state      String
+  trigger_event String?
+  created_at    DateTime?  @default(now()) @db.Timestamptz(6)
+  b2b_leads     b2b_leads? @relation(fields: [lead_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([lead_id], map: "idx_lead_state_transitions_lead")
+}
+
+model leads {
+  id               String   @id @db.Uuid
+  created_at       DateTime @db.Timestamptz(6)
+  service_type     String?
+  large_items      Json?
+  timeframe        String?
+  help_loading     String?
+  duration         String?
+  postcode_from    String?
+  postcode_to      String?
+  email            String?
+  phone            String?
+  phone_consent    Boolean?
+  full_name        String?
+  marketing_opt_in Boolean?
+  utm              Json?
+}
+
+model opportunity_signals {
+  id                     String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  discovered_business_id String?                @db.Uuid
+  signal_type            String
+  signal_description     String?
+  score_impact           Int?                   @default(5)
+  detected_at            DateTime?              @default(now()) @db.Timestamptz(6)
+  source                 String?
+  metadata               Json?
+  created_at             DateTime?              @default(now()) @db.Timestamptz(6)
+  discovered_businesses  discovered_businesses? @relation(fields: [discovered_business_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model phase3_campaign {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id         String    @db.Uuid
+  business_name   String?
+  email           String?
+  template_type   String?
+  subject         String?
+  body            String?
+  resend_email_id String?
+  sent_at         DateTime? @db.Timestamptz(6)
+  status          String?
+  error           String?
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model playing_with_neon {
+  id    Int    @id @default(autoincrement())
+  name  String
+  value Float? @db.Real
+}
+
+model postcode_discovery_jobs {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_by          String
+  status              String?   @default("pending")
+  total_postcodes     Int?
+  processed_postcodes Int?      @default(0)
+  discoveries_found   Int?      @default(0)
+  leads_created       Int?      @default(0)
+  postcode_data       Json?
+  results             Json?
+  error_message       String?
+  started_at          DateTime? @db.Timestamptz(6)
+  completed_at        DateTime? @db.Timestamptz(6)
+  created_at          DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at(sort: Desc)], map: "idx_postcode_discovery_created")
+  @@index([status], map: "idx_postcode_discovery_status")
+}
+
+model prospect_feedback {
+  id           String   @id
+  slug         String
+  feedbackType String
+  referrer     String?
+  user_agent   String?
+  created_at   DateTime @default(now())
+
+  @@index([created_at])
+  @@index([slug])
+}
+
+model push_subscriptions {
+  id         Int       @id @default(autoincrement())
+  endpoint   String    @unique
+  p256dh     String
+  auth       String
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model qualified_businesses {
+  id                      String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enriched_business_id    String?                 @db.Uuid
+  discovered_business_id  String?                 @unique(map: "uq_qualified_discovered_business") @db.Uuid
+  google_place_id         String?
+  opportunity_score       Decimal                 @db.Decimal(5, 2)
+  score_breakdown         Json
+  confidence              String?
+  qualification_reason    String?
+  estimated_monthly_value Decimal?                @db.Decimal(10, 2)
+  qualified_at            DateTime?               @default(now()) @db.Timestamptz(6)
+  promoted_to_lead_at     DateTime?               @db.Timestamptz(6)
+  updated_at              DateTime?               @default(now()) @db.Timestamptz(6)
+  b2b_leads               b2b_leads?
+  b2b_learning_outcomes   b2b_learning_outcomes[]
+  lead_promotions         lead_promotions[]
+  discovered_businesses   discovered_businesses?  @relation(fields: [discovered_business_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  enriched_businesses     enriched_businesses?    @relation(fields: [enriched_business_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([promoted_to_lead_at], map: "idx_qualified_businesses_promoted")
+  @@index([opportunity_score(sort: Desc)], map: "idx_qualified_businesses_score")
+}
+
+model ratings {
+  id         String   @id
+  job_id     String?  @unique
+  driver_id  String?
+  score      Int?
+  comment    String?
+  created_at DateTime @default(now())
+  drivers    drivers? @relation(fields: [driver_id], references: [id])
+  jobs       jobs?    @relation(fields: [job_id], references: [id])
+
+  @@index([driver_id])
+}
+
+model research_missions {
+  id                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                 String
+  mission_type         String
+  prompt               String?
+  discovery_strategy   Json?
+  source               String?   @default("operator")
+  status               String?   @default("pending")
+  created_by           String?
+  discoveries_found    Int?      @default(0)
+  businesses_qualified Int?      @default(0)
+  leads_created        Int?      @default(0)
+  results_summary      Json?
+  error_message        String?
+  started_at           DateTime? @db.Timestamptz(6)
+  completed_at         DateTime? @db.Timestamptz(6)
+  created_at           DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+}
+
+enum AssumptionStatus {
+  emerging
+  supported
+  weak
+  rejected
+}
+
+enum HypothesisStatus {
+  emerging
+  supported
+  weak
+  rejected
+}
+
+enum JobEventType {
+  assigned
+  accepted
+  arrived_pickup
+  collected
+  on_way
+  arrived_delivery
+  delivered
+}
+
+enum JobInvoiceStatus {
+  pending
+  paid
+  cancelled
+}
+
+enum JobPhotoType {
+  collection
+  delivery
+}
+
+enum ObservationSource {
+  review
+  conversation
+  outcome
+}
+
+enum OutcomeSignal {
+  no_answer
+  spoke_briefly
+  real_conversation
+  not_interested
+  wrong_fit
+}
+
+enum PipelineState {
+  DISCOVERED
+  EVIDENCE_COLLECTED
+  INVESTIGATED
+  INBOX_READY
+}
+
+enum SignalClassification {
+  supports
+  contradicts
+  unclear
+  new_signal
 }
