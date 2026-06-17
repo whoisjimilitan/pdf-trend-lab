@@ -260,6 +260,7 @@ model b2b_leads {
   b2b_learning_outcomes      b2b_learning_outcomes[]
   b2b_outreach               b2b_outreach[]
   b2b_prospect_brief_cache   b2b_prospect_brief_cache?
+  b2b_prospect_qualifications b2b_prospect_qualifications? @relation("b2b_prospect_qualifications")
   b2b_standing_orders        b2b_standing_orders[]
   lead_promotions            lead_promotions[]
   lead_state_transitions     lead_state_transitions[]
@@ -346,12 +347,85 @@ model b2b_outreach {
   replied_at        DateTime?
   email_type        String?            @default("initial")
   resend_message_id String?
+  pressure_type     String?
+  copy_variant      String?
+  sent_by           String?            @default("autonomous")
   created_at        DateTime           @default(now())
   b2b_email_events  b2b_email_events[]
+  b2b_responses     b2b_responses[]
   b2b_leads         b2b_leads          @relation(fields: [lead_id], references: [id], onDelete: Cascade)
 
   @@index([lead_id])
   @@index([lead_id], map: "idx_b2b_outreach_lead")
+  @@index([pressure_type])
+  @@index([copy_variant])
+  @@index([sent_by])
+}
+
+model b2b_responses {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  outreach_id   String       @db.Uuid
+  response_type String
+  responded_at  DateTime     @default(now())
+  response_time_minutes Int?
+  created_at    DateTime     @default(now())
+  b2b_outreach  b2b_outreach @relation(fields: [outreach_id], references: [id], onDelete: Cascade)
+
+  @@index([outreach_id])
+  @@index([response_type])
+  @@index([responded_at(sort: Desc)])
+}
+
+model b2b_prospect_qualifications {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id            String   @db.Uuid
+  prospect_first_name String?
+  prospect_role      String?
+  prospect_phone     String?
+  prospect_email     String?
+  proposed_call_time String?
+  notes              String?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @default(now())
+  b2b_leads          b2b_leads @relation("b2b_prospect_qualifications", fields: [lead_id], references: [id], onDelete: Cascade)
+
+  @@index([lead_id])
+  @@unique([lead_id])
+}
+
+model b2b_import_logs {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  file_name         String
+  total_rows        Int
+  rows_processed    Int?     @default(0)
+  rows_duplicates   Int?     @default(0)
+  rows_sent         Int?     @default(0)
+  rows_errors       Int?     @default(0)
+  error_details     Json?
+  imported_at       DateTime @default(now())
+  created_at        DateTime @default(now())
+
+  @@index([imported_at(sort: Desc)])
+}
+
+model b2b_learning_metrics {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pressure_type   String
+  industry        String?
+  copy_variant    String?
+  emails_sent     Int      @default(0)
+  responses_yes   Int      @default(0)
+  responses_no    Int      @default(0)
+  yes_rate        Decimal? @db.Decimal(5, 2)
+  conversion_rate Decimal? @db.Decimal(5, 2)
+  updated_at      DateTime @default(now())
+  created_at      DateTime @default(now())
+
+  @@unique([pressure_type, industry, copy_variant])
+  @@index([pressure_type])
+  @@index([industry])
+  @@index([yes_rate(sort: Desc)])
+  @@index([updated_at(sort: Desc)])
 }
 
 model b2b_prospect_brief_cache {

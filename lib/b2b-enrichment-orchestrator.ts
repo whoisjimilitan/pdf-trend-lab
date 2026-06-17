@@ -2,7 +2,7 @@
  * B2B Enrichment Orchestrator
  *
  * Coordinates the full enrichment pipeline for newly created leads.
- * Executes: Brief → Angle → Email Draft
+ * Executes: Brief → Angle → Email Draft → Pressure Type Assignment
  *
  * Design: Failures are non-blocking. Lead creation always succeeds.
  * Each stage executes independently.
@@ -11,21 +11,26 @@
 import { generateProspectBrief } from "./b2b-prospect-brief-generator";
 import { generateOutreachAngles } from "./b2b-outreach-angle-generator";
 import { generateEmailDraft } from "./b2b-email-draft-generator";
+import { mapCategoryToPressureType } from "./b2b-pressure-type-mapper";
+import { prisma } from "./prisma";
 
 export interface EnrichmentResult {
   lead_id: string;
   brief_generated: boolean;
   angle_generated: boolean;
   email_generated: boolean;
+  pressure_type?: string;
   errors: string[];
   completed_at: string;
 }
 
 /**
- * Enrich a lead with brief, angle, and email draft
+ * Enrich a lead with brief, angle, email draft, and pressure type
  *
  * This should be called immediately after a lead is created.
  * Runs asynchronously (doesn't block lead creation).
+ *
+ * Assigns pressure_type based on business category and saves to b2b_outreach.
  */
 export async function enrichLeadWithOutreach(
   leadId: string
@@ -41,6 +46,26 @@ export async function enrichLeadWithOutreach(
 
   try {
     console.log(`[ENRICHMENT] Starting enrichment pipeline for ${leadId}`);
+
+    // Fetch lead to get category for pressure type mapping
+    const lead = await prisma.b2b_leads.findUnique({
+      where: { id: leadId },
+      select: { business_category: true },
+    });
+
+    if (!lead?.business_category) {
+      result.errors.push("Lead has no business category for pressure type mapping");
+      console.log(`[ENRICHMENT] No category found for ${leadId}`);
+    }
+
+    const pressureType = lead?.business_category
+      ? mapCategoryToPressureType(lead.business_category)
+      : undefined;
+
+    if (pressureType) {
+      result.pressure_type = pressureType;
+      console.log(`[ENRICHMENT] Assigned pressure_type: ${pressureType} for ${leadId}`);
+    }
 
     // STEP 1: Generate Prospect Brief
     const brief = await generateProspectBrief(leadId);
@@ -68,6 +93,30 @@ export async function enrichLeadWithOutreach(
         } else {
           result.email_generated = true;
           console.log(`[ENRICHMENT] Email draft generated for ${leadId}`);
+
+          // STEP 4: Save to b2b_outreach with pressure_type
+          if (email.subject && email.body) {
+            try {
+              await prisma.b2b_outreach.create({
+                data: {
+                  lead_id: leadId,
+                  subject: email.subject,
+                  body: email.body,
+                  email_type: "initial",
+                  sent_by: "autonomous",
+                  pressure_type: pressureType,
+                  copy_variant: "default",
+                },
+              });
+              console.log(`[ENRICHMENT] Outreach record created for ${leadId}`);
+            } catch (err) {
+              result.errors.push("Failed to save outreach record");
+              console.error(
+                `[ENRICHMENT] Failed to save outreach for ${leadId}:`,
+                err
+              );
+            }
+          }
         }
       }
     }
@@ -82,7 +131,9 @@ export async function enrichLeadWithOutreach(
 
   // Log result
   if (result.brief_generated && result.angle_generated && result.email_generated) {
-    console.log(`[ENRICHMENT] ✅ Complete enrichment for ${leadId}`);
+    console.log(
+      `[ENRICHMENT] ✅ Complete enrichment for ${leadId} (pressure: ${result.pressure_type})`
+    );
   } else if (result.brief_generated || result.angle_generated || result.email_generated) {
     console.log(
       `[ENRICHMENT] ⚠️ Partial enrichment for ${leadId}: brief=${result.brief_generated}, angle=${result.angle_generated}, email=${result.email_generated}`
