@@ -4,10 +4,10 @@
  * Pure logging infrastructure for page behavior.
  * Records what happens. Does not interpret, score, rank, or optimize.
  * Non-blocking async operations.
+ *
+ * NOTE: PageEngagementLog model missing from schema in Phase 3.4A
+ * Dead code — not imported anywhere. Functions stubbed.
  */
-
-import { prisma } from "./prisma"
-import { v4 as uuidv4 } from "uuid"
 
 /**
  * Record page view
@@ -21,22 +21,8 @@ export async function recordPageView(params: {
   insightId: string
   validationId: string
 }): Promise<string> {
-  try {
-    const log = await prisma.pageEngagementLog.create({
-      data: {
-        id: uuidv4(),
-        prospectId: params.prospectId,
-        insightId: params.insightId,
-        validationId: params.validationId,
-        pageViewed: true,
-        viewedAt: new Date()
-      }
-    })
-    return log.id
-  } catch (error) {
-    console.error(`Failed to record page view: ${error}`)
-    throw error
-  }
+  // Feature: Page engagement logging — database model removed from schema in Phase 3.4A
+  return "temp-" + Date.now()
 }
 
 /**
@@ -50,20 +36,7 @@ export async function recordScrollDepth(params: {
   insightId: string
   depth: number
 }): Promise<void> {
-  try {
-    await prisma.pageEngagementLog.updateMany({
-      where: {
-        prospectId: params.prospectId,
-        insightId: params.insightId
-      },
-      data: {
-        scrollDepthPercent: Math.min(1.0, Math.max(0.0, params.depth)),
-        updatedAt: new Date()
-      }
-    })
-  } catch (error) {
-    console.error(`Failed to record scroll depth: ${error}`)
-  }
+  // Feature: Page engagement logging — database model removed from schema in Phase 3.4A
 }
 
 /**
@@ -77,20 +50,7 @@ export async function recordDwellTime(params: {
   insightId: string
   seconds: number
 }): Promise<void> {
-  try {
-    await prisma.pageEngagementLog.updateMany({
-      where: {
-        prospectId: params.prospectId,
-        insightId: params.insightId
-      },
-      data: {
-        dwellTimeSeconds: Math.max(0, Math.floor(params.seconds)),
-        updatedAt: new Date()
-      }
-    })
-  } catch (error) {
-    console.error(`Failed to record dwell time: ${error}`)
-  }
+  // Feature: Page engagement logging — database model removed from schema in Phase 3.4A
 }
 
 /**
@@ -98,73 +58,46 @@ export async function recordDwellTime(params: {
  *
  * @param prospectId Lead identifier
  */
-export async function recordCTAClick(params: {
+export async function recordCtaClick(params: {
   prospectId: string
   insightId: string
+  ctaText: string
 }): Promise<void> {
-  try {
-    await prisma.pageEngagementLog.updateMany({
-      where: {
-        prospectId: params.prospectId,
-        insightId: params.insightId
-      },
-      data: {
-        ctaClicks: { increment: 1 },
-        ctaClickedAt: new Date(),
-        updatedAt: new Date()
-      }
-    })
-  } catch (error) {
-    console.error(`Failed to record CTA click: ${error}`)
-  }
+  // Feature: Page engagement logging — database model removed from schema in Phase 3.4A
 }
 
 /**
- * Record return visit
+ * Record form submission
  *
  * @param prospectId Lead identifier
+ * @param formData Submitted form fields
  */
-export async function recordReturnVisit(params: {
+export async function recordFormSubmission(params: {
   prospectId: string
   insightId: string
+  formData: Record<string, any>
 }): Promise<void> {
-  try {
-    await prisma.pageEngagementLog.updateMany({
-      where: {
-        prospectId: params.prospectId,
-        insightId: params.insightId
-      },
-      data: {
-        returnVisits: { increment: 1 },
-        lastVisitAt: new Date(),
-        updatedAt: new Date()
-      }
-    })
-  } catch (error) {
-    console.error(`Failed to record return visit: ${error}`)
-  }
+  // Feature: Page engagement logging — database model removed from schema in Phase 3.4A
 }
 
 /**
- * Query engagement logs for analysis
+ * Get engagement summary for prospect
  *
  * @param prospectId Lead identifier
  */
-export async function getEngagementLog(params: {
-  prospectId: string
-  insightId?: string
-}): Promise<any[]> {
-  try {
-    const logs = await prisma.pageEngagementLog.findMany({
-      where: {
-        prospectId: params.prospectId,
-        insightId: params.insightId
-      },
-      orderBy: { createdAt: "desc" }
-    })
-    return logs
-  } catch (error) {
-    console.error(`Failed to query engagement logs: ${error}`)
-    return []
+export async function getEngagementSummary(prospectId: string): Promise<{
+  pageViewed: boolean
+  scrollDepth: number
+  dwellTimeSeconds: number
+  ctaClicked: boolean
+  formSubmitted: boolean
+}> {
+  // Feature: Page engagement logging — database model removed from schema in Phase 3.4A
+  return {
+    pageViewed: false,
+    scrollDepth: 0,
+    dwellTimeSeconds: 0,
+    ctaClicked: false,
+    formSubmitted: false
   }
 }

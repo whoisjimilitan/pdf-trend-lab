@@ -8,15 +8,8 @@ export async function POST(req: NextRequest) {
   const { email } = await req.json() as { email?: string };
   if (!email?.trim()) return NextResponse.json({ found: false }, { status: 400 });
 
-  const partner = await prisma.partner.findUnique({
-    where: { email: email.trim().toLowerCase() },
-  });
+  // Feature: Partner affiliate program — database model removed from schema in Phase 3.4A
+  const partner = null;
 
   if (!partner) return NextResponse.json({ found: false });
-
-  const dashboardUrl = `${SITE}/curator/${partner.code}`;
-  const { subject, html } = partnerWelcomeEmail(partner.code, dashboardUrl);
-  await resend.emails.send({ from: FROM, to: partner.email, subject, html }).catch(() => {});
-
-  return NextResponse.json({ found: true });
 }

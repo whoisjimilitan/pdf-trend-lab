@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Instant answers to real problems. Practical PDF guides and pastoral reflection words — instant download, read on any device.",
 };
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 const BJ_NICHES = new Set(["grief","doubt","shame","loneliness","fear","exhaustion","faith","healing","identity"]);
 

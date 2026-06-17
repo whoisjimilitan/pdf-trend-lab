@@ -4,6 +4,8 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import EmailCapture from "./email-capture";
 
+export const dynamic = "force-dynamic";
+
 type Props = { params: Promise<{ slug: string }> };
 
 const BJ_NICHES = new Set(["grief","doubt","shame","loneliness","fear","exhaustion","faith","healing","identity"]);

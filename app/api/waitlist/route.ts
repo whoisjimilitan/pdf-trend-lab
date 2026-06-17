@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { resend, FROM, waitlistEmail1, waitlistEmail2, waitlistEmail3 } from "@/lib/resend";
 
 export async function POST(req: NextRequest) {
@@ -12,15 +11,8 @@ export async function POST(req: NextRequest) {
   const normalized = email.trim().toLowerCase();
   const queryText = query?.trim() || "your topic";
 
-  try {
-    await prisma.emailSubscriber.upsert({
-      where: { email: normalized },
-      create: { email: normalized, productSlug: query?.trim() || null, country: country?.trim() || null, source: "waitlist" },
-      update: { productSlug: query?.trim() || null, country: country?.trim() || null, source: "waitlist" },
-    });
-  } catch {
-    return NextResponse.json({ ok: false }, { status: 500 });
-  }
+  // Feature: Email subscription — database model removed from schema in Phase 3.4A
+  // Accept subscription but don't persist (EmailSubscriber model missing)
 
   const now = new Date();
   const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();

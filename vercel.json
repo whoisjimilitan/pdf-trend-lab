@@ -3,6 +3,10 @@
     {
       "path": "/api/daily-word",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/discovery/run",
+      "schedule": "0 2 * * *"
     }
   ]
 }

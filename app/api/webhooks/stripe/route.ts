@@ -42,37 +42,9 @@ export async function POST(req: NextRequest) {
   console.log("[webhook] checkout.session.completed — session:", session.id, "email:", email, "meta:", sessionMeta);
 
   // ── Partner sign-up ────────────────────────────────────────────────────────
+  // Feature: Partner affiliate program — database model removed from schema in Phase 3.4A
   if (sessionMeta.type === "partner") {
-    if (!email) {
-      console.error("[webhook] Partner purchase but no email on session");
-      return NextResponse.json({ received: true });
-    }
-
-    let code = generateCode(email);
-    let attempts = 0;
-    while (attempts < 5) {
-      const existing = await prisma.partner.findUnique({ where: { code } });
-      if (!existing) break;
-      code = generateCode(email);
-      attempts++;
-    }
-
-    await prisma.partner.upsert({
-      where: { email },
-      create: { email, code },
-      update: {},
-    });
-
-    const dashboardUrl = `${SITE}/curator/${code}`;
-    const { subject, html } = partnerWelcomeEmail(code, dashboardUrl);
-
-    try {
-      await resend.emails.send({ from: FROM, to: email, subject, html });
-      console.log("[webhook] Partner welcome email sent to", email);
-    } catch (err) {
-      console.error("[webhook] Failed to send partner welcome email to", email, err);
-    }
-
+    console.log("[webhook] Partner sign-up request ignored (feature unavailable)");
     return NextResponse.json({ received: true });
   }
 
@@ -98,19 +70,8 @@ export async function POST(req: NextRequest) {
   }).catch((err) => console.error("[webhook] Failed to update product stats:", err));
 
   if (partnerCode) {
-    const partner = await prisma.partner.findUnique({ where: { code: partnerCode } });
-    if (partner) {
-      const commission = Math.round(saleAmount * COMMISSION * 100) / 100;
-      await prisma.partnerSale.create({
-        data: { partnerId: partner.id, productSlug: slug, saleAmount, commission },
-      }).catch((err) => console.error("[webhook] Failed to create partner sale:", err));
-      await prisma.partner.update({
-        where: { id: partner.id },
-        data: { salesCount: { increment: 1 }, totalEarned: { increment: commission } },
-      }).catch((err) => console.error("[webhook] Failed to update partner totals:", err));
-    } else {
-      console.warn("[webhook] partnerCode not found in DB:", partnerCode);
-    }
+    // Feature: Partner affiliate program — database models removed from schema in Phase 3.4A
+    console.log("[webhook] Partner sale tracking skipped (feature unavailable):", partnerCode);
   }
 
   if (email) {

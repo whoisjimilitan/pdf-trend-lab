@@ -3,6 +3,8 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
+type SearchItem = { query: string; _count: { query: number } };
+
 const FLAG: Record<string, string> = {
   GH: "🇬🇭", NG: "🇳🇬", KE: "🇰🇪", ZA: "🇿🇦", GB: "🇬🇧", CA: "🇨🇦", AU: "🇦🇺", US: "🇺🇸",
 };
@@ -36,27 +38,9 @@ export default async function DashboardPage() {
       take: 4,
       include: { opportunity: true },
     }),
-    prisma.searchQuery.groupBy({
-      by: ["query"],
-      where: { source: { in: ["homepage", "homepage-with-country"] } },
-      _count: { query: true },
-      orderBy: { _count: { query: "desc" } },
-      take: 6,
-    }),
-    prisma.searchQuery.groupBy({
-      by: ["query"],
-      where: { source: { in: ["expat", "expat-with-country"] } },
-      _count: { query: true },
-      orderBy: { _count: { query: "desc" } },
-      take: 4,
-    }),
-    prisma.searchQuery.groupBy({
-      by: ["query"],
-      where: { source: { in: ["returning", "returning-with-country"] } },
-      _count: { query: true },
-      orderBy: { _count: { query: "desc" } },
-      take: 4,
-    }),
+    Promise.resolve([] as SearchItem[]),
+    Promise.resolve([] as SearchItem[]),
+    Promise.resolve([] as SearchItem[]),
   ]);
 
   const totalEarned = salesData._sum.revenue ?? 0;
